@@ -2,6 +2,12 @@ const Discord = require("discord.js");
 require("dotenv").config();
 const prefix = process.env.prefix
 const token = process.env.NotMyToken
+if (token == null) {
+	console.log("Token is missing, please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPArt/TheIIIProject for more information.")
+	process.exit(1)
+} else if (prefix == null) {
+	console.log("Prefix is missing, please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPart/TheIIIProject for more information.")
+}
 const botOwners = ["ray.#2021", "InimicalPart ©#0001"]
 const setImageLinks = [
 	"https://cdn.discordapp.com/attachments/857343827223117827/858120350633951272/III_29.png",
