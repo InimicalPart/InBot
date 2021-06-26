@@ -6,7 +6,7 @@ if (token == null) {
 	console.log("Token is missing, please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPArt/TheIIIProject for more information.")
 	process.exit(1)
 } else if (prefix == null) {
-	console.log("Prefix is missing, please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPart/TheIIIProject for more information.")
+	console.log("Prefix is missing, The consequences of this will be that the bot wont have a prefix and will react to messages like 'test'. please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPart/TheIIIProject for more information.")
 }
 const botOwners = ["ray.#2021", "InimicalPart ©#0001"]
 const setImageLinks = [
