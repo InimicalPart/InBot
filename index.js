@@ -3,7 +3,9 @@ require("dotenv").config();
 const prefix = process.env.prefix
 const token = process.env.NotMyToken
 const submissionChannelID = "858140842798743603"
-const submissionQueueID = "858140842798743603"
+const submissionQueueID = "858356481556611122"
+const logsID = "858357212828925952"
+const iiiPostingID = "858161576561606697"
 if (token == null) {
 	console.log("Token is missing, please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPArt/TheIIIProject for more information.")
 	process.exit(1)
@@ -112,6 +114,7 @@ client.on('message', async (message) => {
 	if (message.content.startsWith(prefix + "test")) {
 		if (botOwners.includes(message.author.id)) {
 			message.channel.send("Hi! My brain tells me that you are one of my owners :)")
+			message.channel.send(message)
 		} else {
 			message.channel.send("Hmm... You're not my owner! >:(")
 		}
@@ -138,6 +141,7 @@ client.on('message', async (message) => {
 		message.channel.send(embed);
 
 	} else if (message.content.startsWith(prefix + "post")) {
+		if (iiiPostingID != message.channel.id) return;
 		message.channel.send("Please send the image you want to post")
 		let url;
 		let title;
@@ -164,7 +168,7 @@ client.on('message', async (message) => {
 								return message.channel.send("This title is too long! Try again with a shorter title");
 							} else {
 								title = messageNext.content;
-								const submissionChannel = client.channels.cache.get(submissionChannelID);
+								const submissionQueue = client.channels.cache.get(submissionQueueID);
 								/*submissionChannel.send("**" + title + "**");
 								submissionChannel.send(url);
 								submissionChannel.send("Amazing picture by: <@" + message.author + ">")
@@ -176,17 +180,13 @@ client.on('message', async (message) => {
 									.addField("Title:", "**" + title + "**")
 									.addField("Amazing picture by:", "<@" + message.author + ">");
 
-								submissionChannel.send(subEmbed)
-									.then(function (messagea) {
-										messagea.react("👍")
-										messagea.react("👎")
-									}).catch(function (err) {
-										console.error("ERROR: " + err.message)
-									});
+								submissionQueue.send(subEmbed)
 
-								message.channel.send("Your image was sent to <#" + submissionChannel.id + ">")
+								message.channel.send("Your image was sent to the queue! You'll get a DM when a choice was made! :D")
 							}
-						});
+						}).catch((err) => {
+							return message.channel.send("Time limit reached. Canceling.")
+						});;
 					});
 				} else {
 					return message.channel.send("Not an image.")
@@ -194,6 +194,8 @@ client.on('message', async (message) => {
 			} else {
 				return message.channel.send("You did not send an image.")
 			}
+		}).catch((err) => {
+			return message.channel.send("Time limit reached. Canceling.")
 		});
 
 	} else if (message.content.startsWith(prefix + "remove")) {
@@ -224,10 +226,11 @@ client.on('message', async (message) => {
 		if (!args[1]) {
 			return message.channel.send("Please provide the reason for the deny")
 		}
-		const submissionChannel = client.channels.cache.get(submissionChannelID);
+		const submissionQueue = client.channels.cache.get(submissionQueueID);
+
 		const messageID = args[0];
 		const reason = args.slice(1).join(" ");
-		let m = await submissionChannel.messages.fetch(messageID).catch((err) => {
+		let m = await submissionQueue.messages.fetch(messageID).catch((err) => {
 			return message.channel.send("Invalid Message ID.")
 		})
 		if (m == undefined) {
@@ -264,6 +267,7 @@ client.on('message', async (message) => {
 		if (exists != null) {
 			return message.channel.send("This message has already been denied or approved.")
 		}
+		const logs = client.channels.cache.get(logsID)
 		const newEmbed = new Discord.MessageEmbed()
 			.setAuthor(author.tag, author.avatarURL())
 			.setImage(url)
@@ -272,7 +276,8 @@ client.on('message', async (message) => {
 			.addField("Amazing picture by:", "<@" + message.author + ">")
 			.addField('\u200b', '\u200b')
 			.addField('Information:', ':x: | Denied by Moderator: ' + reason);
-		m.edit(newEmbed)
+		m.delete()
+		logs.send(newEmbed)
 		await author.send("Your image submission was denied: " + reason).then(() => {
 			message.channel.send("DM Sent.")
 		}).catch(() => {
@@ -287,10 +292,11 @@ client.on('message', async (message) => {
 		if (!args[1]) {
 			return message.channel.send("Please provide the reason for the approval")
 		}
+		const submissionQueue = client.channels.cache.get(submissionQueueID);
 		const submissionChannel = client.channels.cache.get(submissionChannelID);
 		const messageID = args[0];
 		const reason = args.slice(1).join(" ");
-		let m = await submissionChannel.messages.fetch(messageID).catch((err) => {
+		let m = await submissionQueue.messages.fetch(messageID).catch((err) => {
 			return message.channel.send("Invalid Message ID.")
 		})
 		if (m == undefined) {
@@ -327,6 +333,8 @@ client.on('message', async (message) => {
 		if (exists != null) {
 			return message.channel.send("This message has already been denied or approved.")
 		}
+
+		const logs = client.channels.cache.get(logsID)
 		const newEmbed = new Discord.MessageEmbed()
 			.setAuthor(author.tag, author.avatarURL())
 			.setImage(url)
@@ -335,12 +343,18 @@ client.on('message', async (message) => {
 			.addField("Amazing picture by:", "<@" + message.author + ">")
 			.addField('\u200b', '\u200b')
 			.addField('Information:', ':white_check_mark: | Approved by Moderator: ' + reason);
-		m.edit(newEmbed)
-		await author.send("Your image submission was approved!: " + reason).then(() => {
-			message.channel.send("DM Sent.")
-		}).catch(() => {
-			message.channel.send("User has DMs closed / No mutual servers");
+		m.delete()
+		submissionChannel.send(newEmbed).then(function (messagea) {
+			messagea.react("👍")
+			messagea.react("👎")
+		}).catch(function (err) {
+			console.error("ERROR: " + err.message)
 		});
+		logs.send(newEmbed)
+
+		await author.send("Your image submission was approved!: " + reason).catch(() => {
+			console.log("error, probably user has dms closed.")
+		})
 	} else if (message.content.startsWith(prefix + "restore")) {
 		if (!botOwners.includes(message.author.id)) return// message.channel.send("Hmm... You don't seem to have enough permissions to do that.")
 		message.delete();
