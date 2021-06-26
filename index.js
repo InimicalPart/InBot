@@ -8,7 +8,20 @@ if (token == null) {
 } else if (prefix == null) {
 	console.log("Prefix is missing, The consequences of this will be that the bot wont have a prefix and will react to messages like 'test'. please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPart/TheIIIProject for more information.")
 }
-const botOwners = ["ray.#2021", "InimicalPart ©#0001"]
+const botOwners = ["ray.#2021", "InimicalPart ©#0001", "lethal.#0111"]
+function attachIsImage(msgAttach) {
+	var url = msgAttach.url;
+	//True if this url is a png image.
+	if (url.indexOf("png", url.length - "png".length /*or 3*/) !== -1) {
+		return url.indexOf("png", url.length - "png".length /*or 3*/) !== -1;
+	} else if (url.indexOf("jpg", url.length - "jpg".length /*or 3*/) !== -1) {
+		return url.indexOf("jpg", url.length - "jpg".length /*or 3*/) !== -1;
+	} else if (url.indexOf("jpeg", url.length - "jpeg".length /*or 3*/) !== -1) {
+		return url.indexOf("jpeg", url.length - "jpeg".length /*or 3*/) !== -1;
+	} else if (url.indexOf("webm", url.length - "webm".length /*or 3*/) !== -1) {
+		return url.indexOf("webm", url.length - "webm".length /*or 3*/) !== -1;
+	}
+}
 const setImageLinks = [
 	"https://cdn.discordapp.com/attachments/857343827223117827/858120350633951272/III_29.png",
 	"https://cdn.discordapp.com/attachments/857343827223117827/858123412149239818/Web_1920_1.png",
@@ -41,6 +54,8 @@ function between(min, max) {
 	)
 }
 client.on('message', async (message) => {
+	if (message.author.bot) return;
+	const args = message.content.split(' ').shift();
 	if (message.content.startsWith(prefix + "test")) {
 		if (botOwners.includes(message.author.tag)) {
 			message.channel.send("Hi! My brain tells me that you are one of my owners :)")
@@ -55,7 +70,7 @@ client.on('message', async (message) => {
 			.setDescription("**III Project** Invite: [**Click me!**](https://discord.gg/iii) ")
 			.setFooter("This is the footer text, it can hold 2048 characters", "http://i.imgur.com/w1vhFSR.png")
 			.setImage(randomLink)//"https://cdn.discordapp.com/attachments/857343827223117827/858120350633951272/III_29.png")
-			.setThumbnail("http://i.imgur.com/p2qNFag.png")
+			//.setThumbnail("http://i.imgur.com/p2qNFag.png")
 			.setTimestamp()
 			.setURL("https://discord.js.org/#/docs/main/v12/class/MessageEmbed")
 			.addFields({
@@ -64,10 +79,69 @@ client.on('message', async (message) => {
 			})
 			.addFields({ name: "Inline Field", value: "They can also be inline.", inline: true })
 			.addFields({ name: '\u200b', value: '\u200b' })
-			.addFields({ name: "Inline Field 3", value: "You can have a maximum of 25 fields.", inline: true });
+			.addFields({ name: "More information", value: "More information is available [**here**](https://www.github.com/InimicalPart/TheIIIProject)", inline: true });
 
 
 		message.channel.send(embed);
+
+	} else if (message.content.startsWith(prefix + "post")) {
+		message.channel.send("Please send the image you want to post")
+		let url;
+		let title;
+		var filter = m => m.author.id === message.author.id
+		message.channel.awaitMessages(filter, {
+			max: 1,
+			time: 30000,
+			errors: ['time']
+		}).then(messageNext => {
+			messageNext = messageNext.first()
+			if (messageNext.attachments.size > 0 && messageNext.attachments.size < 2) {
+				if (messageNext.attachments.every(attachIsImage)) {
+					messageNext.attachments.forEach(attachment => {
+						url = attachment.url;
+						message.channel.send("Wow! What's this amazing picture called?")
+						var filter2 = m => m.author.id === message.author.id
+						message.channel.awaitMessages(filter2, {
+							max: 1,
+							time: 30000,
+							errors: ['time']
+						}).then(messageNext => {
+							messageNext = messageNext.first()
+							if (messageNext.content.length > 75) {
+								return message.channel.send("This title is too long! Try again with a shorter title");
+							} else {
+								title = messageNext.content;
+								const submissionChannel = client.channels.cache.get("858140842798743603");
+								/*submissionChannel.send("**" + title + "**");
+								submissionChannel.send(url);
+								submissionChannel.send("Amazing picture by: <@" + message.author + ">")
+								*/
+								const subEmbed = new Discord.MessageEmbed()
+									.setAuthor(message.author.tag, message.author.avatarURL())
+									.setImage(url)
+									.setColor("#FFFF00")
+									.addField("Title:", "**" + title + "**")
+									.addField("Amazing picture by:", "<@" + message.author + ">");
+
+								submissionChannel.send(subEmbed)
+									.then(function (messagea) {
+										messagea.react("👍")
+										messagea.react("👎")
+									}).catch(function (err) {
+										console.error("ERROR: " + err.message)
+									});
+
+								message.channel.send("Your image was sent to <#" + submissionChannel.id + ">")
+							}
+						});
+					});
+				} else {
+					return message.channel.send("Not an image.")
+				}
+			} else {
+				return message.channel.send("You did not send an image.")
+			}
+		});
 
 	}
 })
