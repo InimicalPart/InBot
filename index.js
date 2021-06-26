@@ -109,11 +109,17 @@ client.on('message', async (message) => {
 	if (message.author.bot) return;
 	let args = []
 	args = message.content.split(" ").slice(1);//.split(" ");
-	if (message.content.startsWith(prefix + "test")) {
+	if (message.content.startsWith(prefix + "test") || message.content.startsWith(prefix + "ping")) {
 		if (botOwners.includes(message.author.id)) {
-			message.channel.send("Hi! My brain tells me that you are one of my owners :)")
+			message.channel.send(" this i kinda feel bad if you can see").then (async (msg) =>{
+				msg.delete()
+				const embed = new Discord.MessageEmbed()
+				.setColor("RANDOM")
+				.setDescription(`<:bitelip:857350270513971221> | Latency is \`${msg.createdTimestamp - message.createdTimestamp}ms\` and API Latency is \`${Math.round(client.ws.ping)}ms\``)
+				message.channel.send(embed);
+			})
 		} else {
-			message.channel.send("Hmm... You're not my owner! >:(")
+			message.channel.send("Hmm... You're not my owner! >:(");
 		}
 	} else if (message.content.startsWith(prefix + "embed")) {
 		const randomLink = setImageLinks[Math.floor(Math.random() * setImageLinks.length)]
@@ -396,6 +402,15 @@ client.on('message', async (message) => {
 		}).catch(function (err) {
 			console.error("ERROR: " + err.message)
 		});
+	}  else if (message.content.startsWith(prefix + "random") || message.content.startsWith(prefix + "r")) {
+		const randomLink = setImageLinks[Math.floor(Math.random() * setImageLinks.length)]
+		const embed = new Discord.MessageEmbed()
+		.setTitle("Random III Image")
+		.setColor("RANDOM")
+		.setImage(randomLink)
+		.setTimestamp(new Date())
+		.setFooter(`Requested by ${message.author.tag}`, message.author.avatarURL())
+		message.channel.send(embed);
 	}
 
 })
