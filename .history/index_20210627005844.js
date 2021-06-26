@@ -109,7 +109,7 @@ client.on('message', async (message) => {
 	if (message.author.bot) return;
 	let args = []
 	args = message.content.split(" ").slice(1);//.split(" ");
-	if (message.content.startsWith(prefix + "test") || message.content.startsWith(prefix + "ping")) {
+	if (message.content.startsWith(prefix + "test")) {
 		if (botOwners.includes(message.author.id)) {
 			message.channel.send(" this i kinda feel bad if you can see").then (async (msg) =>{
 				msg.delete()
@@ -402,15 +402,6 @@ client.on('message', async (message) => {
 		}).catch(function (err) {
 			console.error("ERROR: " + err.message)
 		});
-	}  else if (message.content.startsWith(prefix + "random") || message.content.startsWith(prefix + "r")) {
-		const randomLink = setImageLinks[Math.floor(Math.random() * setImageLinks.length)]
-		const embed = new Discord.MessageEmbed()
-		.setTitle("Random III Image")
-		.setColor("RANDOM")
-		.setImage(randomLink)
-		.setTimestamp(new Date())
-		.setFooter(`Requested by ${message.author.tag}`, message.author.avatarURL())
-		message.channel.send(embed);
 	}
 
 })

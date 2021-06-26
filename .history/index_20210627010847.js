@@ -408,8 +408,7 @@ client.on('message', async (message) => {
 		.setTitle("Random III Image")
 		.setColor("RANDOM")
 		.setImage(randomLink)
-		.setTimestamp(new Date())
-		.setFooter(`Requested by ${message.author.tag}`, message.author.avatarURL())
+		.setFooter(new Date())
 		message.channel.send(embed);
 	}
 

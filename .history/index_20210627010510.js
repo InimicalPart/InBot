@@ -405,12 +405,9 @@ client.on('message', async (message) => {
 	}  else if (message.content.startsWith(prefix + "random") || message.content.startsWith(prefix + "r")) {
 		const randomLink = setImageLinks[Math.floor(Math.random() * setImageLinks.length)]
 		const embed = new Discord.MessageEmbed()
-		.setTitle("Random III Image")
 		.setColor("RANDOM")
 		.setImage(randomLink)
-		.setTimestamp(new Date())
-		.setFooter(`Requested by ${message.author.tag}`, message.author.avatarURL())
-		message.channel.send(embed);
+		
 	}
 
 })
