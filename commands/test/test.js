@@ -8,11 +8,12 @@ async function runCommand(message, args, RM) {
 	const client = RM.client;
 	const env = RM.process_env;
 	const prettyMilliseconds = RM.pretty_ms;
-	const embed = new Discord.MessageEmbed()
-		.setColor("RANDOM")
-		.setDescription(`<:bitelip:857350270513971221> | Latency is \`${Date.now() - message.createdTimestamp}ms\` and API Latency is \`${Math.round(client.ws.ping)}ms\`, Bot has been up for: \`${prettyMilliseconds(client.uptime)}\``)
-	message.channel.send(embed);
-
+	message.channel.send("Pinging...  :ping_pong:").then(async (m) => {
+		const embed = new Discord.MessageEmbed()
+			.setColor("RANDOM")
+			.setDescription(`<:bitelip:857350270513971221> | Latency is \`${m.createdTimestamp - message.createdTimestamp}ms\` and API Latency is \`${Math.round(client.ws.ping)}ms\`, Bot has been up for: \`${prettyMilliseconds(client.uptime)}\``)
+		message.channel.send(embed);
+	})
 }
 function commandAlias() {
 	return commandInfo.possibleTriggers;
