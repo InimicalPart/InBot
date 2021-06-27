@@ -1,6 +1,25 @@
 {
   "dependencies": {
     "discord.js": "^12.5.3",
-    "dotenv": "^10.0.0"
-  }
+    "dotenv": "^10.0.0",
+    "pretty-ms": "^7.0.1"
+  },
+  "name": "iii.exe",
+  "description": "<h1 align=\"center\">The III Project</h1>",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InimicalPart/TheIIIProject.git"
+  },
+  "author": "Ini & Ray",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/InimicalPart/TheIIIProject/issues"
+  },
+  "homepage": "https://github.com/InimicalPart/TheIIIProject#readme"
 }
