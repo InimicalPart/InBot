@@ -8,6 +8,7 @@ const cmdRestore = require('./commands/restore/restore.js');
 const cmdRandom = require('./commands/random/random.js');
 //-------------------------------------------
 const Discord = require("discord.js");
+require('discord-reply');
 require("dotenv").config();
 const prettyMilliseconds = require("pretty-ms")
 const prefix = process.env.prefix
