@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+require('discord-reply');
 require("dotenv").config();
 const prefix = process.env.prefix
 const token = process.env.NotMyToken
@@ -24,6 +25,8 @@ function attachIsImage(msgAttach) {
 		return url.indexOf("webm", url.length - "webm".length /*or 3*/) !== -1;
 	}
 }
+const cooldown = new Set();
+
 const setImageLinks = [
 	"https://cdn.discordapp.com/attachments/857343827223117827/858124182981050408/Twitter_Header_2.png",
 	"https://cdn.discordapp.com/attachments/857343827223117827/858124182209691708/Web_1920_64.png",
@@ -110,7 +113,9 @@ client.on('message', async (message) => {
 	let args = []
 	args = message.content.split(" ").slice(1);//.split(" ");
 	if (message.content.startsWith(prefix + "test") || message.content.startsWith(prefix + "ping")) {
-		if (botOwners.includes(message.author.id)) {
+		if (cooldown.has(message.author.id)) {
+            message.lineReply("Chill man. Try again in 5s")
+    } else {
 			message.channel.send(" this i kinda feel bad if you can see").then (async (msg) =>{
 				msg.delete()
 				const embed = new Discord.MessageEmbed()
@@ -118,8 +123,10 @@ client.on('message', async (message) => {
 				.setDescription(`<:bitelip:857350270513971221> | Latency is \`${msg.createdTimestamp - message.createdTimestamp}ms\` and API Latency is \`${Math.round(client.ws.ping)}ms\``)
 				message.channel.send(embed);
 			})
-		} else {
-			message.channel.send("Hmm... You're not my owner! >:(");
+			cooldown.add(message.author.id);
+			setTimeout(() => {
+				message.delete()&&cooldown.delete(message.author.id);
+			}, 5000);
 		}
 	} else if (message.content.startsWith(prefix + "embed")) {
 		const randomLink = setImageLinks[Math.floor(Math.random() * setImageLinks.length)]
