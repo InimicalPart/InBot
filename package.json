@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "discord-buttons": "^3.2.1",
     "discord-reply": "^0.1.2",
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
@@ -9,7 +10,6 @@
   "description": "<h1 align=\"center\">The III Project</h1>",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

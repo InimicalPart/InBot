@@ -1,19 +1,18 @@
 const commandInfo = {
-	"possibleTriggers": ["ping", "test"],
-	"help": "`.ping`: Checks the latency of the bot and the discord API and the bot uptime\nAliases: `.test`"
+	"possibleTriggers": ["help", "h", "?"],
+	"help": "`.help`: uhhh... help helps to help you get the needed help. Aliases: `.h`, `.?`"
 }
 
 async function runCommand(message, args, RM) {
-
-	const Discord = RM.Discord;
-	const client = RM.client;
-	const prettyMilliseconds = RM.pretty_ms;
-	message.channel.send("Pinging...  :ping_pong:").then(async (m) => {
-		const embed = new Discord.MessageEmbed()
-			.setColor("RANDOM")
-			.setDescription(`<:bitelip:857350270513971221> | Latency is \`${m.createdTimestamp - message.createdTimestamp}ms\` and API Latency is \`${Math.round(client.ws.ping)}ms\`, Bot has been up for: \`${prettyMilliseconds(client.uptime)}\``)
-		message.channel.send(embed);
-	})
+	console.log(args[0])
+	for (let i in RM) {
+		if (i.startsWith("cmd")) {
+			let k = RM[i]
+			if (k.commandAlias().includes(args[0])) {
+				message.channel.send(k.commandHelp())
+			}
+		}
+	}
 }
 function commandAlias() {
 	return commandInfo.possibleTriggers;
@@ -23,7 +22,8 @@ function commandHelp() {
 }
 module.exports = { runCommand, commandAlias, commandHelp }
 
-console.log("[I] TEST initialized [I]")
+console.log("[I] HELP initialized [I]")
+
 /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /*
 ------------------[Instruction]------------------
 
