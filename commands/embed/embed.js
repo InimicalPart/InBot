@@ -28,6 +28,7 @@ async function runCommand(message, args, RM) {
 	message.channel.send(embed);
 
 
+
 }
 function commandAlias() {
 	return commandInfo.possibleTriggers;

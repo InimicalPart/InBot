@@ -1,5 +1,6 @@
 const commandInfo = {
-	"possibleTriggers": ["command1", "alias2", "alias3"]
+	"possibleTriggers": ["command1", "alias2", "alias3"],
+	"help": "`.<command name>`: eats your cake!"
 }
 
 async function runCommand(message, args, RM) {
@@ -10,7 +11,10 @@ async function runCommand(message, args, RM) {
 function commandAlias() {
 	return commandInfo.possibleTriggers;
 }
-module.exports = { runCommand, commandAlias }
+function commandHelp() {
+	return commandInfo.help;
+}
+module.exports = { runCommand, commandAlias, commandHelp }
 
 console.log("[I] <command name> initialized [I]")
 /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /*

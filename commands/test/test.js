@@ -1,12 +1,12 @@
 const commandInfo = {
-	"possibleTriggers": ["ping", "test"]
+	"possibleTriggers": ["ping", "test"],
+	"help": "`.ping`: Checks the latency of the bot and the discord API and the bot uptime\nAliases: `.test`"
 }
 
 async function runCommand(message, args, RM) {
 
 	const Discord = RM.Discord;
 	const client = RM.client;
-	const env = RM.process_env;
 	const prettyMilliseconds = RM.pretty_ms;
 	message.channel.send("Pinging...  :ping_pong:").then(async (m) => {
 		const embed = new Discord.MessageEmbed()
@@ -18,7 +18,10 @@ async function runCommand(message, args, RM) {
 function commandAlias() {
 	return commandInfo.possibleTriggers;
 }
-module.exports = { runCommand, commandAlias }
+function commandHelp() {
+	return commandInfo.help;
+}
+module.exports = { runCommand, commandAlias, commandHelp }
 
 console.log("[I] TEST initialized [I]")
 /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /*

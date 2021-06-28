@@ -1,5 +1,6 @@
 const commandInfo = {
-	"possibleTriggers": ["restore"]
+	"possibleTriggers": ["restore"],
+	"help": ""
 }
 
 async function runCommand(message, args, RM) {
