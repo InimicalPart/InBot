@@ -33,9 +33,10 @@ const requiredModules = {
 client.on('message', async (message) => {
 	if (message.author.bot || !message.content.startsWith(process.env.prefix)) return;
 	for (let i in requiredModules) {
-		if (!i.startsWith("cmd")) return;
-		if (!requiredModules[i].commandAlias().includes(message.content.split(" ")[0].replace(process.env.prefix, ""))) return;
-		requiredModules[i].runCommand(message, message.content.split(" ").slice(1), requiredModules)
+		if (i.startsWith("cmd"))
+			if (requiredModules[i].commandAlias().includes(message.content.split(" ")[0].replace(process.env.prefix, "")))
+				requiredModules[i].runCommand(message, message.content.split(" ").slice(1), requiredModules);
+
 	}
 })
 client.on('ready', () => {

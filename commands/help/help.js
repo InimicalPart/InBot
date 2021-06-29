@@ -8,8 +8,7 @@ async function runCommand(message, args, RM) {
 		if (i.startsWith("cmd")) {
 			let k = RM[i]
 			if (k.commandAlias().includes(args[0])) {
-				const embed = new
-					message.channel.send(k.commandHelp())
+				message.channel.send(k.commandHelp())
 			}
 		}
 	}
