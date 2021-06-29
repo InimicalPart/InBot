@@ -4,6 +4,7 @@
     "discord-reply": "^0.1.2",
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
+    "mathjs": "^9.4.3",
     "pretty-ms": "^7.0.1"
   },
   "name": "iii.exe",
