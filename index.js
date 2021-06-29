@@ -9,7 +9,7 @@ const cmdRandom = require('./commands/random/random.js');
 const cmdHelp = require('./commands/help/help.js');
 //-------------------------------------------
 const Discord = require("discord.js");
-require('discord-reply');
+
 require("dotenv").config();
 const prettyMilliseconds = require("pretty-ms")
 const prefix = process.env.prefix
