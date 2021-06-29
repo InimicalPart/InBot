@@ -1,15 +1,15 @@
 const commandInfo = {
 	"possibleTriggers": ["help", "h", "?"],
-	"help": "`.help`: uhhh... help helps you get the needed help. Aliases: `.h`, `.?`"
+	"help": "`.help`: uhhh... help helps you get the needed help.\nAliases: `.h`, `.?`"
 }
 
 async function runCommand(message, args, RM) {
-	console.log(args[0])
 	for (let i in RM) {
 		if (i.startsWith("cmd")) {
 			let k = RM[i]
 			if (k.commandAlias().includes(args[0])) {
-				message.channel.send(k.commandHelp())
+				const embed = new
+					message.channel.send(k.commandHelp())
 			}
 		}
 	}
