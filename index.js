@@ -1,4 +1,5 @@
 const cmdTest = require('./commands/test/test.js');
+const cmdCalculate = require('./commands/calculate/calculate.js');
 const cmdPost = require('./commands/post/post.js');
 const cmdApprove = require('./commands/approve/approve.js');
 const cmdDeny = require('./commands/deny/deny.js');
@@ -9,7 +10,7 @@ const cmdRandom = require('./commands/random/random.js');
 const cmdHelp = require('./commands/help/help.js');
 //-------------------------------------------
 const Discord = require("discord.js");
-
+const math = require('mathjs');
 require("dotenv").config();
 const prettyMilliseconds = require("pretty-ms")
 const prefix = process.env.prefix
@@ -32,6 +33,7 @@ const client = new Discord.Client();
 
 const requiredModules = {
 	"cmdTest": cmdTest,
+	"cmdCalculate": cmdCalculate,
 	"cmdPost": cmdPost,
 	"cmdApprove": cmdApprove,
 	"cmdDeny": cmdDeny,
@@ -50,6 +52,7 @@ const requiredModules = {
 	"iiiPostingID": iiiPostingID,
 	"botOwners": botOwners,
 	"setImageLinks": setImageLinks,
+	"math": math,
 }
 
 /*
@@ -97,6 +100,8 @@ client.on('message', async (message) => {
 		cmdEmbed.runCommand(message, args, requiredModules)
 	} else if (cmdPost.commandAlias().includes(command)) {
 		cmdPost.runCommand(message, args, requiredModules)
+	} else if (cmdCalculate.commandAlias().includes(command)) {
+		cmdCalculate.runCommand(message, args, requiredModules)
 	} else if (cmdRemove.commandAlias().includes(command)) {
 		cmdRemove.runCommand(message, args, requiredModules)
 	} else if (cmdDeny.commandAlias().includes(command)) {

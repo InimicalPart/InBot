@@ -1,6 +1,6 @@
 const commandInfo = {
 	"possibleTriggers": ["help", "h", "?"],
-	"help": "`.help`: uhhh... help helps to help you get the needed help. Aliases: `.h`, `.?`"
+	"help": "`.help`: uhhh... help helps you get the needed help. Aliases: `.h`, `.?`"
 }
 
 async function runCommand(message, args, RM) {
