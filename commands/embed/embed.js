@@ -9,7 +9,7 @@ async function runCommand(message, args, RM) {
 	const randomLink = setImageLinks[Math.floor(Math.random() * setImageLinks.length)]
 	const embed = new Discord.MessageEmbed()
 		.setAuthor(message.author.tag, message.author.avatarURL())
-		.setColor(0x00AE86)
+		.setColor("RANDOM")
 		.setDescription("**III Project** Invite: [**Click me!**](https://discord.gg/iii) ")
 		.setFooter("This is the footer text, it can hold 2048 characters", "http://i.imgur.com/w1vhFSR.png")
 		.setImage(randomLink)//"https://cdn.discordapp.com/attachments/857343827223117827/858120350633951272/III_29.png")

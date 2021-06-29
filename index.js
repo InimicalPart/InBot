@@ -1,5 +1,4 @@
 const cmdTest = require('./commands/test/test.js');
-const cmdCalculate = require('./commands/calculate/calculate.js');
 const cmdPost = require('./commands/post/post.js');
 const cmdApprove = require('./commands/approve/approve.js');
 const cmdDeny = require('./commands/deny/deny.js');
@@ -8,6 +7,8 @@ const cmdEmbed = require('./commands/embed/embed.js');
 const cmdRestore = require('./commands/restore/restore.js');
 const cmdRandom = require('./commands/random/random.js');
 const cmdHelp = require('./commands/help/help.js');
+const cmdCalculate = require('./commands/calculate/calculate.js');
+const cmdRoast = require('./commands/roast/roast.js');
 //-------------------------------------------
 const Discord = require("discord.js");
 const math = require('mathjs');
@@ -33,7 +34,6 @@ const client = new Discord.Client();
 
 const requiredModules = {
 	"cmdTest": cmdTest,
-	"cmdCalculate": cmdCalculate,
 	"cmdPost": cmdPost,
 	"cmdApprove": cmdApprove,
 	"cmdDeny": cmdDeny,
@@ -42,6 +42,8 @@ const requiredModules = {
 	"cmdRestore": cmdRestore,
 	"cmdRandom": cmdRandom,
 	"cmdHelp": cmdHelp,
+	"cmdCalculate": cmdCalculate,
+	"cmdRoast": cmdRoast,
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": prettyMilliseconds,
@@ -56,6 +58,16 @@ const requiredModules = {
 }
 
 /*
+const cmdTest
+const cmdCalculate
+const cmdPost
+const cmdApprove
+const cmdDeny
+const cmdRemove
+const cmdEmbed
+const cmdRestore
+const cmdRandom
+const cmdHelp
 const Discord = RM.Discord;
 const env = RM.process_env;
 const prettyMilliseconds = RM.pretty_ms;
@@ -66,7 +78,6 @@ const logsID = RM.logsID;
 const iiiPostingID = RM.iiiPostingID;
 const botOwners = RM.botOwners;
 const setImageLinks = RM.setImageLinks
-const command = RM.command
 
 ,
 
@@ -76,21 +87,10 @@ const command = RM.command
 
 
 */
-function between(min, max) {
-	return Math.floor(
-		Math.random() * (max - min + 1) + min
-	)
-}
-async function findMessage(message, ID) {
-	let channels = message.guild.channels.cache.filter(c => c.type == 'text').array();
-	for (let current of channels) {
-		let target = await current.messages.fetch(ID);
-		if (target) { console.log(target); return target; }
-	}
-}
 
 client.on('message', async (message) => {
 	if (message.author.bot) return;
+	if (!message.content.startsWith(prefix)) return;
 	let args = []
 	let command = message.content.split(" ")[0].replace(prefix, "");
 	args = message.content.split(" ").slice(1);
@@ -114,6 +114,8 @@ client.on('message', async (message) => {
 		cmdRandom.runCommand(message, args, requiredModules)
 	} else if (cmdHelp.commandAlias().includes(command)) {
 		cmdHelp.runCommand(message, args, requiredModules)
+	} else if (cmdRoast.commandAlias().includes(command)) {
+		cmdRoast.runCommand(message, args, requiredModules)
 	}
 
 
