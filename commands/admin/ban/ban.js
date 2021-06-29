@@ -1,19 +1,11 @@
 const commandInfo = {
-	"possibleTriggers": ["ping", "test"],
-	"help": "`.ping`: Checks the latency of the bot and the discord API and the bot uptime\nAliases: `.test`"
+	"possibleTriggers": ["command1", "alias2", "alias3"],
+	"help": "`.<command name>`: eats your cake!"
 }
 
 async function runCommand(message, args, RM) {
 
-	const Discord = RM.Discord;
-	const client = RM.client;
-	const prettyMilliseconds = RM.pretty_ms;
-	message.channel.send("Pinging...  :ping_pong:").then((m) => {
-		const embed = new Discord.MessageEmbed()
-			.setColor("RANDOM")
-			.setDescription(`<:bitelip:857350270513971221> | Latency is \`${m.createdTimestamp - message.createdTimestamp}ms\` and API Latency is \`${Math.round(client.ws.ping)}ms\`, Bot has been up for: \`${prettyMilliseconds(client.uptime)}\``)
-		m.edit(embed);
-	})
+
 }
 function commandAlias() {
 	return commandInfo.possibleTriggers;
@@ -23,7 +15,7 @@ function commandHelp() {
 }
 module.exports = { runCommand, commandAlias, commandHelp }
 
-console.log("[I] TEST initialized [I]")
+console.log("[I] BAN initialized [I]")
 /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /*
 ------------------[Instruction]------------------
 
