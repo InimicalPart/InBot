@@ -14,7 +14,7 @@ const requiredModules = {
 	"cmdEmbed": require('./commands/embed/embed.js'),
 	"cmdRestore": require('./commands/restore/restore.js'),
 	"cmdRandom": require('./commands/random/random.js'),
-	"cmdHelp": require('./commands/help/help.js');,
+	"cmdHelp": require('./commands/help/help.js'),
 	"cmdCalculate": require('./commands/calculate/calculate.js'),
 	"cmdRoast": require('./commands/roast/roast.js'),
 	"cmdMotivation": require('./commands/motivation/motivation.js'),
@@ -42,4 +42,4 @@ client.on('ready', () => {
 	client.user.setPresence({ activity: { name: `III V1`, type: "WATCHING" }, status: 'dnd' })
 	console.log("------------------------\n" + client.user.tag + " is ready!")
 })
-client.login(token)
+client.login(process.env.NotMyToken)
