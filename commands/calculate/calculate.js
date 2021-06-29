@@ -1,6 +1,6 @@
 const commandInfo = {
     "possibleTriggers": ["calc", "math", "calculate"],
-    "help": "`.calculate: will calculate a math equation that you input eg. `.calc 2+2`\nAliases: .calc, .math"
+    "help": ".calculate: will calculate a math equation that you input eg. \`.calc 2+2\`\nAliases: .calc, .math"
 }
 
 async function runCommand(message, args, RM) {
