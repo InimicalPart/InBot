@@ -8,7 +8,6 @@ async function runCommand(message, args, RM) {
 	const Discord = RM.Discord;
 	const client = RM.client;
 	const prettyMilliseconds = RM.pretty_ms;
-	const embed = Discord.MessageEmbed()
 	message.channel.send("Pinging...  :ping_pong:").then((m) => {
 		const embed = new Discord.MessageEmbed()
 			.setColor("RANDOM")
