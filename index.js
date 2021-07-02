@@ -30,6 +30,8 @@ const requiredModules = {
 	"cmdQueue": require('./commands/queue/queue.js'),
 	"cmdPlay": require('./commands/play/play.js'),
 	"cmdVCSounds": require('./commands/vcsounds/vcsounds.js'),
+	"cmdSkip": require('./commands/skip/skip.js'),
+	"cmdStop": require('./commands/stop/stop.js'),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),
@@ -60,7 +62,11 @@ async function runCMD(k, message) {
 	k.runCommand(message, message.content.split(" ").slice(1), requiredModules);
 }
 client.on('ready', () => {
-	client.user.setPresence({ activity: { name: `III V2`, type: "WATCHING" }, status: 'dnd' })
+	if (client.user.id == "859513472973537311") {
+		client.user.setPresence({ activity: { name: `III DEV EDITION`, type: "WATCHING" }, status: 'dnd' })
+	} else {
+		client.user.setPresence({ activity: { name: `III V1`, type: "WATCHING" }, status: 'dnd' })
+	}
 	console.log("------------------------\n" + client.user.tag + " is ready!")
 })
 client.login(process.env.NotMyToken)

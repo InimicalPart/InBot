@@ -69,7 +69,8 @@ async function runCommand(message, args, RM) {
 				url: `https://www.youtube.com/watch?v=${video.id}`,
 				thumbnail: `https://i.ytimg.com/vi/${video.id}/maxresdefault.jpg`,
 				duration: video.duration,
-				time: songInfo.videoDetails.lengthSeconds
+				time: songInfo.videoDetails.lengthSeconds,
+				isLive: songInfo.videoDetails.isLiveContent
 			};
 
 			if (serverQueue) {
@@ -81,7 +82,7 @@ async function runCommand(message, args, RM) {
 						.setTitle("Added To Queue")
 						.setThumbnail(song.thumbnail)
 						.setTimestamp()
-						.setDescription(`**${song.title}** has been added to queue! | Requested By **${message.author.username}**`)
+						.setDescription(`**${song.title}** has been added to queue!\n\nRequested By **${message.author.username}**`)
 						.setFooter(message.member.displayName, message.author.displayAvatarURL());
 					message.channel.send(sembed)
 				}
@@ -120,28 +121,37 @@ async function runCommand(message, args, RM) {
 
 			let npmin = Math.floor(song.time / 60);
 			let npsec = song.time - npmin * 60
-			let np = `${addzeros(npmin, 2)}:${addzeros(npsec, 2)}`.split(' ')
+			let np;
+			if (song.isLive) {
+				np = "[LIVE]"
+			} else {
+				np = `${addzeros(npmin, 2)}:${addzeros(npsec, 2)}`.split(' ')
+			}
+			try {
+				if (serverQueue) {
+					const dispatcher = queue.connection.play(ytdl(song.url, { highWaterMark: 1 << 20, quality: "highestaudio" }))
+						.on('finish', () => {
+							if (queue.loop) {
+								queue.songs.push(queue.songs.shift());
+								return play(queue.songs[0]);
+							}
+							queue.songs.shift();
+							play(queue.songs[0]);
+						})
+						.on('error', error => console.error(error));
 
-			const dispatcher = queue.connection.play(ytdl(song.url, { highWaterMark: 1 << 20, quality: "highestaudio" }))
-				.on('finish', () => {
-					if (queue.loop) {
-						queue.songs.push(queue.songs.shift());
-						return play(queue.songs[0]);
-					}
-					queue.songs.shift();
-					play(queue.songs[0]);
-				})
-				.on('error', error => console.error(error));
-			dispatcher.setVolumeLogarithmic(queue.volume / 5);
-			const embed = new Discord.MessageEmbed()
-				.setColor("GREEN")
-				.setTitle('Now Playing\n')
-				.setThumbnail(song.thumbnail)
-				.setTimestamp()
-				.setDescription(`🎵 Now playing:\n **${song.title}** 🎵\n\n Song Length: **${np}**`)
-				.setFooter(message.member.displayName, message.author.displayAvatarURL());
-			queue.textChannel.send(embed);
-		};
+					dispatcher.setVolumeLogarithmic(queue.volume / 5);
+					const embed = new Discord.MessageEmbed()
+						.setColor("GREEN")
+						.setTitle('Now Playing\n')
+						.setThumbnail(song.thumbnail)
+						.setTimestamp()
+						.setDescription(`🎵 Now playing:\n **${song.title}** 🎵\n\n Song Length: **${np}**`)
+						.setFooter(message.member.displayName, message.author.displayAvatarURL());
+					queue.textChannel.send(embed);
+				}
+			} catch { };
+		}
 	} catch (e) {
 		message.channel.send(e.message)
 	}
