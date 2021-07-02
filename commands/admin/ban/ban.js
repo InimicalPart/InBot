@@ -7,16 +7,24 @@ async function runCommand(message, args, RM) {
 
 
 }
+
 function commandAlias() {
 	return commandInfo.possibleTriggers;
 }
+
 function commandHelp() {
 	return commandInfo.help;
 }
-module.exports = { runCommand, commandAlias, commandHelp }
+module.exports = {
+	runCommand,
+	commandAlias,
+	commandHelp
+}
 
 console.log("[I] BAN initialized [I]")
-/* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /*
+/* */
+/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/*
 ------------------[Instruction]------------------
 
 1. Make a directory in commands/ with your command name
@@ -37,4 +45,5 @@ To check if possible triggers has the command call
 "cmd<cmdname>.commandAlias().includes(command)"
 
 ------------------[Instruction]------------------
-*/ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
+*/
+/* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
