@@ -20,8 +20,7 @@ async function runCommand(message, args, RM) {
             .setFooter(member.displayName, member.user.displayAvatarURL())
             .setTimestamp()
         return message.channel.send(quoteEmbed);
-    }
-    else if (args[0]) {
+    } else if (args[0]) {
         const embed = new Discord.MessageEmbed()
             .setAuthor(message.guild.name, message.guild.iconURL())
             .setColor("GREEN")
@@ -32,12 +31,18 @@ async function runCommand(message, args, RM) {
         message.channel.send(embed)
     }
 }
+
 function commandAlias() {
     return commandInfo.possibleTriggers;
 }
+
 function commandHelp() {
     return commandInfo.help;
 }
-module.exports = { runCommand, commandAlias, commandHelp }
+module.exports = {
+    runCommand,
+    commandAlias,
+    commandHelp
+}
 
 console.log("[I] MOTIVATION initialized [I]")
