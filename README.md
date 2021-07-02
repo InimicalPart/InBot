@@ -1,6 +1,6 @@
 <h1 align="center">The III Project</h1>
 
-<img alt="Discord" src="https://img.shields.io/discord/857017449743777812?logo=discord&style=flat-square"> <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/TheIIISociety?color=brightgreen&label=%40TheIIISociety&logo=twitter&style=flat-square"> <br><img alt="GitHub top language" src="https://img.shields.io/github/languages/top/InimicalPart/TheIIIProject?style=flat-square"> <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/InimicalPart/TheIIIProject?style=flat-square"> <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/InimicalPart/TheIIIProject?style=flat-square">
+<img alt="Discord" src="https://img.shields.io/discord/857017449743777812?logo=discord&style=flat-square"> <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/TheIIISociety?color=brightgreen&label=%40TheIIISociety&logo=twitter&style=flat-square"> <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/InimicalPart/TheIIIProject?style=flat-square"> <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/InimicalPart/TheIIIProject?style=flat-square"><img alt="GitHub contributors" src="https://img.shields.io/github/contributors/InimicalPart/TheIIIProject?style=flat-square">
 
 <br/><h2 align="center"><u><b>Information</b></u></h2>
 
