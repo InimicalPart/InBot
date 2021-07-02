@@ -7,6 +7,7 @@ global.queue = new Map();
 global.games = new Map()
 
 const Discord = require("discord.js");
+const db = require("quick.db")
 require("discord-reply")
 require("dotenv").config();
 if (process.env.NotMyToken == null) {
@@ -27,6 +28,9 @@ const requiredModules = {
 	"cmdCalculate": require('./commands/calculate/calculate.js'),
 	"cmdRoast": require('./commands/roast/roast.js'),
 	"cmdMotivation": require('./commands/motivation/motivation.js'),
+	"cmdBan": require('./commands/ban/ban.js'),
+	"cmdModlog": require('./commands/modlog/modlog.js'),
+	"cmdUnban": require('./commands/unban/unban.js'),
 	"cmdQueue": require('./commands/queue/queue.js'),
 	"cmdPlay": require('./commands/play/play.js'),
 	"cmdVCSounds": require('./commands/vcsounds/vcsounds.js'),
@@ -36,6 +40,7 @@ const requiredModules = {
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),
 	"client": client,
+	"db": db,
 	"submissionChannelID": "858140842798743603",
 	"submissionQueueID": "858356481556611122",
 	"logsID": "858357212828925952",
