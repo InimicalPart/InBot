@@ -1,10 +1,8 @@
 {
   "dependencies": {
-    "discord-buttons": "^3.2.1",
     "discord-reply": "^0.1.2",
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
-    "ffmpeg": "^0.0.4",
     "ffmpeg-static": "^4.4.0",
     "mathjs": "^9.4.3",
     "path": "^0.12.7",
