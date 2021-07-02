@@ -73,26 +73,33 @@ async function runCommand(message, args, RM) {
 
 
 }
+
 function attachIsImage(msgAttach) {
 	var url = msgAttach.url;
 	//True if this url is a png image.
-	if (url.indexOf("png", url.length - "png".length /*or 3*/) !== -1) {
-		return url.indexOf("png", url.length - "png".length /*or 3*/) !== -1;
-	} else if (url.indexOf("jpg", url.length - "jpg".length /*or 3*/) !== -1) {
-		return url.indexOf("jpg", url.length - "jpg".length /*or 3*/) !== -1;
-	} else if (url.indexOf("jpeg", url.length - "jpeg".length /*or 3*/) !== -1) {
-		return url.indexOf("jpeg", url.length - "jpeg".length /*or 3*/) !== -1;
-	} else if (url.indexOf("webm", url.length - "webm".length /*or 3*/) !== -1) {
-		return url.indexOf("webm", url.length - "webm".length /*or 3*/) !== -1;
+	if (url.indexOf("png", url.length - "png".length /*or 3*/ ) !== -1) {
+		return url.indexOf("png", url.length - "png".length /*or 3*/ ) !== -1;
+	} else if (url.indexOf("jpg", url.length - "jpg".length /*or 3*/ ) !== -1) {
+		return url.indexOf("jpg", url.length - "jpg".length /*or 3*/ ) !== -1;
+	} else if (url.indexOf("jpeg", url.length - "jpeg".length /*or 3*/ ) !== -1) {
+		return url.indexOf("jpeg", url.length - "jpeg".length /*or 3*/ ) !== -1;
+	} else if (url.indexOf("webm", url.length - "webm".length /*or 3*/ ) !== -1) {
+		return url.indexOf("webm", url.length - "webm".length /*or 3*/ ) !== -1;
 	}
 }
+
 function commandAlias() {
 	return commandInfo.possibleTriggers;
 }
-module.exports = { runCommand, commandAlias }
+module.exports = {
+	runCommand,
+	commandAlias
+}
 
 console.log("[I] POST initialized [I]")
-/* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /*
+/* */
+/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/*
 ------------------[Instruction]------------------
 
 1. Make a directory in commands/ with your command name
@@ -113,4 +120,5 @@ To check if possible triggers has the command call
 "cmd<cmdname>.commandAlias().includes(command)"
 
 ------------------[Instruction]------------------
-*/ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
+*/
+/* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
