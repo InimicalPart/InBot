@@ -1,12 +1,15 @@
 {
   "dependencies": {
-    "discord-buttons": "^3.2.1",
     "discord-reply": "^0.1.2",
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
+    "ffmpeg-static": "^4.4.0",
     "mathjs": "^9.4.3",
+    "path": "^0.12.7",
     "pretty-ms": "^7.0.1",
-    "quick.db": "^7.1.3"
+    "quick.db": "^7.1.3",
+    "simple-youtube-api": "^5.2.1",
+    "ytdl-core": "^4.8.3"
   },
   "name": "iii.exe",
   "description": "<h1 align=\"center\">The III Project</h1>",
