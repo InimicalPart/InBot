@@ -24,7 +24,8 @@ module.exports = {
 
 console.log("[I] <command name> initialized [I]")
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/* */
+/* */ /* */ /* */ /* */ /* */ /* */
 /*
 ------------------[Instruction]------------------
 
@@ -47,4 +48,5 @@ To check if possible triggers has the command call
 
 ------------------[Instruction]------------------
 */
-/* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
+/* */
+/* */ /* */ /* */ /* */ /* */ /* */ /* */
