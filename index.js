@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+const db = require("quick.db")
 require("dotenv").config();
 if (process.env.NotMyToken == null) {
 	console.log("Token is missing, please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPart/TheIIIProject for more information.")
@@ -18,10 +19,14 @@ const requiredModules = {
 	"cmdCalculate": require('./commands/calculate/calculate.js'),
 	"cmdRoast": require('./commands/roast/roast.js'),
 	"cmdMotivation": require('./commands/motivation/motivation.js'),
+	"cmdBan": require('./commands/ban/ban.js'),
+	"cmdModlog": require('./commands/modlog/modlog.js'),
+	"cmdUnban": require('./commands/unban/unban.js'),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),
 	"client": client,
+	"db": db,
 	"submissionChannelID": "858140842798743603",
 	"submissionQueueID": "858356481556611122",
 	"logsID": "858357212828925952",
