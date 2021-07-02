@@ -1,6 +1,6 @@
 const commandInfo = {
-	"possibleTriggers": ["skip"],
-	"help": "`.skip`: Skips a song."
+	"possibleTriggers": ["stop"],
+	"help": "`.stop`: Stops the entire song and queue."
 }
 
 async function runCommand(message, args, RM) {
@@ -22,8 +22,9 @@ async function runCommand(message, args, RM) {
 	const { channel } = message.member.voice;
 	if (!channel) return message.channel.send('I\'m sorry but you need to be in a voice channel to skip music!');
 	const embed = new RM.Discord.MessageEmbed()
-		.setDescription(`Skipping: [${serverQueue.songs[0].title}](${serverQueue.songs[0].url})`)
+		.setDescription(`Stopping music.`)
 	message.channel.send(embed)
+	ops.queue.clear()
 	serverQueue.connection.dispatcher.end()
 
 }
@@ -41,7 +42,7 @@ module.exports = {
 	commandHelp
 }
 
-console.log("[I] SKIP initialized [I]")
+console.log("[I] STOP initialized [I]")
 /* */
 /* */ /* */ /* */ /* */ /* */ /* */ /* */
 /*
