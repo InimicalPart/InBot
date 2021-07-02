@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@discordjs/opus": "^0.5.3",
     "discord-buttons": "^3.2.1",
     "discord-reply": "^0.1.2",
     "discord.js": "^12.5.3",
