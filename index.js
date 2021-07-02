@@ -40,7 +40,7 @@ client.on('message', async (message) => {
 	}
 })
 client.on('ready', () => {
-	client.user.setPresence({ activity: { name: `III V1`, type: "WATCHING" }, status: 'dnd' })
+	client.user.setPresence({ activity: { name: `III V3`, type: "WATCHING" }, status: 'dnd' })
 	console.log("------------------------\n" + client.user.tag + " is ready!")
 })
 client.login(process.env.NotMyToken)

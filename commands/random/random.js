@@ -15,13 +15,19 @@ async function runCommand(message, args, RM) {
 	message.channel.send(embed);
 
 }
+
 function commandAlias() {
 	return commandInfo.possibleTriggers;
 }
-module.exports = { runCommand, commandAlias }
+module.exports = {
+	runCommand,
+	commandAlias
+}
 
 console.log("[I] RANDOM initialized [I]")
-/* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /*
+/* */
+/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/*
 ------------------[Instruction]------------------
 
 1. Make a directory in commands/ with your command name
@@ -42,4 +48,5 @@ To check if possible triggers has the command call
 "cmd<cmdname>.commandAlias().includes(command)"
 
 ------------------[Instruction]------------------
-*/ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
+*/
+/* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */

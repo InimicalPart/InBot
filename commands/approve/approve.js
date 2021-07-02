@@ -10,7 +10,7 @@ async function runCommand(message, args, RM) {
 	const submissionQueueID = RM.submissionQueueID;
 	const logsID = RM.logsID;
 	const botOwners = RM.botOwners;
-	if (!botOwners.includes(message.author.id)) return// message.channel.send("Hmm... You don't seem to have enough permissions to do that.")
+	if (!botOwners.includes(message.author.id)) return // message.channel.send("Hmm... You don't seem to have enough permissions to do that.")
 	message.delete();
 	if (!args[0]) {
 		return message.channel.send("Please provide the message to approval")
@@ -97,13 +97,19 @@ async function runCommand(message, args, RM) {
 	}
 
 }
+
 function commandAlias() {
 	return commandInfo.possibleTriggers;
 }
-module.exports = { runCommand, commandAlias }
+module.exports = {
+	runCommand,
+	commandAlias
+}
 
 console.log("[I] APPROVE initialized [I]")
-/* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /*
+/* */
+/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/*
 ------------------[Instruction]------------------
 
 1. Make a directory in commands/ with your command name
@@ -124,4 +130,5 @@ To check if possible triggers has the command call
 "cmd<cmdname>.commandAlias().includes(command)"
 
 ------------------[Instruction]------------------
-*/ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
+*/
+/* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */

@@ -2,6 +2,7 @@ const commandInfo = {
 	"possibleTriggers": ["roast", "attack", "diss"],
 	"help": "`.roast`: Roast your friends. +18\nAliases: `.attack`, `.diss`"
 }
+
 function between(lower, upper) {
 	var scale = upper - lower + 1;
 	return Math.floor(lower + Math.random() * scale);
@@ -42,7 +43,10 @@ async function runCommand(message, args, RM) {
 
 		try {
 			// read contents of the file
-			require('fs').createReadStream("./resources/roasts.txt").on('data', function (chunk) { for (i = 0; i < chunk.length; ++i)if (chunk[i] == 10) count++; }).on('end', async function () {
+			require('fs').createReadStream("./resources/roasts.txt").on('data', function (chunk) {
+				for (i = 0; i < chunk.length; ++i)
+					if (chunk[i] == 10) count++;
+			}).on('end', async function () {
 				const wantedLine = between(1, count)
 				const data = require('fs').readFileSync('./resources/roasts.txt', 'UTF-8');
 
@@ -63,16 +67,24 @@ async function runCommand(message, args, RM) {
 	}
 
 }
+
 function commandAlias() {
 	return commandInfo.possibleTriggers;
 }
+
 function commandHelp() {
 	return commandInfo.help;
 }
-module.exports = { runCommand, commandAlias, commandHelp }
+module.exports = {
+	runCommand,
+	commandAlias,
+	commandHelp
+}
 
 console.log("[I] ROAST initialized [I]")
-/* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /*
+/* */
+/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/*
 ------------------[Instruction]------------------
 
 1. Make a directory in commands/ with your command name
@@ -93,4 +105,5 @@ To check if possible triggers has the command call
 "cmd<cmdname>.commandAlias().includes(command)"
 
 ------------------[Instruction]------------------
-*/ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
+*/
+/* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
