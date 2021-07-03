@@ -1,4 +1,5 @@
 const commandInfo = {
+	"name": "play",
 	"possibleTriggers": ["play", "p"],
 	"help": "`.play: plays a song of our choice from youtube\nAliases: .p"
 }
