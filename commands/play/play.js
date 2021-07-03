@@ -127,8 +127,7 @@ async function runCommand(message, args, RM) {
 			} else {
 				np = `${addzeros(npmin, 2)}:${addzeros(npsec, 2)}`.split(' ')
 			}
-			try {
-				if (serverQueue) {
+
 					const dispatcher = queue.connection.play(ytdl(song.url, { highWaterMark: 1 << 20, quality: "highestaudio" }))
 						.on('finish', () => {
 							if (queue.loop) {
@@ -150,8 +149,6 @@ async function runCommand(message, args, RM) {
 						.setFooter(message.member.displayName, message.author.displayAvatarURL());
 					queue.textChannel.send(embed);
 				}
-			} catch { };
-		}
 	} catch (e) {
 		message.channel.send(e.message)
 	}
