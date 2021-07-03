@@ -1,5 +1,5 @@
 const commandInfo = {
-  "possibleTriggers": ["pause", "Pause"],
+  "possibleTriggers": ["pause"],
   "help": "`.pause`: pauses the current playing song\nAliases: *none*"
 }
 

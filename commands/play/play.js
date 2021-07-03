@@ -1,5 +1,5 @@
 const commandInfo = {
-	"possibleTriggers": ["play", "p", "P", "Play"],
+	"possibleTriggers": ["play", "p"],
 	"help": "`.play: plays a song of our choice from youtube\nAliases: .p"
 }
 
@@ -114,7 +114,9 @@ async function runCommand(message, args, RM) {
 		async function play(song) {
 			const queue = ops.queue.get(message.guild.id);
 			if (!song) {
-				queue.voiceChannel.leave();
+				try {
+					queue.voiceChannel.leave();
+				} catch (e) { console.log(e.message) }
 				ops.queue.delete(message.guild.id);
 				return;
 			};
