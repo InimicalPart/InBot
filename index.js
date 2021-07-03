@@ -6,6 +6,7 @@ global.queue3 = new Map();
 global.queue = new Map();
 global.games = new Map()
 
+
 const Discord = require("discord.js");
 const db = require("quick.db")
 require("discord-reply")
@@ -36,6 +37,7 @@ const requiredModules = {
 	"cmdVCSounds": require('./commands/vcsounds/vcsounds.js'),
 	"cmdSkip": require('./commands/skip/skip.js'),
 	"cmdStop": require('./commands/stop/stop.js'),
+	"cmdPause": require('./commands/pause/pause.js'),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),
