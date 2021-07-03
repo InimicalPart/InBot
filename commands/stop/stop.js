@@ -24,7 +24,7 @@ async function runCommand(message, args, RM) {
 	const embed = new RM.Discord.MessageEmbed()
 		.setDescription(`Stopping music.`)
 	message.channel.send(embed)
-	ops.queue.clear()
+	ops.queue.delete(message.guild.id);
 	serverQueue.connection.dispatcher.end()
 
 }
