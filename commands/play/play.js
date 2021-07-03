@@ -1,5 +1,6 @@
 const commandInfo = {
-	"possibleTriggers": ["play", "p", "P", "Play"],
+	"name": "play",
+	"possibleTriggers": ["play", "p"],
 	"help": "`.play: plays a song of our choice from youtube\nAliases: .p"
 }
 
@@ -114,7 +115,9 @@ async function runCommand(message, args, RM) {
 		async function play(song) {
 			const queue = ops.queue.get(message.guild.id);
 			if (!song) {
-				queue.voiceChannel.leave();
+				try {
+					queue.voiceChannel.leave();
+				} catch (e) { console.log(e.message) }
 				ops.queue.delete(message.guild.id);
 				return;
 			};
@@ -127,28 +130,27 @@ async function runCommand(message, args, RM) {
 			} else {
 				np = `${addzeros(npmin, 2)}:${addzeros(npsec, 2)}`.split(' ')
 			}
+			const dispatcher = queue.connection.play(ytdl(song.url, { highWaterMark: 1 << 20, quality: "highestaudio" }))
+				.on('finish', () => {
+					if (queue.loop) {
+						queue.songs.push(queue.songs.shift());
+						return play(queue.songs[0]);
+					}
+					queue.songs.shift();
+					play(queue.songs[0]);
+				})
+				.on('error', error => console.error(error));
 
-					const dispatcher = queue.connection.play(ytdl(song.url, { highWaterMark: 1 << 20, quality: "highestaudio" }))
-						.on('finish', () => {
-							if (queue.loop) {
-								queue.songs.push(queue.songs.shift());
-								return play(queue.songs[0]);
-							}
-							queue.songs.shift();
-							play(queue.songs[0]);
-						})
-						.on('error', error => console.error(error));
-
-					dispatcher.setVolumeLogarithmic(queue.volume / 5);
-					const embed = new Discord.MessageEmbed()
-						.setColor("GREEN")
-						.setTitle('Now Playing\n')
-						.setThumbnail(song.thumbnail)
-						.setTimestamp()
-						.setDescription(`🎵 Now playing:\n **${song.title}** 🎵\n\n Song Length: **${np}**`)
-						.setFooter(message.member.displayName, message.author.displayAvatarURL());
-					queue.textChannel.send(embed);
-				}
+			dispatcher.setVolumeLogarithmic(queue.volume / 5);
+			const embed = new Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setTitle('Now Playing\n')
+				.setThumbnail(song.thumbnail)
+				.setTimestamp()
+				.setDescription(`🎵 Now playing:\n **${song.title}** 🎵\n\n Song Length: **${np}**`)
+				.setFooter(message.member.displayName, message.author.displayAvatarURL());
+			queue.textChannel.send(embed);
+		}
 	} catch (e) {
 		message.channel.send(e.message)
 	}

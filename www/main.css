@@ -1,0 +1,37 @@
+.input {
+  border-radius: 100vh;
+  border-width: 3px;
+  height: 25px;
+  border-color: rgb(134, 134, 134);
+  text-align: center;
+  color: #000000;
+  width: 175px;
+  background-color: #cccccc;
+  transition: width 0.5s, border-color 0.75s, background-color 0.5s;
+}
+.input:hover {
+  width: 250px;
+  border-color: #49a1b1;
+  background-color: rgb(253, 253, 253);
+}
+.input:focus {
+  width: 250px;
+  border-color: #49a1b1;
+  background-color: rgb(253, 253, 253);
+}
+* {
+  color: #ffffff;
+  background-color: #121212;
+  outline: none;
+  font-size: 20px;
+}
+body {
+  text-align: center;
+}
+.form {
+  display: inline-block;
+}
+.button {
+  background-color: #ffffff;
+  color: #000000;
+}
