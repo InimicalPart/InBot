@@ -115,7 +115,7 @@ function generateQueueEmbed(message, queue, RM) {
 		if (info !== undefined) {
 			const embed = new RM.Discord.MessageEmbed()
 				.setTitle("Song Queue\n")
-				.setThumbnail(message.guild.iconURL())
+				.setThumbnail("https://cdn.discordapp.com/attachments/857343827223117827/860548004187865098/unknown.png")
 				.setColor("GREEN")
 				.setDescription(
 					`**Current Song - [${queue[0].title}](${queue[0].url})**\n\n**Next Up:**\n${info}`

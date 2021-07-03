@@ -38,6 +38,7 @@ const requiredModules = {
 	"cmdSkip": require('./commands/skip/skip.js'),
 	"cmdStop": require('./commands/stop/stop.js'),
 	"cmdPause": require('./commands/pause/pause.js'),
+	"cmdNowplaying": require('./commands/nowplaying/nowplaying'),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),
