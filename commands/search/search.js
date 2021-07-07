@@ -19,7 +19,7 @@ async function runCommand(message, args, RM) {
     const Discord = RM.Discord;
     const client = RM.client;
     const { Util, MessageEmbed } = require('discord.js');
-    const { GOOGLE_API_KEY } = RM.process_env.GAPI
+    const GOOGLE_API_KEY = RM.process_env.GAPI
     const YouTube = require("simple-youtube-api");
     const youtube = new YouTube(GOOGLE_API_KEY);
     const ytdl = require('ytdl-core');
