@@ -98,7 +98,9 @@ client.on('ready', async () => {
 	} else if (config.showUsers == false) {
 		console.log("\n⚠ As showUsers in config is disabled, channel won't be updated. ⚠")
 	}
-	console.log("------------------------\n" + client.user.tag + " is ready!")
+	let edition;
+	if (client.user.id == "859513472973537311") { edition = "DEV" } else { edition = "MAIN" }
+	console.log("------------------------\n" + client.user.tag + " is ready and is running " + edition + " edition!")
 })
 client.on('guildMemberAdd', async () => {
 	if (client.user.id != "859513472973537311" && config.showUsers == true) {
