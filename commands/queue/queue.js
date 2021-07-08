@@ -1,6 +1,9 @@
 const commandInfo = {
-	possibleTriggers: ["queue", "q", "Q", "Queue"],
-	help: "`.queue: lists the songs in the queue....\nAliases: .q",
+	"primaryName": "queue",
+	"possibleTriggers": ["queue", "q"],
+	"help": "Gets the server queue.",
+	"aliases": ["q"],
+	"usage": "[COMMAND]" // [COMMAND] gets replaced with the command and correct prefix later
 };
 
 async function runCommand(message, args, RM) {
@@ -124,17 +127,28 @@ function generateQueueEmbed(message, queue, RM) {
 		return embeds;
 	}
 }
-function commandAlias() {
+function commandTriggers() {
 	return commandInfo.possibleTriggers;
 }
-
+function commandPrim() {
+	return commandInfo.primaryName;
+}
+function commandAliases() {
+	return commandInfo.aliases;
+}
 function commandHelp() {
 	return commandInfo.help;
 }
+function commandUsage() {
+	return commandInfo.usage;
+}
 module.exports = {
 	runCommand,
-	commandAlias,
+	commandTriggers,
 	commandHelp,
-};
+	commandAliases,
+	commandPrim,
+	commandUsage
+}
 
 console.log("[I] QUEUE initialized [I]");

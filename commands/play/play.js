@@ -1,7 +1,9 @@
 const commandInfo = {
-	"name": "play",
+	"primaryName": "play",
 	"possibleTriggers": ["play", "p"],
-	"help": "`.play: plays a song of our choice from youtube\nAliases: .p"
+	"help": "Plays a video from youtube.",
+	"aliases": ["p"],
+	"usage": "[COMMAND] <search string/link>" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
@@ -158,7 +160,7 @@ async function runCommand(message, args, RM) {
 
 
 
-function commandAlias() {
+function commandTriggers() {
 	return commandInfo.possibleTriggers;
 }
 
@@ -167,7 +169,7 @@ function commandHelp() {
 }
 module.exports = {
 	runCommand,
-	commandAlias,
+	commandTriggers,
 	commandHelp
 }
 

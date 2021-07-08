@@ -1,6 +1,9 @@
 const commandInfo = {
+	"primaryName": "config",
 	"possibleTriggers": ["config", "c"],
-	"help": "`.config`: Changes the server config.\nAliases: `.c`"
+	"help": "Allows admins to change the server config.",
+	"aliases": ["c"],
+	"usage": "[COMMAND] <config name> [new value]" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
@@ -117,17 +120,28 @@ async function runCommand(message, args, RM) {
 
 	}
 }
-function commandAlias() {
+function commandTriggers() {
 	return commandInfo.possibleTriggers;
 }
-
+function commandPrim() {
+	return commandInfo.primaryName;
+}
+function commandAliases() {
+	return commandInfo.aliases;
+}
 function commandHelp() {
 	return commandInfo.help;
 }
+function commandUsage() {
+	return commandInfo.usage;
+}
 module.exports = {
 	runCommand,
-	commandAlias,
-	commandHelp
+	commandTriggers,
+	commandHelp,
+	commandAliases,
+	commandPrim,
+	commandUsage
 }
 
 console.log("[I] CONFIG initialized [I]")
@@ -144,13 +158,13 @@ console.log("[I] CONFIG initialized [I]")
 -------------------------------------------------
 
 To get all possible triggers, from index.js call
-"cmd<cmdname>.commandAlias()"
+"cmd<cmdname>.commandTriggers()"
 
 To call the command, from index.js call
 "cmd<cmdname>.runCommand(message, arguments, requiredModules);"
 
 To check if possible triggers has the command call
-"cmd<cmdname>.commandAlias().includes(command)"
+"cmd<cmdname>.commandTriggers().includes(command)"
 
 ------------------[Instruction]------------------
 */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */

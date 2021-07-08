@@ -1,6 +1,9 @@
 const commandInfo = {
+    "primaryName": "motivate",
     "possibleTriggers": ["motivation", "motivate"],
-    "help": "`.motivate <@user>`: sends an inspirational quote\nAliases: `.motivation`"
+    "help": "Sends an inspirational quote.",
+    "aliases": ["motivation"],
+    "usage": "[COMMAND] [user]" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
@@ -32,17 +35,24 @@ async function runCommand(message, args, RM) {
     }
 }
 
-function commandAlias() {
+function commandTriggers() {
     return commandInfo.possibleTriggers;
 }
-
+function commandPrim() {
+    return commandInfo.primaryName;
+}
+function commandAliases() {
+    return commandInfo.aliases;
+}
 function commandHelp() {
     return commandInfo.help;
 }
 module.exports = {
     runCommand,
-    commandAlias,
-    commandHelp
+    commandTriggers,
+    commandHelp,
+    commandAliases,
+    commandPrim
 }
 
 console.log("[I] MOTIVATION initialized [I]")

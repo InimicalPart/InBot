@@ -1,6 +1,9 @@
 const commandInfo = {
+    "primaryName": "unban",
     "possibleTriggers": ["unban"],
-    "help": "`.unban`: pretty self explanatory"
+    "help": "Allows an admin to unban a user",
+    "aliases": [],
+    "usage": "[COMMAND] <user/user id>" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
@@ -68,17 +71,24 @@ async function runCommand(message, args, RM) {
 
 }
 
-function commandAlias() {
+function commandTriggers() {
     return commandInfo.possibleTriggers;
 }
-
+function commandPrim() {
+    return commandInfo.primaryName;
+}
+function commandAliases() {
+    return commandInfo.aliases;
+}
 function commandHelp() {
     return commandInfo.help;
 }
 module.exports = {
     runCommand,
-    commandAlias,
-    commandHelp
+    commandTriggers,
+    commandHelp,
+    commandAliases,
+    commandPrim
 }
 
 console.log("[I] UNBAN initialized [I]")
@@ -100,13 +110,13 @@ console.log("[I] UNBAN initialized [I]")
 -------------------------------------------------
 
 To get all possible triggers, from index.js call
-"cmd<cmdname>.commandAlias()"
+"cmd<cmdname>.commandTriggers()"
 
 To call the command, from index.js call
 "cmd<cmdname>.runCommand(message, arguments, requiredModules);"
 
 To check if possible triggers has the command call
-"cmd<cmdname>.commandAlias().includes(command)"
+"cmd<cmdname>.commandTriggers().includes(command)"
 
 ------------------[Instruction]------------------
 */

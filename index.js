@@ -15,6 +15,7 @@ if (process.env.NotMyToken == null) {
 	console.log("Token is missing, please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPart/TheIIIProject for more information.")
 	process.exit(1)
 }
+
 const client = new Discord.Client();
 const requiredModules = {
 	"cmdTest": require('./commands/test/test.js'),
@@ -61,7 +62,7 @@ client.on('message', async (message) => {
 	if (!["745783548241248286", "301062520679170066", "426826826220961821"].includes(message.author.id) && client.user.id == "859513472973537311") return message.channel.send("This is a DEV edition, where everything is tested. Only bot owners are allowed to use these commands. Please use the main version: <@858108082705006642>")
 	for (let i in requiredModules) {
 		if (i.startsWith("cmd"))
-			if (requiredModules[i].commandAlias().includes(message.content.split(" ")[0].toLowerCase().replace(process.env.prefix, "")))
+			if (requiredModules[i].commandTriggers().includes(message.content.split(" ")[0].toLowerCase().replace(process.env.prefix, "")))
 				runCMD(requiredModules[i], message)
 
 	}

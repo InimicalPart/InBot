@@ -1,6 +1,9 @@
 const commandInfo = {
+	"primaryName": "musictrivia",
 	"possibleTriggers": ["mt", "musictrivia", "ps"],
-	"help": "`.musictrivia` you have 30 seconds to guess either the singer/band or the name of the song: \nAliases: `.mt`, `.ps`, `.musictrivia`"
+	"help": "Starts a music trivia game. You need to guess the song and the artist.",
+	"aliases": ["mt", "ps"],
+	"usage": "[COMMAND] <num songs>" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
@@ -307,17 +310,28 @@ async function runCommand(message, args, RM) {
 }
 
 
-function commandAlias() {
+function commandTriggers() {
 	return commandInfo.possibleTriggers;
 }
-
+function commandPrim() {
+	return commandInfo.primaryName;
+}
+function commandAliases() {
+	return commandInfo.aliases;
+}
 function commandHelp() {
 	return commandInfo.help;
 }
+function commandUsage() {
+	return commandInfo.usage;
+}
 module.exports = {
 	runCommand,
-	commandAlias,
-	commandHelp
+	commandTriggers,
+	commandHelp,
+	commandAliases,
+	commandPrim,
+	commandUsage
 }
 
 console.log("[I] VCSOUNDS initialized [I]")
