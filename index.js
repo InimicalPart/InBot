@@ -8,8 +8,8 @@ global.games = new Map()
 
 
 const Discord = require("discord.js");
-const db = require("quick.db")
 require("discord-reply")
+const config = require("./config.js")
 require("dotenv").config();
 if (process.env.NotMyToken == null) {
 	console.log("Token is missing, please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPart/TheIIIProject for more information.")
@@ -40,11 +40,11 @@ const requiredModules = {
 	"cmdPause": require('./commands/pause/pause.js'),
 	"cmdNowplaying": require('./commands/nowplaying/nowplaying.js'),
 	"cmdSearch": require('./commands/search/search.js'),
+	"cmdConfig": require('./commands/config/config.js'),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),
 	"client": client,
-	"db": db,
 	"submissionChannelID": "858140842798743603",
 	"submissionQueueID": "858356481556611122",
 	"logsID": "858357212828925952",
@@ -70,12 +70,50 @@ async function runCMD(k, message) {
 	if (Discord.version > "12.5.3") message.channel.send("**NOTE:** The discord API has updated. Some commands may not work properly!")
 	k.runCommand(message, message.content.split(" ").slice(1), requiredModules);
 }
-client.on('ready', () => {
+client.on('ready', async () => {
 	if (client.user.id == "859513472973537311") {
 		client.user.setPresence({ activity: { name: `III DEV EDITION`, type: "WATCHING" }, status: 'dnd' })
 	} else {
 		client.user.setPresence({ activity: { name: `III V1`, type: "WATCHING" }, status: 'dnd' })
 	}
+	let users = []
+	const list = client.guilds.cache.get("857017449743777812");
+	list.members.cache.forEach(member => users.push(member.id));
+	if (client.user.id != "859513472973537311" && config.showUsers == true) await list.channels.cache.get("862425213799104512").setName("↦ • Members: " + users.length)
+	const createdAt = list.createdAt;
+	const today = new Date();
+	var DIT = today.getTime() - createdAt.getTime();
+	var days = Math.round(DIT / (1000 * 3600 * 24))
+	var communityDay = new Date("18 August 2021")
+	var DITC = communityDay.getTime() - today.getTime();
+	var daysC = Math.round(DITC / (1000 * 3600 * 24))
+	console.log("------------------------\nThe III Society has " + users.length + " members.\n");
+	console.log("Only " + (7000 - users.length) + " more until we reach the Community requirements!")
+	console.log("Only " + (100 - users.length) + " more until we reach 100 members!")
+	console.log("Only " + (500 - users.length) + " more until we can see Server Metrics!\n")
+	console.log("The III Society was created at " + createdAt.toLocaleDateString() + ". That's " + days + " days ago!")
+	console.log("Only " + daysC + " days until The III Society is old enough to apply to Server Discovery!")
+	if (client.user.id == "859513472973537311") {
+		console.log("\n⚠ As this is a DEV edition, Channels will not be updated to avoid interference with the main edition ⚠")
+	} else if (config.showUsers == false) {
+		console.log("\n⚠ As showUsers in config is disabled, channel won't be updated. ⚠")
+	}
 	console.log("------------------------\n" + client.user.tag + " is ready!")
+})
+client.on('guildMemberAdd', async () => {
+	if (client.user.id != "859513472973537311" && config.showUsers == true) {
+		let users = []
+		const list = client.guilds.cache.get("857017449743777812");
+		list.members.cache.forEach(member => users.push(member.id));
+		await list.channels.cache.get("862425213799104512").setName("↦ • Members: " + users.length)
+	}
+})
+client.on('guildMemberRemove', async () => {
+	if (client.user.id != "859513472973537311" && config.showUsers == true) {
+		let users = []
+		const list = client.guilds.cache.get("857017449743777812");
+		list.members.cache.forEach(member => users.push(member.id));
+		await list.channels.cache.get("862425213799104512").setName("↦ • Members: " + users.length)
+	}
 })
 client.login(process.env.NotMyToken)
