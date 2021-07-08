@@ -1,5 +1,9 @@
 const commandInfo = {
-	"possibleTriggers": ["random", "r"]
+	"primaryName": "random",
+	"possibleTriggers": ["random", "r"],
+	"help": "Gets a random III image",
+	"aliases": ["r"],
+	"usage": "[COMMAND]" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
@@ -16,12 +20,28 @@ async function runCommand(message, args, RM) {
 
 }
 
-function commandAlias() {
+function commandTriggers() {
 	return commandInfo.possibleTriggers;
+}
+function commandPrim() {
+	return commandInfo.primaryName;
+}
+function commandAliases() {
+	return commandInfo.aliases;
+}
+function commandHelp() {
+	return commandInfo.help;
+}
+function commandUsage() {
+	return commandInfo.usage;
 }
 module.exports = {
 	runCommand,
-	commandAlias
+	commandTriggers,
+	commandHelp,
+	commandAliases,
+	commandPrim,
+	commandUsage
 }
 
 console.log("[I] RANDOM initialized [I]")
@@ -40,13 +60,13 @@ console.log("[I] RANDOM initialized [I]")
 -------------------------------------------------
 
 To get all possible triggers, from index.js call
-"cmd<cmdname>.commandAlias()"
+"cmd<cmdname>.commandTriggers()"
 
 To call the command, from index.js call
 "cmd<cmdname>.runCommand(message, arguments, requiredModules);"
 
 To check if possible triggers has the command call
-"cmd<cmdname>.commandAlias().includes(command)"
+"cmd<cmdname>.commandTriggers().includes(command)"
 
 ------------------[Instruction]------------------
 */

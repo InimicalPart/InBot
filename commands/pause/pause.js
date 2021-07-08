@@ -1,6 +1,9 @@
 const commandInfo = {
+  "primaryName": "pause",
   "possibleTriggers": ["pause"],
-  "help": "`.pause`: pauses the current playing song\nAliases: *none*"
+  "help": "Allows you to pause or resume (not really working) the music.",
+  "aliases": [],
+  "usage": "[COMMAND]" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
@@ -21,16 +24,20 @@ async function runCommand(message, args, RM) {
 
   try {
 
-    if (!channel) return message.channel.send('I\'m sorry but you need to be in a voice channel to pause music!');
+    if (!channel) return message.channel.send('You need to be in a voice channel.');
     if (message.guild.me.voice.channel !== message.member.voice.channel) {
-      return message.channel.send("**You Have To Be In The Same Channel With The Bot!**");
+      return message.channel.send("You need to be in the same voice channel as me!");
     };
     if (serverQueue && serverQueue.playing) {
       serverQueue.playing = false;
       serverQueue.connection.dispatcher.pause(true);
-      return message.channel.send('**Paused** ⏸');
+      return message.channel.send('Paused ⏸');
+    } else if (serverQueue && !serverQueue.playing) {
+      serverQueue.playing = true;
+      serverQueue.connection.dispatcher.pause(false);
+      return message.channel.send("Resumed ▶")
     }
-    return message.channel.send(':x: **There is Nothing Playing!**');
+    return message.channel.send(':x: | There is Nothing Playing!');
   } catch {
     serverQueue.connection.dispatcher.end();
     await channel.leave();
@@ -40,17 +47,24 @@ async function runCommand(message, args, RM) {
 
 
 
-function commandAlias() {
+function commandTriggers() {
   return commandInfo.possibleTriggers;
 }
-
+function commandPrim() {
+  return commandInfo.primaryName;
+}
+function commandAliases() {
+  return commandInfo.aliases;
+}
 function commandHelp() {
   return commandInfo.help;
 }
 module.exports = {
   runCommand,
-  commandAlias,
-  commandHelp
+  commandTriggers,
+  commandHelp,
+  commandAliases,
+  commandPrim
 }
 
 console.log("[I] PAUSE initialized [I]")

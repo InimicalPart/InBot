@@ -1,5 +1,9 @@
 const commandInfo = {
-	"possibleTriggers": ["post"]
+	"primaryName": "post",
+	"possibleTriggers": ["post"],
+	"help": "Make an image submission.",
+	"aliases": [],
+	"usage": "[COMMAND]" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
@@ -77,23 +81,39 @@ async function runCommand(message, args, RM) {
 function attachIsImage(msgAttach) {
 	var url = msgAttach.url;
 	//True if this url is a png image.
-	if (url.indexOf("png", url.length - "png".length /*or 3*/ ) !== -1) {
-		return url.indexOf("png", url.length - "png".length /*or 3*/ ) !== -1;
-	} else if (url.indexOf("jpg", url.length - "jpg".length /*or 3*/ ) !== -1) {
-		return url.indexOf("jpg", url.length - "jpg".length /*or 3*/ ) !== -1;
-	} else if (url.indexOf("jpeg", url.length - "jpeg".length /*or 3*/ ) !== -1) {
-		return url.indexOf("jpeg", url.length - "jpeg".length /*or 3*/ ) !== -1;
-	} else if (url.indexOf("webm", url.length - "webm".length /*or 3*/ ) !== -1) {
-		return url.indexOf("webm", url.length - "webm".length /*or 3*/ ) !== -1;
+	if (url.indexOf("png", url.length - "png".length /*or 3*/) !== -1) {
+		return url.indexOf("png", url.length - "png".length /*or 3*/) !== -1;
+	} else if (url.indexOf("jpg", url.length - "jpg".length /*or 3*/) !== -1) {
+		return url.indexOf("jpg", url.length - "jpg".length /*or 3*/) !== -1;
+	} else if (url.indexOf("jpeg", url.length - "jpeg".length /*or 3*/) !== -1) {
+		return url.indexOf("jpeg", url.length - "jpeg".length /*or 3*/) !== -1;
+	} else if (url.indexOf("webm", url.length - "webm".length /*or 3*/) !== -1) {
+		return url.indexOf("webm", url.length - "webm".length /*or 3*/) !== -1;
 	}
 }
 
-function commandAlias() {
+function commandTriggers() {
 	return commandInfo.possibleTriggers;
+}
+function commandPrim() {
+	return commandInfo.primaryName;
+}
+function commandAliases() {
+	return commandInfo.aliases;
+}
+function commandHelp() {
+	return commandInfo.help;
+}
+function commandUsage() {
+	return commandInfo.usage;
 }
 module.exports = {
 	runCommand,
-	commandAlias
+	commandTriggers,
+	commandHelp,
+	commandAliases,
+	commandPrim,
+	commandUsage
 }
 
 console.log("[I] POST initialized [I]")
@@ -112,13 +132,13 @@ console.log("[I] POST initialized [I]")
 -------------------------------------------------
 
 To get all possible triggers, from index.js call
-"cmd<cmdname>.commandAlias()"
+"cmd<cmdname>.commandTriggers()"
 
 To call the command, from index.js call
 "cmd<cmdname>.runCommand(message, arguments, requiredModules);"
 
 To check if possible triggers has the command call
-"cmd<cmdname>.commandAlias().includes(command)"
+"cmd<cmdname>.commandTriggers().includes(command)"
 
 ------------------[Instruction]------------------
 */

@@ -1,30 +1,74 @@
 const commandInfo = {
+	"primaryName": "help",
 	"possibleTriggers": ["help", "h", "?"],
-	"help": "`.help`: uhhh... help helps you get the needed help.\nAliases: `.h`, `.?`"
+	"help": "Help allows you to get information about a command.",
+	"aliases": ["h", "?"],
+	"usage": "[COMMAND] [command]" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
 	for (let i in RM) {
 		if (i.startsWith("cmd")) {
 			let k = RM[i]
-			if (k.commandAlias().includes(args[0])) {
-				message.channel.send(k.commandHelp())
+			if (k.commandTriggers().includes(args[0])) {
+				const prefix = RM.process_env.prefix
+				let aliases;
+				let description;
+				if (k.commandAliases().length < 1) {
+					aliases = "No aliases."
+				} else {
+					aliases = '`' + prefix + k.commandAliases().join("` | `" + prefix) + "`"
+				}
+				if (k.commandHelp() == "") {
+					description = "No description."
+				} else {
+					description = k.commandHelp()
+				}
+				const embed = new RM.Discord.MessageEmbed()
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription("Command: **" + k.commandPrim().toUpperCase() + "**")
+					.addFields({
+						name: "Description",
+						value: description
+					})
+					.addFields({
+						name: "Usage",
+						value: k.commandUsage().replace("[COMMAND]", prefix + args[0])
+					})
+					.addFields({
+						name: "Aliases",
+						value: aliases
+					})
+					.setTimestamp()
+				return message.channel.send(embed)
 			}
 		}
 	}
+	message.channel.send(new RM.Discord.MessageEmbed().setDescription("Command was not found."))
 }
 
-function commandAlias() {
+function commandTriggers() {
 	return commandInfo.possibleTriggers;
 }
-
+function commandPrim() {
+	return commandInfo.primaryName;
+}
+function commandAliases() {
+	return commandInfo.aliases;
+}
 function commandHelp() {
 	return commandInfo.help;
 }
+function commandUsage() {
+	return commandInfo.usage;
+}
 module.exports = {
 	runCommand,
-	commandAlias,
-	commandHelp
+	commandTriggers,
+	commandHelp,
+	commandAliases,
+	commandPrim,
+	commandUsage
 }
 
 console.log("[I] HELP initialized [I]")
@@ -44,13 +88,13 @@ console.log("[I] HELP initialized [I]")
 -------------------------------------------------
 
 To get all possible triggers, from index.js call
-"cmd<cmdname>.commandAlias()"
+"cmd<cmdname>.commandTriggers()"
 
 To call the command, from index.js call
 "cmd<cmdname>.runCommand(message, arguments, requiredModules);"
 
 To check if possible triggers has the command call
-"cmd<cmdname>.commandAlias().includes(command)"
+"cmd<cmdname>.commandTriggers().includes(command)"
 
 ------------------[Instruction]------------------
 */

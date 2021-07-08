@@ -1,6 +1,9 @@
 const commandInfo = {
+	"primaryName": "roast",
 	"possibleTriggers": ["roast", "attack", "diss"],
-	"help": "`.roast`: Roast your friends. +18\nAliases: `.attack`, `.diss`"
+	"help": "Roast your friends.\n⚠ +18 ⚠",
+	"aliases": ["attack", "diss"],
+	"usage": "[COMMAND] <user>" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 function between(lower, upper) {
@@ -62,23 +65,34 @@ async function runCommand(message, args, RM) {
 			});
 
 		} catch (err) {
-			console.error(err);
+			message.channel.send("Error! " + err.message)
 		}
 	}
 
 }
 
-function commandAlias() {
+function commandTriggers() {
 	return commandInfo.possibleTriggers;
 }
-
+function commandPrim() {
+	return commandInfo.primaryName;
+}
+function commandAliases() {
+	return commandInfo.aliases;
+}
 function commandHelp() {
 	return commandInfo.help;
 }
+function commandUsage() {
+	return commandInfo.usage;
+}
 module.exports = {
 	runCommand,
-	commandAlias,
-	commandHelp
+	commandTriggers,
+	commandHelp,
+	commandAliases,
+	commandPrim,
+	commandUsage
 }
 
 console.log("[I] ROAST initialized [I]")
@@ -97,13 +111,13 @@ console.log("[I] ROAST initialized [I]")
 -------------------------------------------------
 
 To get all possible triggers, from index.js call
-"cmd<cmdname>.commandAlias()"
+"cmd<cmdname>.commandTriggers()"
 
 To call the command, from index.js call
 "cmd<cmdname>.runCommand(message, arguments, requiredModules);"
 
 To check if possible triggers has the command call
-"cmd<cmdname>.commandAlias().includes(command)"
+"cmd<cmdname>.commandTriggers().includes(command)"
 
 ------------------[Instruction]------------------
 */

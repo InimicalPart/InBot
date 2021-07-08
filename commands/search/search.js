@@ -1,6 +1,9 @@
 const commandInfo = {
+    "primaryName": "search",
     "possibleTriggers": ["search"],
-    "help": "`.search: looks up music on youtube\nAliases: *none*"
+    "help": "Gets top 10 search results from youtube.",
+    "aliases": [],
+    "usage": "[COMMAND] <search string>" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
@@ -173,17 +176,24 @@ async function runCommand(message, args, RM) {
 
 
 
-function commandAlias() {
+function commandTriggers() {
     return commandInfo.possibleTriggers;
 }
-
+function commandPrim() {
+    return commandInfo.primaryName;
+}
+function commandAliases() {
+    return commandInfo.aliases;
+}
 function commandHelp() {
     return commandInfo.help;
 }
 module.exports = {
     runCommand,
-    commandAlias,
-    commandHelp
+    commandTriggers,
+    commandHelp,
+    commandAliases,
+    commandPrim
 }
 
 console.log("[I] SEARCH initialized [I]")

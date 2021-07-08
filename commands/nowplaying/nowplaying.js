@@ -1,35 +1,33 @@
 const commandInfo = {
+    "primaryName": "nowplaying",
     "possibleTriggers": ["np", "nowplaying"],
-    "help": "`.nowplaying`: Shows current song playing\nAliases: `.np`"
-  }
-  
-  async function runCommand(message, args, RM) {
+    "help": "Shows current song playing",
+    "aliases": ["np"],
+    "usage": "[COMMAND]" // [COMMAND] gets replaced with the command and correct prefix later
+}
+
+async function runCommand(message, args, RM) {
     const queue2 = global.queue2;
     const queue3 = global.queue3;
     const queue = global.queue;
     const games = global.games
-  
+
     let ops = {
-      queue2: queue2,
-      queue: queue,
-      queue3: queue3,
-      games: games
+        queue2: queue2,
+        queue: queue,
+        queue3: queue3,
+        games: games
     }
-  
+
     const { MessageEmbed } = RM.Discord;
-  
+
     try {
-        const { channel } = message.member.voice;
-        if (!channel) return message.channel.send('I\'m sorry but you need to be in a voice channel to see the current song playing!');
-        if (message.guild.me.voice.channel !== message.member.voice.channel) {
-            return message.channel.send("**You Have To Be In The Same Channel With The Bot!**");
-        };
         const serverQueue = ops.queue.get(message.guild.id);
-        if (!serverQueue) return message.channel.send('❌ **Nothing playing in this server**');
+        if (!serverQueue) return message.channel.send('❌ | Nothing playing in this server!');
         let video = serverQueue.songs[0];
         let description;
         if (video.duration == 'Live Stream') {
-            description = 'Live Stream';
+            description = '[LIVE]';
         } else {
             description = playbackBar(video);
         }
@@ -72,7 +70,7 @@ const commandInfo = {
             const playBackBarLocation = Math.round(
                 (passedTimeInMS / totalDurationInMS) * 10
             );
-            
+
             let playBack = '';
             for (let i = 1; i < 21; i++) {
                 if (playBackBarLocation == 0) {
@@ -92,10 +90,8 @@ const commandInfo = {
         }
 
         function formatDuration(durationObj) {
-            const duration = `${durationObj.hours ? (durationObj.hours + ':') : ''}${
-                durationObj.minutes ? durationObj.minutes : '00'
-                }:${
-                (durationObj.seconds < 10)
+            const duration = `${durationObj.hours ? (durationObj.hours + ':') : ''}${durationObj.minutes ? durationObj.minutes : '00'
+                }:${(durationObj.seconds < 10)
                     ? ('0' + durationObj.seconds)
                     : (durationObj.seconds
                         ? durationObj.seconds
@@ -103,25 +99,32 @@ const commandInfo = {
                 }`;
             return duration;
         }
-    } catch {
-        message.channel.send("**Something Went Wrong!**")
+    } catch (e) {
+        return message.channel.send("Error! " + e.message)
     }
-  
-  }
-  
-  
-  
-  function commandAlias() {
+
+}
+
+
+
+function commandTriggers() {
     return commandInfo.possibleTriggers;
-  }
-  
-  function commandHelp() {
+}
+function commandPrim() {
+    return commandInfo.primaryName;
+}
+function commandAliases() {
+    return commandInfo.aliases;
+}
+function commandHelp() {
     return commandInfo.help;
-  }
-  module.exports = {
+}
+module.exports = {
     runCommand,
-    commandAlias,
-    commandHelp
-  }
-  
-  console.log("[I] NOWPLAYING initialized [I]")
+    commandTriggers,
+    commandHelp,
+    commandAliases,
+    commandPrim
+}
+
+console.log("[I] NOWPLAYING initialized [I]")

@@ -1,6 +1,9 @@
 const commandInfo = {
+    "primaryName": "calculate",
     "possibleTriggers": ["calc", "math", "calculate"],
-    "help": ".calculate: will calculate a math equation that you input eg. \`.calc 2+2\`\nAliases: .calc, .math"
+    "help": "Calculate a math equation that you input.",
+    "aliases": ["math", "calc"],
+    "usage": "[COMMAND] <math equation>" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
@@ -30,17 +33,24 @@ async function runCommand(message, args, RM) {
 
 }
 
-function commandAlias() {
+function commandTriggers() {
     return commandInfo.possibleTriggers;
 }
-
+function commandPrim() {
+    return commandInfo.primaryName;
+}
+function commandAliases() {
+    return commandInfo.aliases;
+}
 function commandHelp() {
     return commandInfo.help;
 }
 module.exports = {
     runCommand,
-    commandAlias,
-    commandHelp
+    commandTriggers,
+    commandHelp,
+    commandAliases,
+    commandPrim
 }
 
 console.log("[I] CALCULATE initialized [I]")
