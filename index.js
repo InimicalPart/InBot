@@ -78,8 +78,9 @@ client.on('ready', async () => {
 	}
 	let users = []
 	const list = client.guilds.cache.get("857017449743777812");
-	list.members.cache.forEach(member => users.push(member.id));
-	if (client.user.id != "859513472973537311" && config.showUsers == true) await list.channels.cache.get("862425213799104512").setName("↦ • Members: " + users.length)
+	let count = 0;
+	list.members.cache.forEach(member => { users.push(member.id); count++ });
+	if (client.user.id != "859513472973537311" && config.showUsers == true) await list.channels.cache.get("862425213799104512").setName("↦ • Members: " + count)
 	const createdAt = list.createdAt;
 	const today = new Date();
 	var DIT = today.getTime() - createdAt.getTime();
@@ -87,10 +88,10 @@ client.on('ready', async () => {
 	var communityDay = new Date("18 August 2021")
 	var DITC = communityDay.getTime() - today.getTime();
 	var daysC = Math.round(DITC / (1000 * 3600 * 24))
-	console.log("------------------------\nThe III Society has " + users.length + " members.\n");
-	console.log("Only " + (7000 - users.length) + " more until we reach the Community requirements!")
-	console.log("Only " + (100 - users.length) + " more until we reach 100 members!")
-	console.log("Only " + (500 - users.length) + " more until we can see Server Metrics!\n")
+	console.log("------------------------\nThe III Society has " + count + " members.\n");
+	console.log("Only " + (7000 - count) + " more until we reach the Community requirements!")
+	console.log("Only " + (100 - count) + " more until we reach 100 members!")
+	console.log("Only " + (500 - count) + " more until we can see Server Metrics!\n")
 	console.log("The III Society was created at " + createdAt.toLocaleDateString() + ". That's " + days + " days ago!")
 	console.log("Only " + daysC + " days until The III Society is old enough to apply to Server Discovery!")
 	if (client.user.id == "859513472973537311") {
@@ -104,16 +105,18 @@ client.on('guildMemberAdd', async () => {
 	if (client.user.id != "859513472973537311" && config.showUsers == true) {
 		let users = []
 		const list = client.guilds.cache.get("857017449743777812");
-		list.members.cache.forEach(member => users.push(member.id));
-		await list.channels.cache.get("862425213799104512").setName("↦ • Members: " + users.length)
+		let count = 0;
+		list.members.cache.forEach(member => { users.push(member.id); count++ });
+		await list.channels.cache.get("862425213799104512").setName("↦ • Members: " + count)
 	}
 })
 client.on('guildMemberRemove', async () => {
 	if (client.user.id != "859513472973537311" && config.showUsers == true) {
 		let users = []
 		const list = client.guilds.cache.get("857017449743777812");
-		list.members.cache.forEach(member => users.push(member.id));
-		await list.channels.cache.get("862425213799104512").setName("↦ • Members: " + users.length)
+		let count = 0;
+		list.members.cache.forEach(member => { users.push(member.id); count++ });
+		await list.channels.cache.get("862425213799104512").setName("↦ • Members: " + count)
 	}
 })
 client.login(process.env.NotMyToken)
