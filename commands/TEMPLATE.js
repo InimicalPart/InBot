@@ -36,7 +36,7 @@ module.exports = {
 	commandUsage
 }
 
-console.log("[I] <command name> initialized [I]")
+
 /* */
 /* */
 /* */ /* */ /* */ /* */ /* */ /* */

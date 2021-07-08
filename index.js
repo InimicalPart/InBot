@@ -17,31 +17,38 @@ if (process.env.NotMyToken == null) {
 }
 
 const client = new Discord.Client();
+//!--------------------------
+const fun = require('./commands/fun/index.js')
+const iiisub = require('./commands/iii-submission/index.js')
+const misc = require('./commands/misc/index.js')
+const moderation = require('./commands/moderation/index.js')
+const music = require('./commands/music/index.js')
+//!--------------------------
 const requiredModules = {
-	"cmdTest": require('./commands/test/test.js'),
-	"cmdPost": require('./commands/post/post.js'),
-	"cmdApprove": require('./commands/approve/approve.js'),
-	"cmdDeny": require('./commands/deny/deny.js'),
-	"cmdRemove": require('./commands/remove/remove.js'),
-	"cmdEmbed": require('./commands/embed/embed.js'),
-	"cmdRestore": require('./commands/restore/restore.js'),
-	"cmdRandom": require('./commands/random/random.js'),
-	"cmdHelp": require('./commands/help/help.js'),
-	"cmdCalculate": require('./commands/calculate/calculate.js'),
-	"cmdRoast": require('./commands/roast/roast.js'),
-	"cmdMotivation": require('./commands/motivation/motivation.js'),
-	"cmdQueue": require('./commands/queue/queue.js'),
-	"cmdPlay": require('./commands/play/play.js'),
-	"cmdVCSounds": require('./commands/vcsounds/vcsounds.js'),
-	"cmdSkip": require('./commands/skip/skip.js'),
-	"cmdStop": require('./commands/stop/stop.js'),
-	"cmdBan": require('./commands/ban/ban.js'),
-	"cmdModlog": require('./commands/modlog/modlog.js'),
-	"cmdUnban": require('./commands/unban/unban.js'),
-	"cmdPause": require('./commands/pause/pause.js'),
-	"cmdNowplaying": require('./commands/nowplaying/nowplaying.js'),
-	"cmdSearch": require('./commands/search/search.js'),
-	"cmdConfig": require('./commands/config/config.js'),
+	"cmdTest": misc.test(),
+	"cmdPost": iiisub.post(),
+	"cmdApprove": iiisub.approve(),
+	"cmdDeny": iiisub.deny(),
+	"cmdRemove": iiisub.remove(),
+	"cmdEmbed": misc.embed(),
+	"cmdRestore": iiisub.restore(),
+	"cmdRandom": misc.random(),
+	"cmdHelp": misc.help(),
+	"cmdCalculate": misc.calculate(),
+	"cmdRoast": fun.roast(),
+	"cmdMotivation": fun.motivation(),
+	"cmdQueue": music.queue(),
+	"cmdPlay": music.play(),
+	"cmdVCSounds": music.vcsounds(),
+	"cmdSkip": music.skip(),
+	"cmdStop": music.stop(),
+	"cmdBan": moderation.ban(),
+	"cmdModlog": moderation.modlog(),
+	"cmdUnban": moderation.unban(),
+	"cmdPause": music.pause(),
+	"cmdNowplaying": music.nowplaying(),
+	"cmdSearch": music.search(),
+	"cmdConfig": moderation.config(),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),
