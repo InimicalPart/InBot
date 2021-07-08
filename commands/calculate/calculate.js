@@ -45,12 +45,16 @@ function commandAliases() {
 function commandHelp() {
     return commandInfo.help;
 }
+function commandUsage() {
+    return commandInfo.usage;
+}
 module.exports = {
     runCommand,
     commandTriggers,
     commandHelp,
     commandAliases,
-    commandPrim
+    commandPrim,
+    commandUsage
 }
 
 console.log("[I] CALCULATE initialized [I]")
