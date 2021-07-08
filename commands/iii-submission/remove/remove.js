@@ -1,14 +1,34 @@
 const commandInfo = {
-	"primaryName": "<command name>",
-	"possibleTriggers": ["command1", "alias2", "alias3"],
-	"help": "eats your cake!",
-	"aliases": ["alias2", "alias3"],
-	"usage": "[COMMAND] <required> [optional]" // [COMMAND] gets replaced with the command and correct prefix later
+	"primaryName": "remove",
+	"possibleTriggers": ["remove", "delete"],
+	"help": "Allows admins to remove an approved image submission.",
+	"aliases": ["delete"],
+	"usage": "[COMMAND] <MSG ID>" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
 
-	// cmd stuff here
+	const client = RM.client;
+	const submissionChannelID = RM.submissionChannelID;
+	const botOwners = RM.botOwners;
+	if (!botOwners.includes(message.author.id)) return;
+
+	if (!args[0]) {
+		return message.channel.send("Please provide the message to remove")
+	}
+	const submissionChannel = client.channels.cache.get(submissionChannelID);
+	const messageID = args[0];
+	let m = await submissionChannel.messages.fetch(messageID).catch((err) => {
+		return message.channel.send("Invalid Message ID.")
+	})
+	if (m == undefined) {
+		return message.channel.send("Invalid Message ID.");
+	}
+
+
+	//return message.channel.send(messageID + "s content is: " + m.content)
+	m.delete().then(() => message.channel.send("Successfully deleted " + messageID)).catch((err) => message.channel.send("ERROR: " + err));
+
 
 }
 

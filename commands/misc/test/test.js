@@ -1,15 +1,22 @@
 const commandInfo = {
-	"primaryName": "<command name>",
-	"possibleTriggers": ["command1", "alias2", "alias3"],
-	"help": "eats your cake!",
-	"aliases": ["alias2", "alias3"],
-	"usage": "[COMMAND] <required> [optional]" // [COMMAND] gets replaced with the command and correct prefix later
+	"primaryName": "ping",
+	"possibleTriggers": ["ping", "test"],
+	"help": "Checks the latency of the bot and the discord API and the bot uptime.",
+	"aliases": ["test"],
+	"usage": "[COMMAND]" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
 
-	// cmd stuff here
-
+	const Discord = RM.Discord;
+	const client = RM.client;
+	const prettyMilliseconds = RM.pretty_ms;
+	message.channel.send("Pinging...  :ping_pong:").then((m) => {
+		const embed = new Discord.MessageEmbed()
+			.setColor("RANDOM")
+			.setDescription(`<:bitelip:857350270513971221> | Latency is \`${m.createdTimestamp - message.createdTimestamp}ms\` and API Latency is \`${Math.round(client.ws.ping)}ms\`, Bot has been up for: \`${prettyMilliseconds(client.uptime)}\``)
+		m.edit(embed);
+	})
 }
 
 function commandTriggers() {

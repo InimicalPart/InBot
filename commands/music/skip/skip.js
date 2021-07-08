@@ -1,14 +1,33 @@
 const commandInfo = {
-	"primaryName": "<command name>",
-	"possibleTriggers": ["command1", "alias2", "alias3"],
-	"help": "eats your cake!",
-	"aliases": ["alias2", "alias3"],
-	"usage": "[COMMAND] <required> [optional]" // [COMMAND] gets replaced with the command and correct prefix later
+	"primaryName": "skip",
+	"possibleTriggers": ["skip", "s"],
+	"help": "Skips a song.",
+	"aliases": ["s"],
+	"usage": "[COMMAND]" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
+	const queue2 = global.queue2;
+	const queue3 = global.queue3;
+	const queue = global.queue;
+	const games = global.games
 
-	// cmd stuff here
+	let ops = {
+		queue2: queue2,
+		queue: queue,
+		queue3: queue3,
+		games: games,
+	};
+
+	const serverQueue = ops.queue.get(message.guild.id);
+	if (!serverQueue) return message.channel.send(":x: | There is nothing playing!")
+
+	const { channel } = message.member.voice;
+	if (!channel) return message.channel.send('You need to be in a voice channel!');
+	const embed = new RM.Discord.MessageEmbed()
+		.setDescription(`Skipping: [${serverQueue.songs[0].title}](${serverQueue.songs[0].url})`)
+	message.channel.send(embed)
+	serverQueue.connection.dispatcher.end()
 
 }
 
@@ -38,8 +57,7 @@ module.exports = {
 
 
 /* */
-/* */
-/* */ /* */ /* */ /* */ /* */ /* */
+/* */ /* */ /* */ /* */ /* */ /* */ /* */
 /*
 ------------------[Instruction]------------------
 
@@ -62,5 +80,4 @@ To check if possible triggers has the command call
 
 ------------------[Instruction]------------------
 */
-/* */
-/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */

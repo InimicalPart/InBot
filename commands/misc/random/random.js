@@ -1,14 +1,22 @@
 const commandInfo = {
-	"primaryName": "<command name>",
-	"possibleTriggers": ["command1", "alias2", "alias3"],
-	"help": "eats your cake!",
-	"aliases": ["alias2", "alias3"],
-	"usage": "[COMMAND] <required> [optional]" // [COMMAND] gets replaced with the command and correct prefix later
+	"primaryName": "random",
+	"possibleTriggers": ["random", "r"],
+	"help": "Gets a random III image",
+	"aliases": ["r"],
+	"usage": "[COMMAND]" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
-
-	// cmd stuff here
+	const Discord = RM.Discord;
+	const setImageLinks = RM.setImageLinks
+	const randomLink = setImageLinks[Math.floor(Math.random() * setImageLinks.length)]
+	const embed = new Discord.MessageEmbed()
+		.setTitle("Random III Image")
+		.setColor("RANDOM")
+		.setImage(randomLink)
+		.setTimestamp(new Date())
+		.setFooter(`Requested by ${message.author.tag}`, message.author.avatarURL())
+	message.channel.send(embed);
 
 }
 

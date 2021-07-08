@@ -1,15 +1,50 @@
 const commandInfo = {
-	"primaryName": "<command name>",
-	"possibleTriggers": ["command1", "alias2", "alias3"],
-	"help": "eats your cake!",
-	"aliases": ["alias2", "alias3"],
-	"usage": "[COMMAND] <required> [optional]" // [COMMAND] gets replaced with the command and correct prefix later
+	"primaryName": "help",
+	"possibleTriggers": ["help", "h", "?"],
+	"help": "Help allows you to get information about a command.",
+	"aliases": ["h", "?"],
+	"usage": "[COMMAND] [command]" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
 async function runCommand(message, args, RM) {
-
-	// cmd stuff here
-
+	for (let i in RM) {
+		if (i.startsWith("cmd")) {
+			let k = RM[i]
+			if (k.commandTriggers().includes(args[0])) {
+				const prefix = RM.process_env.prefix
+				let aliases;
+				let description;
+				if (k.commandAliases().length < 1) {
+					aliases = "No aliases."
+				} else {
+					aliases = '`' + prefix + k.commandAliases().join("` | `" + prefix) + "`"
+				}
+				if (k.commandHelp() == "") {
+					description = "No description."
+				} else {
+					description = k.commandHelp()
+				}
+				const embed = new RM.Discord.MessageEmbed()
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription("Command: **" + k.commandPrim().toUpperCase() + "**")
+					.addFields({
+						name: "Description",
+						value: description
+					})
+					.addFields({
+						name: "Usage",
+						value: k.commandUsage().replace("[COMMAND]", prefix + args[0])
+					})
+					.addFields({
+						name: "Aliases",
+						value: aliases
+					})
+					.setTimestamp()
+				return message.channel.send(embed)
+			}
+		}
+	}
+	message.channel.send(new RM.Discord.MessageEmbed().setDescription("Command was not found."))
 }
 
 function commandTriggers() {
@@ -35,6 +70,7 @@ module.exports = {
 	commandPrim,
 	commandUsage
 }
+
 
 
 /* */
