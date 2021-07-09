@@ -20,7 +20,7 @@ module.exports = {
 	approve,
 	deny,
 	post,
-	remove,
+	//remove,
 	restore
 }
 
