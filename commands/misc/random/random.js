@@ -3,7 +3,8 @@ const commandInfo = {
 	"possibleTriggers": ["random", "r"],
 	"help": "Gets a random III image",
 	"aliases": ["r"],
-	"usage": "[COMMAND]" // [COMMAND] gets replaced with the command and correct prefix later
+	"usage": "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
+	"category": "misc"
 }
 
 async function runCommand(message, args, RM) {
@@ -35,13 +36,17 @@ function commandHelp() {
 function commandUsage() {
 	return commandInfo.usage;
 }
+function commandCategory() {
+	return commandInfo.category;
+}
 module.exports = {
 	runCommand,
 	commandTriggers,
 	commandHelp,
 	commandAliases,
 	commandPrim,
-	commandUsage
+	commandUsage,
+	commandCategory
 }
 
 

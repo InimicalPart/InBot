@@ -3,7 +3,8 @@ const commandInfo = {
 	"possibleTriggers": ["mt", "musictrivia", "ps"],
 	"help": "Starts a music trivia game. You need to guess the song and the artist.",
 	"aliases": ["mt", "ps"],
-	"usage": "[COMMAND] <num songs>" // [COMMAND] gets replaced with the command and correct prefix later
+	"usage": "[COMMAND] <num songs>", // [COMMAND] gets replaced with the command and correct prefix later
+	"category": "music"
 }
 
 async function runCommand(message, args, RM) {
@@ -325,12 +326,16 @@ function commandHelp() {
 function commandUsage() {
 	return commandInfo.usage;
 }
+function commandCategory() {
+	return commandInfo.category;
+}
 module.exports = {
 	runCommand,
 	commandTriggers,
 	commandHelp,
 	commandAliases,
 	commandPrim,
-	commandUsage
+	commandUsage,
+	commandCategory
 }
 

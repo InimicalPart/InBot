@@ -3,7 +3,8 @@ const commandInfo = {
 	"possibleTriggers": ["play", "p"],
 	"help": "Plays a video from youtube.",
 	"aliases": ["p"],
-	"usage": "[COMMAND] <search string/link>" // [COMMAND] gets replaced with the command and correct prefix later
+	"usage": "[COMMAND] <search string/link>", // [COMMAND] gets replaced with the command and correct prefix later
+	"category": "music"
 }
 
 async function runCommand(message, args, RM) {
@@ -163,13 +164,28 @@ async function runCommand(message, args, RM) {
 function commandTriggers() {
 	return commandInfo.possibleTriggers;
 }
-
+function commandPrim() {
+	return commandInfo.primaryName;
+}
+function commandAliases() {
+	return commandInfo.aliases;
+}
 function commandHelp() {
 	return commandInfo.help;
+}
+function commandUsage() {
+	return commandInfo.usage;
+}
+function commandCategory() {
+	return commandInfo.category;
 }
 module.exports = {
 	runCommand,
 	commandTriggers,
-	commandHelp
+	commandHelp,
+	commandAliases,
+	commandPrim,
+	commandUsage,
+	commandCategory
 }
 

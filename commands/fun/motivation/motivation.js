@@ -3,7 +3,8 @@ const commandInfo = {
     "possibleTriggers": ["motivation", "motivate"],
     "help": "Sends an inspirational quote.",
     "aliases": ["motivation"],
-    "usage": "[COMMAND] [user]" // [COMMAND] gets replaced with the command and correct prefix later
+    "usage": "[COMMAND] [user]", // [COMMAND] gets replaced with the command and correct prefix later
+    "category": "fun"
 }
 
 async function runCommand(message, args, RM) {
@@ -50,12 +51,16 @@ function commandHelp() {
 function commandUsage() {
     return commandInfo.usage;
 }
+function commandCategory() {
+    return commandInfo.category;
+}
 module.exports = {
     runCommand,
     commandTriggers,
     commandHelp,
     commandAliases,
     commandPrim,
-    commandUsage
+    commandUsage,
+    commandCategory
 }
 

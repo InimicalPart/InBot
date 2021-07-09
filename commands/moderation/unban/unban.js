@@ -3,7 +3,8 @@ const commandInfo = {
     "possibleTriggers": ["unban"],
     "help": "Allows an admin to unban a user",
     "aliases": [],
-    "usage": "[COMMAND] <user/user id>" // [COMMAND] gets replaced with the command and correct prefix later
+    "usage": "[COMMAND] <user/user id>", // [COMMAND] gets replaced with the command and correct prefix later
+    "category": "mod"
 }
 
 async function runCommand(message, args, RM) {
@@ -86,13 +87,17 @@ function commandHelp() {
 function commandUsage() {
     return commandInfo.usage;
 }
+function commandCategory() {
+    return commandInfo.category;
+}
 module.exports = {
     runCommand,
     commandTriggers,
     commandHelp,
     commandAliases,
     commandPrim,
-    commandUsage
+    commandUsage,
+    commandCategory
 }
 
 

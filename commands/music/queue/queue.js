@@ -1,9 +1,10 @@
 const commandInfo = {
-	"primaryName": "queue",
-	"possibleTriggers": ["queue", "q"],
-	"help": "Gets the server queue.",
-	"aliases": ["q"],
-	"usage": "[COMMAND]" // [COMMAND] gets replaced with the command and correct prefix later
+	"primaryName": "queue", // This is the command name used by help.js (gets uppercased).
+	"possibleTriggers": ["queue", "q"], // These are all commands that will trigger this command.
+	"help": "Gets the server queue.", // This is the general description pf the command.
+	"aliases": ["q"], // These are command aliases that help.js will use
+	"usage": "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
+	"category": "music"
 };
 
 async function runCommand(message, args, RM) {
@@ -24,16 +25,16 @@ async function runCommand(message, args, RM) {
 	const { channel } = message.member.voice;
 	if (!channel)
 		return message.channel.send(
-			"I'm sorry but you need to be in a voice channel to see queue!"
+			"You need to be in a voice channel to see queue!"
 		);
 	if (message.guild.me.voice.channel !== message.member.voice.channel) {
 		return message.channel.send(
-			"**You Have To Be In The Same Channel With The Bot!**"
+			"You need to be in the same voice channel as me!"
 		);
 	}
 	const serverQueue = ops.queue.get(message.guild.id);
 	if (!serverQueue)
-		return message.channel.send("❌ **Nothing playing in this server**");
+		return message.channel.send("❌ | Nothing playing in this server");
 	try {
 		let currentPage = 0;
 		const embeds = generateQueueEmbed(message, serverQueue.songs, RM);
@@ -78,7 +79,7 @@ async function runCommand(message, args, RM) {
 					message.channel.send(e.message)
 					serverQueue.connection.dispatcher.end();
 					return message.channel.send(
-						"**Missing Permissions - [ADD_REACTIONS, MANAGE_MESSAGES]!**"
+						"Missing Permissions - **[ADD_REACTIONS, MANAGE_MESSAGES]**!"
 					);
 				}
 			});
@@ -92,7 +93,7 @@ async function runCommand(message, args, RM) {
 		console.log(e)
 		serverQueue.connection.dispatcher.end();
 		return message.channel.send(
-			"**Missing Permissions - [ADD_REACTIONS, MANAGE_MESSAGES]!**"
+			"Missing Permissions - **[ADD_REACTIONS, MANAGE_MESSAGES]**!"
 		);
 	}
 }
@@ -142,13 +143,15 @@ function commandHelp() {
 function commandUsage() {
 	return commandInfo.usage;
 }
+function commandCategory() {
+	return commandInfo.category;
+}
 module.exports = {
 	runCommand,
 	commandTriggers,
 	commandHelp,
 	commandAliases,
 	commandPrim,
-	commandUsage
+	commandUsage,
+	commandCategory
 }
-
-	;

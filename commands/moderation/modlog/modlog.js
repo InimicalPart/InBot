@@ -3,7 +3,8 @@ const commandInfo = {
     "possibleTriggers": ['setm', 'sm', 'smc'],
     "help": "Allows admins to set a channel where the bot can send moderation logs.",
     "aliases": ["sm", "smc"],
-    "usage": "[COMMAND] <channel>" // [COMMAND] gets replaced with the command and correct prefix later
+    "usage": "[COMMAND] <channel>", // [COMMAND] gets replaced with the command and correct prefix later
+    "category": "mod"
 }
 
 async function runCommand(message, args, RM) {
@@ -61,13 +62,17 @@ function commandHelp() {
 function commandUsage() {
     return commandInfo.usage;
 }
+function commandCategory() {
+    return commandInfo.category;
+}
 module.exports = {
     runCommand,
     commandTriggers,
     commandHelp,
     commandAliases,
     commandPrim,
-    commandUsage
+    commandUsage,
+    commandCategory
 }
 
 

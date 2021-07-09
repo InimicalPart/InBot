@@ -3,7 +3,8 @@ const commandInfo = {
 	"possibleTriggers": ["roast", "attack", "diss"],
 	"help": "Roast your friends.\n⚠ +18 ⚠",
 	"aliases": ["attack", "diss"],
-	"usage": "[COMMAND] <user>" // [COMMAND] gets replaced with the command and correct prefix later
+	"usage": "[COMMAND] <user>", // [COMMAND] gets replaced with the command and correct prefix later
+	"category": "fun"
 }
 
 function between(lower, upper) {
@@ -86,13 +87,17 @@ function commandHelp() {
 function commandUsage() {
 	return commandInfo.usage;
 }
+function commandCategory() {
+	return commandInfo.category;
+}
 module.exports = {
 	runCommand,
 	commandTriggers,
 	commandHelp,
 	commandAliases,
 	commandPrim,
-	commandUsage
+	commandUsage,
+	commandCategory
 }
 
 
