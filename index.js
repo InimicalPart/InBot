@@ -29,7 +29,7 @@ const requiredModules = {
 	"cmdPost": iiisub.post(),
 	"cmdApprove": iiisub.approve(),
 	"cmdDeny": iiisub.deny(),
-	"cmdRemove": iiisub.remove(),
+	//"cmdRemove": iiisub.remove(),
 	"cmdEmbed": misc.embed(),
 	"cmdRestore": iiisub.restore(),
 	"cmdRandom": misc.random(),
