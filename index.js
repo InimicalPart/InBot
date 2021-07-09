@@ -52,6 +52,7 @@ const requiredModules = {
 	"cmdNowplaying": music.nowplaying(),
 	"cmdSearch": music.search(),
 	"cmdConfig": moderation.config(),
+	"cmdLyrics": music.lyrics(),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),

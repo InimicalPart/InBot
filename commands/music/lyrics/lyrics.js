@@ -1,14 +1,14 @@
 const commandInfo = {
     primaryName: "lyrics",
     possibleTriggers: ["ly", "lyrics", "lyric"],
-    help: "shows the lyrics to the current song / or a song",
+    help: "Shows the lyrics to the current song / or a song",
     aliases: ["ly", "lyric"],
     usage: "[COMMAND] <name of a song>", // [COMMAND] gets replaced with the command and correct prefix later
     category: "music",
 };
 
 async function runCommand(message, args, RM) {
-  
+
     const queue2 = global.queue2;
     const queue3 = global.queue3;
     const queue = global.queue;
