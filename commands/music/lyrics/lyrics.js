@@ -1,13 +1,16 @@
 const commandInfo = {
     primaryName: "lyrics",
     possibleTriggers: ["ly", "lyrics", "lyric"],
-    help: "Shows the lyrics to the current song / or a song",
+    help: "shows the lyrics to the current song / or a song",
     aliases: ["ly", "lyric"],
     usage: "[COMMAND] <name of a song>", // [COMMAND] gets replaced with the command and correct prefix later
     category: "music",
 };
 
 async function runCommand(message, args, RM) {
+    const { MessageEmbed } = RM.Discord;
+    const Genius = require("genius-lyrics");
+    const GClient = new Genius.Client();
 
     const queue2 = global.queue2;
     const queue3 = global.queue3;
@@ -20,11 +23,6 @@ async function runCommand(message, args, RM) {
         queue3: queue3,
         games: games,
     };
-
-    const { MessageEmbed } = RM.Discord;
-    const GENIUS_API_KEY = RM.process_env.GENIUSAPI;
-    const fetch = RM.fetch;
-    const cheerio = RM.cheerio
 
     const { channel } = message.member.voice;
     if (!channel)
@@ -42,96 +40,26 @@ async function runCommand(message, args, RM) {
 
     let songName = serverQueue.songs[0].title;
     songName = songName.replace(
-        /lyrics|lyric|lyrical|official music video|\(official music video\)|audio|official|official video|official video hd|official hd video|offical video music|\(offical video music\)|extended|hd|(\[.+\])/gi,
+        /lyrics|lyric|lyrical|official music video|\(official music video\)|audio|official|official video|official video hd|official hd video|official video music|\(official video music\)|extended|hd|(\[.+\])/gi,
         ""
     );
 
-    const sentMessage = await message.channel.send("👀 Searching for lyrics 👀");
+    const sentMessage = await message.channel.send(
+        "👀 Searching for lyrics... 👀"
+    );
 
-    let url = `https://api.genius.com/search?q=${encodeURI(songName)}`;
-
-    const headers = {
-        Authorization: `Bearer ${GENIUS_API_KEY}`,
-    };
     try {
-        let body = await fetch(url, {
-            headers,
-        });
-        let result = await body.json();
-        const songID = result.response.hits[0].result.id;
-        if (!songID) return message.channel.send("not available");
+        const searches = await GClient.songs.search(songName);
+        const firstSong = searches[0];
+        const lyrics = await firstSong.lyrics();
 
-        url = `https://api.genius.com/songs/${songID}`;
-        body = await fetch(url, {
-            headers,
-        });
-        result = await body.json();
-
-        const song = result.response.song;
-
-        let lyrics = await getLyrics(song.url);
-        lyrics = lyrics.replace(/(\[.+\])/g, "");
-        if (lyrics.length > 8192) {
-            return sentMessage.edit("**Not Availble**");
-        }
-        if (lyrics.length < 2048) {
-            const lyricsEmbed = new MessageEmbed()
-                .setColor("GREEN")
-                .setDescription(lyrics.trim());
-            return sentMessage.edit("", lyricsEmbed);
-        }
-        if (lyrics.length > 2048) {
-            const firstLyricsEmbed = new MessageEmbed()
-                .setColor("GREEN")
-                .setDescription(lyrics.slice(0, 2048));
-            const secondLyricsEmbed = new MessageEmbed()
-                .setColor("GREEN")
-                .setDescription(lyrics.slice(2048, 4096));
-            sentMessage.edit("", firstLyricsEmbed);
-            message.channel.send("", secondLyricsEmbed);
-        }
-        if (lyrics.length > 4096 && lyrics.length < 6144) {
-            const firstLyricsEmbed2 = new MessageEmbed()
-                .setColor("GREEN")
-                .setDescription(lyrics.slice(0, 2048));
-            const secondLyricsEmbed2 = new MessageEmbed()
-                .setColor("GREEN")
-                .setDescription(lyrics.slice(2048, 4096));
-            const thirdLyricsEmbed = new MessageEmbed()
-                .setColor("GREEN")
-                .setDescription(lyrics.slice(4096, lyrics.length));
-            await sentMessage.edit("", firstLyricsEmbed2);
-            message.channel.send(secondLyricsEmbed2);
-            message.channel.send(thirdLyricsEmbed);
-            return;
-        }
-        if (lyrics.length > 6144 && lyrics.length < 8192) {
-            const firstLyricsEmbed3 = new MessageEmbed()
-                .setColor("GREEN")
-                .setDescription(lyrics.slice(0, 2048));
-            const secondLyricsEmbed3 = new MessageEmbed()
-                .setColor("GREEN")
-                .setDescription(lyrics.slice(2048, 4096));
-            const thirdLyricsEmbed2 = new MessageEmbed()
-                .setColor("GREEN")
-                .setDescription(lyrics.slice(4096, 6144));
-            const fourthLyricsEmbed = new MessageEmbed()
-                .setColor("GREEN")
-                .setDescription(lyrics.slice(6144, lyrics.length));
-            await sentMessage.edit("", firstLyricsEmbed3);
-            message.channel.send(secondLyricsEmbed3);
-            message.channel.send(thirdLyricsEmbed2);
-            message.channel.send(fourthLyricsEmbed);
-        }
+        const lyembed = new MessageEmbed()
+            .setColor("GREEN")
+            .setTitle(`Lyrics for ${songName}`)
+            .setDescription(lyrics);
+        await sentMessage.edit("", lyembed);
     } catch (e) {
-        return sentMessage.edit("**Not Available**");
-    }
-
-    async function getLyrics(url) {
-        const response = await fetch(url);
-        const text = await response.text();
-        const $ = cheerio.load(text);
-        return $(".lyrics").text().trim();
+        message.channel.send(`:x: Error when fetching lyrics - ${e}`);
     }
 }
 
