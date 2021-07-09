@@ -9,8 +9,6 @@ global.games = new Map();
 const Discord = require("discord.js");
 require("discord-reply");
 const config = require("./config.js");
-const fetch = require("node-fetch");
-const cheerio = require("cheerio");
 require("dotenv").config();
 if (process.env.NotMyToken == null) {
   console.log(
@@ -54,8 +52,6 @@ const requiredModules = {
   cmdConfig: moderation.config(),
   cmdLyrics: music.lyrics(),
   Discord: Discord,
-  fetch: fetch,
-  cheerio: cheerio,
   process_env: process.env,
   pretty_ms: require("pretty-ms"),
   client: client,
