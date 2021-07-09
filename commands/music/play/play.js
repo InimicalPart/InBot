@@ -23,10 +23,11 @@ async function runCommand(message, args, RM) {
 
 		const Discord = RM.Discord;
 		const client = RM.client;
+		const apis = [RM.process_env.GAPI, RM.process_env.GAPI2, RM.process_env.GAPI3, RM.process_env.GAPI4]
+		const GOOGLE_API_KEY = Math.floor(Math.random() * apis.length)
 		const { Util } = require('discord.js');
-		const GOOGLE_API_KEY = RM.process_env.GAPI
 		const YouTube = require("simple-youtube-api");
-		const youtube = new YouTube(GOOGLE_API_KEY);
+		let youtube = new YouTube(GOOGLE_API_KEY);
 		const ytdl = require('ytdl-core');
 
 		if (!args[0]) return message.channel.send("**Please Enter Song Name Or Link!**")
@@ -46,8 +47,11 @@ async function runCommand(message, args, RM) {
 			const videos = await playlist.getVideos();
 
 			for (const video of Object.values(videos)) {
-				const video2 = await youtube.getVideoByID(video.id);
-				await handleVideo(video2, message, channel, true);
+				try {
+					const video2 = await youtube.getVideoByID(video.id);
+					console.log(video2.shortURL)
+					await handleVideo(video2, message, channel, true);
+				} catch (e) { console.log(e) }
 			}
 			return message.channel.send(`**Playlist \`${playlist.title}\` has been added to the queue!**`);
 		} else {
