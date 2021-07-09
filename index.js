@@ -48,6 +48,7 @@ const requiredModules = {
 	"cmdUnban": moderation.unban(),
 	"cmdPause": music.pause(),
 	"cmdNowplaying": music.nowplaying(),
+  "cmdLyrics": music.lyrics(),
 	"cmdSearch": music.search(),
 	"cmdConfig": moderation.config(),
 	"cmdLyrics": music.lyrics(),
