@@ -3,7 +3,8 @@ const commandInfo = {
     "possibleTriggers": ["calc", "math", "calculate"],
     "help": "Calculate a math equation that you input.",
     "aliases": ["math", "calc"],
-    "usage": "[COMMAND] <math equation>" // [COMMAND] gets replaced with the command and correct prefix later
+    "usage": "[COMMAND] <math equation>", // [COMMAND] gets replaced with the command and correct prefix later
+    "category": "misc"
 }
 
 async function runCommand(message, args, RM) {
@@ -48,12 +49,16 @@ function commandHelp() {
 function commandUsage() {
     return commandInfo.usage;
 }
+function commandCategory() {
+    return commandInfo.category;
+}
 module.exports = {
     runCommand,
     commandTriggers,
     commandHelp,
     commandAliases,
     commandPrim,
-    commandUsage
+    commandUsage,
+    commandCategory
 }
 

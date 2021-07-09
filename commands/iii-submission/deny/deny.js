@@ -3,7 +3,8 @@ const commandInfo = {
 	"possibleTriggers": ["deny", "decline"],
 	"help": "Allows admins to deny an image submission",
 	"aliases": ["decline"],
-	"usage": "[COMMAND] <MSG ID> <reason>" // [COMMAND] gets replaced with the command and correct prefix later
+	"usage": "[COMMAND] <MSG ID> <reason>", // [COMMAND] gets replaced with the command and correct prefix later
+	"category": "iiisub"
 }
 
 async function runCommand(message, args, RM) {
@@ -95,13 +96,17 @@ function commandHelp() {
 function commandUsage() {
 	return commandInfo.usage;
 }
+function commandCategory() {
+	return commandInfo.category;
+}
 module.exports = {
 	runCommand,
 	commandTriggers,
 	commandHelp,
 	commandAliases,
 	commandPrim,
-	commandUsage
+	commandUsage,
+	commandCategory
 }
 
 

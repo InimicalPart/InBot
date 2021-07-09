@@ -3,7 +3,8 @@ const commandInfo = {
   "possibleTriggers": ["pause"],
   "help": "Allows you to pause or resume (not really working) the music.",
   "aliases": [],
-  "usage": "[COMMAND]" // [COMMAND] gets replaced with the command and correct prefix later
+  "usage": "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
+  "category": "music"
 }
 
 async function runCommand(message, args, RM) {
@@ -34,7 +35,7 @@ async function runCommand(message, args, RM) {
       return message.channel.send('Paused ⏸');
     } else if (serverQueue && !serverQueue.playing) {
       serverQueue.playing = true;
-      serverQueue.connection.dispatcher.pause(false);
+      serverQueue.connection.dispatcher.resume();
       return message.channel.send("Resumed ▶")
     }
     return message.channel.send(':x: | There is Nothing Playing!');
@@ -59,11 +60,19 @@ function commandAliases() {
 function commandHelp() {
   return commandInfo.help;
 }
+function commandUsage() {
+  return commandInfo.usage;
+}
+function commandCategory() {
+  return commandInfo.category;
+}
 module.exports = {
   runCommand,
   commandTriggers,
   commandHelp,
   commandAliases,
-  commandPrim
+  commandPrim,
+  commandUsage,
+  commandCategory
 }
 

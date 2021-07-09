@@ -1,8 +1,8 @@
 const commandInfo = {
-	"primaryName": "<command name>",
-	"possibleTriggers": ["command1", "alias2", "alias3"],
-	"help": "eats your cake!",
-	"aliases": ["alias2", "alias3"],
+	"primaryName": "<command name>", // This is the command name used by help.js (gets uppercased).
+	"possibleTriggers": ["command1", "alias2", "alias3"], // These are all commands that will trigger this command.
+	"help": "eats your cake!", // This is the general description pf the command.
+	"aliases": ["alias2", "alias3"], // These are command aliases that help.js will use
 	"usage": "[COMMAND] <required> [optional]" // [COMMAND] gets replaced with the command and correct prefix later
 }
 
@@ -27,13 +27,17 @@ function commandHelp() {
 function commandUsage() {
 	return commandInfo.usage;
 }
+function commandCategory() {
+	return commandInfo.category;
+}
 module.exports = {
 	runCommand,
 	commandTriggers,
 	commandHelp,
 	commandAliases,
 	commandPrim,
-	commandUsage
+	commandUsage,
+	commandCategory
 }
 
 
