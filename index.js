@@ -9,8 +9,6 @@ global.games = new Map();
 const Discord = require("discord.js");
 require("discord-reply");
 const config = require("./config.js");
-const fetch = require("node-fetch");
-const cheerio = require("cheerio");
 require("dotenv").config();
 if (process.env.NotMyToken == null) {
 	console.log(
