@@ -22,7 +22,7 @@ async function runCommand(message, args, RM) {
     };
 
     const { MessageEmbed } = RM.Discord;
-    const { GENIUS_API_KEY } = RM.process_env.GENIUSAPI;
+    const GENIUS_API_KEY = RM.process_env.GENIUSAPI;
     const fetch = RM.fetch;
     const cheerio = RM.cheerio
 
