@@ -1,6 +1,6 @@
 <h1 align="center">The III Project</h1>
 
-<p style="text-align: center;">                          <img alt="Discord" src="https://img.shields.io/discord/857017449743777812?logo=discord&style=flat-square"> <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/TheIIISociety?color=brightgreen&label=%40TheIIISociety&logo=twitter&style=flat-square"> <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/InimicalPart/TheIIIProject?style=flat-square"> <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/InimicalPart/TheIIIProject?style=flat-square"> <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/InimicalPart/TheIIIProject?style=flat-square"></p>
+<p align="center" style="text-align: center;">                          <img alt="Discord" src="https://img.shields.io/discord/857017449743777812?logo=discord&style=flat-square"> <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/TheIIISociety?color=brightgreen&label=%40TheIIISociety&logo=twitter&style=flat-square"> <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/InimicalPart/TheIIIProject?style=flat-square"> <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/InimicalPart/TheIIIProject?style=flat-square"> <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/InimicalPart/TheIIIProject?style=flat-square"></p>
 
 <br/><h2 align="center"><u><b>Information</b></u></h2>
 
@@ -13,25 +13,4 @@ This bot was created to simplify spreading information and get users to be able 
 <h3 align="center">
 Main Founders: <b>lethal.</b> & <b>ray.</b><br>
 Developer: <b>InimicalPart</b></b><br>
-
-<br>
-Boosters:<br>
-<b>InimicalPart</b><br>
-<b>lethal.</b><br>
-<b>ray.</b><br>
-<b>BroMad</b><br>
-<b>graphite black</b><br>
-<b>ImmadBro</b><br>
-<b>IniForAdmin</b><br> <!-- I totally agree -->
-<b>JustinisCrxcked</b><br>
-<b>lynx</b><br>
-<b>mrthersite</b><br>
-<b>No Problem</b><br>
-<b>nopr</b><br>
-<b>somethingman</b><br>
-<b>TheBoostEnder, InimicalPart FTW</b><br>
-<b>The_Unkown_SkIIIs</b><br>
-and<br>
-<b>vase liner</b><br>
-
 </h3>
