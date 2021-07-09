@@ -67,7 +67,7 @@ async function runCommand(message, args, RM) {
                     .setFooter(message.member.displayName, message.author.avatarURL())
                     .setDescription(`
                     __**Song selection:**__\n
-                    ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
+                    ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n').replace(new RegExp('&#39;', "g"), "'")}
                     \nPlease provide a value to select one of the search results ranging from 1-10.
                                     `)
                     .setTimestamp();
