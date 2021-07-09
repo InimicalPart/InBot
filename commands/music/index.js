@@ -22,6 +22,10 @@ function stop() {
 function vcsounds() {
 	return require('./vcsounds/vcsounds.js')
 }
+function lyrics() {
+	return require('./lyrics/lyrics.js')
+}
+
 
 
 module.exports = {
@@ -32,7 +36,8 @@ module.exports = {
 	search,
 	skip,
 	stop,
-	vcsounds
+	vcsounds,
+	lyrics
 }
 
 console.log("[I] Category MUSIC loaded")

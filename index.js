@@ -4,25 +4,28 @@
 global.queue2 = new Map();
 global.queue3 = new Map();
 global.queue = new Map();
-global.games = new Map()
-
+global.games = new Map();
 
 const Discord = require("discord.js");
-require("discord-reply")
-const config = require("./config.js")
+require("discord-reply");
+const config = require("./config.js");
+const fetch = require("node-fetch");
+const cheerio = require("cheerio");
 require("dotenv").config();
 if (process.env.NotMyToken == null) {
-	console.log("Token is missing, please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPart/TheIIIProject for more information.")
-	process.exit(1)
+	console.log(
+		"Token is missing, please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPart/TheIIIProject for more information."
+	);
+	process.exit(1);
 }
 
 const client = new Discord.Client();
 //!--------------------------
-const fun = require('./commands/fun/index.js')
-const iiisub = require('./commands/iii-submission/index.js')
-const misc = require('./commands/misc/index.js')
-const moderation = require('./commands/moderation/index.js')
-const music = require('./commands/music/index.js')
+const fun = require("./commands/fun/index.js");
+const iiisub = require("./commands/iii-submission/index.js");
+const misc = require("./commands/misc/index.js");
+const moderation = require("./commands/moderation/index.js");
+const music = require("./commands/music/index.js");
 //!--------------------------
 const requiredModules = {
 	"cmdTest": misc.test(),
@@ -76,56 +79,114 @@ client.on('message', async (message) => {
 	}
 })
 async function runCMD(k, message) {
-	if (Discord.version > "12.5.3") message.channel.send("**NOTE:** The discord API has updated. Some commands may not work properly!")
+	if (Discord.version > "12.5.3")
+		message.channel.send(
+			"**NOTE:** The discord API has updated. Some commands may not work properly!"
+		);
 	k.runCommand(message, message.content.split(" ").slice(1), requiredModules);
 }
-client.on('ready', async () => {
-	console.log("[I] Logged in! [I]")
+client.on("ready", async () => {
+	console.log("[I] Logged in! [I]");
 	if (client.user.id == "859513472973537311") {
-		client.user.setPresence({ activity: { name: `III DEV EDITION`, type: "WATCHING" }, status: 'dnd' })
+		client.user.setPresence({
+			activity: {
+				name: `III DEV EDITION`,
+				type: "WATCHING",
+			},
+			status: "dnd",
+		});
 	} else {
-		client.user.setPresence({ activity: { name: `III V1`, type: "WATCHING" }, status: 'dnd' })
+		client.user.setPresence({
+			activity: {
+				name: `III V1`,
+				type: "WATCHING",
+			},
+			status: "dnd",
+		});
 	}
-	let users = []
+	let users = [];
 	const list = client.guilds.cache.get("857017449743777812");
-	list.members.cache.forEach(member => users.push(member.id));
-	if (client.user.id != "859513472973537311" && config.showUsers == true) await list.channels.cache.get("862425213799104512").setName("↦ • Members: " + users.length)
+	list.members.cache.forEach((member) => users.push(member.id));
+	if (client.user.id != "859513472973537311" && config.showUsers == true)
+		await list.channels.cache
+			.get("862425213799104512")
+			.setName("↦ • Members: " + users.length);
 	const createdAt = list.createdAt;
 	const today = new Date();
 	var DIT = today.getTime() - createdAt.getTime();
-	var days = Math.round(DIT / (1000 * 3600 * 24))
-	var communityDay = new Date("18 August 2021")
+	var days = Math.round(DIT / (1000 * 3600 * 24));
+	var communityDay = new Date("18 August 2021");
 	var DITC = communityDay.getTime() - today.getTime();
-	var daysC = Math.round(DITC / (1000 * 3600 * 24))
-	console.log("------------------------\nThe III Society has " + users.length + " members.\n");
-	console.log("Only " + (7000 - users.length) + " more until we reach the Community requirements!")
-	console.log("Only " + (100 - users.length) + " more until we reach 100 members!")
-	console.log("Only " + (500 - users.length) + " more until we can see Server Metrics!\n")
-	console.log("The III Society was created at " + createdAt.toLocaleDateString() + ". That's " + days + " days ago!")
-	console.log("Only " + daysC + " days until The III Society is old enough to apply to Server Discovery!")
+	var daysC = Math.round(DITC / (1000 * 3600 * 24));
+	console.log(
+		"------------------------\nThe III Society has " +
+		users.length +
+		" members.\n"
+	);
+	console.log(
+		"Only " +
+		(7000 - users.length) +
+		" more until we reach the Community requirements!"
+	);
+	console.log(
+		"Only " + (100 - users.length) + " more until we reach 100 members!"
+	);
+	console.log(
+		"Only " + (500 - users.length) + " more until we can see Server Metrics!\n"
+	);
+	console.log(
+		"The III Society was created at " +
+		createdAt.toLocaleDateString() +
+		". That's " +
+		days +
+		" days ago!"
+	);
+	console.log(
+		"Only " +
+		daysC +
+		" days until The III Society is old enough to apply to Server Discovery!"
+	);
 	if (client.user.id == "859513472973537311") {
-		console.log("\n⚠ As this is a DEV edition, Channels will not be updated to avoid interference with the main edition. ⚠")
+		console.log(
+			"\n⚠ As this is a DEV edition, Channels will not be updated to avoid interference with the main edition. ⚠"
+		);
 	} else if (config.showUsers == false) {
-		console.log("\n⚠ As showUsers in config is disabled, channel won't be updated. ⚠")
+		console.log(
+			"\n⚠ As showUsers in config is disabled, channel won't be updated. ⚠"
+		);
 	}
 	let edition;
-	if (client.user.id == "859513472973537311") { edition = "DEV" } else { edition = "MAIN" }
-	console.log("------------------------\n" + client.user.tag + " is ready and is running " + edition + " edition!")
-})
-client.on('guildMemberAdd', async () => {
-	if (client.user.id != "859513472973537311" && config.showUsers == true) {
-		let users = []
-		const list = client.guilds.cache.get("857017449743777812");
-		list.members.cache.forEach(member => users.push(member.id));
-		await list.channels.cache.get("862425213799104512").setName("↦ • Members: " + users.length)
+	if (client.user.id == "859513472973537311") {
+		edition = "DEV";
+	} else {
+		edition = "MAIN";
 	}
-})
-client.on('guildMemberRemove', async () => {
+	console.log(
+		"------------------------\n" +
+		client.user.tag +
+		" is ready and is running " +
+		edition +
+		" edition!"
+	);
+});
+client.on("guildMemberAdd", async () => {
 	if (client.user.id != "859513472973537311" && config.showUsers == true) {
-		let users = []
+		let users = [];
 		const list = client.guilds.cache.get("857017449743777812");
-		list.members.cache.forEach(member => users.push(member.id));
-		await list.channels.cache.get("862425213799104512").setName("↦ • Members: " + users.length)
+		list.members.cache.forEach((member) => users.push(member.id));
+		await list.channels.cache
+			.get("862425213799104512")
+			.setName("↦ • Members: " + users.length);
 	}
-})
-client.login(process.env.NotMyToken)
+});
+client.on("guildMemberRemove", async () => {
+	if (client.user.id != "859513472973537311" && config.showUsers == true) {
+		let users = [];
+		const list = client.guilds.cache.get("857017449743777812");
+		list.members.cache.forEach((member) => users.push(member.id));
+		await list.channels.cache
+			.get("862425213799104512")
+			.setName("↦ • Members: " + users.length);
+	}
+});
+client.login(process.env.NotMyToken);
