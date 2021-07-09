@@ -124,8 +124,7 @@ async function runCommand(message, args, RM) {
             message.channel.send(fourthLyricsEmbed);
         }
     } catch (e) {
-        // return sentMessage.edit("**Not Available**");
-        return message.channel.send(e);
+        return sentMessage.edit("**Not Available**");
     }
 
     async function getLyrics(url) {
