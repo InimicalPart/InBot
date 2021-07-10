@@ -23,11 +23,10 @@ async function runCommand(message, args, RM) {
 
 		const Discord = RM.Discord;
 		const client = RM.client;
-		const apis = [RM.process_env.GAPI, RM.process_env.GAPI2, RM.process_env.GAPI3, RM.process_env.GAPI4]
-		const GOOGLE_API_KEY = Math.floor(Math.random() * apis.length)
+        const apis = [RM.process_env.GAPI, RM.process_env.GAPI2, RM.process_env.GAPI3, RM.process_env.GAPI4]
 		const { Util } = require('discord.js');
 		const YouTube = require("simple-youtube-api");
-		let youtube = new YouTube(GOOGLE_API_KEY);
+		let youtube = new YouTube(apis[Math.floor(Math.random() * apis.length)]);
 		const ytdl = require('ytdl-core');
 
 		if (!args[0]) return message.channel.send("**Please Enter Song Name Or Link!**")
