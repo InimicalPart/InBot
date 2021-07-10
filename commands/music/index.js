@@ -25,7 +25,9 @@ function vcsounds() {
 function lyrics() {
 	return require('./lyrics/lyrics.js')
 }
-
+function remove() {
+	return require('./remove/remove.js')
+}
 
 
 module.exports = {
@@ -37,7 +39,8 @@ module.exports = {
 	skip,
 	stop,
 	vcsounds,
-	lyrics
+	lyrics,
+    remove
 }
 
 console.log("[I] Category MUSIC loaded")
