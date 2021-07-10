@@ -1,5 +1,5 @@
 .env
 .history/
-node_modules/
+node_modules/   
 ./json.sqlite
 .vscode/
