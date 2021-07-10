@@ -10,7 +10,7 @@ const commandInfo = {
 async function runCommand(message, args, RM) {
     const Discord = RM.Discord;
     const client = RM.client;
-    const jsonQuotes = require('../../resources/motivational.json')
+    const jsonQuotes = require('../../../resources/motivational.json')
 
     let member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args.join(' ').toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args.join(' ').toLocaleLowerCase()) || message.member;
 
