@@ -33,12 +33,23 @@ async function runCommand(message, args, RM) {
       "You need to be in the same voice channel as me!"
     );
   }
-  if (!serverQueue || serverQueue.length < 1) {
+  if (!serverQueue || serverQueue.songs.length < 2) {
     return message.channel.send(":x: | The queue is empty!");
+  }
+  if (!args[0]) {
+    return message.channel.send("Which song do you want to remove? (queue num)")
   } else {
-    serverQueue.forEach(function (item, key, mapObj) {
-      message.channel.send(key.toString(), ":", " ", item.toString() + "<br />");
-    });
+    if (!Number(args[0])) return message.channel.send(":x: | The argument is not a number!")
+    if (args[0] < 1 || args[0] > serverQueue.songs.length - 1) return message.channel.send(":x: | Incorrect number!")
+    const title = serverQueue.songs[args[0]].title
+    const url = serverQueue.songs[args[0]].url
+    const embed = new Discord.MessageEmbed()
+      .setDescription(`Removed [${title}](${url})`)
+      .setTimestamp()
+      .setFooter(message.author.username, message.author.avatarURL())
+
+    serverQueue.songs.splice(args[0], 1)
+    message.channel.send(embed)
   }
 }
 
