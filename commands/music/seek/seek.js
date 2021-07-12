@@ -33,6 +33,7 @@ async function runCommand(message, args, RM) {
 		const hms = msToTime(Number(ms))
 		message.channel.send("Song seeked to: `" + hms + "`")
 	} else {
+		const queuee = serverQueue.songs[0]
 		const ms = args[0]
 		if (ms > queuee.time) return message.channel.send("You seek argument is longer than the song!")
 		global.seekMS = ms;
