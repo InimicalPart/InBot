@@ -3,7 +3,7 @@ const commandInfo = {
 	"possibleTriggers": ["seek"], // These are all commands that will trigger this command.
 	"help": "Changes position in the song", // This is the general description pf the command.
 	"aliases": [], // These are command aliases that help.js will use
-	"usage": "[COMMAND] <milliseconds>", // [COMMAND] gets replaced with the command and correct prefix later
+	"usage": "[COMMAND] <xx:xx/ms>", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "music"
 }
 
@@ -29,6 +29,13 @@ async function runCommand(message, args, RM) {
 		const ms = hmsToSecondsOnly(args[0])
 		if (ms > queuee.time) return message.channel.send("You seek argument is longer than the song!")
 		global.seekMS = ms * 1000;
+		serverQueue.connection.play(require("ytdl-core")(queuee.url, { highWaterMark: 1 << 20, quality: "highestaudio" }), { seek: ms })
+		const hms = msToTime(Number(ms))
+		message.channel.send("Song seeked to: `" + hms + "`")
+	} else {
+		const ms = args[0]
+		if (ms > queuee.time) return message.channel.send("You seek argument is longer than the song!")
+		global.seekMS = ms;
 		serverQueue.connection.play(require("ytdl-core")(queuee.url, { highWaterMark: 1 << 20, quality: "highestaudio" }), { seek: ms })
 		const hms = msToTime(Number(ms))
 		message.channel.send("Song seeked to: `" + hms + "`")
