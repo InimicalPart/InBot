@@ -43,7 +43,7 @@ async function runCommand(message, args, RM) {
         return;
 
         function playbackBar(video) {
-            const passedTimeInMS = serverQueue.connection.dispatcher.streamTime;
+            const passedTimeInMS = serverQueue.connection.dispatcher.streamTime + global.seekMS;
             const passedTimeInMSObj = {
                 seconds: Math.floor((passedTimeInMS / 1000) % 60),
                 minutes: Math.floor((passedTimeInMS / (1000 * 60)) % 60),

@@ -23,7 +23,7 @@ async function runCommand(message, args, RM) {
 
 		const Discord = RM.Discord;
 		const client = RM.client;
-        const apis = [RM.process_env.GAPI, RM.process_env.GAPI2, RM.process_env.GAPI3, RM.process_env.GAPI4]
+		const apis = [RM.process_env.GAPI, RM.process_env.GAPI2, RM.process_env.GAPI3, RM.process_env.GAPI4]
 		const { Util } = require('discord.js');
 		const YouTube = require("simple-youtube-api");
 		let youtube = new YouTube(apis[Math.floor(Math.random() * apis.length)]);
@@ -138,6 +138,7 @@ async function runCommand(message, args, RM) {
 			}
 			const dispatcher = queue.connection.play(ytdl(song.url, { highWaterMark: 1 << 20, quality: "highestaudio" }))
 				.on('finish', () => {
+					global.seekMS = 0;
 					if (queue.loop) {
 						queue.songs.push(queue.songs.shift());
 						return play(queue.songs[0]);

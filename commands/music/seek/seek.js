@@ -1,17 +1,18 @@
 const commandInfo = {
-	"primaryName": "skip",
-	"possibleTriggers": ["skip", "s"],
-	"help": "Skips a song.",
-	"aliases": ["s"],
-	"usage": "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
+	"primaryName": "seek", // This is the command name used by help.js (gets uppercased).
+	"possibleTriggers": ["seek"], // These are all commands that will trigger this command.
+	"help": "Changes position in the song", // This is the general description pf the command.
+	"aliases": [], // These are command aliases that help.js will use
+	"usage": "[COMMAND] <milliseconds>", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "music"
 }
 
 async function runCommand(message, args, RM) {
+
 	const queue2 = global.queue2;
 	const queue3 = global.queue3;
 	const queue = global.queue;
-	const games = global.games
+	const games = global.games;
 
 	let ops = {
 		queue2: queue2,
@@ -19,20 +20,49 @@ async function runCommand(message, args, RM) {
 		queue3: queue3,
 		games: games,
 	};
-
 	const serverQueue = ops.queue.get(message.guild.id);
-	if (!serverQueue) return message.channel.send(":x: | There is nothing playing!")
 
-	const { channel } = message.member.voice;
-	if (!channel) return message.channel.send('You need to be in a voice channel!');
-	const embed = new RM.Discord.MessageEmbed()
-		.setDescription(`Skipping: [${serverQueue.songs[0].title}](${serverQueue.songs[0].url})`)
-	message.channel.send(embed)
-	global.seekMS = 0;
-	serverQueue.connection.dispatcher.end()
 
+	if (!args[0]) return message.channel.send("Please provide a number!")
+	if (args[0].includes(":")) {
+		const queuee = serverQueue.songs[0]
+		const ms = hmsToSecondsOnly(args[0])
+		if (ms > queuee.time) return message.channel.send("You seek argument is longer than the song!")
+		global.seekMS = ms * 1000;
+		serverQueue.connection.play(require("ytdl-core")(queuee.url, { highWaterMark: 1 << 20, quality: "highestaudio" }), { seek: ms })
+		const hms = msToTime(Number(ms))
+		message.channel.send("Song seeked to: `" + hms + "`")
+	}
+	//
 }
+function hmsToSecondsOnly(str) {
+	var p = str.split(':'),
+		s = 0, m = 1;
 
+	while (p.length > 0) {
+		s += m * parseInt(p.pop(), 10);
+		m *= 60;
+	}
+
+	return s;
+}
+function msToTime(s) {
+	s = s * 1000
+	// Pad to 2 or 3 digits, default is 2
+	function pad(n, z) {
+		z = z || 2;
+		return ('00' + n).slice(-z);
+	}
+
+	var ms = s % 1000;
+	s = (s - ms) / 1000;
+	var secs = s % 60;
+	s = (s - secs) / 60;
+	var mins = s % 60;
+	var hrs = (s - mins) / 60;
+
+	return pad(hrs) + ':' + pad(mins) + ':' + pad(secs)
+}
 function commandTriggers() {
 	return commandInfo.possibleTriggers;
 }
@@ -63,7 +93,8 @@ module.exports = {
 
 
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/* */
+/* */ /* */ /* */ /* */ /* */ /* */
 /*
 ------------------[Instruction]------------------
 
@@ -86,4 +117,5 @@ To check if possible triggers has the command call
 
 ------------------[Instruction]------------------
 */
-/* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
+/* */
+/* */ /* */ /* */ /* */ /* */ /* */ /* */
