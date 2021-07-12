@@ -23,7 +23,7 @@ async function runCommand(message, args, RM) {
 
 		const Discord = RM.Discord;
 		const client = RM.client;
-		const apis = [RM.process_env.GAPI, RM.process_env.GAPI2, RM.process_env.GAPI3, RM.process_env.GAPI4]
+		const apis = [RM.process_env.GAPI, RM.process_env.GAPI2, RM.process_env.GAPI3, RM.process_env.GAPI4, RM.process_env.GAPI5, RM.process_env.GAPI6, RM.process_env.GAPI7, RM.process_env.GAPI8, RM.process_env.GAPI9, RM.process_env.GAPI10]
 		const { Util } = require('discord.js');
 		const YouTube = require("simple-youtube-api");
 		let youtube = new YouTube(apis[Math.floor(Math.random() * apis.length)]);
