@@ -5,6 +5,7 @@ global.queue2 = new Map();
 global.queue3 = new Map();
 global.queue = new Map();
 global.games = new Map();
+global.seekMS = 0;
 
 const Discord = require("discord.js");
 require("discord-reply");
@@ -48,10 +49,11 @@ const requiredModules = {
 	"cmdUnban": moderation.unban(),
 	"cmdPause": music.pause(),
 	"cmdNowplaying": music.nowplaying(),
-  "cmdLyrics": music.lyrics(),
+	"cmdLyrics": music.lyrics(),
 	"cmdSearch": music.search(),
 	"cmdConfig": moderation.config(),
 	"cmdLyrics": music.lyrics(),
+	"cmdSeek": music.seek(),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),

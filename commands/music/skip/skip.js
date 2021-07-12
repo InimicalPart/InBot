@@ -28,6 +28,7 @@ async function runCommand(message, args, RM) {
 	const embed = new RM.Discord.MessageEmbed()
 		.setDescription(`Skipping: [${serverQueue.songs[0].title}](${serverQueue.songs[0].url})`)
 	message.channel.send(embed)
+	global.seekMS = 0;
 	serverQueue.connection.dispatcher.end()
 
 }
