@@ -23,5 +23,4 @@ module.exports = {
 	random,
 	test
 }
-
 console.log("[I] Category MISC loaded")
