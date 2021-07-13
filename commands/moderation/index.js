@@ -18,5 +18,4 @@ module.exports = {
 	modlog,
 	unban
 }
-
 console.log("[I] Category MODERATION loaded")

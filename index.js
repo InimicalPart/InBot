@@ -54,6 +54,7 @@ const requiredModules = {
 	"cmdConfig": moderation.config(),
 	"cmdLyrics": music.lyrics(),
 	"cmdSeek": music.seek(),
+	"cmdShuffle": music.shuffle(),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),

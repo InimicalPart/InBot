@@ -31,6 +31,9 @@ function remove() {
 function seek() {
 	return require('./seek/seek.js')
 }
+function shuffle() {
+	return require('./shuffle/shuffle.js')
+}
 
 module.exports = {
 	nowplaying,
@@ -43,7 +46,7 @@ module.exports = {
 	vcsounds,
 	lyrics,
 	remove,
-	seek
+	seek,
+	shuffle
 }
-
 console.log("[I] Category MUSIC loaded")
