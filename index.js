@@ -6,6 +6,7 @@ global.queue3 = new Map();
 global.queue = new Map();
 global.games = new Map();
 global.seekMS = 0;
+global.commandsUsed = 0;
 
 const Discord = require("discord.js");
 require("discord-reply");
@@ -55,6 +56,7 @@ const requiredModules = {
 	"cmdLyrics": music.lyrics(),
 	"cmdSeek": music.seek(),
 	"cmdShuffle": music.shuffle(),
+	"cmdStats": misc.stats(),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),
@@ -86,6 +88,7 @@ async function runCMD(k, message) {
 		message.channel.send(
 			"**NOTE:** The discord API has updated. Some commands may not work properly!"
 		);
+	global.commandsUsed++
 	k.runCommand(message, message.content.split(" ").slice(1), requiredModules);
 }
 client.on("ready", async () => {
