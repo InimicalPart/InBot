@@ -12,7 +12,9 @@ async function runCommand(message, args, RM) {
 	const Discord = RM.Discord;
 	const client = RM.client;
 	const prettyMilliseconds = RM.pretty_ms;
-	message.channel.send("Pinging...  :ping_pong:").then((m) => {
+	const pinging = new RM.Discord.MessageEmbed()
+		.setDescription("Pinging...  :ping_pong:")
+	message.channel.send(pinging).then((m) => {
 		const embed = new Discord.MessageEmbed()
 			.setColor("RANDOM")
 			.setDescription(`<:bitelip:857350270513971221> | Latency is \`${m.createdTimestamp - message.createdTimestamp}ms\` and API Latency is \`${Math.round(client.ws.ping)}ms\`, Bot has been up for: \`${prettyMilliseconds(client.uptime)}\``)

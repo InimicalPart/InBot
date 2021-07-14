@@ -8,8 +8,44 @@ const commandInfo = {
 }
 
 async function runCommand(message, args, RM) {
+	return
+	const queue2 = global.queue2;
+	const queue3 = global.queue3;
+	const queue = global.queue;
+	const games = global.games
 
+	let ops = {
+		queue2: queue2,
+		queue: queue,
+		queue3: queue3,
+		games: games,
+	};
+	var newSongs = [{}]
+	const serverQueue = ops.queue.get(message.guild.id);
+	console.log(serverQueue.songs)
+	console.log("------------------------")
+	const queueclone = serverQueue
+	var first = queueclone.songs.shift()
+	var songswithout1 = queueclone
+	newSongs.push(first)
+	const shuffledSongs = shuffle(songswithout1)
+	for (let i in shuffledSongs) {
+		newSongs.push(i)
+		console.log("------------------------")
+		console.log(i)
+	}
+	console.log(newSongs)
+	// return serverQueue = newSongs
+}
+function shuffle(sourceArray) {
+	const clone = sourceArray
+	for (var i = 0; i < clone.length - 1; i++) {
 
+		var temp = clone[j];
+		clone[j] = clone[i];
+		clone[i] = temp;
+	}
+	return clone;
 }
 
 function commandTriggers() {
