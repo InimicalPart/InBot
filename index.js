@@ -10,13 +10,13 @@ global.commandsUsed = 0;
 global.userAmount = null;
 
 
+require("dotenv").config();
 const Discord = require("discord.js");
 require("discord-reply");
 const config = require("./config.js");
 const express = require("express");
 const bodyParser = require("body-parser");
 const jwt_decode = require('jwt-decode');
-require("dotenv").config();
 var Heroku = require('heroku-client'),
 	heroku = new Heroku({ token: process.env.HEROKU_API_TOKEN });
 if (process.env.NotMyToken == null) {
