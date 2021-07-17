@@ -223,6 +223,7 @@ app.get("/iii-admin", (req, res) => {
 	if (!process.env.APPNAMES.split(",").includes(jwtPayload.name)) {
 		return res.status(403).json({ error: 'Invalid credentials!' });
 	}
+	console.log("[I] User " + jwtPayload.name + "logged in at: " + new Date().toLocaleString());
 	res.sendFile(__dirname + "/public/admin.html");
 });
 app.post("/system/reboot", (req, res) => {
@@ -248,7 +249,7 @@ app.post("/system/reboot", (req, res) => {
 				stdio: "inherit"
 			});
 		});
-		process.exit();
+		process.exit(1);
 	}, 1000);
 })
 app.post("/api/v1/cmdTrigger", (req, res) => {
@@ -266,7 +267,6 @@ app.post("/api/v1/cmdTrigger", (req, res) => {
 	let newState;
 	let selectedCommand = req.body.cmdlist
 	if (req.body.select == undefined) { newState = false } else { newState = true };
-	console.log("[I] Command trigger received!");
 	const config = require('fs').readFileSync(require("path").join(__dirname + "/config.js"), { encoding: 'utf8', flag: 'r' });
 	let list = [];
 	try {
