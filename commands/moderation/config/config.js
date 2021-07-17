@@ -116,6 +116,7 @@ async function runCommand(message, args, RM) {
 		config.showUsers = configValue
 		var fs = require('fs')
 		const path = require("path")
+		console.log(__dirname)
 		const data = fs.readFileSync(path.join(__dirname, '../../../config.js'), { encoding: 'utf8', flag: 'r' });
 		const newData = data.replace(`showUsers = ${oldVal}`, `showUsers = ${configValue}`);
 		fs.writeFileSync(path.join(__dirname, '../../../config.js'), newData);
