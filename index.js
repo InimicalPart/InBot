@@ -11,13 +11,14 @@ global.userAmount = null;
 
 
 const Discord = require("discord.js");
-const lineReader = require("line-reader");
 require("discord-reply");
 const config = require("./config.js");
 const express = require("express");
 const bodyParser = require("body-parser");
 const jwt_decode = require('jwt-decode');
 require("dotenv").config();
+var Heroku = require('heroku-client'),
+	heroku = new Heroku({ token: process.env.HEROKU_API_TOKEN });
 if (process.env.NotMyToken == null) {
 	console.log(
 		"Token is missing, please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPart/TheIIIProject for more information."
@@ -85,7 +86,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 app.listen(process.env.PORT || 3000,
 	() => console.log("[I] API server started {I]"));
-
 console.log("[I] Logging in...[I]")
 client.on('message', async (message) => {
 	if (message.author.bot || !message.content.startsWith(process.env.prefix)) return;
@@ -223,24 +223,25 @@ app.get("/iii-admin", (req, res) => {
 	if (!process.env.APPNAMES.split(",").includes(jwtPayload.name)) {
 		return res.status(403).json({ error: 'Invalid credentials!' });
 	}
-	console.log("[I] User " + jwtPayload.name + "logged in at: " + new Date().toLocaleString());
+	console.log("[I] User " + jwtPayload.name + " logged in at: " + new Date().toLocaleString());
 	res.sendFile(__dirname + "/public/admin.html");
 });
 app.post("/system/reboot", (req, res) => {
+	if (!req.headers.authorization) {
+		return res.status(403).json({ error: 'No credentials sent!' });
+	}
+	res.setHeader('Content-Type', 'text/html')
+	//parse req.headers.authorization using parseJwt
+	var token = req.headers.authorization;
+	var jwtPayload = parseJwt(token);
+	if (!process.env.APPNAMES.split(",").includes(jwtPayload.name)) {
+		return res.status(403).json({ error: 'Invalid credentials!' });
+	}
+	res.redirect("/iii-admin")
+	// When NodeJS exits
+	console.log("⚠ SYSTEM IS REBOOTING ⚠")
+	heroku.delete('/apps/iii-project/dynos/web')
 	setTimeout(function () {
-		if (!req.headers.authorization) {
-			return res.status(403).json({ error: 'No credentials sent!' });
-		}
-		res.setHeader('Content-Type', 'text/html')
-		//parse req.headers.authorization using parseJwt
-		var token = req.headers.authorization;
-		var jwtPayload = parseJwt(token);
-		if (!process.env.APPNAMES.split(",").includes(jwtPayload.name)) {
-			return res.status(403).json({ error: 'Invalid credentials!' });
-		}
-		res.redirect("/iii-admin")
-		// When NodeJS exits
-		console.log("SYSTEM IS REBOOTING")
 		process.on("exit", function () {
 
 			require("child_process").spawn(process.argv.shift(), process.argv, {
