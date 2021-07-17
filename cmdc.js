@@ -6,6 +6,8 @@ let categoryFile = "";
 let mainDir = "";
 let commandDir = path.join(__dirname, "commands/")
 let indexFile = path.join(__dirname, "index.js")
+let configFile = path.join(__dirname, "config.js")
+let adminFile = path.join(__dirname, "public/admin.html")
 const categories = {
 	fun: "Fun",
 	iiisub: "III Submission",
@@ -32,6 +34,7 @@ async function promptOptions() {
 	return executeAction(cmdname, Object.keys(categories).find(key => categories[key] === category));
 };
 async function executeAction(cmdname, category) {
+	const cmdClone = cmdname;
 	cmdname = cmdname.toLowerCase()
 	console.log(chalk.green.bold("? ") + chalk.white.bold("Getting required files..."))
 	switch (category) {
@@ -71,6 +74,7 @@ async function executeAction(cmdname, category) {
 		.replace("<command name>", cmdname)
 		.replace("command1", cmdname)
 		.replace("fun/music/mod/iiisub/misc", category)
+		.replace("[UpperCMD]", cmdClone.charAt(0).toUpperCase() + cmdClone.slice(1))
 	console.log(chalk.green.bold("? ") + chalk.white.bold("Writing to command file..."))
 	fs.writeFile(path.join(mainDir, `/${cmdname}/${cmdname}.js`), newTemplate, function (err) {
 		if (err) throw err;
@@ -78,13 +82,20 @@ async function executeAction(cmdname, category) {
 	});
 	console.log(chalk.green.bold("? ") + chalk.white.bold("Editing index.js..."))
 	const index = fs.readFileSync(indexFile, { encoding: 'utf8', flag: 'r' });
-	let cmdClone = cmdname;
 	const newIndex = index
 		.replace("\"Discord\": Discord,", "	" + `"cmd${cmdClone.charAt(0).toUpperCase() + cmdClone.slice(1)}": ${category}.${cmdname}(),\n	\"Discord\": Discord,`)
 	fs.writeFile(indexFile, newIndex, function (err) {
 		if (err) throw err;
 		//console.log('File is created successfully.');
 	});
+
+	console.log(chalk.green.bold("? ") + chalk.white.bold("Editing config.js..."))
+	fs.appendFileSync(configFile, 'exports.cmd' + cmdClone.charAt(0).toUpperCase() + cmdClone.slice(1) + " = true");
+	console.log(chalk.green.bold("? ") + chalk.white.bold("Editing admin.html..."))
+	const admin = fs.readFileSync(adminFile, { encoding: 'utf8', flag: 'r' });
+	const newAdmin = admin
+		.replace(`</select>`, `	<option value="${cmdname}">${cmdClone.charAt(0).toUpperCase() + cmdClone.slice(1)}</option>\n</select>`)
+	fs.writeFileSync(adminFile, newAdmin);
 	console.log(chalk.green.bold("? ") + chalk.white.bold("Done"))
 }
 promptOptions()

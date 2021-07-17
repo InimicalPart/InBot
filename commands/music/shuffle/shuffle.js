@@ -8,10 +8,20 @@ const commandInfo = {
 }
 
 async function runCommand(message, args, RM) {
-	return
-	const queue2 = global.queue2;
-	const queue3 = global.queue3;
-	const queue = global.queue;
+	if (!require("../../../config.js").cmdShuffle) {
+		return message.channel.send(new RM.Discord.MessageEmbed()
+			.setColor("RED")
+			.setAuthor(message.author.tag, message.author.avatarURL())
+			.setDescription(
+				"Command disabled by Administrators."
+			)
+			.setThumbnail(message.guild.iconURL())
+			.setTitle("Command Disabled")
+		)
+	}
+	const queue2 = global.sQueue2;
+	const queue3 = global.sQueue3;
+	const queue = global.sQueue;
 	const games = global.games
 
 	let ops = {
@@ -20,32 +30,48 @@ async function runCommand(message, args, RM) {
 		queue3: queue3,
 		games: games,
 	};
-	var newSongs = [{}]
+	let songArray = []
+	let otherSongArray = []
 	const serverQueue = ops.queue.get(message.guild.id);
-	console.log(serverQueue.songs)
-	console.log("------------------------")
-	const queueclone = serverQueue
-	var first = queueclone.songs.shift()
-	var songswithout1 = queueclone
-	newSongs.push(first)
-	const shuffledSongs = shuffle(songswithout1)
-	for (let i in shuffledSongs) {
-		newSongs.push(i)
-		console.log("------------------------")
-		console.log(i)
+	const serverQueueClone = serverQueue
+	serverQueueClone.songs.clear()
+	let current = 0;
+	for (let i in serverQueue.songs) {
+		current++
+		if (current == 1) {
+			songArray.push(serverQueue.songs[i])
+		} else {
+			otherSongArray.push(serverQueue.songs[i])
+		}
 	}
-	console.log(newSongs)
+	shuffle(otherSongArray)
+	for (let i in otherSongArray) {
+		songArray.push(otherSongArray[i])
+	}
+	for (let i in songArray) {
+		serverQueueClone.songs.push(songArray[i])
+	}
+	serverQueue.songs = serverQueueClone.songs
+
+
 	// return serverQueue = newSongs
 }
-function shuffle(sourceArray) {
-	const clone = sourceArray
-	for (var i = 0; i < clone.length - 1; i++) {
+function shuffle(array) {
+	var currentIndex = array.length, randomIndex;
 
-		var temp = clone[j];
-		clone[j] = clone[i];
-		clone[i] = temp;
+	// While there remain elements to shuffle...
+	while (0 !== currentIndex) {
+
+		// Pick a remaining element...
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex--;
+
+		// And swap it with the current element.
+		[array[currentIndex], array[randomIndex]] = [
+			array[randomIndex], array[currentIndex]];
 	}
-	return clone;
+
+	return array;
 }
 
 function commandTriggers() {

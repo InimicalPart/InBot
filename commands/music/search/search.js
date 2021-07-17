@@ -8,9 +8,20 @@ const commandInfo = {
 }
 
 async function runCommand(message, args, RM) {
-    const queue2 = global.queue2;
-    const queue3 = global.queue3;
-    const queue = global.queue;
+    if (!require("../../../config.js").cmdSearch) {
+        return message.channel.send(new RM.Discord.MessageEmbed()
+            .setColor("RED")
+            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setDescription(
+                "Command disabled by Administrators."
+            )
+            .setThumbnail(message.guild.iconURL())
+            .setTitle("Command Disabled")
+        )
+    }
+    const queue2 = global.sQueue2;
+    const queue3 = global.sQueue3;
+    const queue = global.sQueue;
     const games = global.games
 
     let ops = {
