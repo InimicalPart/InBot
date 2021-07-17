@@ -4,10 +4,10 @@ const path = require('path');
 const fs = require('fs');
 let categoryFile = "";
 let mainDir = "";
-let commandDir = path.join(__dirname, "commands/")
-let indexFile = path.join(__dirname, "index.js")
-let configFile = path.join(__dirname, "config.js")
-let adminFile = path.join(__dirname, "public/admin.html")
+let commandDir = path.join(process.cwd(), "commands/")
+let indexFile = path.join(process.cwd(), "index.js")
+let configFile = path.join(process.cwd(), "config.js")
+let adminFile = path.join(process.cwd(), "public/admin.html")
 const categories = {
 	fun: "Fun",
 	iiisub: "III Submission",
@@ -39,24 +39,24 @@ async function executeAction(cmdname, category) {
 	console.log(chalk.green.bold("? ") + chalk.white.bold("Getting required files..."))
 	switch (category) {
 		case "fun":
-			categoryFile = path.join(__dirname, '/commands/fun/index.js')
-			mainDir = path.join(__dirname, "/commands/fun/")
+			categoryFile = path.join(process.cwd(), '/commands/fun/index.js')
+			mainDir = path.join(process.cwd(), "/commands/fun/")
 			break;
 		case "iiisub":
-			categoryFile = path.join(__dirname, '/commands/iii-submission/index.js')
-			mainDir = path.join(__dirname, "/commands/iii-submission/")
+			categoryFile = path.join(process.cwd(), '/commands/iii-submission/index.js')
+			mainDir = path.join(process.cwd(), "/commands/iii-submission/")
 			break
 		case "misc":
-			categoryFile = path.join(__dirname, '/commands/misc/index.js')
-			mainDir = path.join(__dirname, "/commands/misc/")
+			categoryFile = path.join(process.cwd(), '/commands/misc/index.js')
+			mainDir = path.join(process.cwd(), "/commands/misc/")
 			break;
 		case "mod":
-			categoryFile = path.join(__dirname, '/commands/moderation/index.js')
-			mainDir = path.join(__dirname, "/commands/moderation/")
+			categoryFile = path.join(process.cwd(), '/commands/moderation/index.js')
+			mainDir = path.join(process.cwd(), "/commands/moderation/")
 			break;
 		case "music":
-			categoryFile = path.join(__dirname, '/commands/music/index.js')
-			mainDir = path.join(__dirname, "/commands/music/")
+			categoryFile = path.join(process.cwd(), '/commands/music/index.js')
+			mainDir = path.join(process.cwd(), "/commands/music/")
 			break;
 	}
 	console.log(chalk.green.bold("? ") + chalk.white.bold("Editing category file..."))

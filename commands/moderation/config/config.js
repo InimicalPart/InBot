@@ -31,14 +31,14 @@ async function runCommand(message, args, RM) {
 		} catch (e) {
 			var fs = require('fs')
 			const path = require("path")
-			const data = fs.readFileSync(path.join(__dirname, 'config.js.TEMPLATE'), { encoding: 'utf8', flag: 'r' });
+			const data = fs.readFileSync(path.join(process.cwd(), 'config.js.TEMPLATE'), { encoding: 'utf8', flag: 'r' });
 			const newData = data
-			fs.writeFileSync(path.join(__dirname, '../../../config.js'), newData);
+			fs.writeFileSync(path.join(process.cwd(), '../../../config.js'), newData);
 			return message.channel.send("config.js required a full restore.")
 		}
 		message.channel.send("There was an error in config.js, the line number is: " + caller_line + ". It contains:")
 		count = 0
-		const wantedPath = require("path").join(__dirname, "../../../config.js")
+		const wantedPath = require("path").join(process.cwd(), "../../../config.js")
 		require('fs').createReadStream(wantedPath).on('data', function (chunk) {
 			for (i = 0; i < chunk.length; ++i)
 				if (chunk[i] == 10) count++;
@@ -66,9 +66,9 @@ async function runCommand(message, args, RM) {
 				return message.channel.send("Ok.")
 			} else if (messageNext.content.toLowerCase() == "yes") {
 				var start = gline.split(" ")[0]
-				const data = require('fs').readFileSync(require("path").join(__dirname, '../../../config.js'), { encoding: 'utf8', flag: 'r' });
+				const data = require('fs').readFileSync(require("path").join(process.cwd(), '../../../config.js'), { encoding: 'utf8', flag: 'r' });
 				var newData = data.replace(gline, start + " = 'RESTORED';")
-				require('fs').writeFileSync(require("path").join(__dirname, '../../../config.js'), newData);
+				require('fs').writeFileSync(require("path").join(process.cwd(), '../../../config.js'), newData);
 				require('fs').createReadStream(wantedPath).on('data', function (chunk) {
 					for (i = 0; i < chunk.length; ++i)
 						if (chunk[i] == 10) count++;
@@ -116,16 +116,16 @@ async function runCommand(message, args, RM) {
 		config.showUsers = configValue
 		var fs = require('fs')
 		const path = require("path")
-		const data = fs.readFileSync(path.join(__dirname, '../../../config.js'), { encoding: 'utf8', flag: 'r' });
+		const data = fs.readFileSync(path.join(process.cwd(), '../../../config.js'), { encoding: 'utf8', flag: 'r' });
 		const newData = data.replace(`showUsers = ${oldVal}`, `showUsers = ${configValue}`);
-		fs.writeFileSync(path.join(__dirname, '../../../config.js'), newData);
-		const verifyData = fs.readFileSync(path.join(__dirname, '../../config.js'), { encoding: 'utf8', flag: 'r' });
+		fs.writeFileSync(path.join(process.cwd(), '../../../config.js'), newData);
+		const verifyData = fs.readFileSync(path.join(process.cwd(), '../../config.js'), { encoding: 'utf8', flag: 'r' });
 		if (verifyData.includes("showUsers = " + oldVal)) {
 			if (typeof oldVal == "string") {
 				oldVal = "'" + oldVal + "'"
-				const data = fs.readFileSync(path.join(__dirname, '../../../config.js'), { encoding: 'utf8', flag: 'r' });
+				const data = fs.readFileSync(path.join(process.cwd(), '../../../config.js'), { encoding: 'utf8', flag: 'r' });
 				const newData = data.replace(`showUsers = ${oldVal}`, `showUsers = ${configValue}`);
-				fs.writeFileSync(path.join(__dirname, '../../../config.js'), newData);
+				fs.writeFileSync(path.join(process.cwd(), '../../../config.js'), newData);
 			}
 		}
 		message.channel.send(`showUsers was changed. New value: ${config.showUsers}`)
