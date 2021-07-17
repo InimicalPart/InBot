@@ -8,6 +8,18 @@ const commandInfo = {
 }
 
 async function runCommand(message, args, RM) {
+	//Check if command is disabled
+	if (!require("../../../config.js").cmd[UpperCMD]) {
+		return message.channel.send(new RM.Discord.MessageEmbed()
+			.setColor("RED")
+			.setAuthor(message.author.tag, message.author.avatarURL())
+			.setDescription(
+				"Command disabled by Administrators."
+			)
+			.setThumbnail(message.guild.iconURL())
+			.setTitle("Command Disabled")
+		)
+	}
 
 	// cmd stuff here
 

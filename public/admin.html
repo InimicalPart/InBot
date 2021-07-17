@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="/api/v1/cmdTrigger" method="post" id="cmdChange">
+      <select for="switch" id="cars" name="cmdlist">
+        <option value="motivation">Motivation</option>
+        <option value="roast">Roast</option>
+        <option value="approve">Approve</option>
+        <option value="deny">Deny</option>
+        <option value="post">Post</option>
+        <!--<option value="remove">Remove</option>>-->
+        <option value="restore">Restore</option>
+        <option value="calculate">Calculate</option>
+        <option value="embed">Embed</option>
+        <option value="help">Help</option>
+        <option value="random">Random</option>
+        <option value="stats">Stats</option>
+        <option value="test">Test/Ping</option>
+        <option value="ban">Ban</option>
+        <option value="config">Config</option>
+        <option value="modlog">Modlog</option>
+        <option value="unban">Unban</option>
+        <option value="lyrics">Lyrics</option>
+        <option value="nowplaying">NowPlaying</option>
+        <option value="pause">Pause</option>
+        <option value="play">Play</option>
+        <option value="queue">Queue</option>
+        <option value="remove">Remove</option>
+        <option value="search">Search</option>
+        <option value="seek">Seek</option>
+        <option value="shuffle">Shuffle</option>
+        <option value="skip">Skip</option>
+        <option value="stop">Stop</option>
+        <option value="vcsounds">VCSounds</option>
+      </select>
+
+      <label class="switch">
+        <input name="select" type="checkbox" />
+        <span class="slider round"></span>
+      </label>
+
+      <button type="submit">Submit</button>
+    </form>
+    <form action="/system/reboot" method="post" id="sysReboot">
+      <button onclick="sysreboot()" type="submit">Reboot App</button>
+    </form>
+    <script type="text/javascript">
+      function sysreboot() {
+        alert(
+          "Ok. You will lose connection and reboot the app after you press OK"
+        );
+      }
+    </script>
+  </body>
+</html>

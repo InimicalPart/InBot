@@ -8,6 +8,17 @@ const commandInfo = {
 }
 
 async function runCommand(message, args, RM) {
+	if (!require("../../../config.js").cmdStats) {
+		return message.channel.send(new RM.Discord.MessageEmbed()
+			.setColor("RED")
+			.setAuthor(message.author.tag, message.author.avatarURL())
+			.setDescription(
+				"Command disabled by Administrators."
+			)
+			.setThumbnail(message.guild.iconURL())
+			.setTitle("Command Disabled")
+		)
+	}
 
 	//general stats
 	const Discord = RM.Discord;
@@ -27,6 +38,8 @@ async function runCommand(message, args, RM) {
 	let GAPI9 = null;
 	let GAPI10 = null;
 	let GENIUSAPI = null;
+
+
 
 	if (RM.process_env.GAPI !== ("" || null || undefined)) {
 		GAPI = "[LOADED]"
@@ -86,6 +99,7 @@ async function runCommand(message, args, RM) {
 	const pinging = new RM.Discord.MessageEmbed()
 		.setDescription("Pinging...  :ping_pong:")
 	message.channel.send(pinging).then((m) => {
+
 		latency = m.createdTimestamp - message.createdTimestamp
 		let embed = new Discord.MessageEmbed()
 			.setAuthor(message.author.username, message.author.avatarURL())
