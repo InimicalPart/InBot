@@ -13,7 +13,7 @@ function between(lower, upper) {
 }
 async function runCommand(message, args, RM) {
 	console.log(process.cwd())
-	if (!require("config.js").cmdRoast) {
+	if (!require("../../../config.js").cmdRoast) {
 		return message.channel.send(new RM.Discord.MessageEmbed()
 			.setColor("RED")
 			.setAuthor(message.author.tag, message.author.avatarURL())
