@@ -9,7 +9,7 @@ const commandInfo = {
 
 async function runCommand(message, args, RM) {
 
-    if (!require("../../../config.js").cmdMotivate) {
+    if (!require("../../../config.js").cmdMotivation) {
         return message.channel.send(new RM.Discord.MessageEmbed()
             .setColor("RED")
             .setAuthor(message.author.tag, message.author.avatarURL())
