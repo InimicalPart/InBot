@@ -83,7 +83,7 @@ console.log("------------------------\n[I] Starting API server [I]")
 let app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(process.cwd() + "/public"));
+app.use(express.static(__dirname + "/public"));
 app.listen(process.env.PORT || 3000,
 	() => console.log("[I] API server started {I]"));
 console.log("[I] Logging in...[I]")
@@ -198,7 +198,7 @@ client.on("ready", async () => {
 //import express and start a server on port 3000
 
 app.get("/", (req, res) => {
-	res.sendFile(process.cwd() + "/public/index.html");
+	res.sendFile(__dirname + "/public/index.html");
 });
 app.get("/api/v1/stats/cmd", (req, res) => {
 	res.json({
@@ -224,7 +224,7 @@ app.get("/iii-admin", (req, res) => {
 		return res.status(403).json({ error: 'Invalid credentials!' });
 	}
 	console.log("[I] User " + jwtPayload.name + " logged in at: " + new Date().toLocaleString());
-	res.sendFile(process.cwd() + "/public/admin.html");
+	res.sendFile(__dirname + "/public/admin.html");
 });
 app.post("/system/reboot", (req, res) => {
 	if (!req.headers.authorization) {
@@ -268,16 +268,16 @@ app.post("/api/v1/cmdTrigger", (req, res) => {
 	let newState;
 	let selectedCommand = req.body.cmdlist
 	if (req.body.select == undefined) { newState = false } else { newState = true };
-	const config = require('fs').readFileSync(require("path").join(process.cwd() + "/config.js"), { encoding: 'utf8', flag: 'r' });
+	const config = require('fs').readFileSync(require("path").join(__dirname + "/config.js"), { encoding: 'utf8', flag: 'r' });
 	let list = [];
 	try {
 		// read contents of the file
 		let count = 0
-		require('fs').createReadStream(require("path").join(process.cwd() + "/config.js")).on('data', function (chunk) {
+		require('fs').createReadStream(require("path").join(__dirname + "/config.js")).on('data', function (chunk) {
 			for (i = 0; i < chunk.length; ++i)
 				if (chunk[i] == 10) count++;
 		}).on('end', async function () {
-			const data = require('fs').readFileSync(require("path").join(process.cwd() + "/config.js"), 'UTF-8');
+			const data = require('fs').readFileSync(require("path").join(__dirname + "/config.js"), 'UTF-8');
 			// split the contents by new line
 			const lines = data.split(/\r?\n/);
 
@@ -299,7 +299,7 @@ app.post("/api/v1/cmdTrigger", (req, res) => {
 	function restOfIndex() {
 		const newConfig = config
 			.replace("cmd" + selectedCommand.charAt(0).toUpperCase() + selectedCommand.slice(1) + " = " + list[list.length - 1], "cmd" + selectedCommand.charAt(0).toUpperCase() + selectedCommand.slice(1) + " = " + newState.toString())
-		require('fs').writeFile(require("path").join(process.cwd() + "/config.js"), newConfig, function (err) {
+		require('fs').writeFile(require("path").join(__dirname + "/config.js"), newConfig, function (err) {
 			if (err) throw err;
 			//console.log('File is created successfully.');
 		});
