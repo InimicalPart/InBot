@@ -12,7 +12,6 @@ function between(lower, upper) {
 	return Math.floor(lower + Math.random() * scale);
 }
 async function runCommand(message, args, RM) {
-	console.log(process.cwd())
 	if (!require("../../../config.js").cmdRoast) {
 		return message.channel.send(new RM.Discord.MessageEmbed()
 			.setColor("RED")
