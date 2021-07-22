@@ -1,3 +1,5 @@
+const { json } = require("mathjs");
+
 const commandInfo = {
   primaryName: "remove", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["remove", "delete"], // These are all commands that will trigger this command.
@@ -36,8 +38,10 @@ async function runCommand(message, args, RM) {
   if (!serverQueue || serverQueue.length < 1) {
     return message.channel.send(":x: | The queue is empty!");
   } else {
-    serverQueue.forEach(function (item, key, mapObj) {
-      message.channel.send(key.toString(), ":", " ", item.toString() + "<br />");
+    let index = 0;
+    serverQueue.songs.forEach(async function (a, b) {
+      const thing = JSON.parse(JSON.stringify(a));
+      message.channel.send(thing.title + ", " + b);
     });
   }
 }
