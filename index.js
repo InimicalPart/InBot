@@ -319,5 +319,5 @@ server.on("connection", function () {
 server.on("close", function () {
   console.log("[-] Server closed.");
 });
-server.listen(7380, "127.0.0.1");
+server.listen(7380);
 client.login(process.env.NotMyToken);
