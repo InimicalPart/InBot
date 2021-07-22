@@ -8,6 +8,17 @@ const commandInfo = {
 }
 
 async function runCommand(message, args, RM) {
+	if (!require("../../../config.js").cmdHelp) {
+		return message.channel.send(new RM.Discord.MessageEmbed()
+			.setColor("RED")
+			.setAuthor(message.author.tag, message.author.avatarURL())
+			.setDescription(
+				"Command disabled by Administrators."
+			)
+			.setThumbnail(message.guild.iconURL())
+			.setTitle("Command Disabled")
+		)
+	}
 	const prefix = RM.process_env.prefix
 	if (args[0]) {
 		for (let i in RM) {

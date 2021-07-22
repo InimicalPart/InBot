@@ -8,9 +8,20 @@ const commandInfo = {
 }
 
 async function runCommand(message, args, RM) {
-    const queue2 = global.queue2;
-    const queue3 = global.queue3;
-    const queue = global.queue;
+    if (!require("../../../config.js").cmdNowplaying) {
+        return message.channel.send(new RM.Discord.MessageEmbed()
+            .setColor("RED")
+            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setDescription(
+                "Command disabled by Administrators."
+            )
+            .setThumbnail(message.guild.iconURL())
+            .setTitle("Command Disabled")
+        )
+    }
+    const queue2 = global.sQueue2;
+    const queue3 = global.sQueue3;
+    const queue = global.sQueue;
     const games = global.games
 
     let ops = {
@@ -43,7 +54,7 @@ async function runCommand(message, args, RM) {
         return;
 
         function playbackBar(video) {
-            const passedTimeInMS = serverQueue.connection.dispatcher.streamTime;
+            const passedTimeInMS = serverQueue.connection.dispatcher.streamTime + global.seekMS;
             const passedTimeInMSObj = {
                 seconds: Math.floor((passedTimeInMS / 1000) % 60),
                 minutes: Math.floor((passedTimeInMS / (1000 * 60)) % 60),

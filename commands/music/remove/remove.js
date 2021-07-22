@@ -10,9 +10,19 @@ const commandInfo = {
 };
 
 async function runCommand(message, args, RM) {
-  const queue2 = global.queue2;
-  const queue3 = global.queue3;
-  const queue = global.queue;
+  if (!require("../../../config.js").cmdRemove) {
+    return message.channel.send(
+      new RM.Discord.MessageEmbed()
+        .setColor("RED")
+        .setAuthor(message.author.tag, message.author.avatarURL())
+        .setDescription("Command disabled by Administrators.")
+        .setThumbnail(message.guild.iconURL())
+        .setTitle("Command Disabled")
+    );
+  }
+  const queue2 = global.sQueue2;
+  const queue3 = global.sQueue3;
+  const queue = global.sQueue;
   const games = global.games;
 
   let ops = {
@@ -35,14 +45,27 @@ async function runCommand(message, args, RM) {
       "You need to be in the same voice channel as me!"
     );
   }
-  if (!serverQueue || serverQueue.length < 1) {
+  if (!serverQueue || serverQueue.songs.length < 2) {
     return message.channel.send(":x: | The queue is empty!");
+  }
+  if (!args[0]) {
+    return message.channel.send(
+      "Which song do you want to remove? (queue num)"
+    );
   } else {
-    let index = 0;
-    serverQueue.songs.forEach(async function (a, b) {
-      const thing = JSON.parse(JSON.stringify(a));
-      message.channel.send(thing.title + ", " + b);
-    });
+    if (!Number(args[0]))
+      return message.channel.send(":x: | The argument is not a number!");
+    if (args[0] < 1 || args[0] > serverQueue.songs.length - 1)
+      return message.channel.send(":x: | Incorrect number!");
+    const title = serverQueue.songs[args[0]].title;
+    const url = serverQueue.songs[args[0]].url;
+    const embed = new Discord.MessageEmbed()
+      .setDescription(`Removed [${title}](${url})`)
+      .setTimestamp()
+      .setFooter(message.author.username, message.author.avatarURL());
+
+    serverQueue.songs.splice(args[0], 1);
+    message.channel.send(embed);
   }
 }
 

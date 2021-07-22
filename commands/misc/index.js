@@ -16,12 +16,16 @@ function test() {
 
 
 
+function stats() {
+	return require("./stats/stats.js")
+}
+
 module.exports = {
+	stats,
 	calculate,
 	embed,
 	help,
 	random,
 	test
 }
-
 console.log("[I] Category MISC loaded")

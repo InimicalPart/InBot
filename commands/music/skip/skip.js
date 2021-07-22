@@ -8,9 +8,20 @@ const commandInfo = {
 }
 
 async function runCommand(message, args, RM) {
-	const queue2 = global.queue2;
-	const queue3 = global.queue3;
-	const queue = global.queue;
+	if (!require("../../../config.js").cmdSkip) {
+		return message.channel.send(new RM.Discord.MessageEmbed()
+			.setColor("RED")
+			.setAuthor(message.author.tag, message.author.avatarURL())
+			.setDescription(
+				"Command disabled by Administrators."
+			)
+			.setThumbnail(message.guild.iconURL())
+			.setTitle("Command Disabled")
+		)
+	}
+	const queue2 = global.sQueue2;
+	const queue3 = global.sQueue3;
+	const queue = global.sQueue;
 	const games = global.games
 
 	let ops = {
@@ -28,6 +39,7 @@ async function runCommand(message, args, RM) {
 	const embed = new RM.Discord.MessageEmbed()
 		.setDescription(`Skipping: [${serverQueue.songs[0].title}](${serverQueue.songs[0].url})`)
 	message.channel.send(embed)
+	global.seekMS = 0;
 	serverQueue.connection.dispatcher.end()
 
 }
