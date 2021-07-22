@@ -28,7 +28,12 @@ function lyrics() {
 function remove() {
 	return require('./remove/remove.js')
 }
-
+function seek() {
+	return require('./seek/seek.js')
+}
+function shuffle() {
+	return require('./shuffle/shuffle.js')
+}
 
 module.exports = {
 	nowplaying,
@@ -40,7 +45,8 @@ module.exports = {
 	stop,
 	vcsounds,
 	lyrics,
-    remove
+	remove,
+	seek,
+	shuffle
 }
-
 console.log("[I] Category MUSIC loaded")

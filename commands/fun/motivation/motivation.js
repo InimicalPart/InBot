@@ -8,6 +8,19 @@ const commandInfo = {
 }
 
 async function runCommand(message, args, RM) {
+
+    if (!require("../../../config.js").cmdMotivation) {
+        return message.channel.send(new RM.Discord.MessageEmbed()
+            .setColor("RED")
+            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setDescription(
+                "Command disabled by Administrators."
+            )
+            .setThumbnail(message.guild.iconURL())
+            .setTitle("Command Disabled")
+        )
+    }
+
     const Discord = RM.Discord;
     const client = RM.client;
     const jsonQuotes = require('../../../resources/motivational.json')

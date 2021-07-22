@@ -8,6 +8,17 @@ const commandInfo = {
 }
 
 async function runCommand(message, args, RM) {
+	if (!require("../../../config.js").cmdConfig) {
+		return message.channel.send(new RM.Discord.MessageEmbed()
+			.setColor("RED")
+			.setAuthor(message.author.tag, message.author.avatarURL())
+			.setDescription(
+				"Command disabled by Administrators."
+			)
+			.setThumbnail(message.guild.iconURL())
+			.setTitle("Command Disabled")
+		)
+	}
 	const botOwners = RM.botOwners;
 	if (!botOwners.includes(message.author.id)) return;
 	let config
@@ -108,7 +119,7 @@ async function runCommand(message, args, RM) {
 		const data = fs.readFileSync(path.join(__dirname, '../../../config.js'), { encoding: 'utf8', flag: 'r' });
 		const newData = data.replace(`showUsers = ${oldVal}`, `showUsers = ${configValue}`);
 		fs.writeFileSync(path.join(__dirname, '../../../config.js'), newData);
-		const verifyData = fs.readFileSync(path.join(__dirname, '../../config.js'), { encoding: 'utf8', flag: 'r' });
+		const verifyData = fs.readFileSync(path.join(__dirname, '../../../config.js'), { encoding: 'utf8', flag: 'r' });
 		if (verifyData.includes("showUsers = " + oldVal)) {
 			if (typeof oldVal == "string") {
 				oldVal = "'" + oldVal + "'"

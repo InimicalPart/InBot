@@ -8,13 +8,24 @@ const commandInfo = {
 };
 
 async function runCommand(message, args, RM) {
+    if (!require("../../../config.js").cmdLyrics) {
+        return message.channel.send(new RM.Discord.MessageEmbed()
+            .setColor("RED")
+            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setDescription(
+                "Command disabled by Administrators."
+            )
+            .setThumbnail(message.guild.iconURL())
+            .setTitle("Command Disabled")
+        )
+    }
     const { MessageEmbed } = RM.Discord;
     const Genius = require("genius-lyrics");
     const GClient = new Genius.Client();
 
-    const queue2 = global.queue2;
-    const queue3 = global.queue3;
-    const queue = global.queue;
+    const queue2 = global.sQueue2;
+    const queue3 = global.sQueue3;
+    const queue = global.sQueue;
     const games = global.games;
 
     let ops = {

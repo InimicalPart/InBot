@@ -8,9 +8,20 @@ const commandInfo = {
 }
 
 async function runCommand(message, args, RM) {
-    const queue2 = global.queue2;
-    const queue3 = global.queue3;
-    const queue = global.queue;
+    if (!require("../../../config.js").cmdSearch) {
+        return message.channel.send(new RM.Discord.MessageEmbed()
+            .setColor("RED")
+            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setDescription(
+                "Command disabled by Administrators."
+            )
+            .setThumbnail(message.guild.iconURL())
+            .setTitle("Command Disabled")
+        )
+    }
+    const queue2 = global.sQueue2;
+    const queue3 = global.sQueue3;
+    const queue = global.sQueue;
     const games = global.games
 
     let ops = {
@@ -23,7 +34,7 @@ async function runCommand(message, args, RM) {
     const Discord = RM.Discord;
     const client = RM.client;
     const { Util, MessageEmbed } = require('discord.js');
-    const apis = [RM.process_env.GAPI, RM.process_env.GAPI2, RM.process_env.GAPI3, RM.process_env.GAPI4]
+    const apis = [RM.process_env.GAPI, RM.process_env.GAPI2, RM.process_env.GAPI3, RM.process_env.GAPI4, RM.process_env.GAPI5, RM.process_env.GAPI6, RM.process_env.GAPI7, RM.process_env.GAPI8, RM.process_env.GAPI9, RM.process_env.GAPI10]
     const YouTube = require("simple-youtube-api");
     const youtube = new YouTube(apis[Math.floor(Math.random() * apis.length)]);
     const ytdl = require('ytdl-core');

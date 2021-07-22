@@ -1,17 +1,26 @@
 //set global variables
-//global.queueLink = []
-//global.queueName = []
-global.queue2 = new Map();
-global.queue3 = new Map();
-global.queue = new Map();
+//global.sQueueLink = []
+//global.sQueueName = []
+global.sQueue2 = new Map();
+global.sQueue3 = new Map();
+global.sQueue = new Map();
 global.games = new Map();
+global.seekMS = 0;
+global.commandsUsed = 0;
+global.userAmount = null;
 
 //import modules
 const net = require("net");
+
+require("dotenv").config();
 const Discord = require("discord.js");
 require("discord-reply");
 const config = require("./config.js");
-require("dotenv").config();
+const express = require("express");
+const bodyParser = require("body-parser");
+const jwt_decode = require("jwt-decode");
+var Heroku = require("heroku-client"),
+  heroku = new Heroku({ token: process.env.HEROKU_API_TOKEN });
 if (process.env.NotMyToken == null) {
   console.log(
     "Token is missing, please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPart/TheIIIProject for more information."
@@ -54,6 +63,9 @@ const requiredModules = {
   cmdSearch: music.search(),
   cmdConfig: moderation.config(),
   cmdLyrics: music.lyrics(),
+  cmdSeek: music.seek(),
+  cmdShuffle: music.shuffle(),
+  cmdStats: misc.stats(),
   Discord: Discord,
   process_env: process.env,
   pretty_ms: require("pretty-ms"),
@@ -138,7 +150,15 @@ const requiredModules = {
   ytdl: require("ytdl-core"),
   db: require("quick.db"),
 };
-console.log("------------------------\n[I] Logging in...[I]");
+console.log("------------------------\n[I] Starting API server [I]");
+let app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname + "/public"));
+app.listen(process.env.PORT || 3000, () =>
+  console.log("[I] API server started {I]")
+);
+console.log("[I] Logging in...[I]");
 client.on("message", async (message) => {
   if (message.author.bot || !message.content.startsWith(process.env.prefix))
     return;
@@ -174,7 +194,12 @@ async function runCMD(k, message) {
     message.channel.send(
       "**NOTE:** The discord API has updated. Some commands may not work properly!"
     );
+  global.commandsUsed++;
   k.runCommand(message, message.content.split(" ").slice(1), requiredModules);
+}
+function parseJwt(token) {
+  var jsonPayload = jwt_decode(token);
+  return JSON.parse(JSON.stringify(jsonPayload));
 }
 client.on("ready", async () => {
   console.log("[I] Logged in! [I]");
@@ -202,6 +227,7 @@ client.on("ready", async () => {
     await list.channels.cache
       .get("862425213799104512")
       .setName("↦ • Members: " + users.length);
+  global.userAmount = users.length;
   const createdAt = list.createdAt;
   const today = new Date();
   var DIT = today.getTime() - createdAt.getTime();
@@ -209,6 +235,7 @@ client.on("ready", async () => {
   var communityDay = new Date("18 August 2021");
   var DITC = communityDay.getTime() - today.getTime();
   var daysC = Math.round(DITC / (1000 * 3600 * 24));
+
   console.log(
     "------------------------\nThe III Society has " +
       users.length +
@@ -260,6 +287,143 @@ client.on("ready", async () => {
       " edition!"
   );
 });
+//import express and start a server on port 3000
+
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/index.html");
+});
+app.get("/api/v1/stats/cmd", (req, res) => {
+  res.json({
+    commandsUsed: global.commandsUsed,
+  });
+});
+app.get("/api/v1/stats/users", (req, res) => {
+  res.json({
+    users: global.userAmount,
+  });
+});
+app.get("/iii-admin", (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(403).json({ error: "No credentials sent!" });
+  }
+  res.setHeader("Content-Type", "text/html");
+  //parse req.headers.authorization using parseJwt
+  var token = req.headers.authorization;
+  var jwtPayload = parseJwt(token);
+  if (!process.env.APPNAMES.split(",").includes(jwtPayload.name)) {
+    return res.status(403).json({ error: "Invalid credentials!" });
+  }
+  console.log(
+    "[I] User " +
+      jwtPayload.name +
+      " logged in at: " +
+      new Date().toLocaleString()
+  );
+  res.sendFile(__dirname + "/public/admin.html");
+});
+app.post("/system/reboot", (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(403).json({ error: "No credentials sent!" });
+  }
+  res.setHeader("Content-Type", "text/html");
+  //parse req.headers.authorization using parseJwt
+  var token = req.headers.authorization;
+  var jwtPayload = parseJwt(token);
+  if (!process.env.APPNAMES.split(",").includes(jwtPayload.name)) {
+    return res.status(403).json({ error: "Invalid credentials!" });
+  }
+  res.redirect("/iii-admin");
+  // When NodeJS exits
+  console.log("⚠ SYSTEM IS REBOOTING ⚠");
+  heroku.delete("/apps/iii-project/dynos/web");
+  setTimeout(function () {
+    process.on("exit", function () {
+      require("child_process").spawn(process.argv.shift(), process.argv, {
+        cwd: process.cwd(),
+        detached: true,
+        stdio: "inherit",
+      });
+    });
+    process.exit(1);
+  }, 1000);
+});
+app.post("/api/v1/cmdTrigger", (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(403).json({ error: "No credentials sent!" });
+  }
+  res.setHeader("Content-Type", "text/html");
+  //parse req.headers.authorization using parseJwt
+  var token = req.headers.authorization;
+  var jwtPayload = parseJwt(token);
+  if (!process.env.APPNAMES.split(",").includes(jwtPayload.name)) {
+    return res.status(403).json({ error: "Invalid credentials!" });
+  }
+  res.redirect("/iii-admin");
+  let newState;
+  let selectedCommand = req.body.cmdlist;
+  if (req.body.select == undefined) {
+    newState = false;
+  } else {
+    newState = true;
+  }
+  const config = require("fs").readFileSync(
+    require("path").join(__dirname + "/config.js"),
+    { encoding: "utf8", flag: "r" }
+  );
+  let list = [];
+  try {
+    // read contents of the file
+    let count = 0;
+    require("fs")
+      .createReadStream(require("path").join(__dirname + "/config.js"))
+      .on("data", function (chunk) {
+        for (i = 0; i < chunk.length; ++i) if (chunk[i] == 10) count++;
+      })
+      .on("end", async function () {
+        const data = require("fs").readFileSync(
+          require("path").join(__dirname + "/config.js"),
+          "UTF-8"
+        );
+        // split the contents by new line
+        const lines = data.split(/\r?\n/);
+
+        // print all lines
+        lines.forEach((line) => {
+          if (line.toLowerCase().includes("exports.cmd" + selectedCommand)) {
+            for (let i in line.split(" ")) {
+              list.push(line.split(" ")[i]);
+            }
+            restOfIndex();
+          }
+        });
+      });
+  } catch (err) {
+    return console.log(err);
+  }
+  function restOfIndex() {
+    const newConfig = config.replace(
+      "cmd" +
+        selectedCommand.charAt(0).toUpperCase() +
+        selectedCommand.slice(1) +
+        " = " +
+        list[list.length - 1],
+      "cmd" +
+        selectedCommand.charAt(0).toUpperCase() +
+        selectedCommand.slice(1) +
+        " = " +
+        newState.toString()
+    );
+    require("fs").writeFile(
+      require("path").join(__dirname + "/config.js"),
+      newConfig,
+      function (err) {
+        if (err) throw err;
+        //console.log('File is created successfully.');
+      }
+    );
+  }
+});
+
 client.on("guildMemberAdd", async () => {
   if (client.user.id != "859513472973537311" && config.showUsers == true) {
     let users = [];
@@ -268,6 +432,7 @@ client.on("guildMemberAdd", async () => {
     await list.channels.cache
       .get("862425213799104512")
       .setName("↦ • Members: " + users.length);
+    global.userAmount = users.length;
   }
 });
 client.on("guildMemberRemove", async () => {
@@ -278,7 +443,31 @@ client.on("guildMemberRemove", async () => {
     await list.channels.cache
       .get("862425213799104512")
       .setName("↦ • Members: " + users.length);
+    global.userAmount = users.length;
   }
 });
+setInterval(function () {
+  var server = net.createServer();
 
+  server.once("error", function (err) {
+    if (err.code === "EADDRINUSE") {
+      // port is currently in use
+    }
+  });
+
+  server.once("listening", function () {
+    // close the server if listening doesn't fail
+    server.close();
+  });
+
+  server.listen(7380);
+  sendInfo();
+}, 1000);
+function sendInfo() {
+  var client = new net.Socket();
+  client.connect(7380, "127.0.0.1", function () {
+    console.log("Connection estabilished with web. Sending data.");
+    client.write({ userAmount: global.userAmount });
+  });
+}
 client.login(process.env.NotMyToken);
