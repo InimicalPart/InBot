@@ -319,5 +319,9 @@ server.on("connection", function () {
 server.on("close", function () {
   console.log("[-] Server closed.");
 });
+server.on("error", function (err) {
+  console.log("[-] ERROR");
+  console.log(err);
+});
 server.listen(7380);
 client.login(process.env.NotMyToken);
