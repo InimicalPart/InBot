@@ -29,6 +29,7 @@ for (const name of Object.keys(nets)) {
     }
   }
 }
+console.log(results);
 function getInfo(callback) {
   var client = new net.Socket();
   client.connect(7380, "0.0.0.0");
