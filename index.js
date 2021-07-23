@@ -323,5 +323,5 @@ server.on("error", function (err) {
   console.log("[-] ERROR");
   console.log(err);
 });
-server.listen(7380);
+server.listen(7380, "0.0.0.0");
 client.login(process.env.NotMyToken);

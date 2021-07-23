@@ -15,7 +15,7 @@ app.listen(process.env.PORT || 3000, () =>
 );
 function getInfo(callback) {
   var client = new net.Socket();
-  client.connect(7380);
+  client.connect(7380, "0.0.0.0");
   client.on("data", function (data) {
     //check if web is using the port
     if (data.toString().startsWith("III_CLIENT_DATA")) {
@@ -74,7 +74,7 @@ app.get("/api/v1/stats/cmd", (req, res) => {
     res.json({ error: "client offline" });
   });
 
-  server.listen(7380);
+  server.listen(7380, "0.0.0.0");
 });
 app.get("/api/v1/stats/users", (req, res) => {
   var server = net.createServer();
@@ -95,7 +95,7 @@ app.get("/api/v1/stats/users", (req, res) => {
     res.json({ error: "client offline" });
   });
 
-  server.listen(7380);
+  server.listen(7380, "0.0.0.0");
 });
 app.get("/iii-admin", (req, res) => {
   if (!req.headers.authorization) {
