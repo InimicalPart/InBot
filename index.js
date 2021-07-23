@@ -290,6 +290,7 @@ client.on("ready", async () => {
       }
     }
   }
+  console.log(results);
 });
 //import express and start a server on port 3000
 
