@@ -21,63 +21,65 @@ async function runCommand(message, args, RM) {
 	}
 
 	const Discord = RM.Discord;
-	const db = RM.db;
-	let user =
-		message.mentions.members.first() ||
-		message.guild.members.cache.get(args[0]) ||
-		message.guild.members.cache.find(
-			r =>
-				r.user.username.toLowerCase() === args.join(" ").toLocaleLowerCase()
-		) ||
-		message.guild.members.cache.find(
-			r => r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
-		) ||
-		message.member;
+	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
 
-	if (!user) {
-		return message.channel.send(new Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				`${args[0]} is not a valid user.`
-			)
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("User Not Found")
-		)
-	}
-	const username = user.user.username || user.username
+		const { connect } = require("../../../databasec")
+		await connect()
+		await connect.create("currency")
+		let user =
+			message.mentions.members.first() ||
+			message.guild.members.cache.get(args[0]) ||
+			message.guild.members.cache.find(
+				r =>
+					r.user.username.toLowerCase() === args.join(" ").toLocaleLowerCase()
+			) ||
+			message.guild.members.cache.find(
+				r => r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
+			) ||
+			message.member;
 
-	let bal = db.fetch(`money_${user.id}`);
-
-	if (bal === null) bal = 0;
-
-	let bank = await db.fetch(`bank_${user.id}`);
-
-	if (bank === null) bank = 0;
-
-	if (user) {
-		let embed = new Discord.MessageEmbed()
-			.setColor("GREEN")
-			.setAuthor(message.author.username, message.author.avatarURL())
-			.setThumbnail(message.guild.iconURL())
-			.setTitle(`${username}'s Balance`)
-			.setDescription(`**Wallet**: $${bal}\n**Bank**: $${bank}`)
-			.setTimestamp();
-
-		return message.channel.send(embed);
-	} else {
-		return message.channel.send(
-			new Discord.MessageEmbed()
+		if (!user) {
+			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
-				.setAuthor(message.author.username, message.author.avatarURL())
+				.setAuthor(message.author.tag, message.author.avatarURL())
 				.setDescription(
-					"Could not find user. Please make sure you are using a mention, nickname, or ID."
+					`${args[0]} is not a valid user.`
 				)
 				.setThumbnail(message.guild.iconURL())
-				.setTitle("Error")
-				.setTimestamp()
-		);
-	}
+				.setTitle("User Not Found")
+			)
+		}
+		const username = user.user.username || user.username
+		if (await connect.fetch("currency", user.id) === null) {
+			await connect.add("currency", user.id, 0, 0)
+		}
+		const info = await connect.fetch("currency", user.id)
+		const bal = parseInt(info.amountw);
+		const bank = parseInt(info.amountb);
+		if (user) {
+			let embed = new Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.username, message.author.avatarURL())
+				.setThumbnail(message.guild.iconURL())
+				.setTitle(`${username}'s Balance`)
+				.setDescription(`**Wallet**: $${bal}\n**Bank**: $${bank}`)
+				.setTimestamp();
+
+			return m.edit(embed);
+		} else {
+			return m.edit(
+				new Discord.MessageEmbed()
+					.setColor("RED")
+					.setAuthor(message.author.username, message.author.avatarURL())
+					.setDescription(
+						"Could not find user. Please make sure you are using a mention, nickname, or ID."
+					)
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("Error")
+					.setTimestamp()
+			);
+		}
+	})
 }
 
 function commandTriggers() {
