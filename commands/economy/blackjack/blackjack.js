@@ -1,4 +1,4 @@
-const { dot, isInteger } = require("mathjs");
+
 
 const commandInfo = {
 	"primaryName": "blackjack", // This is the command name used by help.js (gets uppercased).

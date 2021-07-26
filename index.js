@@ -9,16 +9,22 @@ global.playerBalance = new Map();
 global.seekMS = 0;
 global.commandsUsed = 0;
 global.userAmount = null;
+<<<<<<< HEAD
 // yeah me too but i mean like blackjack on right and index on left
 
+=======
+
+//import modules
+const net = require("net");
+>>>>>>> 5f3552866597c24add3a783654581042c748fe36
 require("dotenv").config();
 const Discord = require("discord.js");
 require("discord-reply");
 const config = require("./config.js");
 const express = require("express");
 const bodyParser = require("body-parser");
-const jwt_decode = require('jwt-decode');
-var Heroku = require('heroku-client'),
+const jwt_decode = require("jwt-decode");
+var Heroku = require("heroku-client"),
 	heroku = new Heroku({ token: process.env.HEROKU_API_TOKEN });
 if (process.env.NotMyToken == null) {
 	console.log(
@@ -37,34 +43,34 @@ const music = require("./commands/music/index.js");
 const economy = require("./commands/economy/index.js");
 //!--------------------------
 const requiredModules = {
-	"cmdTest": misc.test(),
-	"cmdPost": iiisub.post(),
-	"cmdApprove": iiisub.approve(),
-	"cmdDeny": iiisub.deny(),
-	"cmdRemove": music.remove(),
-	"cmdEmbed": misc.embed(),
-	"cmdRestore": iiisub.restore(),
-	"cmdRandom": misc.random(),
-	"cmdHelp": misc.help(),
-	"cmdCalculate": misc.calculate(),
-	"cmdRoast": fun.roast(),
-	"cmdMotivation": fun.motivation(),
-	"cmdQueue": music.queue(),
-	"cmdPlay": music.play(),
-	"cmdVCSounds": music.vcsounds(),
-	"cmdSkip": music.skip(),
-	"cmdStop": music.stop(),
-	"cmdBan": moderation.ban(),
-	"cmdModlog": moderation.modlog(),
-	"cmdUnban": moderation.unban(),
-	"cmdPause": music.pause(),
-	"cmdNowplaying": music.nowplaying(),
-	"cmdLyrics": music.lyrics(),
-	"cmdSearch": music.search(),
-	"cmdConfig": moderation.config(),
-	"cmdLyrics": music.lyrics(),
-	"cmdSeek": music.seek(),
-	"cmdShuffle": music.shuffle(),
+	cmdTest: misc.test(),
+	cmdPost: iiisub.post(),
+	cmdApprove: iiisub.approve(),
+	cmdDeny: iiisub.deny(),
+	cmdRemove: music.remove(),
+	cmdEmbed: misc.embed(),
+	cmdRestore: iiisub.restore(),
+	cmdRandom: misc.random(),
+	cmdHelp: misc.help(),
+	cmdCalculate: misc.calculate(),
+	cmdRoast: fun.roast(),
+	cmdMotivation: fun.motivation(),
+	cmdQueue: music.queue(),
+	cmdPlay: music.play(),
+	cmdVCSounds: music.vcsounds(),
+	cmdSkip: music.skip(),
+	cmdStop: music.stop(),
+	cmdBan: moderation.ban(),
+	cmdModlog: moderation.modlog(),
+	cmdUnban: moderation.unban(),
+	cmdPause: music.pause(),
+	cmdNowplaying: music.nowplaying(),
+	cmdLyrics: music.lyrics(),
+	cmdSearch: music.search(),
+	cmdConfig: moderation.config(),
+	cmdLyrics: music.lyrics(),
+	cmdSeek: music.seek(),
+	cmdShuffle: music.shuffle(),
 	"cmdStats": misc.stats(),
 	"cmdBlackjack": economy.blackjack(),
 	"cmdAddmoney": economy.addmoney(),
@@ -88,36 +94,46 @@ const requiredModules = {
 	"ytdl": require('ytdl-core'),
 	"db": require('quick.db')
 }
-console.log("------------------------\n[I] Starting API server [I]")
-let app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname + "/public"));
-app.listen(process.env.PORT || 3000,
-	() => console.log("[I] API server started {I]"));
-console.log("[I] Logging in...[I]")
-client.on('message', async (message) => {
-	if (message.author.bot || !message.content.startsWith(process.env.prefix)) return;
-	if (!["745783548241248286", "301062520679170066", "426826826220961821", "814623079346470993", "755934610579259432"].includes(message.author.id) && client.user.id == "859513472973537311") return message.channel.send("This is a DEV edition, where everything is tested. Only bot owners are allowed to use these commands. Please use the main version: <@858108082705006642>")
+console.log("------------------------\n[I] Logging in...[I]");
+client.on("message", async (message) => {
+	if (message.author.bot || !message.content.startsWith(process.env.prefix))
+		return;
+	if (
+		![
+			"745783548241248286",
+			"301062520679170066",
+			"426826826220961821",
+			"814623079346470993",
+		].includes(message.author.id) &&
+		client.user.id == "859513472973537311"
+	)
+		return message.channel.send(
+			"This is a DEV edition, where everything is tested. Only bot owners are allowed to use these commands. Please use the main version: <@858108082705006642>"
+		);
 	for (let i in requiredModules) {
 		if (i.startsWith("cmd"))
-			if (requiredModules[i].commandTriggers().includes(message.content.split(" ")[0].toLowerCase().replace(process.env.prefix, "")))
-				runCMD(requiredModules[i], message)
-
+			if (
+				requiredModules[i]
+					.commandTriggers()
+					.includes(
+						message.content
+							.split(" ")[0]
+							.toLowerCase()
+							.replace(process.env.prefix, "")
+					)
+			)
+				runCMD(requiredModules[i], message);
 	}
-})
+});
 async function runCMD(k, message) {
 	if (Discord.version > "12.5.3")
 		message.channel.send(
 			"**NOTE:** The discord API has updated. Some commands may not work properly!"
 		);
-	global.commandsUsed++
+	global.commandsUsed++;
 	k.runCommand(message, message.content.split(" ").slice(1), requiredModules);
 }
-function parseJwt(token) {
-	var jsonPayload = jwt_decode(token);
-	return JSON.parse(JSON.stringify(jsonPayload));
-};
+
 client.on("ready", async () => {
 	console.log("[I] Logged in! [I]");
 	if (client.user.id == "859513472973537311") {
@@ -144,7 +160,7 @@ client.on("ready", async () => {
 		await list.channels.cache
 			.get("862425213799104512")
 			.setName("↦ • Members: " + users.length);
-	global.userAmount = users.length
+	global.userAmount = users.length;
 	const createdAt = list.createdAt;
 	const today = new Date();
 	var DIT = today.getTime() - createdAt.getTime();
@@ -203,117 +219,25 @@ client.on("ready", async () => {
 		edition +
 		" edition!"
 	);
+	const { networkInterfaces } = require("os");
+
+	const nets = networkInterfaces();
+	const results = Object.create(null); // Or just '{}', an empty object
+
+	for (const name of Object.keys(nets)) {
+		for (const net of nets[name]) {
+			// Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+			if (net.family === "IPv4" && !net.internal) {
+				if (!results[name]) {
+					results[name] = [];
+				}
+				results[name].push(net.address);
+			}
+		}
+	}
+	console.log(results);
 });
 //import express and start a server on port 3000
-
-app.get("/", (req, res) => {
-	res.sendFile(__dirname + "/public/index.html");
-});
-app.get("/api/v1/stats/cmd", (req, res) => {
-	res.json({
-		commandsUsed: global.commandsUsed,
-
-	})
-});
-app.get("/api/v1/stats/users", (req, res) => {
-	res.json({
-		users: global.userAmount,
-	})
-
-});
-app.get("/iii-admin", (req, res) => {
-	if (!req.headers.authorization) {
-		return res.status(403).json({ error: 'No credentials sent!' });
-	}
-	res.setHeader('Content-Type', 'text/html')
-	//parse req.headers.authorization using parseJwt
-	var token = req.headers.authorization;
-	var jwtPayload = parseJwt(token);
-	if (!process.env.APPNAMES.split(",").includes(jwtPayload.name)) {
-		return res.status(403).json({ error: 'Invalid credentials!' });
-	}
-	console.log("[I] User " + jwtPayload.name + " logged in at: " + new Date().toLocaleString());
-	res.sendFile(__dirname + "/public/admin.html");
-});
-app.post("/system/reboot", (req, res) => {
-	if (!req.headers.authorization) {
-		return res.status(403).json({ error: 'No credentials sent!' });
-	}
-	res.setHeader('Content-Type', 'text/html')
-	//parse req.headers.authorization using parseJwt
-	var token = req.headers.authorization;
-	var jwtPayload = parseJwt(token);
-	if (!process.env.APPNAMES.split(",").includes(jwtPayload.name)) {
-		return res.status(403).json({ error: 'Invalid credentials!' });
-	}
-	res.redirect("/iii-admin")
-	// When NodeJS exits
-	console.log("⚠ SYSTEM IS REBOOTING ⚠")
-	heroku.delete('/apps/iii-project/dynos/web')
-	setTimeout(function () {
-		process.on("exit", function () {
-
-			require("child_process").spawn(process.argv.shift(), process.argv, {
-				cwd: process.cwd(),
-				detached: true,
-				stdio: "inherit"
-			});
-		});
-		process.exit(1);
-	}, 1000);
-})
-app.post("/api/v1/cmdTrigger", (req, res) => {
-	if (!req.headers.authorization) {
-		return res.status(403).json({ error: 'No credentials sent!' });
-	}
-	res.setHeader('Content-Type', 'text/html')
-	//parse req.headers.authorization using parseJwt
-	var token = req.headers.authorization;
-	var jwtPayload = parseJwt(token);
-	if (!process.env.APPNAMES.split(",").includes(jwtPayload.name)) {
-		return res.status(403).json({ error: 'Invalid credentials!' });
-	}
-	res.redirect("/iii-admin")
-	let newState;
-	let selectedCommand = req.body.cmdlist
-	if (req.body.select == undefined) { newState = false } else { newState = true };
-	const config = require('fs').readFileSync(require("path").join(__dirname + "/config.js"), { encoding: 'utf8', flag: 'r' });
-	let list = [];
-	try {
-		// read contents of the file
-		let count = 0
-		require('fs').createReadStream(require("path").join(__dirname + "/config.js")).on('data', function (chunk) {
-			for (i = 0; i < chunk.length; ++i)
-				if (chunk[i] == 10) count++;
-		}).on('end', async function () {
-			const data = require('fs').readFileSync(require("path").join(__dirname + "/config.js"), 'UTF-8');
-			// split the contents by new line
-			const lines = data.split(/\r?\n/);
-
-			// print all lines
-			lines.forEach((line) => {
-
-				if (line.toLowerCase().includes("exports.cmd" + selectedCommand)) {
-					for (let i in line.split(" ")) {
-						list.push(line.split(" ")[i])
-					}
-					restOfIndex()
-				}
-			});
-		});
-
-	} catch (err) {
-		return console.log(err)
-	}
-	function restOfIndex() {
-		const newConfig = config
-			.replace("cmd" + selectedCommand.charAt(0).toUpperCase() + selectedCommand.slice(1) + " = " + list[list.length - 1], "cmd" + selectedCommand.charAt(0).toUpperCase() + selectedCommand.slice(1) + " = " + newState.toString())
-		require('fs').writeFile(require("path").join(__dirname + "/config.js"), newConfig, function (err) {
-			if (err) throw err;
-			//console.log('File is created successfully.');
-		});
-	}
-});
 
 client.on("guildMemberAdd", async () => {
 	if (client.user.id != "859513472973537311" && config.showUsers == true) {
@@ -323,7 +247,7 @@ client.on("guildMemberAdd", async () => {
 		await list.channels.cache
 			.get("862425213799104512")
 			.setName("↦ • Members: " + users.length);
-		global.userAmount = users.length
+		global.userAmount = users.length;
 	}
 });
 client.on("guildMemberRemove", async () => {
@@ -334,7 +258,33 @@ client.on("guildMemberRemove", async () => {
 		await list.channels.cache
 			.get("862425213799104512")
 			.setName("↦ • Members: " + users.length);
-		global.userAmount = users.length
+		global.userAmount = users.length;
 	}
 });
+var server = net.createServer(function (socket) {
+	socket.on("data", function (data) {
+		if (data.toString() == "200 ok") {
+			console.log("[-] Connection closed.");
+			socket.destroy();
+		}
+	});
+	socket.write(
+		"III_CLIENT_DATA: " +
+		`{"userAmount": ${global.userAmount}, "commandsUsed": ${global.commandsUsed}}`
+	);
+	socket.pipe(socket);
+});
+
+server.on("connection", function () {
+	console.log("[+] Connection received.");
+});
+server.on("close", function () {
+	console.log("[-] Server closed.");
+});
+server.on("error", function (err) {
+	console.log("[-] ERROR");
+	console.log(err);
+	server.close();
+});
+server.listen(7380, "0.0.0.0");
 client.login(process.env.NotMyToken);
