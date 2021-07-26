@@ -9,14 +9,9 @@ global.playerBalance = new Map();
 global.seekMS = 0;
 global.commandsUsed = 0;
 global.userAmount = null;
-<<<<<<< HEAD
-// yeah me too but i mean like blackjack on right and index on left
-
-=======
 
 //import modules
 const net = require("net");
->>>>>>> 5f3552866597c24add3a783654581042c748fe36
 require("dotenv").config();
 const Discord = require("discord.js");
 require("discord-reply");
@@ -43,34 +38,34 @@ const music = require("./commands/music/index.js");
 const economy = require("./commands/economy/index.js");
 //!--------------------------
 const requiredModules = {
-	cmdTest: misc.test(),
-	cmdPost: iiisub.post(),
-	cmdApprove: iiisub.approve(),
-	cmdDeny: iiisub.deny(),
-	cmdRemove: music.remove(),
-	cmdEmbed: misc.embed(),
-	cmdRestore: iiisub.restore(),
-	cmdRandom: misc.random(),
-	cmdHelp: misc.help(),
-	cmdCalculate: misc.calculate(),
-	cmdRoast: fun.roast(),
-	cmdMotivation: fun.motivation(),
-	cmdQueue: music.queue(),
-	cmdPlay: music.play(),
-	cmdVCSounds: music.vcsounds(),
-	cmdSkip: music.skip(),
-	cmdStop: music.stop(),
-	cmdBan: moderation.ban(),
-	cmdModlog: moderation.modlog(),
-	cmdUnban: moderation.unban(),
-	cmdPause: music.pause(),
-	cmdNowplaying: music.nowplaying(),
-	cmdLyrics: music.lyrics(),
-	cmdSearch: music.search(),
-	cmdConfig: moderation.config(),
-	cmdLyrics: music.lyrics(),
-	cmdSeek: music.seek(),
-	cmdShuffle: music.shuffle(),
+	"cmdTest": misc.test(),
+	"cmdPost": iiisub.post(),
+	"cmdApprove": iiisub.approve(),
+	"cmdDeny:": iiisub.deny(),
+	"cmdRemove": music.remove(),
+	"cmdEmbed": misc.embed(),
+	"cmdRestore": iiisub.restore(),
+	"cmdRandom": misc.random(),
+	"cmdHelp": misc.help(),
+	"cmdCalculate": misc.calculate(),
+	"cmdRoast": fun.roast(),
+	"cmdMotivation": fun.motivation(),
+	"cmdQueue": music.queue(),
+	"cmdPlay": music.play(),
+	"cmdVCSounds": music.vcsounds(),
+	"cmdSkip": music.skip(),
+	"cmdStop": music.stop(),
+	"cmdBan": moderation.ban(),
+	"cmdModlog": moderation.modlog(),
+	"cmdUnban": moderation.unban(),
+	"cmdPause": music.pause(),
+	"cmdNowplaying": music.nowplaying(),
+	"cmdLyrics": music.lyrics(),
+	"cmdSearch": music.search(),
+	"cmdConfig": moderation.config(),
+	"cmdLyrics": music.lyrics(),
+	"cmdSeek": music.seek(),
+	"cmdShuffle": music.shuffle(),
 	"cmdStats": misc.stats(),
 	"cmdBlackjack": economy.blackjack(),
 	"cmdAddmoney": economy.addmoney(),
