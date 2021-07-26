@@ -35,7 +35,7 @@ async function runCommand(message, args, RM) {
 					if (k.commandHelp() == "") {
 						description = "No description."
 					} else {
-						description = k.commandHelp()
+						description = k.commandHelp().replace("[PREFIX]", prefix)
 					}
 					const embed = new RM.Discord.MessageEmbed()
 						.setAuthor(message.author.tag, message.author.avatarURL())
@@ -74,6 +74,7 @@ async function runCommand(message, args, RM) {
 			.addField("🛠 Misc", "Here are some commands that don't really fit in any category.")
 			.addField("⚔ Moderation", "Here are some commands that admins can use to manage the server!")
 			.addField("🎵 Music", "Here can you find commands that you can use to listen to music!")
+			.addField("💰 Economy", "Here are all the money related commands")
 		message.channel.send(embed).then((m) => {
 			var filter2 = m => m.author.id === message.author.id
 			message.channel.awaitMessages(filter2, {
@@ -93,7 +94,7 @@ async function runCommand(message, args, RM) {
 								if (k.commandHelp() == "") {
 									description = "No description."
 								} else {
-									description = k.commandHelp()
+									description = k.commandHelp().replace("[PREFIX]", prefix)
 								}
 								embed.addField(prefix + k.commandPrim(), description)
 							}
@@ -109,7 +110,7 @@ async function runCommand(message, args, RM) {
 								if (k.commandHelp() == "") {
 									description = "No description."
 								} else {
-									description = k.commandHelp()
+									description = k.commandHelp().replace("[PREFIX]", prefix)
 								}
 								embed.addField(prefix + k.commandPrim(), description)
 							}
@@ -125,7 +126,7 @@ async function runCommand(message, args, RM) {
 								if (k.commandHelp() == "") {
 									description = "No description."
 								} else {
-									description = k.commandHelp()
+									description = k.commandHelp().replace("[PREFIX]", prefix)
 								}
 								embed.addField(prefix + k.commandPrim(), description)
 							}
@@ -141,7 +142,7 @@ async function runCommand(message, args, RM) {
 								if (k.commandHelp() == "") {
 									description = "No description."
 								} else {
-									description = k.commandHelp()
+									description = k.commandHelp().replace("[PREFIX]", prefix)
 								}
 								embed.addField(prefix + k.commandPrim(), description)
 							}
@@ -157,7 +158,23 @@ async function runCommand(message, args, RM) {
 								if (k.commandHelp() == "") {
 									description = "No description."
 								} else {
-									description = k.commandHelp()
+									description = k.commandHelp().replace("[PREFIX]", prefix)
+								}
+								embed.addField(prefix + k.commandPrim(), description)
+							}
+						}
+					}
+					m.edit(embed)
+				} else if (wanting == "eco" || wanting == "economy") {
+					let embed = new RM.Discord.MessageEmbed().setTitle("Economy")
+					for (let i in RM) {
+						if (i.startsWith("cmd")) {
+							let k = RM[i]
+							if (k.commandCategory() == "economy") {
+								if (k.commandHelp() == "") {
+									description = "No description."
+								} else {
+									description = k.commandHelp().replace("[PREFIX]", prefix)
 								}
 								embed.addField(prefix + k.commandPrim(), description)
 							}

@@ -13,7 +13,8 @@ const categories = {
 	iiisub: "III Submission",
 	misc: "Miscellaneous",
 	mod: "Moderation",
-	music: "Music"
+	music: "Music",
+	economy: "Economy"
 };
 async function promptOptions() {
 	console.clear();
@@ -58,6 +59,10 @@ async function executeAction(cmdname, category) {
 			categoryFile = path.join(__dirname, '/commands/music/index.js')
 			mainDir = path.join(__dirname, "/commands/music/")
 			break;
+		case "economy":
+			categoryFile = path.join(__dirname, '/commands/economy/index.js')
+			mainDir = path.join(__dirname, "/commands/economy/")
+			break;
 	}
 	console.log(chalk.green.bold("? ") + chalk.white.bold("Editing category file..."))
 	const data = fs.readFileSync(categoryFile, { encoding: 'utf8', flag: 'r' });
@@ -73,7 +78,7 @@ async function executeAction(cmdname, category) {
 	const newTemplate = template
 		.replace("<command name>", cmdname)
 		.replace("command1", cmdname)
-		.replace("fun/music/mod/iiisub/misc", category)
+		.replace("fun/music/mod/iiisub/misc/economy", category)
 		.replace("[UpperCMD]", cmdClone.charAt(0).toUpperCase() + cmdClone.slice(1))
 	console.log(chalk.green.bold("? ") + chalk.white.bold("Writing to command file..."))
 	fs.writeFile(path.join(mainDir, `/${cmdname}/${cmdname}.js`), newTemplate, function (err) {
@@ -90,7 +95,7 @@ async function executeAction(cmdname, category) {
 	});
 
 	console.log(chalk.green.bold("? ") + chalk.white.bold("Editing config.js..."))
-	fs.appendFileSync(configFile, 'exports.cmd' + cmdClone.charAt(0).toUpperCase() + cmdClone.slice(1) + " = true");
+	fs.appendFileSync(configFile, 'exports.cmd' + cmdClone.charAt(0).toUpperCase() + cmdClone.slice(1) + " = true\n\n");
 	console.log(chalk.green.bold("? ") + chalk.white.bold("Editing admin.html..."))
 	const admin = fs.readFileSync(adminFile, { encoding: 'utf8', flag: 'r' });
 	const newAdmin = admin

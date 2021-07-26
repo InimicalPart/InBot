@@ -1,5 +1,5 @@
 exports.showUsers = true;
-//------------------\\ 
+//----------------\\
 
 exports.cmdMotivation = true
 exports.cmdRoast = true
@@ -17,15 +17,22 @@ exports.cmdBan = true
 exports.cmdConfig = true
 exports.cmdModlog = true
 exports.cmdUnban = true
-exports.cmdLyrics = true
-exports.cmdNowplaying = true
-exports.cmdPause = true
-exports.cmdPlay = true
-exports.cmdQueue = true
-exports.cmdRemove = true
-exports.cmdSearch = true
-exports.cmdSeek = true
-exports.cmdShuffle = true
-exports.cmdSkip = true
-exports.cmdStop = true
-exports.cmdVcsounds = true
+exports.cmdLyrics = false
+exports.cmdNowplaying = false
+exports.cmdPause = false
+exports.cmdPlay = false
+exports.cmdQueue = false
+exports.cmdRemove = false
+exports.cmdSearch = false
+exports.cmdSeek = false
+exports.cmdShuffle = false
+exports.cmdSkip = false
+exports.cmdStop = false
+exports.cmdVcsounds = false
+exports.cmdBlackjack = true
+exports.cmdAddmoney = true
+exports.cmdBalance = true
+exports.cmdRemovemoney = true
+exports.cmdFlipacoin = true
+exports.cmdRayispog = true
+

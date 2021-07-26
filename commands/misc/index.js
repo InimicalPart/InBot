@@ -13,14 +13,22 @@ function random() {
 function test() {
 	return require("./test/test.js")
 }
-
-
-
 function stats() {
 	return require("./stats/stats.js")
 }
 
+
+function flipacoin() {
+	return require("./flipacoin/flipacoin.js")
+}
+
+function rayispog() {
+	return require("./rayispog/rayispog.js")
+}
+
 module.exports = {
+	rayispog,
+	flipacoin,
 	stats,
 	calculate,
 	embed,
