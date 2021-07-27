@@ -28,6 +28,7 @@ async function runCommand(message, args, RM) {
 		await connect.create("currency")
 
 		if (!message.member.hasPermission("ADMINISTRATOR", "MANAGE _GUILD")) {
+			await connect.end()
 			return m.edit(
 				new Discord.MessageEmbed()
 					.setColor("RED")
@@ -40,17 +41,19 @@ async function runCommand(message, args, RM) {
 			)
 		}
 
-		if (!args[0]) return m.edit(
-			new Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setDescription(
-					"Please specify a user."
-				)
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Invalid Arguments")
-		)
-
+		if (!args[0]) {
+			await connect.end()
+			return m.edit(
+				new Discord.MessageEmbed()
+					.setColor("RED")
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription(
+						"Please specify a user."
+					)
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("Invalid Arguments")
+			)
+		}
 		let user = undefined
 		if (Number.isInteger(parseInt(args[0]))) {
 			message.guild.members.cache.forEach((member) => { if (member.id == args[0]) user = member.user; })
@@ -58,51 +61,64 @@ async function runCommand(message, args, RM) {
 			user = message.mentions.members.first() || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args[0].toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args[0].toLocaleLowerCase());
 		}
 
-		if (!user) return m.edit(
-			new Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setDescription(
-					"Please specify a user."
-				)
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Invalid Arguments")
-		)
-
-		if (!args[1]) return m.edit(
-			new Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setDescription(
-					"Please specify a value."
-				)
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Invalid Arguments")
-		)
-
-		if (isNaN(args[1])) return m.edit(
-			new Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setDescription(
-					"Please specify a value."
-				)
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Invalid Arguments")
-		)
-
+		if (!user) {
+			await connect.end()
+			return m.edit(
+				new Discord.MessageEmbed()
+					.setColor("RED")
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription(
+						"Please specify a user."
+					)
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("Invalid Arguments")
+			)
+		}
+		if (!args[1]) {
+			await connect.end()
+			return m.edit(
+				new Discord.MessageEmbed()
+					.setColor("RED")
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription(
+						"Please specify a value."
+					)
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("Invalid Arguments")
+			)
+		}
+		if (isNaN(args[1])) {
+			await connect.end()
+			return m.edit(
+				new Discord.MessageEmbed()
+					.setColor("RED")
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription(
+						"Please specify a value."
+					)
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("Invalid Arguments")
+			)
+		}
+		if (await connect.fetch("currency", user.id) === null) {
+			await connect.add("currency", user.id, 0, 0)
+		} // ANCHOR no it doesnt work for me
 		const info = await connect.fetch("currency", user.id)
 		let bal = parseInt(info.amountw)
-		if (args[0] > bal) return m.edit(
-			new Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setDescription(
-					"you cannot take more than they have :/"
-				)
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Invalid Arguments")
-		)
+		if (args[0] > bal) {
+			await connect.end();
+			return m.edit(
+				new Discord.MessageEmbed()
+					.setColor("RED")
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription(
+						"you cannot take more than they have :/"
+					)
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("Invalid Arguments")
+			)
+		}
+
 		await connect.update("currency", user.id, ((bal - 0) - (args[1] - 0)))
 		const info2 = await connect.fetch("currency", user.id)
 		let bal2 = info2.amountw
@@ -116,8 +132,8 @@ async function runCommand(message, args, RM) {
 			.setTitle("Money Removed")
 
 		m.edit(moneyEmbed)
+		await connect.end(true)
 	})
-
 }
 
 function commandTriggers() {

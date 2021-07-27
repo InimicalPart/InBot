@@ -93,7 +93,7 @@ async function runCommand(message, args, RM) {
 					finalDesc += "5: **" + top5names[i] + "**, Bank: **$" + row.amountb + "**"
 				}
 			} else {
-				start = "Top 5 Wallets and Banks:\n\n"
+				start = "Top 5 Wallets and Banks:\n\n" //hi?
 				if (i == 0) {
 					finalDesc += "🥇 **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**\n\n"
 				} else if (i == 1) {
@@ -117,6 +117,7 @@ async function runCommand(message, args, RM) {
 			)
 			.setThumbnail(message.guild.iconURL())
 		m.edit(embed)
+		await connect.end()
 	})
 }
 

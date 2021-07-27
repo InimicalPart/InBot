@@ -39,6 +39,7 @@ async function runCommand(message, args, RM) {
 			message.member;
 
 		if (!user) {
+			await connect.end()
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -64,9 +65,10 @@ async function runCommand(message, args, RM) {
 				.setTitle(`${username}'s Balance`)
 				.setDescription(`**Wallet**: $${bal}\n**Bank**: $${bank}`)
 				.setTimestamp();
-
+			await connect.end()
 			return m.edit(embed);
 		} else {
+			await connect.end()
 			return m.edit(
 				new Discord.MessageEmbed()
 					.setColor("RED")

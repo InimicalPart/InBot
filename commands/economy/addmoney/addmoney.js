@@ -27,6 +27,7 @@ async function runCommand(message, args, RM) {
 		await connect.create("currency")
 
 		if (!message.member.hasPermission("ADMINISTRATOR")) {
+			await connect.end()
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.username, message.author.avatarURL())
@@ -39,6 +40,7 @@ async function runCommand(message, args, RM) {
 			)
 		};
 		if (!args[0]) {
+			await connect.end()
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.username, message.author.avatarURL())
@@ -60,7 +62,8 @@ async function runCommand(message, args, RM) {
 			user = message.mentions.members.first() || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args[0].toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args[0].toLocaleLowerCase());
 			user = user.user
 		}
-		if (!user) {
+		if (user == undefined) {
+			await connect.end()
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -73,6 +76,7 @@ async function runCommand(message, args, RM) {
 		}
 		const username = user.username
 		if (!args[1]) {
+			await connect.end()
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -85,6 +89,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (isNaN(args[1]) || args[1] < 0) {
+			await connect.end()
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -97,6 +102,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (args[1] > 1000000) {
+			await connect.end()
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -108,21 +114,26 @@ async function runCommand(message, args, RM) {
 				.setTitle("Invalid Value")
 			)
 		}
+		if (await connect.fetch("currency", user.id) === null) {
+			await connect.add("currency", user.id, 0, 0)
+		}
 		const res = await connect.fetch("currency", user.id)
 		await connect.update("currency", user.id, ((res.amountw - 0) + (args[1] - 0)))
-		let moneyEmbed = new Discord.MessageEmbed()
+		m.edit(new Discord.MessageEmbed()
 			.setColor("GREEN")
 			.setAuthor(message.author.tag, message.author.avatarURL())
 			.setDescription(
-				`${username} has been given ${args[1]} dollarooos.`
+				`${username}'s balance has been increased by ${args[1]}!`
 			)
 			.setTimestamp()
 			.setThumbnail(message.guild.iconURL())
 			.setTitle("Success")
-		m.edit(moneyEmbed)
+		)
+		await connect.end(true)
+
+
 	})
 }
-
 function commandTriggers() {
 	return commandInfo.possibleTriggers;
 }

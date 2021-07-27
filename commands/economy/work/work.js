@@ -24,7 +24,7 @@ async function runCommand(message, args, RM) {
 	await connect()
 	await connect.create("currency")
 	// cmd stuff here
-
+	await connect.end(true)
 }
 
 function commandTriggers() {

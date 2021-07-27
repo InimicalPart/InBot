@@ -24,16 +24,14 @@ async function runCommand(message, args, RM) {
 	await connect()
 	await connect.create("currency")
 	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
-		let user = message.mentions.members.first() ||
+		let user =
+			message.mentions.members.first() ||
 			message.guild.members.cache.get(args[0]) ||
-			message.guild.members.cache.find(
-				r =>
-					r.user.username.toLowerCase() === args.join(" ").toLocaleLowerCase()
-			) ||
-			message.guild.members.cache.find(
-				r => r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
-			) || null
+			message.guild.members.cache.find(r => r.user.username.toLowerCase() === args[0].toLocaleLowerCase()) ||
+			message.guild.members.cache.find(r => r.displayName.toLowerCase() === args[0].toLocaleLowerCase()) ||
+			null
 		if (user == null) {
+			await connect.end()
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -52,6 +50,7 @@ async function runCommand(message, args, RM) {
 		}
 		let amount = parseInt(args[1])
 		if (isNaN(amount)) {
+			await connect.end()
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -63,6 +62,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (amount < 1) {
+			await connect.end()
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -76,6 +76,7 @@ async function runCommand(message, args, RM) {
 		let authorBal = await connect.fetch("currency", message.author.id)
 		let userBal = await connect.fetch("currency", user.id)
 		if (amount > authorBal.amountw) {
+			await connect.end()
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -99,6 +100,7 @@ async function runCommand(message, args, RM) {
 			.setTitle("Success")
 		)
 		// cmd stuff here
+		await connect.end(true)
 	})
 }
 

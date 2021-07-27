@@ -92,6 +92,9 @@ async function runCommand(message, args, RM) {
 			.setTimestamp()
 		)
 	} else if (Number.isInteger(parseInt(args[0]))) {
+		if (await connect.fetch("currency", message.author.id) === null) {
+			await connect.add("currency", message.author.id, 0, 0)
+		}
 		bet = parseInt(args[0])
 		let tempWal = await connect.fetch("currency", message.author.id)
 		const wallet = parseInt(tempWal.amountw)
@@ -536,27 +539,27 @@ async function runCommand(message, args, RM) {
 		//message.channel.send("Player's cards: " + player + "\nDealer's cards: " + dealer)
 		async function gameFinished(reason) {
 			if (reason == "timeout") {
-				message.channel.send("Game ended because time ran out. You lost: $" + bet)
+				message.channel.send("Game ended because time ran out. You lost: `$" + bet + "`")
 			} else if (reason == "bust") {
-				message.channel.send("Game ended because of bust. You lost: $" + bet)
+				message.channel.send("Game ended because of bust. You lost: `$" + bet + "`")
 			} else if (reason == "invalid") {
-				message.channel.send("Game ended because of invalid input. You lost: $" + bet)
+				message.channel.send("Game ended because of invalid input. You lost: `$" + bet + "`")
 			} else if (reason == "dblackjack") {
 				const info = await connect.fetch("currency", message.author.id)
-				message.channel.send("Game ended because the dealer got a blackjack. You lost: $" + bet * 2)
+				message.channel.send("Game ended because the dealer got a blackjack. You lost: `$" + bet * 2 + "`")
 				connect.update("currency", message.author.id, ((info.amountw - 0) - (bet - 0)))
 			} else if (reason == "blackjack") {
 				const info = await connect.fetch("currency", message.author.id)
 				connect.update("currency", message.author.id, ((info.amountw - 0) + (bet * 2)))
-				message.channel.send("Game ended because the player got a blackjack. You win: $" + bet * 2)
-				message.channel.send("$" + bet * 2 + " has been added to your account")
+				message.channel.send("Game ended because the player got a blackjack. You win: `$" + bet * 2 + "`")
+				message.channel.send("`$" + bet * 2 + "` has been added to your account")
 			} else if (reason == "dealerwin") {
-				message.channel.send("Game ended because the dealer got a blackjack or got closest to a blackjack. You lost: $" + bet)
+				message.channel.send("Game ended because the dealer got a blackjack or got closest to a blackjack. You lost: `$" + bet + "`")
 			} else if (reason == "playerwin") {
 				const info = await connect.fetch("currency", message.author.id)
 				connect.update("currency", message.author.id, ((info.amountw - 0) + (bet * 2)))
-				message.channel.send("Game ended because the player got a blackjack or got closest to a blackjack. You win: $" + bet * 2)
-				message.channel.send("$" + bet * 2 + " has been added to your account")
+				message.channel.send("Game ended because the player got a blackjack or got closest to a blackjack. You win: `$" + bet * 2 + "`")
+				message.channel.send("`$" + bet * 2 + "` has been added to your account")
 			} else if (reason == "push") {
 				const info = await connect.fetch("currency", message.author.id)
 				connect.update("currency", message.author.id, ((info.amountw - 0) + (bet)))
@@ -566,8 +569,9 @@ async function runCommand(message, args, RM) {
 			if (newMoney.amountw.includes("-")) {
 				message.channel.send("**Oh shoot! You're in the negatives, work to earn back your money!**")
 			}
-			message.channel.send("Your balance is now: $" + newMoney.amountw + "`")
+			message.channel.send("Your balance is now: `$" + newMoney.amountw + "`")
 
+			await connect.end(true)
 		}
 
 
