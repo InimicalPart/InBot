@@ -148,7 +148,7 @@ async function runCommand(message, args, RM) {
 				}
 			}
 		}
-		//db.add(`games_${user.id}`, 1) | InimicalPart Note: commented because i dont see why it is neccesary.
+		//db.add(`games_${user.id}`, 1) | InimicalPart Note: commented because i dont see why it is neccesary. -: Ray Note: i mean because of the database change i dont think it will matter but it was for profile stats.
 		ops.games.delete(message.channel.id);
 		if (win) {
 			db.add(`money_${user.id}`, amount);

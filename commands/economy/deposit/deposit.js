@@ -25,12 +25,15 @@ async function runCommand(message, args, RM) {
 	await connect.create("currency")
 	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
 
-		if (!args[0]) return m.edit(new RM.Discord.MessageEmbed()
-			.setDescription("Please enter an amount to deposit!")
-			.setColor("RED")
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Error")
-		)
+		if (!args[0]) {
+			await connect.end()
+			return m.edit(new RM.Discord.MessageEmbed()
+				.setDescription("Please enter an amount to deposit!")
+				.setColor("RED")
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Error")
+			)
+		}
 
 		if (await connect.fetch("currency", message.author.id) === null) {
 			await connect.add("currency", message.author.id, 0, 0)
@@ -43,6 +46,7 @@ async function runCommand(message, args, RM) {
 			amount = parseInt(args[0])
 		}
 		if (amount > balance.amountw) {
+			await connect.end()
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription("You don't have enough money!")
 				.setColor("RED")
@@ -51,6 +55,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (amount < 0) {
+			await connect.end()
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription("You can't deposit negative money!")
 				.setColor("RED")
@@ -59,6 +64,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (amount === 0) {
+			await connect.end()
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription("You can't deposit anything!")
 				.setColor("RED")
@@ -73,9 +79,9 @@ async function runCommand(message, args, RM) {
 			.setThumbnail(message.guild.iconURL())
 			.setTitle("Success")
 		)
+		await connect.end(true)
 	})
 	// cmd stuff here
-
 }
 
 function commandTriggers() {

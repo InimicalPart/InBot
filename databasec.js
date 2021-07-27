@@ -80,6 +80,16 @@ async function connect() {
 		return res;
 
 	}
+	async function end(/**@type boolean */allowWait) {
+		if (allowWait)
+			return setTimeout(async function () {
+				client.end()
+			}, 500)
+		return client.end()
+	}
+	async function dcAll(/**@type string */ table_name) {
+		client.query("SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE datname = " + table_name + " AND pid <> pg_backend_pid();")
+	}
 
 	connect.create = create;
 	connect.add = add;
@@ -88,6 +98,8 @@ async function connect() {
 	connect.remove = remove;
 	connect.clear = clear;
 	connect.query = query;
+	connect.end = end;
+	connect.dcAll = dcAll;
 }
 module.exports = {
 	connect
@@ -105,6 +117,7 @@ Initializor:
 Create a table in the database:
 	await connect.create(table_name)
 
+	but is this all of the information there nothing else?
 
 Add a user to the money database:
 	await connect.add("currency", message.author.id, 0, 0)

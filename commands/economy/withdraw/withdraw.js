@@ -24,12 +24,15 @@ async function runCommand(message, args, RM) {
 	await connect()
 	await connect.create("currency")
 	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
-		if (!args[0]) return m.edit(new RM.Discord.MessageEmbed()
-			.setDescription("Please enter an amount to withdraw!")
-			.setColor("RED")
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Error")
-		)
+		if (!args[0]) {
+			await connect.end()
+			return m.edit(new RM.Discord.MessageEmbed()
+				.setDescription("Please enter an amount to withdraw!")
+				.setColor("RED")
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Error")
+			)
+		}
 		if (await connect.fetch("currency", message.author.id) === null) {
 			await connect.add("currency", message.author.id, 0, 0)
 		}
@@ -41,6 +44,7 @@ async function runCommand(message, args, RM) {
 			amount = parseInt(args[0])
 		}
 		if (amount > balance.amountb) {
+			await connect.end()
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription(`You don't have $${amount} in the bank!`)
 				.setColor("RED")
@@ -49,6 +53,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (amount < 0) {
+			await connect.end()
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription("You can't withdraw a negative amount!")
 				.setColor("RED")
@@ -57,6 +62,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (amount === 0) {
+			await connect.end()
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription("You can't withdraw anything!")
 				.setColor("RED")
@@ -64,7 +70,7 @@ async function runCommand(message, args, RM) {
 				.setTitle("Error")
 			)
 		}
-		await connect.update("currency", message.author.id, parseInt(balance.amountw) + parseInt(amount), parseInt(balance.amountb) - parseInt(amount))
+		await connect.update("currency", message.author.id, parseInt(balance.amountw) + parseInt(amount), parseInt(balance.amountb) - parseInt(amount)).then()
 		m.edit(new RM.Discord.MessageEmbed()
 			.setDescription(`Withdrew $${amount} from the bank! You have $${parseInt(balance.amountb - amount)} left in the bank!`)
 			.setColor("GREEN")
@@ -72,9 +78,9 @@ async function runCommand(message, args, RM) {
 			.setTitle("Success")
 		)
 
+		await connect.end(true)
 	})
 	// cmd stuff here
-
 }
 
 function commandTriggers() {
