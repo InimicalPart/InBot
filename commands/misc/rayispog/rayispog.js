@@ -21,6 +21,9 @@ async function runCommand(message, args, RM) {
 		)
 	}
 
+	const { connect } = require("../../../databasec")
+	await connect()
+	await connect.create("currency")
 	const queue2 = global.sQueue2;
 	const queue3 = global.sQueue3;
 	const queue = global.sQueue;
@@ -33,9 +36,8 @@ async function runCommand(message, args, RM) {
 		games: games
 	}
 
-	const { stripIndents } = RM.common; //change it to RM.common in index.js - done alr restart this beitch 
+	const { stripIndents } = RM.common;
 	const { shuffle, verify } = require("../../../functions");
-	const db = RM.db
 
 	const Discord = RM.Discord
 	const suits = ["♤", "♡", "♢", "♧"];
@@ -49,8 +51,11 @@ async function runCommand(message, args, RM) {
 	if (deckCount <= 0 || deckCount >= 9) return message.channel.send("**Please Enter A Number Between 1 - 8!**")
 
 	let user = message.author;
-	let bal = db.fetch(`money_${user.id}`)
-	if (!bal === null) bal = 0;
+	let bal = await connect.fetch("currency", message.author.id)
+	bal = bal.amountw
+	if (await connect.fetch("currency", user.id) === null) {
+		await connect.add("currency", user.id, 0, 0)
+	}
 	if (!args[1]) return message.channel.send("**Please Enter Your Bet!**")
 
 	let amount = parseInt(args[1])
@@ -77,11 +82,11 @@ async function runCommand(message, args, RM) {
 			return message.channel.send('**Both Of You Just Hit Blackjack!**');
 		} else if (dealerInitialTotal === 21) {
 			ops.games.delete(message.channel.id);
-			db.subtract(`money_${user.id}`, amount);
+			await connect.update(`currency`, message.author.id, parseInt(bal - amount));
 			return message.channel.send(`**The Dealer Hit Blackjack Right Away!\nNew Balance - **\` ${bal - amount}\``);
 		} else if (playerInitialTotal === 21) {
 			ops.games.delete(message.channel.id);
-			db.add(`money_${user.id}`, amount)
+			await connect.update(`currency`, message.author.id, parseInt(bal) + parseInt(amount));
 			return message.channel.send(`**You Hit Blackjack Right Away!\nNew Balance -**\`${bal + amount}\``);
 		}
 
@@ -143,7 +148,7 @@ async function runCommand(message, args, RM) {
 				}
 			}
 		}
-		db.add(`games_${user.id}`, 1)
+		//db.add(`games_${user.id}`, 1) | InimicalPart Note: commented because i dont see why it is neccesary.
 		ops.games.delete(message.channel.id);
 		if (win) {
 			db.add(`money_${user.id}`, amount);
@@ -197,7 +202,51 @@ async function runCommand(message, args, RM) {
 			return a + value;
 		}, 0);
 	}
-
+	/*
+	
+	------------------------------USAGE----------------------------\\
+	
+	Initializor:
+		const { connect } = require("../../../databasec")
+		await connect()
+		await connect.create("currency")
+	
+	
+	Create a table in the database:
+		await connect.create(table_name)
+	
+	
+	Add a user to the money database:
+		await connect.add("currency", message.author.id, 0, 0)
+	
+	Fetch a users information:
+		const result = await connect.fetch("currency", message.author.id)
+	
+		result.id // the DB ID of the user
+		result.userid // Discord User ID of the user
+		result.amountw // Amount of money the user has in their wallet
+		result.amountb // Amount of money the user has in their bank
+	
+	
+	Update a users information:
+		await connect.update("currency", message.author.id, new wallet, new bank)
+	
+		Update users new bank:
+			await connect.update("currency", message.author.id, undefined, new bank)
+	
+		Update users new wallet:
+			await connect.update("currency", message.author.id, new wallet)
+	
+	
+	Remove a user from a table:
+		await connect.remove("currency", message.author.id)
+	
+	
+	Clear a users information from a table: // sets users wallet to 0 and bank to 0
+		await connect.clear("currency", message.author.id)
+	
+	
+	*/
 }
 function commandTriggers() {
 	return commandInfo.possibleTriggers;

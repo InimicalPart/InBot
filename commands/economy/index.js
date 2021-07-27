@@ -14,7 +14,27 @@ function removemoney() {
 	return require("./removemoney/removemoney.js")
 }
 
+function work() {
+	return require("./work/work.js")
+}
+
+function deposit() {
+	return require("./deposit/deposit.js")
+}
+
+function withdraw() {
+	return require("./withdraw/withdraw.js")
+}
+
+function pay() {
+	return require("./pay/pay.js")
+}
+
 module.exports = {
+	pay,
+	withdraw,
+	deposit,
+	work,
 	removemoney,
 	balance,
 	addmoney,
