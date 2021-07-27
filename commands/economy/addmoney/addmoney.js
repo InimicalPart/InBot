@@ -20,105 +20,107 @@ async function runCommand(message, args, RM) {
 			.setTitle("Command Disabled")
 		)
 	}
-
 	const Discord = RM.Discord
-	const db = RM.db
+	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
+		const { connect } = require("../../../databasec")
+		await connect()
+		await connect.create("currency")
 
-	if (!message.member.hasPermission("ADMINISTRATOR")) {
-		return message.channel.send(new Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.username, message.author.avatarURL())
-			.setDescription(
-				"You do not have permission to use this command."
+		if (!message.member.hasPermission("ADMINISTRATOR")) {
+			return m.edit(new Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.username, message.author.avatarURL())
+				.setDescription(
+					"You do not have permission to use this command."
+				)
+				.setTimestamp()
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Permission Denied")
 			)
-			.setTimestamp()
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Permission Denied")
-		)
-	};
-	if (!args[0]) {
-		return message.channel.send(new Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.username, message.author.avatarURL())
-			.setDescription(
-				"You need to specify a user to add money to."
+		};
+		if (!args[0]) {
+			return m.edit(new Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.username, message.author.avatarURL())
+				.setDescription(
+					"You need to specify a user to add money to."
+				)
+				.setTimestamp()
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("No User Specified")
 			)
-			.setTimestamp()
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("No User Specified")
-		)
-	}
+		}
 
-	//copilot fix the fucking error please
-	//ty copilot human version
-	let user = undefined
-	if (Number.isInteger(parseInt(args[0]))) {
-		message.guild.members.cache.forEach((member) => { if (member.id == args[0]) user = member.user; })
-	} else {
-		user = message.mentions.members.first() || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args[0].toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args[0].toLocaleLowerCase());
-		user = user.user
-	}
-	if (!user) {
-		return message.channel.send(new Discord.MessageEmbed()
-			.setColor("RED")
+		//copilot fix the fucking error please
+		//ty copilot human version
+		let user = undefined
+		if (Number.isInteger(parseInt(args[0]))) {
+			message.guild.members.cache.forEach((member) => { if (member.id == args[0]) user = member.user; })
+		} else {
+			user = message.mentions.members.first() || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args[0].toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args[0].toLocaleLowerCase());
+			user = user.user
+		}
+		if (!user) {
+			return m.edit(new Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					`${args[0]} is not a valid user.`
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("User Not Found")
+			)
+		}
+		const username = user.username
+		if (!args[1]) {
+			return m.edit(new Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					`You need to specify a value to add.`
+				)
+				.setTimestamp()
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("No Value Specified")
+			)
+		}
+		if (isNaN(args[1]) || args[1] < 0) {
+			return m.edit(new Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					`The value you specified is not a number.`
+				)
+				.setTimestamp()
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Invalid Value")
+			)
+		}
+		if (args[1] > 1000000) {
+			return m.edit(new Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					`The value you specified is too high.`
+				)
+				.setTimestamp()
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Invalid Value")
+			)
+		}
+		const res = await connect.fetch("currency", user.id)
+		await connect.update("currency", user.id, ((res.amountw - 0) + (args[1] - 0)))
+		let moneyEmbed = new Discord.MessageEmbed()
+			.setColor("GREEN")
 			.setAuthor(message.author.tag, message.author.avatarURL())
 			.setDescription(
-				`${args[0]} is not a valid user.`
-			)
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("User Not Found")
-		)
-	}
-	const username = user.username
-	if (!args[1]) {
-		return message.channel.send(new Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				`You need to specify a value to add.`
+				`${username} has been given ${args[1]} dollarooos.`
 			)
 			.setTimestamp()
 			.setThumbnail(message.guild.iconURL())
-			.setTitle("No Value Specified")
-		)
-	}
-	if (isNaN(args[1]) || args[1] < 0) {
-		return message.channel.send(new Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				`The value you specified is not a number.`
-			)
-			.setTimestamp()
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Invalid Value")
-		)
-	}
-	if (args[1] > 10000) {
-		return message.channel.send(new Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				`The value you specified is too high.`
-			)
-			.setTimestamp()
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Invalid Value")
-		)
-	}
-	db.add(`money_${user.id}`, args[1])
-
-	let moneyEmbed = new Discord.MessageEmbed()
-		.setColor("GREEN")
-		.setAuthor(message.author.tag, message.author.avatarURL())
-		.setDescription(
-			`${username} has been given ${args[1]} dollarooos.`
-		)
-		.setTimestamp()
-		.setThumbnail(message.guild.iconURL())
-		.setTitle("Success")
-	message.channel.send(moneyEmbed)
-
+			.setTitle("Success")
+		m.edit(moneyEmbed)
+	})
 }
 
 function commandTriggers() {
