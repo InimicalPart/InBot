@@ -95,7 +95,7 @@ async function executeAction(cmdname, category) {
 	});
 
 	console.log(chalk.green.bold("? ") + chalk.white.bold("Editing config.js..."))
-	fs.appendFileSync(configFile, 'exports.cmd' + cmdClone.charAt(0).toUpperCase() + cmdClone.slice(1) + " = true\n\n");
+	fs.appendFileSync(configFile, 'exports.cmd' + cmdClone.charAt(0).toUpperCase() + cmdClone.slice(1) + " = true\n");
 	console.log(chalk.green.bold("? ") + chalk.white.bold("Editing admin.html..."))
 	const admin = fs.readFileSync(adminFile, { encoding: 'utf8', flag: 'r' });
 	const newAdmin = admin

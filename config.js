@@ -35,4 +35,8 @@ exports.cmdBalance = true
 exports.cmdRemovemoney = true
 exports.cmdFlipacoin = true
 exports.cmdRayispog = true
-
+exports.cmdWork = true
+exports.cmdDeposit = true
+exports.cmdWithdraw = true
+exports.cmdPay = true
+exports.cmdLeaderboard = true
