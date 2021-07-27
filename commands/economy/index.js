@@ -30,7 +30,12 @@ function pay() {
 	return require("./pay/pay.js")
 }
 
+function leaderboard() {
+	return require("./leaderboard/leaderboard.js")
+}
+
 module.exports = {
+	leaderboard,
 	pay,
 	withdraw,
 	deposit,

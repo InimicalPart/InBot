@@ -74,6 +74,12 @@ async function connect() {
 		client.query(`UPDATE ${table_name} SET amountw=0, amountb=0 WHERE userid=${userid};`)
 		client.end()
 	}
+	async function query(
+		/** @type string */ query) {
+		const res = await client.query(query)
+		return res;
+
+	}
 
 	connect.create = create;
 	connect.add = add;
@@ -81,6 +87,7 @@ async function connect() {
 	connect.update = update;
 	connect.remove = remove;
 	connect.clear = clear;
+	connect.query = query;
 }
 module.exports = {
 	connect

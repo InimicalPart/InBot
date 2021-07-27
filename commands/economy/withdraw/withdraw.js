@@ -3,7 +3,7 @@ const commandInfo = {
 	"possibleTriggers": ["withdraw", "with"], // These are all commands that will trigger this command.
 	"help": "Withdraw your money from the bank!", // This is the general description pf the command.
 	"aliases": ["with"], // These are command aliases that help.js will use
-	"usage": "[COMMAND] <amount>", // [COMMAND] gets replaced with the command and correct prefix later
+	"usage": "[COMMAND] <amount/all>", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "economy"
 }
 
@@ -51,6 +51,14 @@ async function runCommand(message, args, RM) {
 		if (amount < 0) {
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription("You can't withdraw a negative amount!")
+				.setColor("RED")
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Error")
+			)
+		}
+		if (amount === 0) {
+			return m.edit(new RM.Discord.MessageEmbed()
+				.setDescription("You can't withdraw anything!")
 				.setColor("RED")
 				.setThumbnail(message.guild.iconURL())
 				.setTitle("Error")

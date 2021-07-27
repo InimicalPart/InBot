@@ -20,9 +20,86 @@ async function runCommand(message, args, RM) {
 			.setTitle("Command Disabled")
 		)
 	}
+	const { connect } = require("../../../databasec")
+	await connect()
+	await connect.create("currency")
+	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
+		let user = message.mentions.members.first() ||
+			message.guild.members.cache.get(args[0]) ||
+			message.guild.members.cache.find(
+				r =>
+					r.user.username.toLowerCase() === args.join(" ").toLocaleLowerCase()
+			) ||
+			message.guild.members.cache.find(
+				r => r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
+			) || null
+		if (user == null) {
+			return m.edit(new RM.Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"**ERROR:** Could not find user."
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Error")
+			)
+		}
+		if (await connect.fetch("currency", user.id) === null) {
+			await connect.add("currency", user.id, 0, 0)
+		}
+		if (await connect.fetch("currency", message.author.id) === null) {
+			await connect.add("currency", message.author.id, 0, 0)
+		}
+		let amount = parseInt(args[1])
+		if (isNaN(amount)) {
+			return m.edit(new RM.Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"**ERROR:** Invalid amount."
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Error")
+			)
+		}
+		if (amount < 1) {
+			return m.edit(new RM.Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"**ERROR:** Invalid amount."
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Error")
+			)
+		}
+		let authorBal = await connect.fetch("currency", message.author.id)
+		let userBal = await connect.fetch("currency", user.id)
+		if (amount > authorBal.amountw) {
+			return m.edit(new RM.Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"You don't have $" + amount
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Error")
+			)
 
-	// cmd stuff here
-
+		}
+		await connect.update("currency", message.author.id, parseInt(authorBal.amountw) - parseInt(amount))
+		await connect.update("currency", user.id, parseInt(userBal.amountw) + parseInt(amount))
+		m.edit(new RM.Discord.MessageEmbed()
+			.setColor("GREEN")
+			.setAuthor(message.author.tag, message.author.avatarURL())
+			.setDescription(
+				"You have transfered $" + amount + " to **" + user.user.username + "**."
+			)
+			.setThumbnail(message.guild.iconURL())
+			.setTitle("Success")
+		)
+		// cmd stuff here
+	})
 }
 
 function commandTriggers() {
