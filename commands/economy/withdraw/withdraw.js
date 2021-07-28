@@ -20,32 +20,52 @@ async function runCommand(message, args, RM) {
 			.setTitle("Command Disabled")
 		)
 	}
-	const { connect } = require("../../../databasec")
-	await connect()
-	await connect.create("currency")
+	const client = RM.client;
 	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
-		if (!args[0]) {
-			await connect.end()
-			return m.edit(new RM.Discord.MessageEmbed()
-				.setDescription("Please enter an amount to withdraw!")
-				.setColor("RED")
+		if (!args[0]) return m.edit(new RM.Discord.MessageEmbed()
+			.setDescription("Please enter an amount to withdraw!")
+			.setColor("RED")
+			.setThumbnail(message.guild.iconURL())
+			.setTitle("Error")
+		)
+
+		let user = message.author
+
+		const newProfile = {
+			userID: user.id,
+			username: message.author.tag,
+		  };
+		  const profile = await client.getProfile(user).catch((err) => {
+			console.log("^^");
+		  });
+	  
+		  if (!profile) {
+			await client.createProfile(newProfile);
+			m.edit(
+			  new Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+				  `Welcome to The III Project's Economy System!\n\nYou have been added to the database, please re-use the command`
+				)
 				.setThumbnail(message.guild.iconURL())
-				.setTitle("Error")
-			)
-		}
-		if (await connect.fetch("currency", message.author.id) === null) {
-			await connect.add("currency", message.author.id, 0, 0)
-		}
-		const balance = await connect.fetch("currency", message.author.id)
+				.setTitle("WELCOME")
+			);
+		  }
+
+		  const bal = parseInt(profile.coins);	
+		  const bank = parseInt(profile.bank); 
+		  const bankSpace = parseInt(profile.bankSpace)
+
 		let amount;
 		if (args[0] === "all") {
-			amount = parseInt(balance.amountb)
+			amount = parseInt(bank)
 		} else {
 			amount = parseInt(args[0])
 		}
-		if (amount > balance.amountb) {
-			await connect.end()
-			return m.edit(new RM.Discord.MessageEmbed()
+		if (amount > bank) {
+			return m.edit(
+				new RM.Discord.MessageEmbed()
 				.setDescription(`You don't have $${amount} in the bank!`)
 				.setColor("RED")
 				.setThumbnail(message.guild.iconURL())
@@ -53,7 +73,6 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (amount < 0) {
-			await connect.end()
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription("You can't withdraw a negative amount!")
 				.setColor("RED")
@@ -62,25 +81,24 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (amount === 0) {
-			await connect.end()
 			return m.edit(new RM.Discord.MessageEmbed()
-				.setDescription("You can't withdraw anything!")
-				.setColor("RED")
+				.setDescription("GreAt JoB YoU SuCcEsSfulLy WiThDrEw :sparkles:**NoThInG**:sparkles:")
+				.setColor("GREEN")
 				.setThumbnail(message.guild.iconURL())
-				.setTitle("Error")
+				.setTitle("SuccEsSFUl TrAnsFer MaN")
 			)
 		}
-		await connect.update("currency", message.author.id, parseInt(balance.amountw) + parseInt(amount), parseInt(balance.amountb) - parseInt(amount)).then()
+		await client.updateProfile(user, {coins: bal + amount, bank: bank - amount});
 		m.edit(new RM.Discord.MessageEmbed()
-			.setDescription(`Withdrew $${amount} from the bank! You have $${parseInt(balance.amountb - amount)} left in the bank!`)
+			.setDescription(`Withdrew $${amount} from the bank! You have $${(bank - amount)} left in the bank!`)
 			.setColor("GREEN")
 			.setThumbnail(message.guild.iconURL())
 			.setTitle("Success")
 		)
 
-		await connect.end(true)
 	})
-	// cmd stuff here
+	
+
 }
 
 function commandTriggers() {

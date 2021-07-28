@@ -21,12 +21,14 @@ async function runCommand(message, args, RM) {
 	}
 
 	const Discord = RM.Discord;
-	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
+	const client = RM.client;
 
-		const { connect } = require("../../../databasec")
-		await connect()
-		await connect.create("currency")
-		let user =
+	message.channel.send(
+		new Discord.MessageEmbed()
+		.setDescription(
+			"<a:loading:869354366803509299> *Working on it...*"
+			)).then(async (m) => {
+		const user =
 			message.mentions.members.first() ||
 			message.guild.members.cache.get(args[0]) ||
 			message.guild.members.cache.find(
@@ -38,8 +40,9 @@ async function runCommand(message, args, RM) {
 			) ||
 			message.member;
 
+				
+
 		if (!user) {
-			await connect.end()
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -51,24 +54,61 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		const username = user.user.username || user.username
-		if (await connect.fetch("currency", user.id) === null) {
-			await connect.add("currency", user.id, 0, 0)
-		}
-		const info = await connect.fetch("currency", user.id)
-		const bal = parseInt(info.amountw);
-		const bank = parseInt(info.amountb);
+		
+		const newProfile = {
+			userID: user.id,
+			username: user.user.tag
+		};
+		const profile = await client.getProfile(user).catch((err) => {
+			console.log(`^^`);
+		})
+		// if there is no profile create one and send a message saying that they have been added to the data base
+		if (!profile) {
+			await client.createProfile(newProfile);
+		m.edit(
+			new Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					`Welcome to The III Project's Economy System!\n\nYou have been added to the database, please re-use the command`
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("WELCOME")
+		)} 
+		
+		
+
+		//if (await connect.fetch("currency", user.id) === null) {
+		//	await connect.add("currency", user.id, 0, 0)
+		//}
+		// const info = await connect.fetch("currency", user.id)
+
+		const bal = parseInt(profile.coins);	
+		const bank = parseInt(profile.bank); 
+		const bankSpace = parseInt(profile.bankSpace);
+
+		
+		//create a variable that will calculate how much is in the bank, max allowed = bankSpace. convert it to percent up to 2 decimal places 
+		const bankPercent = (bank / bankSpace) * 100;
+
+		//create a variable that gets the day month and year of a user
+		const date = new Date();
+		const day = date.getDate();
+		const month = date.getMonth();
+		const year = date.getFullYear();
+
+
+
+
+
 		if (user) {
 			let embed = new Discord.MessageEmbed()
-				.setColor("GREEN")
-				.setAuthor(message.author.username, message.author.avatarURL())
-				.setThumbnail(message.guild.iconURL())
+				.setColor("BLACK")
 				.setTitle(`${username}'s Balance`)
-				.setDescription(`**Wallet**: $${bal}\n**Bank**: $${bank}`)
-				.setTimestamp();
-			await connect.end()
+				.setDescription(`**Wallet**: ⍟ ${bal}\n**Bank**: ⍟ ${bank}/${bankSpace} (\`${bankPercent}%\`)`)
+				.setFooter(`😏 • ${day}/${month}/${year}`) //set footer to the day month and year
 			return m.edit(embed);
 		} else {
-			await connect.end()
 			return m.edit(
 				new Discord.MessageEmbed()
 					.setColor("RED")
