@@ -22,13 +22,10 @@ async function runCommand(message, args, RM) {
 	}
 
 	const Discord = RM.Discord
+	const client = RM.client
 	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
-		const { connect } = require("../../../databasec")
-		await connect()
-		await connect.create("currency")
 
 		if (!message.member.hasPermission("ADMINISTRATOR", "MANAGE _GUILD")) {
-			await connect.end()
 			return m.edit(
 				new Discord.MessageEmbed()
 					.setColor("RED")
@@ -41,19 +38,17 @@ async function runCommand(message, args, RM) {
 			)
 		}
 
-		if (!args[0]) {
-			await connect.end()
-			return m.edit(
-				new Discord.MessageEmbed()
-					.setColor("RED")
-					.setAuthor(message.author.tag, message.author.avatarURL())
-					.setDescription(
-						"Please specify a user."
-					)
-					.setThumbnail(message.guild.iconURL())
-					.setTitle("Invalid Arguments")
-			)
-		}
+		if (!args[0]) return m.edit(
+			new Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"Please specify a user."
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Invalid Arguments")
+		)
+
 		let user = undefined
 		if (Number.isInteger(parseInt(args[0]))) {
 			message.guild.members.cache.forEach((member) => { if (member.id == args[0]) user = member.user; })
@@ -61,53 +56,73 @@ async function runCommand(message, args, RM) {
 			user = message.mentions.members.first() || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args[0].toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args[0].toLocaleLowerCase());
 		}
 
-		if (!user) {
-			await connect.end()
-			return m.edit(
-				new Discord.MessageEmbed()
-					.setColor("RED")
-					.setAuthor(message.author.tag, message.author.avatarURL())
-					.setDescription(
-						"Please specify a user."
-					)
-					.setThumbnail(message.guild.iconURL())
-					.setTitle("Invalid Arguments")
-			)
-		}
-		if (!args[1]) {
-			await connect.end()
-			return m.edit(
-				new Discord.MessageEmbed()
-					.setColor("RED")
-					.setAuthor(message.author.tag, message.author.avatarURL())
-					.setDescription(
-						"Please specify a value."
-					)
-					.setThumbnail(message.guild.iconURL())
-					.setTitle("Invalid Arguments")
-			)
-		}
-		if (isNaN(args[1])) {
-			await connect.end()
-			return m.edit(
-				new Discord.MessageEmbed()
-					.setColor("RED")
-					.setAuthor(message.author.tag, message.author.avatarURL())
-					.setDescription(
-						"Please specify a value."
-					)
-					.setThumbnail(message.guild.iconURL())
-					.setTitle("Invalid Arguments")
-			)
-		}
-		if (await connect.fetch("currency", user.id) === null) {
-			await connect.add("currency", user.id, 0, 0)
-		} // ANCHOR no it doesnt work for me
-		const info = await connect.fetch("currency", user.id)
-		let bal = parseInt(info.amountw)
-		if (args[0] > bal) {
-			await connect.end();
-			return m.edit(
+		if (!user) return m.edit(
+			new Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"Please specify a user."
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Invalid Arguments")
+		)
+
+		if (!args[1]) return m.edit(
+			new Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"Please specify a value."
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Invalid Arguments")
+		)
+
+		if (isNaN(args[1])) return m.edit(
+			new Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"Please specify a value."
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Invalid Arguments")
+		)
+
+		const profile = await client.getProfile(user).catch((err) => {
+			console.log(`^^`);
+		})
+		// if there is no profile create one and send a message saying that they have been added to the data base
+		if (!profile) {
+		m.edit(
+			new Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					`${user} is not in the database`
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("ERROR")
+		)}
+
+		const bal = parseInt(profile.coins);	
+		const bank = parseInt(profile.bank); 
+		const bankSpace = parseInt(profile.bankSpace);
+		let amount = parseInt(args[1]);
+
+		if (amount > bal) return m.edit(
+			new Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"you cannot take more than they have :/"
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Invalid Arguments")
+		)
+
+		if (args[2] === "-b") {
+			if (amount > bank) return m.edit(
 				new Discord.MessageEmbed()
 					.setColor("RED")
 					.setAuthor(message.author.tag, message.author.avatarURL())
@@ -117,23 +132,35 @@ async function runCommand(message, args, RM) {
 					.setThumbnail(message.guild.iconURL())
 					.setTitle("Invalid Arguments")
 			)
+			await client.updateProfile(user, {bank: bank - amount})
+			return m.edit(
+				new Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					`You took ${amount} coins from ${user.user.username}'s bank.`
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("SUCCESS")
+			)
 		}
 
-		await connect.update("currency", user.id, ((bal - 0) - (args[1] - 0)))
-		const info2 = await connect.fetch("currency", user.id)
-		let bal2 = info2.amountw
+
+		await client.updateProfile(user, { coins: bal - amount }).catch((err) => {
+			console.log(err);
+		})
 		let moneyEmbed = new Discord.MessageEmbed()
 			.setColor("GREEN")
 			.setAuthor(message.author.tag, message.author.avatarURL())
 			.setDescription(
-				`You took ${args[1]} from ${user.user.username}. New bal = $${bal2}`
+				`You took ${args[1]} from ${user.user.username} their Balance is now $${bal - amount}`
 			)
 			.setThumbnail(message.guild.iconURL())
 			.setTitle("Money Removed")
 
 		m.edit(moneyEmbed)
-		await connect.end(true)
 	})
+
 }
 
 function commandTriggers() {
