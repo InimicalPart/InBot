@@ -9,6 +9,43 @@ The III Project is a project where you can create images with the twist by addin
 This bot was created to simplify spreading information and get users to be able to show their work to others. This bot was also created to simplify the moderation of the server and the users.
 </h3>
 
+
+<hs2 align-="center">The Bot</h2>
+<p> 
+The III Project bot is the Official bot for <a href="https://discord.gg/iii">The III Project</a>, a community of users that are dedicated to the creation of images with the twist by adding <b>III</b> to the middle. The bot is a simple bot that allows users to create images with the twist by adding <b>III</b> to the middle. The bot also allows users to share their images on the <a href="https://discord.gg/iii">Discord server</a> where the community can take a look at their creations.
+</p> 
+<!-- definition of III -->
+<h3 align="center">
+<b>III</b>
+</h3>
+<p>
+<img src="https://i.imgur.com/xQZQQQQ.png" alt="III" width="200" height="200">
+</p>
+<!-- definition of the twist -->
+<h3 align="center">
+<b>The Twist</b>
+</h3>
+<p>
+<img src="https://i.imgur.com/xQZQQQQ.png" alt="The Twist" width="200" height="200">
+</p>
+<!-- definition of the image -->
+<h3 align="center">
+<b>The Image</b>
+</h3>
+<p>
+<img src="https://i.imgur.com/xQZQQQQ.png" alt="The Image" width="200" height="200">
+</p>
+<!-- definition of the III Project -->
+<h3 align="center">
+<b>The III Project</b>
+</h3>
+<p>
+<img src="https://i.imgur.com/xQZQQQQ.png" alt="The III Project" width="200" height="200">
+</p>
+<p>
+The III symbol is a symbol of the third instance of the word <b>I</b>. It is often used in music to represent the third instance of the major scale. The III symbol is used to represent the third instance of the major scale. It is often used in music to represent the third instance of the major scale
+</p>
+
 <h2 align="center">Credits</h2>
 <h3 align="center">
 Main Founders: <b>lethal.</b> & <b>ray.</b><br>
