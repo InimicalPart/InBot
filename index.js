@@ -80,7 +80,7 @@ const requiredModules = {
 	"cmdWithdraw": economy.withdraw(),
 	"cmdPay": economy.pay(),
 	"cmdLeaderboard": economy.leaderboard(),
-		"cmdRestart": misc.restart(),
+		"cmdDbdc": misc.dbdc(),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),

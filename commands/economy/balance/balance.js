@@ -88,8 +88,12 @@ async function runCommand(message, args, RM) {
 		const bankSpace = parseInt(profile.bankSpace);
 
 		
-		//create a variable that will calculate how much is in the bank, max allowed = bankSpace. convert it to percent up to 2 decimal places 
-		const bankPercent = (bank / bankSpace) * 100;
+		//create a variable that will calculate how much is in the bank, max allowed = bankSpace. convert it to percent to one decimal place
+		//define math
+		const math = require("mathjs");
+		const bankPercent = math.round((bank / bankSpace) * 100, 1);
+		
+
 
 		//create a variable that gets the day month and year of a user
 		const date = new Date();
