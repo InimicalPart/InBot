@@ -40,3 +40,4 @@ exports.cmdDeposit = true
 exports.cmdWithdraw = true
 exports.cmdPay = true
 exports.cmdLeaderboard = true
+exports.cmdDbdc = true
