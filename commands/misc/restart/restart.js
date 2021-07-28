@@ -15,7 +15,7 @@ async function runCommand(message, args, RM) { // Check if command is disabled
     const mongoose = require('mongoose');
     const db = require('mongodb')
     const client = RM.client
-    if (!require("../../../config.js").cmdRestart) {
+    if (!require("../../../config.js").cmdDbdc) {
         return message.channel.send(new RM.Discord.MessageEmbed().setColor("RED").setAuthor(message.author.tag, message.author.avatarURL()).setDescription("Command disabled by Administrators.").setThumbnail(message.guild.iconURL()).setTitle("Command Disabled"))
     }
 
