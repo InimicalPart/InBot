@@ -1,12 +1,15 @@
 const commandInfo = {
 	"primaryName": "work", // This is the command name used by help.js (gets uppercased).
 	"possibleTriggers": ["work", "alias2", "alias3"], // These are all commands that will trigger this command.
-	"help": "eats your cake!", // This is the general description pf the command.
+	"help": "eats your cake!", // This is the general description of the command.
 	"aliases": ["alias2", "alias3"], // These are command aliases that help.js will use
 	"usage": "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "economy"
 }
-
+function between(lower, upper) {
+	var scale = upper - lower + 1;
+	return Math.floor(lower + Math.random() * scale);
+}
 async function runCommand(message, args, RM) {
 	//Check if command is disabled
 	if (!require("../../../config.js").cmdWork) {
@@ -20,11 +23,127 @@ async function runCommand(message, args, RM) {
 			.setTitle("Command Disabled")
 		)
 	}
+	return
 	const { connect } = require("../../../databasec")
 	await connect()
 	await connect.create("currency")
-	// cmd stuff here
-	await connect.end(true)
+	function between(lower, upper) {
+		var scale = upper - lower + 1;
+		return Math.floor(lower + Math.random() * scale);
+	}
+	function WordJumble(fun) {
+
+		var letter = fun;
+
+		var jumbledWord = "";
+
+		for (var i = 0; i < fun.length; i++) {
+			var Chindex = Math.floor(Math.random() * letter.length);
+			jumbledWord = jumbledWord + letter.charAt(Chindex);
+			letter = letter.substr(0, Chindex) + letter.substr(Chindex + 1);
+		}
+
+		return jumbledWord;
+	}
+	const words = [
+		"youtube", "games", "rayispog", "loveini", "bananaman"
+	]
+	const missingWordsStart = [
+		"We no speak [WORD]",
+		"The III [WORD]",
+		"Listen here you little [WORD]",
+		"[WORD] and dogs",
+		"Never gonna [WORD] you up",
+		"I am once again [WORD] for your financial support",
+		""
+	]
+	const missingWordsEnd = [
+		"americano",
+		"project",
+		"shit",
+		"cats",
+		"give",
+		"asking"
+	]
+	const type = between(1, 3)
+	const word = words[Math.floor(Math.random() * words.length)]
+	if (type === 1) {
+		message.channel.send("Quick! Type `" + word + "` as fast as you can! You have 5 seconds")
+		var filter2 = m => m.author.id === message.author.id
+		message.channel.awaitMessages(filter2, {
+			max: 1,
+			time: 50000,
+			errors: ['time']
+		}).then(async messageNext => {
+			messageNext = messageNext.first()
+			const response = messageNext.content.toLowerCase()
+			if (response.toLowerCase() === word.toLowerCase()) {
+				const money = between(50, 100)
+				const bal = await connect.fetch("currency", message.author.id)
+				connect.update("currency", message.author.id, parseInt(bal.amountw) + parseInt(money))
+				message.channel.send("You got it! You win `$" + money + "`!")
+				return await connect.end(true)
+			}
+			message.channel.send("Ah! You failed.")
+			await connect.end(true)
+		}).catch(async () => {
+			message.channel.send("Ah! You failed.")
+			await connect.end(true)
+		})
+	} else if (type === 2) {
+		const jumbledWord = WordJumble(word)
+		message.channel.send("Quick! Unscramble `" + jumbledWord + "` as fast as you can! You have 30 seconds")
+		var filter2 = m => m.author.id === message.author.id
+		message.channel.awaitMessages(filter2, {
+			max: 1,
+			time: 30000,
+			errors: ['time']
+		}).then(async messageNext => {
+			messageNext = messageNext.first()
+			const response = messageNext.content.toLowerCase()
+			if (response.toLowerCase() === word.toLowerCase()) {
+				const money = between(50, 100)
+				const bal = await connect.fetch("currency", message.author.id)
+				connect.update("currency", message.author.id, parseInt(bal.amountw) + parseInt(money))
+				message.channel.send("You got it! You win `$" + money + "`!")
+				return await connect.end(true)
+			}
+			message.channel.send("Ah! You failed.")
+			await connect.end(true)
+		}).catch(async () => {
+			message.channel.send("Ah! You failed.")
+			await connect.end(true)
+		})
+	} else if (type === 3) {
+		const num = Math.floor(Math.random() * missingWordsStart.length)
+		const sentence = missingWordsStart[num]
+		const missingWord = missingWordsEnd[num]
+
+		message.channel.send("Finish this sentence\n\n`" + sentence.replace("[WORD]", "___________") + "`\n\n15 seconds to solve")
+		var filter2 = m => m.author.id === message.author.id
+		message.channel.awaitMessages(filter2, {
+			max: 1,
+			time: 15000,
+			errors: ['time']
+		}).then(async messageNext => {
+			messageNext = messageNext.first()
+			const response = messageNext.content.toLowerCase()
+			if (response.toLowerCase() === missingWord.toLowerCase()) {
+				const money = between(50, 100)
+				const bal = await connect.fetch("currency", message.author.id)
+				connect.update("currency", message.author.id, parseInt(bal.amountw) + parseInt(money))
+				message.channel.send("You got it! You win `$" + money + "`!")
+				return await connect.end(true)
+			}
+			message.channel.send("Ah! You failed.")
+			await connect.end(true)
+		}).catch(async () => {
+			message.channel.send("Ah! You failed.")
+			await connect.end(true)
+		})
+	}
+
+
 }
 
 function commandTriggers() {

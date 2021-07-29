@@ -1,7 +1,7 @@
 const commandInfo = {
 	"primaryName": "addmoney", // This is the command name used by help.js (gets uppercased).
 	"possibleTriggers": ["addmoney", "am"], // These are all commands that will trigger this command.
-	"help": "Allows admins to add money to a user", // This is the general description pf the command.
+	"help": "Allows admins to add money to a user", // This is the general description of the command.
 	"aliases": ["am"], // These are command aliases that help.js will use
 	"usage": "[COMMAND] <user> <money>", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "economy"
@@ -114,8 +114,9 @@ async function runCommand(message, args, RM) {
 				.setTitle("Invalid Value")
 			)
 		}
+
 		if (await connect.fetch("currency", user.id) === null) {
-			await connect.add("currency", user.id, 0, 0)
+			await connect.add("currency", user.id, 0, 0, 1000, 0)
 		}
 		const res = await connect.fetch("currency", user.id)
 		await connect.update("currency", user.id, ((res.amountw - 0) + (args[1] - 0)))

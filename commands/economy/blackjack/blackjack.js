@@ -3,7 +3,7 @@
 const commandInfo = {
 	"primaryName": "blackjack", // This is the command name used by help.js (gets uppercased).
 	"possibleTriggers": ["blackjack", "bj"], // These are all commands that will trigger this command.
-	"help": "III's official blackjack! Play with a bot! `[PREFIX]bj help` for more information!", // This is the general description pf the command.
+	"help": "III's official blackjack! Play with a bot! `[PREFIX]bj help` for more information!", // This is the general description of the command.
 	"aliases": ["bj"], // These are command aliases that help.js will use
 	"usage": "[COMMAND] <bet amount>", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "economy"
@@ -93,7 +93,7 @@ async function runCommand(message, args, RM) {
 		)
 	} else if (Number.isInteger(parseInt(args[0]))) {
 		if (await connect.fetch("currency", message.author.id) === null) {
-			await connect.add("currency", message.author.id, 0, 0)
+			await connect.add("currency", message.author.id, 0, 0, 1000, 0)
 		}
 		bet = parseInt(args[0])
 		let tempWal = await connect.fetch("currency", message.author.id)
@@ -388,7 +388,7 @@ async function runCommand(message, args, RM) {
 					if (dTotalNumF > 21) {
 						if (reason === "bust") {
 							const embed = new RM.Discord.MessageEmbed()
-								.setColor("RED")
+								.setColor("YELLOW")
 								.setAuthor(message.author.username, message.author.avatarURL())
 								.setTitle(":warning: PUSH :warning:")
 								.setDescription(`Both the dealer and you busted!`)
@@ -406,7 +406,7 @@ async function runCommand(message, args, RM) {
 						} else {
 
 							const embed = new RM.Discord.MessageEmbed()
-								.setColor("RED")
+								.setColor("GREEN")
 								.setAuthor(message.author.username, message.author.avatarURL())
 								.setTitle(":white_check_mark: YOU WIN :white_check_mark:")
 								.setDescription(`The dealer BUSTED!`)
@@ -565,8 +565,9 @@ async function runCommand(message, args, RM) {
 				connect.update("currency", message.author.id, ((info.amountw - 0) + (bet)))
 				message.channel.send("Game ended because both the dealer and the player got a blackjack, busted or have the same card value. You didn't lose anything.")
 			}
-			let newMoney = await connect.fetch("currency", message.author.id)
-			if (newMoney.amountw.includes("-")) {
+			const newMoney = await connect.fetch("currency", message.author.id)
+			const wallet = "" + newMoney.amountw
+			if (wallet.includes("-")) {
 				message.channel.send("**Oh shoot! You're in the negatives, work to earn back your money!**")
 			}
 			message.channel.send("Your balance is now: `$" + newMoney.amountw + "`")

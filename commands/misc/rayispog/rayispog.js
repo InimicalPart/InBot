@@ -1,7 +1,7 @@
 const commandInfo = {
 	"primaryName": "rayispog", // This is the command name used by help.js (gets uppercased).
 	"possibleTriggers": ["rayispog", "rbj", "raysbj"], // These are all commands that will trigger this command.
-	"help": "Play a game of blackjack against the bot", // This is the general description pf the command.
+	"help": "Play a game of blackjack against the bot", // This is the general description of the command.
 	"aliases": ["rbj", "raysbj"], // These are command aliases that help.js will use
 	"usage": "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "misc"

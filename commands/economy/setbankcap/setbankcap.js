@@ -1,15 +1,15 @@
 const commandInfo = {
-	"primaryName": "pay", // This is the command name used by help.js (gets uppercased).
-	"possibleTriggers": ["pay", "transfer"], // These are all commands that will trigger this command.
-	"help": "Give some money to a user!", // This is the general description of the command.
-	"aliases": ["transfer"], // These are command aliases that help.js will use
-	"usage": "[COMMAND] <player> <amount>", // [COMMAND] gets replaced with the command and correct prefix later
+	"primaryName": "setbankcap", // This is the command name used by help.js (gets uppercased).
+	"possibleTriggers": ["setbankcap", "sbc"], // These are all commands that will trigger this command.
+	"help": "Allows admins to change a users max bank capacity!", // This is the general description of the command.
+	"aliases": ["sbc"], // These are command aliases that help.js will use
+	"usage": "[COMMAND] <user> <amount/reset>", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "economy"
 }
 
 async function runCommand(message, args, RM) {
 	//Check if command is disabled
-	if (!require("../../../config.js").cmdPay) {
+	if (!require("../../../config.js").cmdSetbankcap) {
 		return message.channel.send(new RM.Discord.MessageEmbed()
 			.setColor("RED")
 			.setAuthor(message.author.tag, message.author.avatarURL())
@@ -20,111 +20,100 @@ async function runCommand(message, args, RM) {
 			.setTitle("Command Disabled")
 		)
 	}
-	const { connect } = require("../../../databasec")
-	await connect()
-	await connect.create("currency")
+	if (!message.member.hasPermission("ADMINISTRATOR")) {
+		await connect.end()
+		return m.edit(new RM.Discord.MessageEmbed()
+			.setColor("RED")
+			.setAuthor(message.author.username, message.author.avatarURL())
+			.setDescription(
+				"You do not have permission to use this command."
+			)
+			.setTimestamp()
+			.setThumbnail(message.guild.iconURL())
+			.setTitle("Permission Denied")
+		)
+	};
 	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
+		const { connect } = require("../../../databasec")
+		await connect()
+		await connect.create("inventory")
 		if (!args[0]) {
-			await connect.end()
-			m.edit(new RM.Discord.MessageEmbed()
+			await connect.end(true)
+			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
-				.setDescription("You need to specify a user to pay!")
+				.setAuthor(message.author.username, message.author.avatarURL())
+				.setDescription(
+					"You need to specify a user to set the bank capacity for."
+				)
+				.setTimestamp()
 				.setThumbnail(message.guild.iconURL())
 				.setTitle("Error")
 			)
-			return
 		}
+
 		let user =
 			message.mentions.members.first() ||
 			message.guild.members.cache.get(args[0]) ||
 			message.guild.members.cache.find(r => r.user.username.toLowerCase() === args[0].toLocaleLowerCase()) ||
 			message.guild.members.cache.find(r => r.displayName.toLowerCase() === args[0].toLocaleLowerCase()) ||
 			null
-		if (user == null) {
-			await connect.end()
-			return m.edit(new RM.Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setDescription(
-					"**ERROR:** Could not find user."
-				)
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Error")
-			)
-		}
+
 		if (await connect.fetch("currency", user.id) === null) {
-			await connect.add("currency", user.id, 0, 0, 1000, 0)
+			await connect.add("currency", user.id)
 		}
-		if (await connect.fetch("currency", message.author.id) === null) {
-			await connect.add("currency", message.author.id, 0, 0, 1000, 0)
-		}
+		const data = await connect.fetch("currency", message.author.id)
 		if (!args[1]) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setColor("GREEN")
+				.setAuthor(message.author.username, message.author.avatarURL())
 				.setDescription(
-					"You can't pay nothing!"
+					user.user.username + "'s bank capacity is at: `$" + data.maxbank + "`"
 				)
+				.setTimestamp()
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Success")
+			)
+		}
+		if (args[1] === "reset") {
+			await connect.update("currency", user.id, undefined, undefined, 1000)
+			await connect.end(true)
+			return m.edit(new RM.Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.username, message.author.avatarURL())
+				.setDescription(
+					user.user.username + "'s bank capacity has been set to: `$1000`"
+				)
+				.setTimestamp()
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Success")
+			)
+		} else if (!isNaN(parseInt(args[1]))) {
+			await connect.update("currency", user.id, undefined, undefined, parseInt(args[1]))
+			await connect.end(true)
+			return m.edit(new RM.Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.username, message.author.avatarURL())
+				.setDescription(
+					user.user.username + "'s bank capacity has been set to: `$" + parseInt(args[1]) + "`"
+				)
+				.setTimestamp()
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Success")
+			)
+		} else {
+			await connect.end(true)
+			return m.edit(new Discord.MessageEmbed()
+				.setColor("RED")
+				.setAuthor(message.author.username, message.author.avatarURL())
+				.setDescription(
+					"You need to specify a valid number for the bank capacity."
+				)
+				.setTimestamp()
 				.setThumbnail(message.guild.iconURL())
 				.setTitle("Error")
 			)
-
 		}
-
-		let amount = parseInt(args[1])
-		if (isNaN(amount)) {
-			await connect.end()
-			return m.edit(new RM.Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setDescription(
-					"**ERROR:** Invalid amount."
-				)
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Error")
-			)
-		}
-		if (amount < 1) {
-			await connect.end()
-			return m.edit(new RM.Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setDescription(
-					"**ERROR:** Invalid amount."
-				)
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Error")
-			)
-		}
-		let authorBal = await connect.fetch("currency", message.author.id)
-		let userBal = await connect.fetch("currency", user.id)
-		if (amount > authorBal.amountw) {
-			await connect.end()
-			return m.edit(new RM.Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setDescription(
-					"You don't have $" + amount
-				)
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Error")
-			)
-
-		}
-		await connect.update("currency", message.author.id, parseInt(authorBal.amountw) - parseInt(amount))
-		await connect.update("currency", user.id, parseInt(userBal.amountw) + parseInt(amount))
-		m.edit(new RM.Discord.MessageEmbed()
-			.setColor("GREEN")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				"You have transfered $" + amount + " to **" + user.user.username + "**."
-			)
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Success")
-		)
-		// cmd stuff here
-		await connect.end(true)
 	})
 }
 

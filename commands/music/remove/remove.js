@@ -3,7 +3,7 @@ const { json } = require("mathjs");
 const commandInfo = {
   primaryName: "remove", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["remove", "delete"], // These are all commands that will trigger this command.
-  help: "Allows you to remove a song from a queue", // This is the general description pf the command.
+  help: "Allows you to remove a song from a queue", // This is the general description of the command.
   aliases: ["delete"], // These are command aliases that help.js will use
   usage: "[COMMAND] <number>", // [COMMAND] gets replaced with the command and correct prefix later
   category: "music",

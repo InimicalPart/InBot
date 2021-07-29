@@ -26,7 +26,12 @@ function rayispog() {
 	return require("./rayispog/rayispog.js")
 }
 
+function dbinfo() {
+	return require("./dbinfo/dbinfo.js")
+}
+
 module.exports = {
+	dbinfo,
 	rayispog,
 	flipacoin,
 	stats,

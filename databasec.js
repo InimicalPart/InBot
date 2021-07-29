@@ -1,3 +1,7 @@
+/*
+
+
+*/
 async function connect() {
 
 	const { Client } = require('pg');
@@ -11,21 +15,37 @@ async function connect() {
 	await client.connect();
 	async function create(
 		/** @type string */ table_name) {
-		const res = await client.query(`CREATE TABLE IF NOT EXISTS ${table_name}(
-			id SERIAL,
-			userid bigint not null,
-			amountw integer,
-			amountb integer
-		);`);
-		return res
+
+		if (table_name == "currency") {
+			const res = await client.query(`CREATE TABLE IF NOT EXISTS ${table_name}(
+				id SERIAL,
+				userid bigint not null,
+				amountw integer,
+				amountb integer,
+				maxbank integer default 1000,
+				level integer default 0
+			);`);
+			return res
+		}
+		if (table_name == "inventory") {
+			const res = await client.query(`CREATE TABLE IF NOT EXISTS ${table_name}(
+				id SERIAL,
+				userid bigint not null,
+				items json not null default '${JSON.stringify({})}'
+				);`);
+			return res
+		}
 	}
+
 
 	async function add(
 		/** @type string */ table_name,
-		/** @type number */ userid,
-		/** @type number */ amountw,
-		/** @type number */ amountb) {
-		const res = await client.query(`INSERT INTO ${table_name}(userid, amountw, amountb) VALUES(${userid},${amountw},${amountb});`)
+		/** @type number */ userid) {
+		if (table_name == "currency") {
+			const res = await client.query(`INSERT INTO ${table_name}(userid, amountw, amountb, maxbank, level) VALUES(${userid},0,0,1000,0);`)
+		} else if (table_name == "inventory") {
+			const res = await client.query(`INSERT INTO ${table_name}(userid, items) VALUES(${userid}, '${JSON.stringify({})}');`)
+		}
 	}
 
 	async function fetch(
@@ -37,26 +57,58 @@ async function connect() {
 		if (res.rows.length < 1) return null
 		return JSON.parse(JSON.stringify(res.rows[0]))
 	}
+	async function updateInv(
+		/** @type string */ table_name,
+		/** @type number */ userid,
+		/** @type json @optional */items) {
+		let itemsE = false
+		if (!items && items === 0 && items !== undefined) itemsE = true;
+		if (items && items !== undefined) itemsE = true;
+		if (!itemsE) {
+			throw new Error('No amount to update.')
+		}
+		client.query(`UPDATE ${table_name} SET items='${JSON.stringify(items)}' WHERE userid=${userid};`)
+
+	}
+
 	async function update(
 		/** @type string */ table_name,
 		/** @type number */ userid,
 		/** @type number @optional */amountw,
-		/** @type number @optional */amountb) {
+		/** @type number @optional */amountb,
+		/** @type number @optional */maxbank,
+		/** @type number @optional */level) {
 		let amountwE = false;
 		let amountbE = false;
-		if (!amountw && amountw === 0) amountwE = true;
-		if (!amountb && amountb === 0) amountbE = true;
-		if (amountw) amountwE = true;
-		if (amountb) amountbE = true;
-		if (amountwE && !amountbE) {
-			client.query(`UPDATE ${table_name} SET amountw=${amountw} WHERE userid=${userid};`)
-		} else if (!amountwE && amountbE) {
-			client.query(`UPDATE ${table_name} SET amountb=${amountb} WHERE userid=${userid};`)
-		} else if (amountwE && amountbE) {
-			client.query(`UPDATE ${table_name} SET amountw=${amountw}, amountb=${amountb} WHERE userid=${userid};`)
-		} else if (!amountwE && !amountbE) {
+		let maxbankE = false;
+		let levelE = false;
+		if (!amountw && amountw === 0 && amountw !== undefined) amountwE = true;
+		if (!amountb && amountb === 0 && amountb !== undefined) amountbE = true;
+		if (!maxbank && maxbank === 0 && maxbank !== undefined) maxbankE = true;
+		if (!level && level === 0 && level !== undefined) levelE = true;
+		if (amountw && amountw !== undefined) amountwE = true;
+		if (amountb && amountb !== undefined) amountbE = true;
+		if (maxbank && maxbank !== undefined) maxbankE = true;
+		if (level && level !== undefined) levelE = true;
+		let total = ""
+		if (!amountwE && !amountbE && !maxbankE && !levelE) {
 			throw new Error('No amount to update.')
 		}
+		if (amountwE) {
+			total += `amountw=${amountw}, `
+		}
+		if (amountbE) {
+			total += `amountb=${amountb}, `
+		}
+		if (maxbankE) {
+			total += `maxbank=${maxbank}, `
+		}
+		if (levelE) {
+			total += `level=${level}, `
+		}
+
+		// throw new Error(`UPDATE ${table_name} SET ${total.trimEnd().slice(0, -1)} WHERE userid=${userid};`)
+		client.query(`UPDATE ${table_name} SET ${total.trimEnd().slice(0, -1)} WHERE userid=${userid};`)
 
 	}
 
@@ -71,7 +123,7 @@ async function connect() {
 		/** @type string */ table_name,
 		/** @type number */ userid) {
 
-		client.query(`UPDATE ${table_name} SET amountw=0, amountb=0 WHERE userid=${userid};`)
+		client.query(`UPDATE ${table_name} SET amountw=0, amountb=0, maxbank=1000, level=0 WHERE userid=${userid};`)
 		client.end()
 	}
 	async function query(
@@ -84,7 +136,7 @@ async function connect() {
 		if (allowWait)
 			return setTimeout(async function () {
 				client.end()
-			}, 500)
+			}, 1000)
 		return client.end()
 	}
 	async function dcAll(/**@type string */ table_name) {
@@ -95,6 +147,7 @@ async function connect() {
 	connect.add = add;
 	connect.fetch = fetch;
 	connect.update = update;
+	connect.updateInv = updateInv;
 	connect.remove = remove;
 	connect.clear = clear;
 	connect.query = query;

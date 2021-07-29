@@ -34,7 +34,37 @@ function leaderboard() {
 	return require("./leaderboard/leaderboard.js")
 }
 
+function use() {
+	return require("./use/use.js")
+}
+
+function spawnitem() {
+	return require("./spawnitem/spawnitem.js")
+}
+
+function inventory() {
+	return require("./inventory/inventory.js")
+}
+
+function setbankcap() {
+	return require("./setbankcap/setbankcap.js")
+}
+
+function shop() {
+	return require("./shop/shop.js")
+}
+
+function buy() {
+	return require("./buy/buy.js")
+}
+
 module.exports = {
+	buy,
+	shop,
+	setbankcap,
+	inventory,
+	spawnitem,
+	use,
 	leaderboard,
 	pay,
 	withdraw,
