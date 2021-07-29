@@ -1,7 +1,7 @@
 const commandInfo = {
 	"primaryName": "deposit", // This is the command name used by help.js (gets uppercased).
 	"possibleTriggers": ["deposit", "dep"], // These are all commands that will trigger this command.
-	"help": "Desposit your money to the bank!", // This is the general description pf the command.
+	"help": "Desposit your money to the bank!", // This is the general description of the command.
 	"aliases": ["dep"], // These are command aliases that help.js will use
 	"usage": "[COMMAND] <amount/all>", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "economy"
@@ -39,6 +39,9 @@ async function runCommand(message, args, RM) {
 			await connect.add("currency", message.author.id, 0, 0)
 		}
 		const balance = await connect.fetch("currency", message.author.id)
+		const bank = balance.amountb
+		const wallet = balance.amountw
+		const maxbank = balance.maxbank
 		let amount;
 		if (args[0] === "all") {
 			amount = parseInt(balance.amountw)
@@ -72,14 +75,58 @@ async function runCommand(message, args, RM) {
 				.setTitle("Error")
 			)
 		}
-		await connect.update("currency", message.author.id, parseInt(balance.amountw - amount), parseInt(balance.amountb + amount))
-		m.edit(new RM.Discord.MessageEmbed()
-			.setDescription("Deposited $" + amount + ` to the bank! You have now $${parseInt(balance.amountw - amount)} in your wallet!`)
-			.setColor("GREEN")
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Success")
-		)
-		await connect.end(true)
+		if (amount > maxbank && bank !== maxbank) {
+			let newAmount = parseInt(maxbank) - parseInt(bank);
+
+			await connect.update("currency", message.author.id, parseInt(balance.amountw - newAmount), parseInt(balance.amountb + newAmount))
+			m.edit(new RM.Discord.MessageEmbed()
+				.setDescription("Deposited $" + newAmount + ` to the bank! You have now $${parseInt(balance.amountw - newAmount)} in your wallet!`)
+				.setColor("GREEN")
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Success")
+			)
+			return await connect.end(true)
+		} else if (amount < maxbank && bank !== maxbank) {
+
+			await connect.update("currency", message.author.id, parseInt(balance.amountw - amount), parseInt(balance.amountb + amount))
+			m.edit(new RM.Discord.MessageEmbed()
+				.setDescription("Deposited $" + amount + ` to the bank! You have now $${parseInt(balance.amountw - amount)} in your wallet!`)
+				.setColor("GREEN")
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Success")
+			)
+			return await connect.end(true)
+		}
+		if (bank + amount > maxbank) {
+			await connect.end(true)
+			return m.edit(new RM.Discord.MessageEmbed()
+				.setDescription("You don't have enough bank space!")
+				.setColor("RED")
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Error")
+			)
+		}
+
+		if (bank === maxbank) {
+			await connect.end(true)
+			return m.edit(new RM.Discord.MessageEmbed()
+				.setDescription("Your bank is full")
+				.setColor("RED")
+				.setThumbnail(message.guild.iconURL())
+				.setTitle(":/")
+			)
+		}
+		if (maxbank < amount) {
+			await connect.end(true)
+			return m.edit(new RM.Discord.MessageEmbed()
+				.setDescription("You don't have enough space in your bank!")
+				.setColor("RED")
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Error")
+			)
+		}
+		//incase of it passing all checks, print values
+		console.log(bank, wallet, amount, maxbank)
 	})
 	// cmd stuff here
 }

@@ -1,7 +1,7 @@
 const commandInfo = {
 	"primaryName": "stats", // This is the command name used by help.js (gets uppercased).
 	"possibleTriggers": ["stats", "statistics"], // These are all commands that will trigger this command.
-	"help": "Get bot statistics and information", // This is the general description pf the command.
+	"help": "Get bot statistics and information", // This is the general description of the command.
 	"aliases": ["statistics"], // These are command aliases that help.js will use
 	"usage": "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "misc"

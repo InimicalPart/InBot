@@ -1,7 +1,7 @@
 const commandInfo = {
 	"primaryName": "pay", // This is the command name used by help.js (gets uppercased).
 	"possibleTriggers": ["pay", "transfer"], // These are all commands that will trigger this command.
-	"help": "Give some money to a user!", // This is the general description pf the command.
+	"help": "Give some money to a user!", // This is the general description of the command.
 	"aliases": ["transfer"], // These are command aliases that help.js will use
 	"usage": "[COMMAND] <player> <amount>", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "economy"
@@ -53,10 +53,10 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (await connect.fetch("currency", user.id) === null) {
-			await connect.add("currency", user.id, 0, 0)
+			await connect.add("currency", user.id, 0, 0, 1000, 0)
 		}
 		if (await connect.fetch("currency", message.author.id) === null) {
-			await connect.add("currency", message.author.id, 0, 0)
+			await connect.add("currency", message.author.id, 0, 0, 1000, 0)
 		}
 		if (!args[1]) {
 			await connect.end()

@@ -1,7 +1,7 @@
 const commandInfo = {
 	primaryName: "balance", // This is the command name used by help.js (gets uppercased).
 	possibleTriggers: ["balance", "wallet", "bal"], // These are all commands that will trigger this command.
-	help: "Shows Your or a User's Current Balance ", // This is the general description pf the command.
+	help: "Shows Your or a User's Current Balance ", // This is the general description of the command.
 	aliases: ["bal", "wallet"], // These are command aliases that help.js will use
 	usage: "[COMMAND] [username | nickname | mention | ID]", // [COMMAND] gets replaced with the command and correct prefix later
 	category: "economy",
@@ -52,7 +52,7 @@ async function runCommand(message, args, RM) {
 		}
 		const username = user.user.username || user.username
 		if (await connect.fetch("currency", user.id) === null) {
-			await connect.add("currency", user.id, 0, 0)
+			await connect.add("currency", user.id, 0, 0, 1000, 0)
 		}
 		const info = await connect.fetch("currency", user.id)
 		const bal = parseInt(info.amountw);
@@ -63,8 +63,13 @@ async function runCommand(message, args, RM) {
 				.setAuthor(message.author.username, message.author.avatarURL())
 				.setThumbnail(message.guild.iconURL())
 				.setTitle(`${username}'s Balance`)
-				.setDescription(`**Wallet**: $${bal}\n**Bank**: $${bank}`)
 				.setTimestamp();
+			if (info.userid !== message.author.id) {
+				embed.setDescription(`**Wallet**: $${bal}\n**Bank**: $${bank}`)
+			} else {
+				let bankPercent = ((bank / info.maxbank) * 100).toFixed(2);
+				embed.setDescription(`**Wallet**: $${bal}\n**Bank**: $${bank}/${info.maxbank} (\`${bankPercent}%\`)`)
+			}
 			await connect.end()
 			return m.edit(embed);
 		} else {

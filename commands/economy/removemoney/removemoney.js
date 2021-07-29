@@ -1,7 +1,7 @@
 const commandInfo = {
 	"primaryName": "removemoney", // This is the command name used by help.js (gets uppercased).
 	"possibleTriggers": ["removemoney", "rm",], // These are all commands that will trigger this command.
-	"help": "removes a certain amount of money from a user", // This is the general description pf the command.
+	"help": "removes a certain amount of money from a user", // This is the general description of the command.
 	"aliases": ["rm",], // These are command aliases that help.js will use
 	"usage": "[COMMAND] <user> <amount>", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "economy"
@@ -101,7 +101,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (await connect.fetch("currency", user.id) === null) {
-			await connect.add("currency", user.id, 0, 0)
+			await connect.add("currency", user.id, 0, 0, 1000, 0)
 		} // ANCHOR no it doesnt work for me
 		const info = await connect.fetch("currency", user.id)
 		let bal = parseInt(info.amountw)

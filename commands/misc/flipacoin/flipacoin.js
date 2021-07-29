@@ -1,7 +1,7 @@
 const commandInfo = {
 	"primaryName": "flipacoin", // This is the command name used by help.js (gets uppercased).
 	"possibleTriggers": ["flipacoin", "flip", "fc"], // These are all commands that will trigger this command.
-	"help": "flips a coin", // This is the general description pf the command.
+	"help": "flips a coin", // This is the general description of the command.
 	"aliases": ["flip", "fc"], // These are command aliases that help.js will use
 	"usage": "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "misc"

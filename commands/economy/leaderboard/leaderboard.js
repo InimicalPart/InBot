@@ -1,7 +1,7 @@
 const commandInfo = {
 	"primaryName": "leaderboard", // This is the command name used by help.js (gets uppercased).
 	"possibleTriggers": ["leaderboard", "lb", "top"], // These are all commands that will trigger this command.
-	"help": "Get the leaderboard of the server!", // This is the general description pf the command.
+	"help": "Get the leaderboard of the server!", // This is the general description of the command.
 	"aliases": ["lb", "top"], // These are command aliases that help.js will use
 	"usage": "[COMMAND] [w/b]", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "economy"
@@ -56,15 +56,15 @@ async function runCommand(message, args, RM) {
 			if (!args[0] || args[0].toLowerCase() === "all") {
 				start = "Top 5 Wallets and Banks:\n\n"
 				if (i == 0) {
-					finalDesc += "🥇 **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**\n\n"
+					finalDesc += "🥇 **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**, Total: **$" + (parseInt(row.amountw) + parseInt(row.amountb)) + "**\n\n"
 				} else if (i == 1) {
-					finalDesc += "🥈 **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**\n\n"
+					finalDesc += "🥈 **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**, Total: **$" + (parseInt(row.amountw) + parseInt(row.amountb)) + "**\n\n"
 				} else if (i == 2) {
-					finalDesc += "🥉 **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**\n\n"
+					finalDesc += "🥉 **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**, Total: **$" + (parseInt(row.amountw) + parseInt(row.amountb)) + "**\n\n"
 				} else if (i == 3) {
-					finalDesc += "4: **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**\n\n"
+					finalDesc += "4: **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**, Total: **$" + (parseInt(row.amountw) + parseInt(row.amountb)) + "**\n\n"
 				} else if (i == 4) {
-					finalDesc += "5: **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**"
+					finalDesc += "5: **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**, Total: **$" + (parseInt(row.amountw) + parseInt(row.amountb)) + "**"
 				}
 			} else if (args[0].toLowerCase() === "wallet" || args[0].toLowerCase() === "wallets" || args[0].toLowerCase() === "w") {
 				start = "Top 5 Wallets:\n\n"
@@ -95,15 +95,15 @@ async function runCommand(message, args, RM) {
 			} else {
 				start = "Top 5 Wallets and Banks:\n\n" //hi?
 				if (i == 0) {
-					finalDesc += "🥇 **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**\n\n"
+					finalDesc += "🥇 **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**, Total: **$" + (parseInt(row.amountw) + parseInt(row.amountb)) + "**\n\n"
 				} else if (i == 1) {
-					finalDesc += "🥈 **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**\n\n"
+					finalDesc += "🥈 **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**, Total: **$" + (parseInt(row.amountw) + parseInt(row.amountb)) + "**\n\n"
 				} else if (i == 2) {
-					finalDesc += "🥉 **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**\n\n"
+					finalDesc += "🥉 **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**, Total: **$" + (parseInt(row.amountw) + parseInt(row.amountb)) + "**\n\n"
 				} else if (i == 3) {
-					finalDesc += "4: **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**\n\n"
+					finalDesc += "4: **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**, Total: **$" + (parseInt(row.amountw) + parseInt(row.amountb)) + "**\n\n"
 				} else if (i == 4) {
-					finalDesc += "5: **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**"
+					finalDesc += "5: **" + top5names[i] + "**, Wallet: **$" + row.amountw + "**, Bank: **$" + row.amountb + "**, Total: **$" + (parseInt(row.amountw) + parseInt(row.amountb)) + "**"
 				}
 			}
 		}

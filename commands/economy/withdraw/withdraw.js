@@ -1,7 +1,7 @@
 const commandInfo = {
 	"primaryName": "withdraw", // This is the command name used by help.js (gets uppercased).
 	"possibleTriggers": ["withdraw", "with"], // These are all commands that will trigger this command.
-	"help": "Withdraw your money from the bank!", // This is the general description pf the command.
+	"help": "Withdraw your money from the bank!", // This is the general description of the command.
 	"aliases": ["with"], // These are command aliases that help.js will use
 	"usage": "[COMMAND] <amount/all>", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "economy"
@@ -34,7 +34,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (await connect.fetch("currency", message.author.id) === null) {
-			await connect.add("currency", message.author.id, 0, 0)
+			await connect.add("currency", message.author.id, 0, 0, 1000, 0)
 		}
 		const balance = await connect.fetch("currency", message.author.id)
 		let amount;

@@ -78,6 +78,13 @@ const requiredModules = {
 	"cmdWithdraw": economy.withdraw(),
 	"cmdPay": economy.pay(),
 	"cmdLeaderboard": economy.leaderboard(),
+	"cmdUse": economy.use(),
+	"cmdDbinfo": misc.dbinfo(),
+	"cmdSpawnitem": economy.spawnitem(),
+		"cmdInventory": economy.inventory(),
+		"cmdSetbankcap": economy.setbankcap(),
+		"cmdShop": economy.shop(),
+		"cmdBuy": economy.buy(),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),
@@ -104,6 +111,7 @@ client.on("message", async (message) => {
 			"301062520679170066",
 			"426826826220961821",
 			"814623079346470993",
+			"755934610579259432"
 		].includes(message.author.id) &&
 		client.user.id == "859513472973537311"
 	)
