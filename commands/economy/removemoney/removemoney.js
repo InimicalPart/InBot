@@ -87,25 +87,95 @@ async function runCommand(message, args, RM) {
 					.setTitle("Invalid Arguments")
 			)
 		}
-		if (isNaN(args[1])) {
-			await connect.end()
-			return m.edit(
-				new Discord.MessageEmbed()
-					.setColor("RED")
-					.setAuthor(message.author.tag, message.author.avatarURL())
-					.setDescription(
-						"Please specify a value."
-					)
-					.setThumbnail(message.guild.iconURL())
-					.setTitle("Invalid Arguments")
-			)
-		}
+
 		if (await connect.fetch("currency", user.id) === null) {
 			await connect.add("currency", user.id, 0, 0, 1000, 0)
 		} // ANCHOR no it doesnt work for me
 		const info = await connect.fetch("currency", user.id)
 		let bal = parseInt(info.amountw)
-		if (args[0] > bal) {
+		let bank = parseInt(info.amountb)
+		if (args[2] == "-b") {
+			if (args[1] == "clear") {
+				await connect.update("currency", user.id, undefined, 0)
+				await connect.end(true)
+				return m.edit(
+					new Discord.MessageEmbed()
+						.setColor("GREEN")
+						.setAuthor(message.author.tag, message.author.avatarURL())
+						.setDescription(
+							`${user.user.username}'s bank was cleared.`
+						)
+						.setThumbnail(message.guild.iconURL())
+						.setTitle("Success")
+				)
+			}
+			if (isNaN(parseInt(args[1]))) {
+				await connect.end(true)
+				return m.edit(
+					new Discord.MessageEmbed()
+						.setColor("RED")
+						.setAuthor(message.author.tag, message.author.avatarURL())
+						.setDescription(
+							"Please specify a valid bank value."
+						)
+						.setThumbnail(message.guild.iconURL())
+						.setTitle("Invalid Arguments")
+				)
+			}
+			if (args[1] > bank) {
+				await connect.end();
+				return m.edit(
+					new Discord.MessageEmbed()
+						.setColor("RED")
+						.setAuthor(message.author.tag, message.author.avatarURL())
+						.setDescription(
+							"you cannot take more than they have :/"
+						)
+						.setThumbnail(message.guild.iconURL())
+						.setTitle("Invalid Arguments")
+				)
+			}
+			await connect.update("currency", user.id, undefined, ((bal - 0) - (args[1] - 0)))
+			let moneyEmbed = new Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					`You took **\`$${args[1]}\`** from **${user.user.username}**'s bank. Their bank balance is now **\`$${bank - parseInt(args[1])}\`**`
+				) // done
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Money Removed")
+
+			m.edit(moneyEmbed)
+			return await connect.end(true)
+		}
+		if (args[1] == "clear") {
+			await connect.update("currency", user.id, 0)
+			await connect.end(true)
+			return m.edit(
+				new Discord.MessageEmbed()
+					.setColor("GREEN")
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription(
+						`${user.user.username}'s wallet was cleared.`
+					)
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("Success")
+			)
+		}
+		if (isNaN(parseInt(args[1]))) {
+			await connect.end(true)
+			return m.edit(
+				new Discord.MessageEmbed()
+					.setColor("RED")
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription(
+						"Please specify a valid bank value."
+					)
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("Invalid Arguments")
+			)
+		}
+		if (args[1] > bal) {
 			await connect.end();
 			return m.edit(
 				new Discord.MessageEmbed()
@@ -126,7 +196,7 @@ async function runCommand(message, args, RM) {
 			.setColor("GREEN")
 			.setAuthor(message.author.tag, message.author.avatarURL())
 			.setDescription(
-				`You took ${args[1]} from ${user.user.username}. New bal = $${bal2}`
+				`You took **\`$${args[1]}\`** from **${user.user.username}**'s wallet. Their new balance is: **\`$${bal - parseInt(args[1])}\`**`
 			)
 			.setThumbnail(message.guild.iconURL())
 			.setTitle("Money Removed")

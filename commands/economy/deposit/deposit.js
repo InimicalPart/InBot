@@ -44,12 +44,24 @@ async function runCommand(message, args, RM) {
 		const maxbank = balance.maxbank
 		let amount;
 		if (args[0] === "all") {
-			amount = parseInt(balance.amountw)
+			amount = parseInt(wallet) // ph wait maybe this was the problem? idk mk lets see lemme add the old code back
 		} else {
 			amount = parseInt(args[0])
 		}
+
+		//if args 0 is not a number tell them its not a fuckign number
+		if (isNaN(parseInt(amount))) {
+			await connect.end(true)
+			return m.edit(new RM.Discord.MessageEmbed()
+				.setDescription("we both know thats not a number")
+				.setColor("RED")
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Error")
+			)
+		}
+
 		if (amount > balance.amountw) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription("You don't have enough money!")
 				.setColor("RED")
@@ -58,7 +70,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (amount < 0) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription("You can't deposit negative money!")
 				.setColor("RED")
@@ -67,36 +79,28 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (amount === 0) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
-				.setDescription("You can't deposit anything!")
+				.setDescription("You can't deposit nothing!")
 				.setColor("RED")
 				.setThumbnail(message.guild.iconURL())
 				.setTitle("Error")
 			)
 		}
 		if (amount > maxbank && bank !== maxbank) {
-			let newAmount = parseInt(maxbank) - parseInt(bank);
-
-			await connect.update("currency", message.author.id, parseInt(balance.amountw - newAmount), parseInt(balance.amountb + newAmount))
+			const newAmount = maxbank - bank;
+			await connect.update("currency", message.author.id, wallet - newAmount, bank + newAmount)
+			const newBal = await connect.fetch("currency", message.author.id)
 			m.edit(new RM.Discord.MessageEmbed()
-				.setDescription("Deposited $" + newAmount + ` to the bank! You have now $${parseInt(balance.amountw - newAmount)} in your wallet!`)
 				.setColor("GREEN")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription("Deposited **\`$" + amount + `\`** to the bank! Your balance is now:\n\nWallet: **\`$${parseInt(newBal.amountw)}\`**\nBank: **\`$${parseInt(newBal.amountb)}\`**`)
 				.setThumbnail(message.guild.iconURL())
-				.setTitle("Success")
-			)
-			return await connect.end(true)
-		} else if (amount < maxbank && bank !== maxbank) {
-
-			await connect.update("currency", message.author.id, parseInt(balance.amountw - amount), parseInt(balance.amountb + amount))
-			m.edit(new RM.Discord.MessageEmbed()
-				.setDescription("Deposited $" + amount + ` to the bank! You have now $${parseInt(balance.amountw - amount)} in your wallet!`)
-				.setColor("GREEN")
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Success")
+				.setTitle("Deposited")
 			)
 			return await connect.end(true)
 		}
+
 		if (bank + amount > maxbank) {
 			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
@@ -105,6 +109,7 @@ async function runCommand(message, args, RM) {
 				.setThumbnail(message.guild.iconURL())
 				.setTitle("Error")
 			)
+
 		}
 
 		if (bank === maxbank) {
@@ -115,8 +120,9 @@ async function runCommand(message, args, RM) {
 				.setThumbnail(message.guild.iconURL())
 				.setTitle(":/")
 			)
+
 		}
-		if (maxbank < amount) {
+		if (maxbank < amount) { // quick question prolly cuz im blind um but where is the normal uhm code for if you do -dep 1 etc cuz that works but wher in this code is it
 			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription("You don't have enough space in your bank!")
@@ -124,12 +130,59 @@ async function runCommand(message, args, RM) {
 				.setThumbnail(message.guild.iconURL())
 				.setTitle("Error")
 			)
+
 		}
-		//incase of it passing all checks, print values
-		console.log(bank, wallet, amount, maxbank)
+
+		await connect.update("currency", message.author.id, wallet - amount, bank + amount)
+		const newBal = await connect.fetch("currency", message.author.id)
+		m.edit(new RM.Discord.MessageEmbed()
+			.setDescription("Deposited **\`$" + amount + `\`** to the bank! Your balance is now:\n\nWallet: **\`$${parseInt(newBal.amountw)}\`**\nBank: **\`$${parseInt(newBal.amountb)}\`**`)
+			.setColor("GREEN")
+			.setThumbnail(message.guild.iconURL())
+			.setTitle("Success")
+		)
+
+		return await connect.end(true)
 	})
-	// cmd stuff here
+	// console.log(bank, wallet, amount, maxbank)
+	// console.log("bank", "wallet", "amount", "maxbank")
 }
+
+/*
+https://github.com/InimicalPart/TheIIIProject/blob/9783c3ada3a4b596583f52de0968252bbc9feace/commands/economy/deposit/deposit.js
+	
+		if (amount > maxbank && bank !== maxbank) {
+			let newAmount = parseInt(maxbank) - parseInt(bank);
+	
+			await connect.update("currency", message.author.id, parseInt(balance.amountw - newAmount), parseInt(balance.amountb + newAmount))
+			m.edit(new RM.Discord.MessageEmbed()
+				.setDescription("Deposited $" + newAmount + ` to the bank! You have now $${parseInt(balance.amountw - newAmount)} in your wallet!`)
+				.setColor("GREEN")
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Success")
+			)
+			return await connect.end(true)
+		} else if (amount < maxbank && bank !== maxbank) {
+	
+			await connect.update("currency", message.author.id, parseInt(balance.amountw - amount), parseInt(balance.amountb + amount))
+			m.edit(new RM.Discord.MessageEmbed()
+				.setDescription("Deposited $" + amount + ` to the bank! You have now $${parseInt(balance.amountw - amount)} in your wallet!`)
+				.setColor("GREEN")
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Success")
+			)
+			return await connect.end(true)
+		}
+*/
+
+// <-------------here------------->
+//it passes all of the checks so it just stands on "working on it"
+// it failed with values:
+//  0     13444   13444   13444
+// bank, wallet, amount, maxbank
+
+//snack timeit works tho?
+//incase of it passing all checks, print values 
 
 function commandTriggers() {
 	return commandInfo.possibleTriggers;

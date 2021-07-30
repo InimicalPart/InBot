@@ -71,8 +71,9 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		await connect.update("currency", message.author.id, parseInt(balance.amountw) + parseInt(amount), parseInt(balance.amountb) - parseInt(amount)).then()
+		const newBal = await connect.fetch("currency", message.author.id)
 		m.edit(new RM.Discord.MessageEmbed()
-			.setDescription(`Withdrew $${amount} from the bank! You have $${parseInt(balance.amountb - amount)} left in the bank!`)
+			.setDescription(`Withdrew **\`$` + amount + `\`** from the bank! Your balance is now:\n\nWallet: **\`$${parseInt(newBal.amountw)}\`**\nBank: **\`$${parseInt(newBal.amountb)}\`**`)
 			.setColor("GREEN")
 			.setThumbnail(message.guild.iconURL())
 			.setTitle("Success")

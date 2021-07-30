@@ -47,3 +47,4 @@ exports.cmdInventory = true
 exports.cmdSetbankcap = true
 exports.cmdShop = true
 exports.cmdBuy = true
+exports.cmdRob = true

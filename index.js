@@ -16,9 +16,6 @@ require("dotenv").config();
 const Discord = require("discord.js");
 require("discord-reply");
 const config = require("./config.js");
-const express = require("express");
-const bodyParser = require("body-parser");
-const jwt_decode = require("jwt-decode");
 var Heroku = require("heroku-client"),
 	heroku = new Heroku({ token: process.env.HEROKU_API_TOKEN });
 if (process.env.NotMyToken == null) {
@@ -81,10 +78,11 @@ const requiredModules = {
 	"cmdUse": economy.use(),
 	"cmdDbinfo": misc.dbinfo(),
 	"cmdSpawnitem": economy.spawnitem(),
-		"cmdInventory": economy.inventory(),
-		"cmdSetbankcap": economy.setbankcap(),
-		"cmdShop": economy.shop(),
-		"cmdBuy": economy.buy(),
+	"cmdInventory": economy.inventory(),
+	"cmdSetbankcap": economy.setbankcap(),
+	"cmdShop": economy.shop(),
+	"cmdBuy": economy.buy(),
+	"cmdRob": economy.rob(),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),
@@ -110,8 +108,7 @@ client.on("message", async (message) => {
 			"745783548241248286",
 			"301062520679170066",
 			"426826826220961821",
-			"814623079346470993",
-			"755934610579259432"
+			"814623079346470993"
 		].includes(message.author.id) &&
 		client.user.id == "859513472973537311"
 	)
