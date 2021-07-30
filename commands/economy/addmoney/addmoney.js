@@ -60,7 +60,6 @@ async function runCommand(message, args, RM) {
 			message.guild.members.cache.forEach((member) => { if (member.id == args[0]) user = member.user; })
 		} else {
 			user = message.mentions.members.first() || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args[0].toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args[0].toLocaleLowerCase());
-			user = user.user
 		}
 		if (user == undefined) {
 			await connect.end()
@@ -74,7 +73,7 @@ async function runCommand(message, args, RM) {
 				.setTitle("User Not Found")
 			)
 		}
-		const username = user.username
+		const username = user.user.username // here was the error it was user.username
 		if (!args[1]) {
 			await connect.end()
 			return m.edit(new Discord.MessageEmbed()
@@ -118,13 +117,43 @@ async function runCommand(message, args, RM) {
 		if (await connect.fetch("currency", user.id) === null) {
 			await connect.add("currency", user.id, 0, 0, 1000, 0)
 		}
+		const info = await connect.fetch("currency", user.id)
+		const bank = parseInt(info.amountb)
+		if (args[2] == "-b") {
+			if (info.maxbank - bank < args[1]) {
+				await connect.end(true)
+				return m.edit(new Discord.MessageEmbed()
+					.setColor("RED")
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription(
+						`You can't add more money to their bank than their max bank cap! They have **\`$${(info.maxbank - bank)}\`** of free space in their bank`
+					)
+					.setTimestamp()
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("Invalid Amount")
+				)
+			}
+			await connect.update("currency", user.id, undefined, ((bank - 0) + (args[1] - 0)))
+			let moneyEmbed = new Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					`**${username}**'s bank has been increased by  **\`$${args[1]}\`**. Their bank balance is now **\`$${bank + parseInt(args[1])}\`**`
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Money Added")
+
+			m.edit(moneyEmbed)
+			return await connect.end(true)
+		}
 		const res = await connect.fetch("currency", user.id)
+
 		await connect.update("currency", user.id, ((res.amountw - 0) + (args[1] - 0)))
 		m.edit(new Discord.MessageEmbed()
 			.setColor("GREEN")
 			.setAuthor(message.author.tag, message.author.avatarURL())
 			.setDescription(
-				`${username}'s balance has been increased by ${args[1]}!`
+				`**${username}**'s balance has been increased by  **\`$${args[1]}\`**!`
 			)
 			.setTimestamp()
 			.setThumbnail(message.guild.iconURL())

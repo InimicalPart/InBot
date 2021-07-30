@@ -35,6 +35,15 @@ async function connect() {
 				);`);
 			return res
 		}
+		if (table_name == "cooldown") {
+			const res = await client.query(`CREATE TABLE IF NOT EXISTS ${table_name}(
+				id SERIAL,
+				userid bigint not null,
+				robcool int default null,
+				workcool int default null
+				);`);
+			return res
+		}
 	}
 
 
@@ -45,6 +54,8 @@ async function connect() {
 			const res = await client.query(`INSERT INTO ${table_name}(userid, amountw, amountb, maxbank, level) VALUES(${userid},0,0,1000,0);`)
 		} else if (table_name == "inventory") {
 			const res = await client.query(`INSERT INTO ${table_name}(userid, items) VALUES(${userid}, '${JSON.stringify({})}');`)
+		} else if (table_name == "cooldown") {
+			const res = await client.query(`INSERT INTO ${table_name}(userid, robcool, workcool) VALUES(${userid}, null, null);`)
 		}
 	}
 
@@ -70,7 +81,32 @@ async function connect() {
 		client.query(`UPDATE ${table_name} SET items='${JSON.stringify(items)}' WHERE userid=${userid};`)
 
 	}
-
+	async function updateCooldown(
+		/** @type string */ table_name,
+		/** @type number */ userid,
+		/** @type Date @optional */ robcool,
+		/** @type Date @optional */ workcool) {
+		let unixDateRob = undefined;
+		let unixDateWork = undefined;
+		if (robcool && robcool !== undefined) {
+			unixDateRob = robcool.getTime() / 1000
+		}
+		if (workcool && workcool !== undefined) {
+			unixDateWork = workcool.getTime() / 1000
+		}
+		if ((!robcool || robcool === undefined) && (!workcool || workcool === undefined)) {
+			throw new Error('No cooldown to update.')
+		}
+		if (unixDateWork !== undefined && unixDateRob !== undefined) {
+			client.query(`UPDATE ${table_name} SET robcool=${unixDateRob}, workcool=${unixDateRob} WHERE userid=${userid};`)
+		} else if (unixDateWork !== undefined && unixDateRob === undefined) {
+			client.query(`UPDATE ${table_name} SET workcool=${unixDateWork} WHERE userid=${userid};`)
+		} else if (unixDateWork === undefined && unixDateRob !== undefined) {
+			client.query(`UPDATE ${table_name} SET robcool=${unixDateRob} WHERE userid=${userid};`)
+		} else {
+			throw new Error('No cooldown to update.')
+		}
+	}
 	async function update(
 		/** @type string */ table_name,
 		/** @type number */ userid,
@@ -82,10 +118,10 @@ async function connect() {
 		let amountbE = false;
 		let maxbankE = false;
 		let levelE = false;
-		if (!amountw && amountw === 0 && amountw !== undefined) amountwE = true;
-		if (!amountb && amountb === 0 && amountb !== undefined) amountbE = true;
-		if (!maxbank && maxbank === 0 && maxbank !== undefined) maxbankE = true;
-		if (!level && level === 0 && level !== undefined) levelE = true;
+		if (!amountw && amountw !== undefined) amountwE = true;
+		if (!amountb && amountb !== undefined) amountbE = true;
+		if (!maxbank && maxbank !== undefined) maxbankE = true;
+		if (!level && level !== undefined) levelE = true;
 		if (amountw && amountw !== undefined) amountwE = true;
 		if (amountb && amountb !== undefined) amountbE = true;
 		if (maxbank && maxbank !== undefined) maxbankE = true;
@@ -148,6 +184,7 @@ async function connect() {
 	connect.fetch = fetch;
 	connect.update = update;
 	connect.updateInv = updateInv;
+	connect.updateCooldown = updateCooldown;
 	connect.remove = remove;
 	connect.clear = clear;
 	connect.query = query;

@@ -26,8 +26,8 @@ async function runCommand(message, args, RM) {
 		await connect()
 		await connect.create("currency")
 		let embed = new RM.Discord.MessageEmbed()
-			.setDescription("<:banknote:870085917963067392> **Bank Note** - [$80,000](https://www.youtube.com/watch?v=8O_ifyIIrN4)\nIncrease your maximum bank capacity by $1000\nid: `banknote`\n\n" +
-				":brain: **Ray's Brain** - [$20,000](https://www.youtube.com/watch?v=8O_ifyIIrN4)\nHe doesnt know\nid:`raybrain`\n\n"
+			.setDescription("<:banknote:870085917963067392> **Bank Note** - [$80,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nIncrease your maximum bank capacity by $1000\nid: `banknote`\n\n" +
+				":brain: **Ray's Brain** - [$20,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nHe doesnt know\nid:`raybrain`\n\n"
 			)
 		m.edit(embed)
 		await connect.end(true)

@@ -58,7 +58,12 @@ function buy() {
 	return require("./buy/buy.js")
 }
 
+function rob() {
+	return require("./rob/rob.js")
+}
+
 module.exports = {
+	rob,
 	buy,
 	shop,
 	setbankcap,

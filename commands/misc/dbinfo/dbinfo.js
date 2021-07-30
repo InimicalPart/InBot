@@ -70,91 +70,80 @@ async function runCommand(message, args, RM) {
 			return
 		}
 		const resjson = JSON.parse(JSON.stringify(res.rows[0]))
+		const user = message.guild.members.cache.get(resjson.userid)
+		const tag = user.user.tag
+		const iconURL = user.user.avatarURL()
+		let embed = new RM.Discord.MessageEmbed()
+			.setColor("GREEN")
+			.setAuthor(message.author.tag, message.author.avatarURL())
+			.setThumbnail(iconURL)
+			.setTitle("DB Data")
+			.addFields({
+				name: "ID",
+				value: resjson.id,
+			})
+			.addFields({
+				name: "Name",
+				value: "**" + tag + "**",
+			})
+			.addFields({
+				name: "User ID",
+				value: resjson.userid
+			})
+			.addFields({
+				name: "Wallet",
+				value: resjson.amountw
+			})
+			.addFields({
+				name: "Bank",
+				value: resjson.amountb
+			})
+			.addFields({
+				name: "Bank Capacity",
+				value: resjson.maxbank
+			})
+			.addFields({
+				name: "Level",
+				value: resjson.level
+			})
 		const res2 = await connect.query("SELECT * FROM inventory WHERE userid=" + resjson.userid)
-		if (res2.rows.length < 1) {
-			const user = message.guild.members.cache.get(resjson.userid)
-			const tag = user.user.tag
-			const iconURL = user.user.avatarURL()
-			const embed = new RM.Discord.MessageEmbed()
-				.setColor("GREEN")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setThumbnail(iconURL)
-				.setTitle("DB Data")
-				.addFields({
-					name: "ID",
-					value: resjson.id,
-				})
-				.addFields({
-					name: "Name",
-					value: "**" + tag + "**",
-				})
-				.addFields({
-					name: "User ID",
-					value: resjson.userid
-				})
-				.addFields({
-					name: "Wallet",
-					value: resjson.amountw
-				})
-				.addFields({
-					name: "Bank",
-					value: resjson.amountb
-				})
-				.addFields({
-					name: "Bank Capacity",
-					value: resjson.maxbank
-				})
-				.addFields({
-					name: "Level",
-					value: resjson.level
-				})
-			m.edit(embed)
-			connect.end(true)
+		const res3 = await connect.query("SELECT * FROM cooldown WHERE userid=" + resjson.userid)
+		if (res3.rows.length < 1) {
 		} else {
-			const res2json = JSON.parse(JSON.stringify(res2.rows[0]))
-			const user = message.guild.members.cache.get(resjson.userid)
-			const tag = user.user.tag
-			const iconURL = user.user.avatarURL()
-			const embed = new RM.Discord.MessageEmbed()
-				.setColor("GREEN")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setThumbnail(iconURL)
-				.setTitle("DB Data")
-				.addFields({
-					name: "ID",
-					value: resjson.id,
-				})
-				.addFields({
-					name: "Name",
-					value: "**" + tag + "**",
-				})
-				.addFields({
-					name: "User ID",
-					value: resjson.userid
-				})
-				.addFields({
-					name: "Wallet",
-					value: resjson.amountw
-				})
-				.addFields({
-					name: "Bank",
-					value: resjson.amountb
-				})
-				.addFields({
-					name: "Bank Capacity",
-					value: resjson.maxbank
-				})
-				.addFields({
-					name: "Level",
-					value: resjson.level
-				})
-				.addFields({
+			const res3json = JSON.parse(JSON.stringify(res3.rows[0]))
+			if (res2.rows.length < 1) {
+			} else {
+				const res2json = JSON.parse(JSON.stringify(res2.rows[0]))
+				embed.addFields({
 					name: "Inventory",
 					value: JSON.stringify(res2json.items)
 				})
-			m.edit(embed)
-			connect.end(true)
+			}
+			if (res3.rows.workcool !== null) {
+				embed.addFields({
+					name: "Work Cooldown",
+					value: new Date(parseInt(res3json.workcool) * 1000).toLocaleString()
+				})
+			} else {
+				embed.addFields({
+					name: "Work Cooldown",
+					value: "No cooldown."
+				})
+			}
+			if (res3.rows[0].robcool !== null) {
+				embed.addFields({
+					name: "Rob Cooldown",
+					value: new Date(parseInt(res3json.robcool) * 1000).toLocaleString()
+				})
+			} else {
+				embed.addFields({
+					name: "Rob Cooldown",
+					value: "No cooldown."
+				})
+			}
 		}
+		m.edit(embed)
+		connect.end(true)
 	})
 }
 function commandTriggers() {
