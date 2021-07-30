@@ -97,7 +97,7 @@ async function runCommand(message, args, RM) {
 						.setTitle("Not enough money")
 					)
 				}
-				await connect.update("currency", message.author.id, data.amountw - 100000)
+				await connect.update("currency", message.author.id, data.amountw - 20000)
 				const items = invData.items
 				if (items.raybrain === undefined) {
 					items.raybrain = 1
