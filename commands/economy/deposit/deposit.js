@@ -6,7 +6,9 @@ const commandInfo = {
 	"usage": "[COMMAND] <amount/all>", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "economy"
 }
-
+function numberWithCommas(x) {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 async function runCommand(message, args, RM) {
 	//Check if command is disabled
 	if (!require("../../../config.js").cmdDeposit) {
@@ -94,7 +96,7 @@ async function runCommand(message, args, RM) {
 			m.edit(new RM.Discord.MessageEmbed()
 				.setColor("GREEN")
 				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setDescription("Deposited **\`$" + amount + `\`** to the bank! Your balance is now:\n\nWallet: **\`$${parseInt(newBal.amountw)}\`**\nBank: **\`$${parseInt(newBal.amountb)}\`**`)
+				.setDescription("Deposited **\`$" + numberWithCommas(newAmount) + `\`** to the bank! Your balance is now:\n\nWallet: **\`$${numberWithCommas(newBal.amountw)}\`**\nBank: **\`$${numberWithCommas(newBal.amountb)}\`**`)
 				.setThumbnail(message.guild.iconURL())
 				.setTitle("Deposited")
 			)
@@ -122,7 +124,7 @@ async function runCommand(message, args, RM) {
 			)
 
 		}
-		if (maxbank < amount) { // quick question prolly cuz im blind um but where is the normal uhm code for if you do -dep 1 etc cuz that works but wher in this code is it
+		if (maxbank < amount) {
 			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription("You don't have enough space in your bank!")
@@ -136,7 +138,7 @@ async function runCommand(message, args, RM) {
 		await connect.update("currency", message.author.id, wallet - amount, bank + amount)
 		const newBal = await connect.fetch("currency", message.author.id)
 		m.edit(new RM.Discord.MessageEmbed()
-			.setDescription("Deposited **\`$" + amount + `\`** to the bank! Your balance is now:\n\nWallet: **\`$${parseInt(newBal.amountw)}\`**\nBank: **\`$${parseInt(newBal.amountb)}\`**`)
+			.setDescription("Deposited **\`$" + numberWithCommas(amount) + `\`** to the bank! Your balance is now:\n\nWallet: **\`$${numberWithCommas(newBal.amountw)}\`**\nBank: **\`$${numberWithCommas(newBal.amountb)}\`**`)
 			.setColor("GREEN")
 			.setThumbnail(message.guild.iconURL())
 			.setTitle("Success")
@@ -144,45 +146,7 @@ async function runCommand(message, args, RM) {
 
 		return await connect.end(true)
 	})
-	// console.log(bank, wallet, amount, maxbank)
-	// console.log("bank", "wallet", "amount", "maxbank")
 }
-
-/*
-https://github.com/InimicalPart/TheIIIProject/blob/9783c3ada3a4b596583f52de0968252bbc9feace/commands/economy/deposit/deposit.js
-	
-		if (amount > maxbank && bank !== maxbank) {
-			let newAmount = parseInt(maxbank) - parseInt(bank);
-	
-			await connect.update("currency", message.author.id, parseInt(balance.amountw - newAmount), parseInt(balance.amountb + newAmount))
-			m.edit(new RM.Discord.MessageEmbed()
-				.setDescription("Deposited $" + newAmount + ` to the bank! You have now $${parseInt(balance.amountw - newAmount)} in your wallet!`)
-				.setColor("GREEN")
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Success")
-			)
-			return await connect.end(true)
-		} else if (amount < maxbank && bank !== maxbank) {
-	
-			await connect.update("currency", message.author.id, parseInt(balance.amountw - amount), parseInt(balance.amountb + amount))
-			m.edit(new RM.Discord.MessageEmbed()
-				.setDescription("Deposited $" + amount + ` to the bank! You have now $${parseInt(balance.amountw - amount)} in your wallet!`)
-				.setColor("GREEN")
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Success")
-			)
-			return await connect.end(true)
-		}
-*/
-
-// <-------------here------------->
-//it passes all of the checks so it just stands on "working on it"
-// it failed with values:
-//  0     13444   13444   13444
-// bank, wallet, amount, maxbank
-
-//snack timeit works tho?
-//incase of it passing all checks, print values 
 
 function commandTriggers() {
 	return commandInfo.possibleTriggers;

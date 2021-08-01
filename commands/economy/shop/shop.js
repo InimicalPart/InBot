@@ -22,14 +22,31 @@ async function runCommand(message, args, RM) {
 	}
 
 	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
+		//const DiscordPages = require("djs-embed-pages");
 		const { connect } = require("../../../databasec")
 		await connect()
 		await connect.create("currency")
-		let embed = new RM.Discord.MessageEmbed()
-			.setDescription("<:banknote:870085917963067392> **Bank Note** - [$80,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nIncrease your maximum bank capacity by $1000\nid: `banknote`\n\n" +
-				":brain: **Ray's Brain** - [$20,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nHe doesnt know\nid:`raybrain`\n\n"
+
+		let page1 = new RM.Discord.MessageEmbed()
+			.setDescription(
+				"<:banknote:870085917963067392> **Bank Note** - [$80,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nIncrease your maximum bank capacity by $1000\nid: `banknote`\n\n" +
+				":brain: **Ray's Brain** - [$20,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nHe doesnt know\nid:`raybrain`\n\n" +
+				":lock: **Padlock** - [$5,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nLock your wallet for 10h! Stops every thief if they don't have a lockpick\nid:`padlock`\n\n" +
+				":lock_with_ink_pen: **Lockpick** - [$7,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nGet a lockpick so you can pick padlocks!\nid: `lockpick`\n\n" +
+				"<:landmine:870679232651591700> **Landmine** - [$10,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nA landmine will have a 50% of killing the thief.\nid: `landmine`\n\n"
 			)
-		m.edit(embed)
+		let page2 = new RM.Discord.MessageEmbed()
+			.setDescription(
+				"<:banknote:870085917963067392> **No Bank Note** - [$80,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nIncrease your maximum bank capacity by $1000\nid: `banknote`\n\n" +
+				":brain: **Ray's Brain** - [$20,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nHe doesnt know\nid:`raybrain`\n\n" +
+				":lock: **Padlock** - [$5,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nLock your wallet for 10h! Stops every thief if they don't have a lockpick\nid:`padlock`\n\n" +
+				":lock_with_ink_pen: **Lockpick** - [$2,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nGet a lockpick so you can pick padlocks!\nid: `lockpick`\n\n" +
+				"<:landmine:870679232651591700> **Landmine** - [$10,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nA landmine will have a 50% of killing the thief.\nid: `landmine`\n\n"
+			)
+
+		m.edit(page1)
+		//":moneybag: **Money Bag** - [$10,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nYou can store up to $10,000\nid: `moneybag`\n\n" +
+		//m.edit(embed)
 		await connect.end(true)
 	})
 

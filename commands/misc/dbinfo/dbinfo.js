@@ -33,6 +33,9 @@ async function runCommand(message, args, RM) {
 			.setTitle("Permission Denied")
 		)
 	};
+	function numberWithCommas(x) {
+		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
 	const { connect } = require("../../../databasec")
 	await connect()
 	await connect.create("currency")
@@ -92,15 +95,15 @@ async function runCommand(message, args, RM) {
 			})
 			.addFields({
 				name: "Wallet",
-				value: resjson.amountw
+				value: "$" + numberWithCommas(resjson.amountw)
 			})
 			.addFields({
 				name: "Bank",
-				value: resjson.amountb
+				value: "$" + numberWithCommas(resjson.amountb)
 			})
 			.addFields({
 				name: "Bank Capacity",
-				value: resjson.maxbank
+				value: "$" + numberWithCommas(resjson.maxbank)
 			})
 			.addFields({
 				name: "Level",
@@ -119,10 +122,10 @@ async function runCommand(message, args, RM) {
 					value: JSON.stringify(res2json.items)
 				})
 			}
-			if (res3.rows.workcool !== null) {
+			if (res3.rows[0].workcool !== null) {
 				embed.addFields({
 					name: "Work Cooldown",
-					value: new Date(parseInt(res3json.workcool) * 1000).toLocaleString()
+					value: new Date(res3json.workcool * 1000).toLocaleString()
 				})
 			} else {
 				embed.addFields({
@@ -133,7 +136,7 @@ async function runCommand(message, args, RM) {
 			if (res3.rows[0].robcool !== null) {
 				embed.addFields({
 					name: "Rob Cooldown",
-					value: new Date(parseInt(res3json.robcool) * 1000).toLocaleString()
+					value: new Date(res3json.robcool * 1000).toLocaleString()
 				})
 			} else {
 				embed.addFields({
@@ -141,6 +144,62 @@ async function runCommand(message, args, RM) {
 					value: "No cooldown."
 				})
 			}
+			if (res3.rows[0].slotscool !== null) {
+				embed.addFields({
+					name: "Slots Cooldown",
+					value: new Date(res3json.slotscool * 1000).toLocaleString()
+				})
+			} else {
+				embed.addFields({
+					name: "Slots Cooldown",
+					value: "No cooldown."
+				})
+			}
+			if (res3.rows[0].roulcool !== null) {
+				embed.addFields({
+					name: "Roulette Cooldown",
+					value: new Date(res3json.roulcool * 1000).toLocaleString()
+				})
+			} else {
+				embed.addFields({
+					name: "Roulette Cooldown",
+					value: "No cooldown."
+				})
+			}
+			if (res3.rows[0].dailycool !== null) {
+				embed.addFields({
+					name: "Daily Cooldown",
+					value: new Date(res3json.dailycool * 1000).toLocaleString()
+				})
+			} else {
+				embed.addFields({
+					name: "Daily Cooldown",
+					value: "No cooldown."
+				})
+			}
+			if (res3.rows[0].weeklycool !== null) {
+				embed.addFields({
+					name: "Weekly Cooldown",
+					value: new Date(res3json.weeklycool * 1000).toLocaleString()
+				})
+			} else {
+				embed.addFields({
+					name: "Weekly Cooldown",
+					value: "No cooldown."
+				})
+			}
+			if (res3.rows[0].monthlycool !== null) {
+				embed.addFields({
+					name: "Monthly Cooldown",
+					value: new Date(res3json.monthlycool * 1000).toLocaleString()
+				})
+			} else {
+				embed.addFields({
+					name: "Monthly Cooldown",
+					value: "No cooldown."
+				})
+			}
+
 		}
 		m.edit(embed)
 		connect.end(true)

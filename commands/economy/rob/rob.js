@@ -39,13 +39,6 @@ async function runCommand(message, args, RM) {
 		if (await connect.fetch("cooldown", message.author.id) == null) {
 			await connect.add("cooldown", message.author.id)
 		}
-
-		let user =
-			message.mentions.members.first() ||
-			message.guild.members.cache.get(args[0]) ||
-			message.guild.members.cache.find(r => r.user.username.toLowerCase() === args[0].toLocaleLowerCase()) ||
-			message.guild.members.cache.find(r => r.displayName.toLowerCase() === args[0].toLocaleLowerCase()) ||
-			null
 		if (!args[0]) {
 			m.edit(new RM.Discord.MessageEmbed()
 				.setColor("RED")
@@ -58,6 +51,12 @@ async function runCommand(message, args, RM) {
 			)
 			return await connect.end(true)
 		}
+		let user =
+			message.mentions.members.first() ||
+			message.guild.members.cache.get(args[0]) ||
+			message.guild.members.cache.find(r => r.user.username.toLowerCase() === args[0].toLocaleLowerCase()) ||
+			message.guild.members.cache.find(r => r.displayName.toLowerCase() === args[0].toLocaleLowerCase()) ||
+			null
 		if (user == null) {
 			m.edit(new RM.Discord.MessageEmbed()
 				.setColor("RED")
@@ -94,6 +93,12 @@ async function runCommand(message, args, RM) {
 		if (await connect.fetch("currency", user.id) == null) {
 			await connect.add("currency", user.id)
 		}
+		if (await connect.fetch("inventory", user.id) == null) {
+			await connect.add("inventory", user.id)
+		}
+		if (await connect.fetch("inventory", message.author.id) == null) {
+			await connect.add("inventory", message.author.id)
+		}
 
 
 		/*if (connect.fetch("inventory", user.id) == null) {
@@ -102,6 +107,7 @@ async function runCommand(message, args, RM) {
 		
 		Check if user has a lockpick or a landmine
 		*/
+
 
 		let userCurrency = await connect.fetch("currency", user.id)
 		let authorCurrency = await connect.fetch("currency", message.author.id)
@@ -132,46 +138,256 @@ async function runCommand(message, args, RM) {
 				.setTitle("Error")
 			)
 		}
+		const victimInv = await connect.fetch("inventory", user.id)
+		const thiefInv = await connect.fetch("inventory", message.author.id)
+		const victimActive = victimInv.items.active
+		if (victimActive.padlock !== undefined) {
+			const padlockExpiry = victimActive.padlock
+			const padlockExpiryDate = new Date(padlockExpiry)
+			if ((padlockExpiryDate.getTime() - new Date().getTime()).toString().includes("-")) {
+				delete victimInv.items.active.padlock
+				await connect.updateInv("inventory", message.author.id, victimInv.items)
+				user.user.send(new RM.Discord.MessageEmbed(
+				).setColor("RED")
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription(
+						"Your padlock expired!"
+					)
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("Error")
+				)
+				await connect.updateCooldown("cooldown", message.author.id, new Date(new Date().setTime(new Date().getTime() + (45 * 60 * 1000))))
+				rest()
+			} else {
+				if (thiefInv.items.lockpick !== undefined && thiefInv.items.lockpick <= 1) {
+					m.edit(new RM.Discord.MessageEmbed()
+						.setColor("YELLOW")
+						.setAuthor(message.author.tag, message.author.avatarURL())
+						.setDescription(
+							"This user has an active padlock! You have `" + thiefInv.items.lockpick + "` lockpicks.\nDo you want to use one and try to pick the lock?\n\n`yes/y/no/n`"
+						)
+						.setThumbnail(message.guild.iconURL())
+						.setTitle("Padlock")
+					)
+					var filter2 = m => m.author.id === message.author.id
+					message.channel.awaitMessages(filter2, {
+						max: 1,
+						time: 30000,
+						errors: ['time']
+					}).then(async messageNext => {
+						messageNext = messageNext.first()
+						const response = messageNext.content.toLowerCase()
+						if (response === "yes" || response === "y") {
+							thiefInv.items.lockpick -= 1
+							if (thiefInv.items.lockpick === 0) {
+								delete thiefInv.items.lockpick
+							}
+							await connect.updateCooldown("cooldown", message.author.id, new Date(new Date().setTime(new Date().getTime() + (45 * 60 * 1000))))
+							await connect.updateInv("inventory", message.author.id, thiefInv.items)
+
+							m.edit(new RM.Discord.MessageEmbed()
+								.setColor("AQUA")
+								.setAuthor(message.author.tag, message.author.avatarURL())
+								.setDescription(
+									"Picking...\n\n:lock: Pin 1: **NOT BOUND**\n" +
+									":lock: Pin 2: **NOT BOUND**\n" +
+									":lock: Pin 3: **NOT BOUND**\n" +
+									":lock: Pin 4: **NOT BOUND**\n" +
+									":lock: Pin 5: **NOT BOUND**"
+								)
+								.setThumbnail(message.guild.iconURL())
+								.setTitle("Padlock Picking")
+							)
+							let pin1 = "NOT BOUND"
+							let pin2 = "NOT BOUND"
+							let pin3 = "NOT BOUND"
+							let pin4 = "NOT BOUND"
+							let pin5 = "NOT BOUND"
+							const pins = [1, 2, 3, 4, 5]
+							let pickBroke = false;
+							setTimeout(() => {
+								const selectedPin = Math.floor(Math.random() * pins.length)
+								const pin = pins[selectedPin]
+								if (pin == 1) { pin1 = "BOUND" } if (pin == 2) { pin2 = "BOUND" } if (pin == 3) { pin3 = "BOUND" } if (pin == 4) { pin4 = "BOUND" } if (pin == 5) { pin5 = "BOUND" }
+								pins.splice(selectedPin, 1)
+								if (between(1, 20) == 10) {
+									pickBroke = true
+									return broke()
+								}
+								m.edit(new RM.Discord.MessageEmbed().setColor("AQUA").setAuthor(message.author.tag, message.author.avatarURL()).setDescription("Picking...\n\n:lock: Pin 1: **" + pin1 + "**\n:lock: Pin 2: **" + pin2 + "**\n:lock: Pin 3: **" + pin3 + "**\n:lock: Pin 4: **" + pin4 + "**\n:lock: Pin 5: **" + pin5 + "**").setThumbnail(message.guild.iconURL()).setTitle("Padlock Picking"))
+								setTimeout(() => {
+									const selectedPin = Math.floor(Math.random() * pins.length)
+									const pin = pins[selectedPin]
+									if (pin == 1) { pin1 = "BOUND" } if (pin == 2) { pin2 = "BOUND" } if (pin == 3) { pin3 = "BOUND" } if (pin == 4) { pin4 = "BOUND" } if (pin == 5) { pin5 = "BOUND" }
+									pins.splice(selectedPin, 1)
+									if (between(1, 20) == 10) {
+										pickBroke = true
+										return broke()
+									}
+									m.edit(new RM.Discord.MessageEmbed().setColor("AQUA").setAuthor(message.author.tag, message.author.avatarURL()).setDescription("Picking...\n\n:lock: Pin 1: **" + pin1 + "**\n:lock: Pin 2: **" + pin2 + "**\n:lock: Pin 3: **" + pin3 + "**\n:lock: Pin 4: **" + pin4 + "**\n:lock: Pin 5: **" + pin5 + "**").setThumbnail(message.guild.iconURL()).setTitle("Padlock Picking"))
+									setTimeout(() => {
+										const selectedPin = Math.floor(Math.random() * pins.length)
+										const pin = pins[selectedPin]
+										if (pin == 1) { pin1 = "BOUND" } if (pin == 2) { pin2 = "BOUND" } if (pin == 3) { pin3 = "BOUND" } if (pin == 4) { pin4 = "BOUND" } if (pin == 5) { pin5 = "BOUND" }
+										pins.splice(selectedPin, 1)
+										if (between(1, 20) == 10) {
+											pickBroke = true
+											return broke()
+										}
+										m.edit(new RM.Discord.MessageEmbed().setColor("AQUA").setAuthor(message.author.tag, message.author.avatarURL()).setDescription("Picking...\n\n:lock: Pin 1: **" + pin1 + "**\n:lock: Pin 2: **" + pin2 + "**\n:lock: Pin 3: **" + pin3 + "**\n:lock: Pin 4: **" + pin4 + "**\n:lock: Pin 5: **" + pin5 + "**").setThumbnail(message.guild.iconURL()).setTitle("Padlock Picking"))
+										setTimeout(() => {
+											const selectedPin = Math.floor(Math.random() * pins.length)
+											const pin = pins[selectedPin]
+											if (pin == 1) { pin1 = "BOUND" } if (pin == 2) { pin2 = "BOUND" } if (pin == 3) { pin3 = "BOUND" } if (pin == 4) { pin4 = "BOUND" } if (pin == 5) { pin5 = "BOUND" }
+											pins.splice(selectedPin, 1)
+											m.edit(new RM.Discord.MessageEmbed().setColor("AQUA").setAuthor(message.author.tag, message.author.avatarURL()).setDescription("Picking...\n\n:lock: Pin 1: **" + pin1 + "**\n:lock: Pin 2: **" + pin2 + "**\n:lock: Pin 3: **" + pin3 + "**\n:lock: Pin 4: **" + pin4 + "**\n:lock: Pin 5: **" + pin5 + "**").setThumbnail(message.guild.iconURL()).setTitle("Padlock Picking"))
+											setTimeout(async () => {
+												const selectedPin = Math.floor(Math.random() * pins.length)
+												const pin = pins[selectedPin]
+												if (pin == 1) { pin1 = "BOUND" } if (pin == 2) { pin2 = "BOUND" } if (pin == 3) { pin3 = "BOUND" } if (pin == 4) { pin4 = "BOUND" } if (pin == 5) { pin5 = "BOUND" }
+												pins.splice(selectedPin, 1)
+												if (between(1, 20) == 10) {
+													pickBroke = true
+													return broke()
+												}
+												m.edit(new RM.Discord.MessageEmbed().setColor("AQUA").setAuthor(message.author.tag, message.author.avatarURL()).setDescription("Picking...\n\n:lock: Pin 1: **" + pin1 + "**\n:lock: Pin 2: **" + pin2 + "**\n:lock: Pin 3: **" + pin3 + "**\n:lock: Pin 4: **" + pin4 + "**\n:lock: Pin 5: **" + pin5 + "**").setThumbnail(message.guild.iconURL()).setTitle("Padlock Picking"))
+												delete victimInv.items.active.padlock
+												await connect.updateInv("inventory", user.id, victimInv.items)
+												rest()
+											}, between(2000, 4000))
+										}, between(2000, 4000))
+									}, between(2000, 4000))
+								}, between(2000, 4000))
+							}, between(2000, 4000))
+							async function broke() {
+								await connect.end(true)
+								return m.edit(new RM.Discord.MessageEmbed()
+									.setColor("RED")
+									.setAuthor(message.author.tag, message.author.avatarURL())
+									.setDescription("Lockpick broke and you failed to rob " + user.user.username + "!")
+									.setThumbnail(message.guild.iconURL())
+									.setTitle("Lockpick broke!"))
+							}
+						} else if (response === "no" || response === "n") {
+							await connect.updateCooldown("cooldown", message.author.id, new Date(new Date().setTime(new Date().getTime() + (45 * 60 * 1000))))
+							m.edit(new RM.Discord.MessageEmbed()
+								.setColor("RED")
+								.setAuthor(message.author.tag, message.author.avatarURL())
+								.setDescription(
+									"User has an active padlock but you didnt use a lockpick!"
+								)
+								.setThumbnail(message.guild.iconURL())
+								.setTitle("Error")
+							)
+
+							return await connect.end(true)
+						}
+					}).catch(async (e) => {
+						message.channel.send("Timeout, " + e.message)
+						await connect.updateCooldown("cooldown", message.author.id, new Date(new Date().setTime(new Date().getTime() + (45 * 60 * 1000))))
+						console.log(e)
+						await connect.end(true)
+					})
+
+				} else {
+					await connect.updateCooldown("cooldown", message.author.id, new Date(new Date().setTime(new Date().getTime() + (45 * 60 * 1000))))
+					m.edit(new RM.Discord.MessageEmbed()
+						.setColor("RED")
+						.setAuthor(message.author.tag, message.author.avatarURL())
+						.setDescription(
+							"User has an active padlock but you don't have a lockpick!"
+						)
+						.setThumbnail(message.guild.iconURL())
+						.setTitle("Error")
+					)
+
+					return await connect.end(true)
+				}
+			}
+		}
 		await connect.updateCooldown("cooldown", message.author.id, new Date(new Date().setTime(new Date().getTime() + (45 * 60 * 1000))))
-		const failOdds = between(0, 100)
-		if (failOdds > 75) {
-			const fortyOfBal = calcPercent(50, authorWal)
-			const amountToRemove = between(200, fortyOfBal)
-			await connect.update("currency", user.id, (parseInt(userWal) + parseInt(amountToRemove)))
+		rest()
+		//await connect.updateCooldown("cooldown", message.author.id, new Date(new Date().setTime(new Date().getTime() + (45 * 60 * 1000))))
+		async function rest() {
 
-			await connect.update("currency", message.author.id, (parseInt(authorWal) - parseInt(amountToRemove)))
+			if (victimInv.items.active.landmine !== undefined) {
+				const landmineExpiry = victimActive.landmine
+				const landmineExpiryDate = new Date(landmineExpiry)
+				if ((landmineExpiryDate.getTime() - new Date().getTime()).toString().includes("-")) {
+					delete victimInv.items.active.landmine
+					await connect.updateInv("inventory", user.id, victimInv.items)
+					user.user.send(new RM.Discord.MessageEmbed(
+					).setColor("RED")
+						.setAuthor(message.author.tag, message.author.avatarURL())
+						.setDescription(
+							"Your landmine expired!"
+						)
+						.setThumbnail(message.guild.iconURL())
+						.setTitle("Error")
+					)
 
+				} else {
+					delete victimInv.items.active.landmine
+					await connect.updateInv("inventory", user.id, victimInv.items)
+					const victimBal = await connect.fetch("currency", message.author.id)
+					if (between(1, 100) > 50) {
+						//instant death
+						await connect.update("currency", message.author.id, 0)
+						m.edit(new RM.Discord.MessageEmbed()
+							.setColor("RED")
+							.setAuthor(message.author.tag, message.author.avatarURL())
+							.setDescription(
+								"You have been killed by a landmine! You lost **`$" + victimBal.amountw + "`**!"
+							)
+							.setThumbnail(message.guild.iconURL())
+							.setTitle("You died!")
+						)
+						return await connect.end(true)
+
+					}//TODO make sure rob works
+					//TODO add landmine to use
+					//TODO make it so u can buy landmines and padlocks
+				}
+			}
+			const failOdds = between(0, 100)
+			if (failOdds > 75) {
+				const fortyOfBal = calcPercent(50, authorWal)
+				const amountToRemove = between(200, fortyOfBal)
+				await connect.update("currency", user.id, (parseInt(userWal) + parseInt(amountToRemove)))
+
+				await connect.update("currency", message.author.id, (parseInt(authorWal) - parseInt(amountToRemove)))
+
+
+				m.edit(new RM.Discord.MessageEmbed()
+					.setColor("RED")
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription(
+						"You got caught while trying to rob **" + user.user.username + "** You lost: **`$" + amountToRemove + "`**!"
+					)
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("Fail")
+				)
+				return await connect.end(true)
+			}
+			const fiftyOfBal = calcPercent(75, userWal)
+			const amountToRemove = parseInt(between(300, fiftyOfBal))
+
+			await connect.update("currency", user.id, (parseInt(userWal) - parseInt(amountToRemove)))
+
+			await connect.update("currency", message.author.id, (parseInt(authorWal) + parseInt(amountToRemove)))
 
 			m.edit(new RM.Discord.MessageEmbed()
-				.setColor("RED")
+				.setColor("GREEN")
 				.setAuthor(message.author.tag, message.author.avatarURL())
 				.setDescription(
-					"You got caught while trying to rob **" + user.user.username + "** You lost: **`$" + amountToRemove + "`**!"
+					"You successfully robbed **" + user.user.username + "** You got: **`$" + amountToRemove + "`**!"
 				)
 				.setThumbnail(message.guild.iconURL())
-				.setTitle("Fail")
+				.setTitle("Success")
 			)
+			user.user.send("**" + message.author.tag + "** just robbed you out of **`$" + amountToRemove + "`**!")
 			return await connect.end(true)
 		}
-		const fiftyOfBal = calcPercent(75, userWal)
-		const amountToRemove = parseInt(between(300, fiftyOfBal))
-
-		await connect.update("currency", user.id, (parseInt(userWal) - parseInt(amountToRemove)))
-
-		await connect.update("currency", message.author.id, (parseInt(authorWal) + parseInt(amountToRemove)))
-
-		m.edit(new RM.Discord.MessageEmbed()
-			.setColor("GREEN")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				"You successfully robbed **" + user.user.username + "** You got: **`$" + amountToRemove + "`**!"
-			)
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Success")
-		)
-		user.user.send("**" + message.author.tag + "** just robbed you out of **`$" + amountToRemove + "`**!")
-		return await connect.end(true)
-
 	})
 }
 

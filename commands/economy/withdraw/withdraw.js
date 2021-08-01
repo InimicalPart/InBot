@@ -6,7 +6,9 @@ const commandInfo = {
 	"usage": "[COMMAND] <amount/all>", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "economy"
 }
-
+function numberWithCommas(x) {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 async function runCommand(message, args, RM) {
 	//Check if command is disabled
 	if (!require("../../../config.js").cmdWithdraw) {
@@ -73,7 +75,7 @@ async function runCommand(message, args, RM) {
 		await connect.update("currency", message.author.id, parseInt(balance.amountw) + parseInt(amount), parseInt(balance.amountb) - parseInt(amount)).then()
 		const newBal = await connect.fetch("currency", message.author.id)
 		m.edit(new RM.Discord.MessageEmbed()
-			.setDescription(`Withdrew **\`$` + amount + `\`** from the bank! Your balance is now:\n\nWallet: **\`$${parseInt(newBal.amountw)}\`**\nBank: **\`$${parseInt(newBal.amountb)}\`**`)
+			.setDescription(`Withdrew **\`$` + (amount) + `\`** from the bank! Your balance is now:\n\nWallet: **\`$${numberWithCommas(newBal.amountw)}\`**\nBank: **\`$${numberWithCommas(newBal.amountb)}\`**`)
 			.setColor("GREEN")
 			.setThumbnail(message.guild.iconURL())
 			.setTitle("Success")

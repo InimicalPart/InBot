@@ -1,7 +1,9 @@
-/*
-
-
-*/
+/**
+ * 
+ * 
+ * 
+ *
+ **/
 async function connect() {
 
 	const { Client } = require('pg');
@@ -31,7 +33,7 @@ async function connect() {
 			const res = await client.query(`CREATE TABLE IF NOT EXISTS ${table_name}(
 				id SERIAL,
 				userid bigint not null,
-				items json not null default '${JSON.stringify({})}'
+				items json not null default '${JSON.stringify({ active: {} })}'
 				);`);
 			return res
 		}
@@ -40,7 +42,12 @@ async function connect() {
 				id SERIAL,
 				userid bigint not null,
 				robcool int default null,
-				workcool int default null
+				workcool int default null,
+				slotscool int default null,
+				roulcool int default null,
+				dailycool int default null,
+				weeklycool int default null,
+				monthlycool int default null
 				);`);
 			return res
 		}
@@ -53,9 +60,9 @@ async function connect() {
 		if (table_name == "currency") {
 			const res = await client.query(`INSERT INTO ${table_name}(userid, amountw, amountb, maxbank, level) VALUES(${userid},0,0,1000,0);`)
 		} else if (table_name == "inventory") {
-			const res = await client.query(`INSERT INTO ${table_name}(userid, items) VALUES(${userid}, '${JSON.stringify({})}');`)
+			const res = await client.query(`INSERT INTO ${table_name}(userid, items) VALUES(${userid}, '${JSON.stringify({ active: {} })}');`)
 		} else if (table_name == "cooldown") {
-			const res = await client.query(`INSERT INTO ${table_name}(userid, robcool, workcool) VALUES(${userid}, null, null);`)
+			const res = await client.query(`INSERT INTO ${table_name}(userid, robcool, workcool, slotscool, roulcool, dailycool, weeklycool, monthlycool) VALUES(${userid}, null, null, null, null, null, null, null);`)
 		}
 	}
 
@@ -85,27 +92,55 @@ async function connect() {
 		/** @type string */ table_name,
 		/** @type number */ userid,
 		/** @type Date @optional */ robcool,
-		/** @type Date @optional */ workcool) {
+		/** @type Date @optional */ workcool,
+		/** @type Date @optional */ slotscool,
+		/** @type Date @optional */ roulcool,
+		/** @type Date @optional */ dailycool,
+		/** @type Date @optional */ weeklycool,
+		/** @type Date @optional */ monthlycool) {
 		let unixDateRob = undefined;
 		let unixDateWork = undefined;
+		let unixDateSlot = undefined;
+		let unixDateRoul = undefined;
+		let unixDateDaily = undefined;
+		let unixDateWeekly = undefined;
+		let unixDateMonthly = undefined;
+
 		if (robcool && robcool !== undefined) {
 			unixDateRob = robcool.getTime() / 1000
 		}
 		if (workcool && workcool !== undefined) {
 			unixDateWork = workcool.getTime() / 1000
 		}
-		if ((!robcool || robcool === undefined) && (!workcool || workcool === undefined)) {
+		if (slotscool && slotscool !== undefined) {
+			unixDateSlots = slotscool.getTime() / 1000
+		}
+		if (dailycool && dailycool !== undefined) {
+			unixDateDaily = dailycool.getTime() / 1000
+		}
+		if (roulcool && roulcool !== undefined) {
+			unixDateRoul = roulcool.getTime() / 1000
+		}
+		if (weeklycool && weeklycool !== undefined) {
+			unixDateWeekly = weeklycool.getTime() / 1000
+		}
+		if (monthlycool && monthlycool !== undefined) {
+			unixDateMonthly = monthlycool.getTime() / 1000
+		}
+
+		if ((!robcool || robcool === undefined) && (!workcool || workcool === undefined) && (!slotscool || slotscool === undefined) && (!dailycool || dailycool === undefined) && (!weeklycool || weeklycool === undefined) && (!monthlycool || monthlycool === undefined)) {
 			throw new Error('No cooldown to update.')
 		}
-		if (unixDateWork !== undefined && unixDateRob !== undefined) {
-			client.query(`UPDATE ${table_name} SET robcool=${unixDateRob}, workcool=${unixDateRob} WHERE userid=${userid};`)
-		} else if (unixDateWork !== undefined && unixDateRob === undefined) {
-			client.query(`UPDATE ${table_name} SET workcool=${unixDateWork} WHERE userid=${userid};`)
-		} else if (unixDateWork === undefined && unixDateRob !== undefined) {
-			client.query(`UPDATE ${table_name} SET robcool=${unixDateRob} WHERE userid=${userid};`)
-		} else {
-			throw new Error('No cooldown to update.')
-		}
+		let total = "";
+		if (unixDateRob) total += `robcool=${unixDateRob},`;
+		if (unixDateWork) total += `workcool=${unixDateWork},`;
+		if (unixDateSlot) total += `slotscool=${unixDateSlot},`;
+		if (unixDateRoul) total += `roulcool=${unixDateRoul},`;
+		if (unixDateDaily) total += `dailycool=${unixDateDaily},`;
+		if (unixDateWeekly) total += `weeklycool=${unixDateWeekly},`;
+		if (unixDateMonthly) total += `monthlycool=${unixDateMonthly},`;
+		total = total.slice(0, -1);
+		client.query(`UPDATE ${table_name} SET ${total} WHERE userid=${userid};`)
 	}
 	async function update(
 		/** @type string */ table_name,

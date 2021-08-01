@@ -70,6 +70,52 @@ async function runCommand(message, args, RM) {
 				.setThumbnail(message.guild.iconURL())
 				.setTitle("Banknote(s) summoned")
 			)
+		} else if (args[0] === "padlock") {
+			if (inventory.padlock === undefined) {
+				inventory.padlock = amount
+			} else { inventory.padlock += amount }
+			await connect.updateInv("inventory", message.author.id, inventory)
+			await connect.end(true)
+			m.edit(new RM.Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"You have summoned a padlock! You now have **" + inventory.padlock + "** padlock(s)"
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Padlock(s) summoned")
+			)
+		} else if (args[0] === "landmine") {
+			if (inventory.landmine === undefined) {
+				inventory.landmine = amount
+			} else { inventory.landmine += amount }
+			await connect.updateInv("inventory", message.author.id, inventory)
+			await connect.end(true)
+			m.edit(new RM.Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"You have summoned a landmine! You now have **" + inventory.landmine + "** landmine(s)"
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Landmine(s) summoned")
+			)
+		} else if (args[0] === "lockpick") {
+			if (inventory.lockpick === undefined) {
+				inventory.lockpick = amount
+			} else { inventory.lockpick += amount }
+			await connect.updateInv("inventory", message.author.id, inventory)
+			await connect.end(true)
+			m.edit(new RM.Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"You have summoned a lockpick! You now have **" + inventory.lockpick + "** lockpick(s)"
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Lockpick(s) summoned")
+			)
+
 		} else {
 			connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()

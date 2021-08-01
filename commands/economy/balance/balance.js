@@ -6,7 +6,9 @@ const commandInfo = {
 	usage: "[COMMAND] [username | nickname | mention | ID]", // [COMMAND] gets replaced with the command and correct prefix later
 	category: "economy",
 };
-
+function numberWithCommas(x) {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 async function runCommand(message, args, RM) {
 	//Check if command is disabled
 	if (!require("../../../config.js").cmdBalance) {
@@ -65,10 +67,10 @@ async function runCommand(message, args, RM) {
 				.setTitle(`${username}'s Balance`)
 				.setTimestamp();
 			if (info.userid !== message.author.id) {
-				embed.setDescription(`**Wallet**: $${bal}\n**Bank**: $${bank}`)
+				embed.setDescription(`**Wallet**: $${numberWithCommas(bal)}\n**Bank**: $${numberWithCommas(bank)}`)
 			} else {
 				let bankPercent = ((bank / info.maxbank) * 100).toFixed(2);
-				embed.setDescription(`**Wallet**: $${bal}\n**Bank**: $${bank}/${info.maxbank} (\`${bankPercent}%\`)`)
+				embed.setDescription(`**Wallet**: $${numberWithCommas(bal)}\n**Bank**: $${numberWithCommas(bank)}/${numberWithCommas(info.maxbank)} (\`${bankPercent}%\`)`)
 			}
 			await connect.end()
 			return m.edit(embed);

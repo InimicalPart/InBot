@@ -73,7 +73,7 @@ async function runCommand(message, args, RM) {
 				.setTitle("User Not Found")
 			)
 		}
-		const username = user.user.username // here was the error it was user.username
+		const username = user.username || user.user.username  // here was the error it was user.username
 		if (!args[1]) {
 			await connect.end()
 			return m.edit(new Discord.MessageEmbed()
@@ -126,7 +126,7 @@ async function runCommand(message, args, RM) {
 					.setColor("RED")
 					.setAuthor(message.author.tag, message.author.avatarURL())
 					.setDescription(
-						`You can't add more money to their bank than their max bank cap! They have **\`$${(info.maxbank - bank)}\`** of free space in their bank`
+						`You can't add more money to their bank than their max bank cap! They have **\`$${numberWithCommas(info.maxbank - bank)}\`** of free space in their bank`
 					)
 					.setTimestamp()
 					.setThumbnail(message.guild.iconURL())
@@ -138,7 +138,7 @@ async function runCommand(message, args, RM) {
 				.setColor("GREEN")
 				.setAuthor(message.author.tag, message.author.avatarURL())
 				.setDescription(
-					`**${username}**'s bank has been increased by  **\`$${args[1]}\`**. Their bank balance is now **\`$${bank + parseInt(args[1])}\`**`
+					`**${username}**'s bank has been increased by  **\`$${numberWithCommas(args[1])}\`**. Their bank balance is now **\`$${numberWithCommas(bank + args[1])}\`**`
 				)
 				.setThumbnail(message.guild.iconURL())
 				.setTitle("Money Added")
@@ -153,7 +153,7 @@ async function runCommand(message, args, RM) {
 			.setColor("GREEN")
 			.setAuthor(message.author.tag, message.author.avatarURL())
 			.setDescription(
-				`**${username}**'s balance has been increased by  **\`$${args[1]}\`**!`
+				`**${username}**'s balance has been increased by **\`$${numberWithCommas(args[1])}\`**!`
 			)
 			.setTimestamp()
 			.setThumbnail(message.guild.iconURL())
