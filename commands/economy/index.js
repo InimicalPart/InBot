@@ -62,7 +62,27 @@ function rob() {
 	return require("./rob/rob.js")
 }
 
+function give() {
+	return require("./give/give.js")
+}
+
+function daily() {
+	return require("./daily/daily.js")
+}
+
+function weekly() {
+	return require("./weekly/weekly.js")
+}
+
+function monthly() {
+	return require("./monthly/monthly.js")
+}
+
 module.exports = {
+	monthly,
+	weekly,
+	daily,
+	give,
 	rob,
 	buy,
 	shop,

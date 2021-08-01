@@ -48,3 +48,7 @@ exports.cmdSetbankcap = true
 exports.cmdShop = true
 exports.cmdBuy = true
 exports.cmdRob = true
+exports.cmdGive = true
+exports.cmdDaily = true
+exports.cmdWeekly = true
+exports.cmdMonthly = true

@@ -116,6 +116,105 @@ async function runCommand(message, args, RM) {
 					.setTitle("Success")
 				)
 			}
+		} else if (args[0] == "padlock") {
+			const data = await connect.fetch("currency", message.author.id)
+			const invData = await connect.fetch("inventory", message.author.id)
+			if (data.amountw < 5000) {
+				await connect.end(true)
+				return m.edit(new RM.Discord.MessageEmbed()
+					.setColor("RED")
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription(
+						"You don't have enough money to buy this."
+					)
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("Not enough money")
+				)
+			}
+			await connect.update("currency", message.author.id, data.amountw - 5000)
+			const items = invData.items
+			if (items.padlock === undefined) {
+				items.padlock = 1
+			} else {
+				items.padlock += 1
+			}
+			await connect.updateInv("inventory", message.author.id, items)
+			await connect.end(true)
+			m.edit(new RM.Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"You have successfully bought a padlock for $5,000."
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Success")
+			)
+		} else if (args[0] == "landmine") {
+			const data = await connect.fetch("currency", message.author.id)
+			const invData = await connect.fetch("inventory", message.author.id)
+			if (data.amountw < 10000) {
+				await connect.end(true)
+				return m.edit(new RM.Discord.MessageEmbed()
+					.setColor("RED")
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription(
+						"You don't have enough money to buy this."
+					)
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("Not enough money")
+				)
+			}
+			await connect.update("currency", message.author.id, data.amountw - 10000)
+			const items = invData.items
+			if (items.landmine === undefined) {
+				items.landmine = 1
+			} else {
+				items.landmine += 1
+			}
+			await connect.updateInv("inventory", message.author.id, items)
+			await connect.end(true)
+			m.edit(new RM.Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"You have successfully bought a landmine for $10,000."
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Success")
+			)
+		} else if (args[0] == "lockpick") {
+			const data = await connect.fetch("currency", message.author.id)
+			const invData = await connect.fetch("inventory", message.author.id)
+			if (data.amountw < 7000) {
+				await connect.end(true)
+				return m.edit(new RM.Discord.MessageEmbed()
+					.setColor("RED")
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription(
+						"You don't have enough money to buy this."
+					)
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("Not enough money")
+				)
+			}
+			await connect.update("currency", message.author.id, data.amountw - 7000)
+			const items = invData.items
+			if (items.lockpick === undefined) {
+				items.lockpick = 1
+			} else {
+				items.lockpick += 1
+			}
+			await connect.updateInv("inventory", message.author.id, items)
+			await connect.end(true)
+			m.edit(new RM.Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"You have successfully bought a lockpick for $7,000." //here? um what was i supposed to do again i forgot
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Success")
+			)
 		} else {
 			await connect.end(true)
 			m.edit(new RM.Discord.MessageEmbed()

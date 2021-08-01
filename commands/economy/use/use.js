@@ -87,7 +87,7 @@ async function runCommand(message, args, RM) {
 			const data = await connect.fetch("inventory", message.author.id)
 			const inventory = JSON.parse(JSON.stringify(data.items))
 			if (inventory.raybrain == undefined || inventory.raybrain < parseInt(amount)) {
-				connect.end(true)
+				await connect.end(true)
 				return m.edit(new RM.Discord.MessageEmbed()
 					.setColor("RED")
 					.setAuthor(message.author.tag, message.author.avatarURL())
@@ -104,7 +104,7 @@ async function runCommand(message, args, RM) {
 				delete inventory.raybrain
 			}
 			await connect.updateInv("inventory", message.author.id, inventory)
-			connect.end(true)
+			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setColor("GREEN")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -114,6 +114,74 @@ async function runCommand(message, args, RM) {
 				.setThumbnail(message.guild.iconURL())
 				.setTitle("Raybrain(s) used")
 			)
+		} // TODO Add PADLOCK(10h) and LANDMINE(24h) to active
+		else if (args[0] === "padlock") {
+			//check if user has a padlock in the inventory database
+			const data = await connect.fetch("inventory", message.author.id)
+			const inventory = JSON.parse(JSON.stringify(data.items))
+			if (inventory.padlock == undefined) {
+				await connect.end(true)
+				return m.edit(new RM.Discord.MessageEmbed()
+					.setColor("RED")
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription(
+						"You don't have a padlock in your inventory."
+					)
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("No Padlock")
+				)
+			}
+			//remove padlock
+			inventory.padlock -= 1
+			if (inventory.padlock === 0) {
+				delete inventory.padlock
+			}
+			inventory.active.padlock = new Date().setTime(new Date().getTime() + (600 * 60 * 1000))
+			await connect.updateInv("inventory", message.author.id, inventory)
+
+			m.edit(new RM.Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"You have used a padlock, it will expire in **10 hours**"
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Padlock used")
+			)
+			return await connect.end(true)
+		} else if (args[0] === "landmine") {
+			//check if user has a landmine in the inventory database
+			const data = await connect.fetch("inventory", message.author.id)
+			const inventory = JSON.parse(JSON.stringify(data.items))
+			if (inventory.landmine == undefined) {
+				await connect.end(true)
+				return m.edit(new RM.Discord.MessageEmbed()
+					.setColor("RED")
+					.setAuthor(message.author.tag, message.author.avatarURL())
+					.setDescription(
+						"You don't have a landmine in your inventory."
+					)
+					.setThumbnail(message.guild.iconURL())
+					.setTitle("No Landmine")
+				)
+			}
+			//remove landmine
+			inventory.landmine -= 1
+			if (inventory.landmine === 0) {
+				delete inventory.landmine
+			}
+			inventory.active.landmine = new Date().setTime(new Date().getTime() + (24 * 60 * 60 * 1000))
+			await connect.updateInv("inventory", message.author.id, inventory)
+			m.edit(new RM.Discord.MessageEmbed()
+				.setColor("GREEN")
+				.setAuthor(message.author.tag, message.author.avatarURL())
+				.setDescription(
+					"You have used a landmine, it will expire in **24 hours**"
+				)
+				.setThumbnail(message.guild.iconURL())
+				.setTitle("Landmine used")
+			)
+			return await connect.end(true)
 		}
 	})
 }

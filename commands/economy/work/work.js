@@ -27,6 +27,7 @@ async function runCommand(message, args, RM) {
 		const { connect } = require("../../../databasec")
 		await connect()
 		await connect.create("currency")
+		await connect.create("cooldown")
 		function between(lower, upper) {
 			var scale = upper - lower + 1;
 			return Math.floor(lower + Math.random() * scale);

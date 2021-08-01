@@ -6,7 +6,9 @@ const commandInfo = {
 	"usage": "[COMMAND] <user> <amount>", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "economy"
 }
-
+function numberWithCommas(x) {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 async function runCommand(message, args, RM) {
 	//Check if command is disabled
 	if (!require("../../../config.js").cmdRemovemoney) {
@@ -27,7 +29,7 @@ async function runCommand(message, args, RM) {
 		await connect()
 		await connect.create("currency")
 
-		if (!message.member.hasPermission("ADMINISTRATOR", "MANAGE _GUILD")) {
+		if (!message.member.hasPermission("ADMINISTRATOR", "MANAGE_GUILD")) {
 			await connect.end()
 			return m.edit(
 				new Discord.MessageEmbed()
@@ -135,12 +137,12 @@ async function runCommand(message, args, RM) {
 						.setTitle("Invalid Arguments")
 				)
 			}
-			await connect.update("currency", user.id, undefined, ((bal - 0) - (args[1] - 0)))
+			await connect.update("currency", user.id, undefined, ((bank - 0) - (args[1] - 0)))
 			let moneyEmbed = new Discord.MessageEmbed()
 				.setColor("GREEN")
 				.setAuthor(message.author.tag, message.author.avatarURL())
 				.setDescription(
-					`You took **\`$${args[1]}\`** from **${user.user.username}**'s bank. Their bank balance is now **\`$${bank - parseInt(args[1])}\`**`
+					`You took **\`$${numberWithCommas(args[1])}\`** from **${user.user.username}**'s bank. Their bank balance is now **\`$${numberWithCommas(bank - args[1])}\`**`
 				) // done
 				.setThumbnail(message.guild.iconURL())
 				.setTitle("Money Removed")
@@ -182,7 +184,7 @@ async function runCommand(message, args, RM) {
 					.setColor("RED")
 					.setAuthor(message.author.tag, message.author.avatarURL())
 					.setDescription(
-						"you cannot take more than they have :/"
+						"User does not have **`$" + numberWithCommas(args[1]) + "`**"
 					)
 					.setThumbnail(message.guild.iconURL())
 					.setTitle("Invalid Arguments")
@@ -196,7 +198,7 @@ async function runCommand(message, args, RM) {
 			.setColor("GREEN")
 			.setAuthor(message.author.tag, message.author.avatarURL())
 			.setDescription(
-				`You took **\`$${args[1]}\`** from **${user.user.username}**'s wallet. Their new balance is: **\`$${bal - parseInt(args[1])}\`**`
+				`You took **\`$${numberWithCommas(args[1])}\`** from **${user.user.username}**'s wallet. Their new balance is: **\`$${numberWithCommas(bal - parseInt(args[1]))}\`**`
 			)
 			.setThumbnail(message.guild.iconURL())
 			.setTitle("Money Removed")

@@ -83,6 +83,10 @@ const requiredModules = {
 	"cmdShop": economy.shop(),
 	"cmdBuy": economy.buy(),
 	"cmdRob": economy.rob(),
+		"cmdGive": economy.give(),
+		"cmdDaily": economy.daily(),
+		"cmdWeekly": economy.weekly(),
+		"cmdMonthly": economy.monthly(),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),
@@ -103,12 +107,21 @@ console.log("------------------------\n[I] Logging in...[I]");
 client.on("message", async (message) => {
 	if (message.author.bot || !message.content.startsWith(process.env.prefix))
 		return;
+	if (message.guild === null) {
+		let em = new Discord.MessageEmbed()
+			.setColor("RED")
+			.setTitle("Error")
+			.setDescription(`:x: Commands can only be used in servers.`)
+			.setFooter(`${message.author.tag} (${message.author.id})`)
+			.setTimestamp();
+		return message.reply(em)
+	}
 	if (
 		![
 			"745783548241248286",
 			"301062520679170066",
 			"426826826220961821",
-			"814623079346470993"
+			"814623079346470993", "852948023780180028"
 		].includes(message.author.id) &&
 		client.user.id == "859513472973537311"
 	)
