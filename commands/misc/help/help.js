@@ -183,6 +183,9 @@ async function runCommand(message, args, RM) {
 					m.edit(embed)
 				}
 			}).catch(() => null);
+		}).catch(async (err) => {
+			console.log(err)
+			message.channel.send("Error: " + err)
 		})
 	}
 }

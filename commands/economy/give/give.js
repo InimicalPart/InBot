@@ -33,7 +33,7 @@ async function runCommand(message, args, RM) {
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
 				.setDescription(
-					"You need to specify a user to rob!"
+					"You need to specify a user to give items to!"
 				)
 				.setThumbnail(message.guild.iconURL())
 				.setTitle("Error")
@@ -260,6 +260,9 @@ async function runCommand(message, args, RM) {
 			)
 			return await connect.end(true)
 		}
+	}).catch(async (err) => {
+		console.log(err)
+		message.channel.send("Error: " + err)
 	})
 }
 

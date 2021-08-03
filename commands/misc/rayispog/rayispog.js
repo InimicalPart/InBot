@@ -47,7 +47,7 @@ async function runCommand(message, args, RM) {
 
 	if (!args[0]) return message.channel.send('**Please Enter Your Deck Amount!**')
 	let deckCount = parseInt(args[0])
-	if (isNaN(args[0])) return message.channel.send('**Please Enter A Number!**')
+	if (Number.isNaN(args[0])) return message.channel.send('**Please Enter A Number!**')
 	if (deckCount <= 0 || deckCount >= 9) return message.channel.send("**Please Enter A Number Between 1 - 8!**")
 
 	let user = message.author;
@@ -59,7 +59,7 @@ async function runCommand(message, args, RM) {
 	if (!args[1]) return message.channel.send("**Please Enter Your Bet!**")
 
 	let amount = parseInt(args[1])
-	if (isNaN(args[1])) return message.channel.send("**Please Enter A Number**")
+	if (Number.isNaN(args[1])) return message.channel.send("**Please Enter A Number**")
 	if (amount > 10000) return message.channel.send("**Cannot Place Bet More Than \`$10,000\`**")
 	if (amount < 1000) return message.channel.send("**Cannot Place Bet Less Than \`$1,000\`. sry not sry**")
 
