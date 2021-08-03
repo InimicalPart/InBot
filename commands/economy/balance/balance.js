@@ -61,7 +61,6 @@ async function runCommand(message, args, RM) {
 		const bank = parseInt(info.amountb);
 		if (user) {
 			let embed = new Discord.MessageEmbed()
-				.setColor("GREEN")
 				.setAuthor(message.author.username, message.author.avatarURL())
 				.setThumbnail(message.guild.iconURL())
 				.setTitle(`${username}'s Balance`)
