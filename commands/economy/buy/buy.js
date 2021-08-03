@@ -227,6 +227,9 @@ async function runCommand(message, args, RM) {
 				.setTitle("Invalid Item")
 			)
 		}
+	}).catch(async (err) => {
+		console.log(err)
+		message.channel.send("Error: " + err)
 	})
 }
 function commandTriggers() {

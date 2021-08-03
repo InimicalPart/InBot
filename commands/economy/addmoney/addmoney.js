@@ -87,7 +87,7 @@ async function runCommand(message, args, RM) {
 				.setTitle("No Value Specified")
 			)
 		}
-		if (isNaN(args[1]) || args[1] < 0) {
+		if (Number.isNaN(args[1]) || args[1] < 0) {
 			await connect.end()
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
@@ -162,6 +162,9 @@ async function runCommand(message, args, RM) {
 		await connect.end(true)
 
 
+	}).catch(async (err) => {
+		console.log(err)
+		message.channel.send("Error: " + err)
 	})
 }
 function commandTriggers() {

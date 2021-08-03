@@ -253,7 +253,7 @@ async function runCommand(message, args, RM) {
 												m.edit(new RM.Discord.MessageEmbed().setColor("AQUA").setAuthor(message.author.tag, message.author.avatarURL()).setDescription("Picking...\n\n:lock: Pin 1: **" + pin1 + "**\n:lock: Pin 2: **" + pin2 + "**\n:lock: Pin 3: **" + pin3 + "**\n:lock: Pin 4: **" + pin4 + "**\n:lock: Pin 5: **" + pin5 + "**").setThumbnail(message.guild.iconURL()).setTitle("Padlock Picking"))
 												delete victimInv.items.active.padlock
 												await connect.updateInv("inventory", user.id, victimInv.items)
-												rest()
+												return rest()
 											}, between(2000, 4000))
 										}, between(2000, 4000))
 									}, between(2000, 4000))
@@ -325,7 +325,6 @@ async function runCommand(message, args, RM) {
 						.setThumbnail(message.guild.iconURL())
 						.setTitle("Error")
 					)
-
 				} else {
 					delete victimInv.items.active.landmine
 					await connect.updateInv("inventory", user.id, victimInv.items)
@@ -344,9 +343,7 @@ async function runCommand(message, args, RM) {
 						)
 						return await connect.end(true)
 
-					}//TODO make sure rob works
-					//TODO add landmine to use
-					//TODO make it so u can buy landmines and padlocks
+					}
 				}
 			}
 			const failOdds = between(0, 100)
@@ -388,6 +385,9 @@ async function runCommand(message, args, RM) {
 			user.user.send("**" + message.author.tag + "** just robbed you out of **`$" + amountToRemove + "`**!")
 			return await connect.end(true)
 		}
+	}).catch(async (err) => {
+		console.log(err)
+		message.channel.send("Error: " + err)
 	})
 }
 

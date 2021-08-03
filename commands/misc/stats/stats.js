@@ -116,6 +116,9 @@ async function runCommand(message, args, RM) {
 				value: `Commands Used: **${global.commandsUsed}**`
 			})
 		m.edit(embed)
+	}).catch(async (err) => {
+		console.log(err)
+		message.channel.send("Error: " + err)
 	})
 
 

@@ -30,7 +30,12 @@ function dbinfo() {
 	return require("./dbinfo/dbinfo.js")
 }
 
+function convert() {
+	return require("./convert/convert.js")
+}
+
 module.exports = {
+	convert,
 	dbinfo,
 	rayispog,
 	flipacoin,

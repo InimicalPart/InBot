@@ -72,7 +72,7 @@ async function runCommand(message, args, RM) {
 				.setTitle("Error")
 			)
 		}
-		await connect.update("currency", message.author.id, parseInt(balance.amountw) + parseInt(amount), parseInt(balance.amountb) - parseInt(amount)).then()
+		await connect.update("currency", message.author.id, parseInt(balance.amountw) + parseInt(amount), parseInt(balance.amountb) - parseInt(amount))
 		const newBal = await connect.fetch("currency", message.author.id)
 		m.edit(new RM.Discord.MessageEmbed()
 			.setDescription(`Withdrew **\`$` + (amount) + `\`** from the bank! Your balance is now:\n\nWallet: **\`$${numberWithCommas(newBal.amountw)}\`**\nBank: **\`$${numberWithCommas(newBal.amountb)}\`**`)
@@ -82,6 +82,9 @@ async function runCommand(message, args, RM) {
 		)
 
 		await connect.end(true)
+	}).catch(async (err) => {
+		console.log(err)
+		message.channel.send("Error: " + err)
 	})
 	// cmd stuff here
 }

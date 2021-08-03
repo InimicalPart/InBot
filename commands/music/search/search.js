@@ -82,7 +82,10 @@ async function runCommand(message, args, RM) {
                     \nPlease provide a value to select one of the search results ranging from 1-10.
                                     `)
                     .setTimestamp();
-                message.channel.send(sembed).then(message2 => message2.delete({ timeout: 100000 }))
+                message.channel.send(sembed).then(message2 => message2.delete({ timeout: 100000 })).catch(async (err) => {
+                    console.log(err)
+                    message.channel.send("Error: " + err)
+                })
                 try {
                     var response = await message.channel.awaitMessages(message2 => message2.content > 0 && message2.content < 11, {
                         max: 1,

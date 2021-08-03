@@ -52,3 +52,4 @@ exports.cmdGive = true
 exports.cmdDaily = true
 exports.cmdWeekly = true
 exports.cmdMonthly = true
+exports.cmdConvert = true

@@ -13,23 +13,6 @@ app.use(express.static(__dirname + "/public"));
 app.listen(process.env.PORT || 3000, () =>
   console.log("[I] API server started [I]")
 );
-const { networkInterfaces } = require("os");
-
-const nets = networkInterfaces();
-const results = Object.create(null); // Or just '{}', an empty object
-
-for (const name of Object.keys(nets)) {
-  for (const net of nets[name]) {
-    // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
-    if (net.family === "IPv4" && !net.internal) {
-      if (!results[name]) {
-        results[name] = [];
-      }
-      results[name].push(net.address);
-    }
-  }
-}
-console.log(results);
 function getInfo(callback) {
   var client = new net.Socket();
   client.connect(7380, "0.0.0.0");
@@ -121,7 +104,7 @@ app.get("/iii-admin", (req, res) => {
   if (!req.headers.authorization) {
     return res.status(403).json({ error: "No credentials sent!" });
   }
-  res.setHeader("Content-Type", "text/html");
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
   //parse req.headers.authorization using parseJwt
   var token = req.headers.authorization;
   var jwtPayload = parseJwt(token);
@@ -130,9 +113,9 @@ app.get("/iii-admin", (req, res) => {
   }
   console.log(
     "[I] User " +
-      jwtPayload.name +
-      " logged in at: " +
-      new Date().toLocaleString()
+    jwtPayload.name +
+    " logged in at: " +
+    new Date().toLocaleString()
   );
   res.sendFile(__dirname + "/public/admin.html");
 });
@@ -140,7 +123,7 @@ app.post("/system/reboot", (req, res) => {
   if (!req.headers.authorization) {
     return res.status(403).json({ error: "No credentials sent!" });
   }
-  res.setHeader("Content-Type", "text/html");
+  res.setHeader('Content-Type', 'text/html; charset=utf-8')
   //parse req.headers.authorization using parseJwt
   var token = req.headers.authorization;
   var jwtPayload = parseJwt(token);
@@ -166,7 +149,7 @@ app.post("/api/v1/cmdTrigger", (req, res) => {
   if (!req.headers.authorization) {
     return res.status(403).json({ error: "No credentials sent!" });
   }
-  res.setHeader("Content-Type", "text/html");
+  res.setHeader('Content-Type', 'text/html; charset=utf-8')
   //parse req.headers.authorization using parseJwt
   var token = req.headers.authorization;
   var jwtPayload = parseJwt(token);
@@ -218,15 +201,15 @@ app.post("/api/v1/cmdTrigger", (req, res) => {
   function restOfIndex() {
     const newConfig = config.replace(
       "cmd" +
-        selectedCommand.charAt(0).toUpperCase() +
-        selectedCommand.slice(1) +
-        " = " +
-        list[list.length - 1],
+      selectedCommand.charAt(0).toUpperCase() +
+      selectedCommand.slice(1) +
+      " = " +
+      list[list.length - 1],
       "cmd" +
-        selectedCommand.charAt(0).toUpperCase() +
-        selectedCommand.slice(1) +
-        " = " +
-        newState.toString()
+      selectedCommand.charAt(0).toUpperCase() +
+      selectedCommand.slice(1) +
+      " = " +
+      newState.toString()
     );
     require("fs").writeFile(
       require("path").join(__dirname + "/config.js"),

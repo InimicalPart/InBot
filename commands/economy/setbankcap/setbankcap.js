@@ -114,6 +114,9 @@ async function runCommand(message, args, RM) {
 				.setTitle("Error")
 			)
 		}
+	}).catch(async (err) => {
+		console.log(err)
+		message.channel.send("Error: " + err)
 	})
 }
 
