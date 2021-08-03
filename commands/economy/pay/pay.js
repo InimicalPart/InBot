@@ -111,7 +111,7 @@ async function runCommand(message, args, RM) {
 				.setTitle("Error")
 			)
 
-		}//TODO Add 8% tax rate
+		}
 		await connect.update("currency", message.author.id, parseInt(authorBal.amountw) - parseInt(amount))
 		await connect.update("currency", user.id, parseInt(userBal.amountw) + parseInt(amount))
 		m.edit(new RM.Discord.MessageEmbed()
@@ -125,6 +125,9 @@ async function runCommand(message, args, RM) {
 		)
 		// cmd stuff here
 		await connect.end(true)
+	}).catch(async (err) => {
+		console.log(err)
+		message.channel.send("Error: " + err)
 	})
 }
 

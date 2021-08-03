@@ -167,6 +167,10 @@ async function runCommand(message, args, RM) {
 			})
 		}
 
+	}).catch(async (e) => {
+		console.log(e)
+		message.channel.send("Error: " + e)
+		await connect.end(true)
 	})
 }
 

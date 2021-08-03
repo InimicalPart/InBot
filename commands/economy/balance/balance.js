@@ -88,6 +88,9 @@ async function runCommand(message, args, RM) {
 					.setTimestamp()
 			);
 		}
+	}).catch(async (err) => {
+		console.log(err)
+		message.channel.send("Error: " + err)
 	})
 }
 

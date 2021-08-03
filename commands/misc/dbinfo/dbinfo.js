@@ -3,7 +3,7 @@ const commandInfo = {
 	"possibleTriggers": ["dbinfo"], // These are all commands that will trigger this command.
 	"help": "Allows admins to check information in the database!", // This is the general description of the command.
 	"aliases": [], // These are command aliases that help.js will use
-	"usage": "[COMMAND] <id>", // [COMMAND] gets replaced with the command and correct prefix later
+	"usage": "[COMMAND] <userid>", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "misc"
 }
 
@@ -45,7 +45,7 @@ async function runCommand(message, args, RM) {
 			connect.end(true)
 			m.edit(new RM.Discord.MessageEmbed()
 				.setColor("RED")
-				.setDescription("You need to specify an id to get info on.")
+				.setDescription("You need to specify an user id to get info on.")
 				.setThumbnail(message.guild.iconURL())
 				.setTitle("Error")
 			)
@@ -61,7 +61,7 @@ async function runCommand(message, args, RM) {
 			)
 			return
 		}
-		const res = await connect.query("SELECT * FROM currency WHERE id=" + SqlString.escape(args[0]))
+		const res = await connect.query("SELECT * FROM currency WHERE userid=" + SqlString.escape(args[0]))
 		if (res.rows.length < 1) {
 			connect.end(true)
 			m.edit(new RM.Discord.MessageEmbed()
@@ -203,6 +203,9 @@ async function runCommand(message, args, RM) {
 		}
 		m.edit(embed)
 		connect.end(true)
+	}).catch(async (err) => {
+		console.log(err)
+		message.channel.send("Error: " + err)
 	})
 }
 function commandTriggers() {

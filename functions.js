@@ -43,7 +43,10 @@ module.exports = {
 
 		return message
 			.awaitReactions(filter, { max: 1, time: time })
-			.then(collected => collected.first() && collected.first().emoji.name);
+			.then(collected => collected.first() && collected.first().emoji.name).catch(async (err) => {
+				console.log(err)
+				message.channel.send("Error: " + err)
+			});
 	},
 
 	drawImageWithTint: function (ctx, image, color, x, y, width, height) {

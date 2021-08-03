@@ -60,7 +60,6 @@ const requiredModules = {
 	"cmdLyrics": music.lyrics(),
 	"cmdSearch": music.search(),
 	"cmdConfig": moderation.config(),
-	"cmdLyrics": music.lyrics(),
 	"cmdSeek": music.seek(),
 	"cmdShuffle": music.shuffle(),
 	"cmdStats": misc.stats(),
@@ -83,10 +82,11 @@ const requiredModules = {
 	"cmdShop": economy.shop(),
 	"cmdBuy": economy.buy(),
 	"cmdRob": economy.rob(),
-		"cmdGive": economy.give(),
-		"cmdDaily": economy.daily(),
-		"cmdWeekly": economy.weekly(),
-		"cmdMonthly": economy.monthly(),
+	"cmdGive": economy.give(),
+	"cmdDaily": economy.daily(),
+	"cmdWeekly": economy.weekly(),
+	"cmdMonthly": economy.monthly(),
+	"cmdConvert": misc.convert(),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),
@@ -121,7 +121,8 @@ client.on("message", async (message) => {
 			"745783548241248286",
 			"301062520679170066",
 			"426826826220961821",
-			"814623079346470993", "852948023780180028"
+			"814623079346470993",
+			"755934610579259432"
 		].includes(message.author.id) &&
 		client.user.id == "859513472973537311"
 	)
