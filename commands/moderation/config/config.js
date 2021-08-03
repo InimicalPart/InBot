@@ -52,7 +52,7 @@ async function runCommand(message, args, RM) {
 			let curLine = 0
 			lines.forEach((line) => {
 				curLine++;
-				if (curLine == caller_line) { message.channel.send(line); message.channel.send("Do you want to restore the line? (yes/no)"); gline = line }
+				if (curLine == parseInt(caller_line)) { message.channel.send(line); message.channel.send("Do you want to restore the line? (yes/no)"); gline = line }
 			});
 		});
 		var filter2 = m => m.author.id === message.author.id
@@ -82,7 +82,7 @@ async function runCommand(message, args, RM) {
 					let curLine = 0
 					lines.forEach((line) => {
 						curLine++;
-						if (curLine == caller_line) { message.channel.send(line); gline = line }
+						if (curLine == parseInt(caller_line)) { message.channel.send(line); gline = line }
 					});
 				});
 				message.channel.send("Alright. The line is now:\n" + gline)

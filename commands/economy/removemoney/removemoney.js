@@ -205,6 +205,9 @@ async function runCommand(message, args, RM) {
 
 		m.edit(moneyEmbed)
 		await connect.end(true)
+	}).catch(async (err) => {
+		console.log(err)
+		message.channel.send("Error: " + err)
 	})
 }
 

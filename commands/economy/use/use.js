@@ -114,8 +114,7 @@ async function runCommand(message, args, RM) {
 				.setThumbnail(message.guild.iconURL())
 				.setTitle("Raybrain(s) used")
 			)
-		} // TODO Add PADLOCK(10h) and LANDMINE(24h) to active
-		else if (args[0] === "padlock") {
+		} else if (args[0] === "padlock") {
 			//check if user has a padlock in the inventory database
 			const data = await connect.fetch("inventory", message.author.id)
 			const inventory = JSON.parse(JSON.stringify(data.items))
@@ -183,6 +182,9 @@ async function runCommand(message, args, RM) {
 			)
 			return await connect.end(true)
 		}
+	}).catch(async (err) => {
+		console.log(err)
+		message.channel.send("Error: " + err)
 	})
 }
 

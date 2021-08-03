@@ -48,6 +48,9 @@ async function runCommand(message, args, RM) {
 		//":moneybag: **Money Bag** - [$10,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nYou can store up to $10,000\nid: `moneybag`\n\n" +
 		//m.edit(embed)
 		await connect.end(true)
+	}).catch(async (err) => {
+		console.log(err)
+		message.channel.send("Error: " + err)
 	})
 
 }
