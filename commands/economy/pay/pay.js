@@ -25,7 +25,7 @@ async function runCommand(message, args, RM) {
 	await connect.create("currency")
 	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
 		if (!args[0]) {
-			await connect.end()
+			await connect.end(true)
 			m.edit(new RM.Discord.MessageEmbed()
 				.setColor("RED")
 				.setDescription("You need to specify a user to pay!")
@@ -41,7 +41,7 @@ async function runCommand(message, args, RM) {
 			message.guild.members.cache.find(r => r.displayName.toLowerCase() === args[0].toLocaleLowerCase()) ||
 			null
 		if (user == null) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -59,7 +59,7 @@ async function runCommand(message, args, RM) {
 			await connect.add("currency", message.author.id, 0, 0, 1000, 0)
 		}
 		if (!args[1]) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -74,7 +74,7 @@ async function runCommand(message, args, RM) {
 
 		let amount = parseInt(args[1])
 		if (isNaN(amount)) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -86,7 +86,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (amount < 1) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -100,7 +100,7 @@ async function runCommand(message, args, RM) {
 		let authorBal = await connect.fetch("currency", message.author.id)
 		let userBal = await connect.fetch("currency", user.id)
 		if (amount > authorBal.amountw) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())

@@ -5,6 +5,7 @@ global.sQueue2 = new Map();
 global.sQueue3 = new Map();
 global.sQueue = new Map();
 global.games = new Map();
+global.chessList = new Map();
 global.playerBalance = new Map();
 global.seekMS = 0;
 global.commandsUsed = 0;
@@ -87,6 +88,8 @@ const requiredModules = {
 	"cmdWeekly": economy.weekly(),
 	"cmdMonthly": economy.monthly(),
 	"cmdConvert": misc.convert(),
+	"cmdRun": misc.run(),
+	"cmdChess": fun.chess(),
 	"Discord": Discord,
 	"process_env": process.env,
 	"pretty_ms": require("pretty-ms"),
@@ -174,7 +177,15 @@ client.on("ready", async () => {
 	}
 	let users = [];
 	const list = client.guilds.cache.get("857017449743777812");
-	list.members.cache.forEach((member) => users.push(member.id));
+	list.members.cache.forEach(async (member) => {
+		if (String(member.user.username).toLowerCase().includes("| gg") || String(member.user.username).toLowerCase().includes("|| discord.gg") || String(member.user.username).toLowerCase().includes("dcgate") || String(member.user.username).toLowerCase().includes("discordgate")) {
+			console.log(member.user.username + " is getting banned.")
+			await member.send("Hello, you have been suspeced of being a user bot, for safety concerns, we have banned you. If you think this is a mistake. Please DM InimicalPart ©#4542 or ray.#2021")
+			member.ban({ reason: 'User bots are not allowed.' })
+		} else {
+			users.push(member.id)
+		}
+	});
 	if (client.user.id != "859513472973537311" && config.showUsers == true)
 		await list.channels.cache
 			.get("862425213799104512")
@@ -241,7 +252,10 @@ client.on("ready", async () => {
 });
 //import express and start a server on port 3000
 
-client.on("guildMemberAdd", async () => {
+client.on("guildMemberAdd", async (user) => {
+	if (String(user.username).toLowerCase().includes("|| discord.gg") || String(user.username).toLowerCase().includes("dcgate") || String(user.username).toLowerCase().includes("discordgate")) {
+		user.ban({ reason: 'User bots are not allowed.' })
+	}
 	if (client.user.id != "859513472973537311" && config.showUsers == true) {
 		let users = [];
 		const list = client.guilds.cache.get("857017449743777812");

@@ -41,7 +41,7 @@ async function runCommand(message, args, RM) {
 			message.member;
 
 		if (!user) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -71,10 +71,10 @@ async function runCommand(message, args, RM) {
 				let bankPercent = ((bank / info.maxbank) * 100).toFixed(2);
 				embed.setDescription(`**Wallet**: $${numberWithCommas(bal)}\n**Bank**: $${numberWithCommas(bank)}/${numberWithCommas(info.maxbank)} (\`${bankPercent}%\`)`)
 			}
-			await connect.end()
+			await connect.end(true)
 			return m.edit(embed);
 		} else {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(
 				new Discord.MessageEmbed()
 					.setColor("RED")

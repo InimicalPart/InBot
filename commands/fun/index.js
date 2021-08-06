@@ -4,7 +4,12 @@ function motivation() {
 function roast() {
 	return require("./roast/roast.js")
 }
+function chess() {
+	return require("./chess/chess.js")
+}
+
 module.exports = {
+	chess,
 	motivation,
 	roast
 }

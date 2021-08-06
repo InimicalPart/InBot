@@ -34,7 +34,12 @@ function convert() {
 	return require("./convert/convert.js")
 }
 
+function run() {
+	return require("./run/run.js")
+}
+
 module.exports = {
+	run,
 	convert,
 	dbinfo,
 	rayispog,

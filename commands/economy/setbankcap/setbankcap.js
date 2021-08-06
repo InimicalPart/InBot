@@ -21,7 +21,7 @@ async function runCommand(message, args, RM) {
 		)
 	}
 	if (!message.member.hasPermission("ADMINISTRATOR")) {
-		await connect.end()
+		await connect.end(true)
 		return m.edit(new RM.Discord.MessageEmbed()
 			.setColor("RED")
 			.setAuthor(message.author.username, message.author.avatarURL())
