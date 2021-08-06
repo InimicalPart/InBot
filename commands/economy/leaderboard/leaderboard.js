@@ -117,7 +117,7 @@ async function runCommand(message, args, RM) {
 			)
 			.setThumbnail(message.guild.iconURL())
 		m.edit(embed)
-		await connect.end()
+		await connect.end(true)
 	}).catch(async (err) => {
 		console.log(err)
 		message.channel.send("Error: " + err)

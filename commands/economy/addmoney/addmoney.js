@@ -6,7 +6,9 @@ const commandInfo = {
 	"usage": "[COMMAND] <user> <money>", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "economy"
 }
-
+function numberWithCommas(x) {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 async function runCommand(message, args, RM) {
 	//Check if command is disabled
 	if (!require("../../../config.js").cmdAddmoney) {
@@ -27,7 +29,7 @@ async function runCommand(message, args, RM) {
 		await connect.create("currency")
 
 		if (!message.member.hasPermission("ADMINISTRATOR")) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.username, message.author.avatarURL())
@@ -40,7 +42,7 @@ async function runCommand(message, args, RM) {
 			)
 		};
 		if (!args[0]) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.username, message.author.avatarURL())
@@ -62,7 +64,7 @@ async function runCommand(message, args, RM) {
 			user = message.mentions.members.first() || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args[0].toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args[0].toLocaleLowerCase());
 		}
 		if (user == undefined) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -75,7 +77,7 @@ async function runCommand(message, args, RM) {
 		}
 		const username = user.username || user.user.username  // here was the error it was user.username
 		if (!args[1]) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -88,7 +90,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (Number.isNaN(args[1]) || args[1] < 0) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())
@@ -101,7 +103,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (args[1] > 1000000) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new Discord.MessageEmbed()
 				.setColor("RED")
 				.setAuthor(message.author.tag, message.author.avatarURL())

@@ -53,3 +53,5 @@ exports.cmdDaily = true
 exports.cmdWeekly = true
 exports.cmdMonthly = true
 exports.cmdConvert = true
+exports.cmdRun = true
+exports.cmdChess = true

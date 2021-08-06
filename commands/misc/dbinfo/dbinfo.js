@@ -21,7 +21,7 @@ async function runCommand(message, args, RM) {
 		)
 	}
 	if (!message.member.hasPermission("ADMINISTRATOR")) {
-		await connect.end()
+		await connect.end(true)
 		return m.edit(new RM.Discord.MessageEmbed()
 			.setColor("RED")
 			.setAuthor(message.author.username, message.author.avatarURL())
@@ -39,6 +39,8 @@ async function runCommand(message, args, RM) {
 	const { connect } = require("../../../databasec")
 	await connect()
 	await connect.create("currency")
+	await connect.create("cooldown")
+	await connect.create("inventory")
 	var SqlString = require('sqlstring');
 	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
 		if (!args[0]) {
@@ -111,17 +113,17 @@ async function runCommand(message, args, RM) {
 			})
 		const res2 = await connect.query("SELECT * FROM inventory WHERE userid=" + resjson.userid)
 		const res3 = await connect.query("SELECT * FROM cooldown WHERE userid=" + resjson.userid)
+		if (res2.rows.length < 1) {
+		} else {
+			const res2json = JSON.parse(JSON.stringify(res2.rows[0]))
+			embed.addFields({
+				name: "Inventory",
+				value: JSON.stringify(res2json.items)
+			})
+		}
 		if (res3.rows.length < 1) {
 		} else {
 			const res3json = JSON.parse(JSON.stringify(res3.rows[0]))
-			if (res2.rows.length < 1) {
-			} else {
-				const res2json = JSON.parse(JSON.stringify(res2.rows[0]))
-				embed.addFields({
-					name: "Inventory",
-					value: JSON.stringify(res2json.items)
-				})
-			}
 			if (res3.rows[0].workcool !== null) {
 				embed.addFields({
 					name: "Work Cooldown",

@@ -30,7 +30,7 @@ async function runCommand(message, args, RM) {
 		await connect.create("currency")
 
 		if (!message.member.hasPermission("ADMINISTRATOR", "MANAGE_GUILD")) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(
 				new Discord.MessageEmbed()
 					.setColor("RED")
@@ -44,7 +44,7 @@ async function runCommand(message, args, RM) {
 		}
 
 		if (!args[0]) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(
 				new Discord.MessageEmbed()
 					.setColor("RED")
@@ -64,7 +64,7 @@ async function runCommand(message, args, RM) {
 		}
 
 		if (!user) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(
 				new Discord.MessageEmbed()
 					.setColor("RED")
@@ -77,7 +77,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (!args[1]) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(
 				new Discord.MessageEmbed()
 					.setColor("RED")
@@ -125,7 +125,7 @@ async function runCommand(message, args, RM) {
 				)
 			}
 			if (args[1] > bank) {
-				await connect.end();
+				await connect.end(true);
 				return m.edit(
 					new Discord.MessageEmbed()
 						.setColor("RED")
@@ -178,7 +178,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (args[1] > bal) {
-			await connect.end();
+			await connect.end(true);
 			return m.edit(
 				new Discord.MessageEmbed()
 					.setColor("RED")

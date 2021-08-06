@@ -56,7 +56,6 @@ async function runCommand(message, args, RM) {
 			"[WORD] and dogs",
 			"Never gonna [WORD] you up",
 			"I am once again [WORD] for your financial support",
-			""
 		]
 		const missingWordsEnd = [
 			"americano",

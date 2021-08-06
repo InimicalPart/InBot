@@ -28,7 +28,7 @@ async function runCommand(message, args, RM) {
 	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
 
 		if (!args[0]) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription("Please enter an amount to deposit!")
 				.setColor("RED")

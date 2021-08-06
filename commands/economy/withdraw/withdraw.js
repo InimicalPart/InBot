@@ -27,7 +27,7 @@ async function runCommand(message, args, RM) {
 	await connect.create("currency")
 	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
 		if (!args[0]) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription("Please enter an amount to withdraw!")
 				.setColor("RED")
@@ -46,7 +46,7 @@ async function runCommand(message, args, RM) {
 			amount = parseInt(args[0])
 		}
 		if (amount > balance.amountb) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription(`You don't have $${amount} in the bank!`)
 				.setColor("RED")
@@ -55,7 +55,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (amount < 0) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription("You can't withdraw a negative amount!")
 				.setColor("RED")
@@ -64,7 +64,7 @@ async function runCommand(message, args, RM) {
 			)
 		}
 		if (amount === 0) {
-			await connect.end()
+			await connect.end(true)
 			return m.edit(new RM.Discord.MessageEmbed()
 				.setDescription("You can't withdraw anything!")
 				.setColor("RED")
