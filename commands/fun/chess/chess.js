@@ -22,9 +22,9 @@ async function runCommand(message, args, RM) {
 			.setTitle("Command Disabled")
 		)
 	}
-	const valid = ["301062520679170066", "814623079346470993"]
-	if (!valid.includes(message.author.id))
-		return
+	// const valid = ["301062520679170066", "814623079346470993"]
+	// if (!valid.includes(message.author.id))
+	// 	return
 	if (!args[0]) {
 		return message.channel.send(new RM.Discord.MessageEmbed()
 			.setColor("RED")

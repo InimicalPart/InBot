@@ -1,1 +1,0 @@
-console.log("Ray. died cuz Inimi killed him after he refused to play a fancy chess game with Inimi. Inimi is now serving 45,5 years in prison.")
