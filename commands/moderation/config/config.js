@@ -1,8 +1,8 @@
 const commandInfo = {
 	"primaryName": "config",
-	"possibleTriggers": ["config", "c"],
+	"possibleTriggers": ["config", "co"],
 	"help": "Allows admins to change the server config.",
-	"aliases": ["c"],
+	"aliases": ["co"],
 	"usage": "[COMMAND] <config name> [new value]", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "mod"
 }
