@@ -2,9 +2,9 @@ const { isBoolean } = require("util")
 
 const commandInfo = {
 	"primaryName": "chess", // This is the command name used by help.js (gets uppercased).
-	"possibleTriggers": ["chess", "alias2", "alias3"], // These are all commands that will trigger this command.
-	"help": "eats your cake!", // This is the general description of the command.
-	"aliases": ["alias2", "alias3"], // These are command aliases that help.js will use
+	"possibleTriggers": ["chess"], // These are all commands that will trigger this command.
+	"help": "Play chess with someone!", // This is the general description of the command.
+	"aliases": [], // These are command aliases that help.js will use
 	"usage": "[COMMAND] <user> [FEN of game]", // [COMMAND] gets replaced with the command and correct prefix later
 	"category": "fun"
 }
@@ -41,7 +41,7 @@ async function runCommand(message, args, RM) {
 	const FTI = require('fen-to-image')
 	const path = require('path')
 	let round = 0;
-	let result = "0-0";
+	let totalResult = "0-0";
 	let user =
 		message.mentions.members.first() ||
 		message.guild.members.cache.get(args[0]) ||
@@ -147,8 +147,18 @@ async function runCommand(message, args, RM) {
 					attachment: path.join(__dirname, "board.png"),
 					name: "board.png"
 				}]
-			}).then(() => { require("fs").unlinkSync(path.join(__dirname, "board.png")) }).catch(console.error)
+			}).then(() => { setTimeout(() => { require("fs").unlinkSync(path.join(__dirname, "board.png")) }, 200) }).catch(console.error)
 			message.channel.send(whiteUser.username + " (White) is starting!")
+			chess.header(
+				'Event', "Casual Game",
+				'Site', "The III Project",
+				'Date', new Date().toISOString().split('T')[0].replace(/-/g, "."),
+				'Round', 1,
+				'White', whiteUser.username,
+				'Black', blackUser.user.username,
+				'Result', totalResult
+
+			)
 		}).catch(console.error)
 		let activeColor;
 		let whitecheck = false;
@@ -164,8 +174,32 @@ async function runCommand(message, args, RM) {
 		collector.on('collect', async messageNext => {
 			try {
 				const msg = messageNext.content.split(" ")
-				if (msg[0] === "end") {
-					message.channel.send("The collector should stop now.")
+				if (msg[0] === "resign") {
+					// add 1 to blackusers win score in the database
+
+					// add 1 to whiteusers loss score in the database
+					let result;
+					if (messageNext.author == whiteUser) {
+						result = "0-1"
+					} else {
+						result = "1-0"
+					}
+					let color = messageNext.author == whiteUser ? "white" : "black"
+					let opposite = messageNext.author == whiteUser ? "Black" : "White"
+					chess.header('Result', result)
+					message.channel.send(color.toUpperCase() + " RESIGNED! " + opposite + " wins!")
+					const endFEN = chess.fen()
+					const moves = chess.history().length
+					const whoWon = opposite
+					const embed = new RM.Discord.MessageEmbed()
+						.setTitle("Chess Stats")
+						.setDescription(`${whiteUser.username} vs ${blackUser.user.username}`)
+						.addField("Round", round)
+						.addField("Moves", moves)
+						.addField("Winner", whoWon)
+						.addField("End FEN", endFEN)
+						.addField("PGN", chess.pgn({ newline_char: '\n' }))
+					message.channel.send(embed)
 					return collector.stop()
 				}
 				const response = messageNext.content.toLowerCase()
@@ -209,7 +243,7 @@ async function runCommand(message, args, RM) {
 								attachment: path.join(__dirname, "board.png"),
 								name: "board.png"
 							}]
-						}).then(() => { require("fs").unlinkSync(path.join(__dirname, "board.png")) }).catch(console.error)
+						}).then(() => { setTimeout(() => { require("fs").unlinkSync(path.join(__dirname, "board.png")) }, 200) }).catch(console.error)
 						whitecheck = false
 						blackcheck = false
 					}).catch(console.error)
@@ -252,10 +286,12 @@ async function runCommand(message, args, RM) {
 							}
 						}
 						if (activeColor === "black" && engineAutoPlay == "black") {
-							return message.channel.send("You cannot play while AutoPlay is moving for you!")
+							message.channel.send("Telling engine to make a move")
+							return run()
 						}
 						if (activeColor === "white" && engineAutoPlay == "white") {
-							return message.channel.send("You cannot play while AutoPlay is moving for you!")
+							message.channel.send("Telling engine to make a move")
+							return run()
 						}
 						const success = chess.move({
 							from: moves[1],
@@ -284,11 +320,19 @@ async function runCommand(message, args, RM) {
 							}
 						}
 						if (activeColor === "black" && engineAutoPlay == "black") {
-							return message.channel.send("You cannot play while AutoPlay is moving for you!")
+							message.channel.send("Telling engine to make a move")
+							return run()
 						}
 						if (activeColor === "white" && engineAutoPlay == "white") {
-							return message.channel.send("You cannot play while AutoPlay is moving for you!")
+							message.channel.send("Telling engine to make a move")
+							return run()
 						}
+						// if (activeColor === "black" && engineAutoPlay == "black") {
+						// 	return message.channel.send("You cannot play while AutoPlay is moving for you!")
+						// }
+						// if (activeColor === "white" && engineAutoPlay == "white") {
+						// 	return message.channel.send("You cannot play while AutoPlay is moving for you!")
+						// }
 						const success = chess.move({
 							from: moves[1],
 							to: moves[2],
@@ -343,7 +387,7 @@ async function runCommand(message, args, RM) {
 										attachment: path.join(__dirname, "board.png"),
 										name: "board.png"
 									}]
-								}).then(() => { require("fs").unlinkSync(path.join(__dirname, "board.png")) }).catch(console.error)
+								}).then(() => { setTimeout(() => { require("fs").unlinkSync(path.join(__dirname, "board.png")) }, 200) }).catch(console.error)
 								if (chess.fen().split(" ")[1] === "w") {
 									activeColor = "white"
 								} else {
@@ -406,16 +450,7 @@ async function runCommand(message, args, RM) {
 									const isStalemate = chess.in_stalemate()
 									const isDraw = chess.in_draw()
 									const isInsufficientMaterial = chess.insufficient_material()
-									chess.header(
-										'Event', "Casual Game",
-										'Site', "The III Project",
-										'Date', new Date().toISOString().split('T')[0].replace(/-/g, "."),
-										'Round', 1,
-										'White', whiteUser.username,
-										'Black', blackUser.user.username,
-										'Result', totalResult
 
-									)
 									const embed = new RM.Discord.MessageEmbed()
 										.setTitle("Chess Stats")
 										.setDescription(`${whiteUser.username} vs ${blackUser.user.username}`)
@@ -428,7 +463,7 @@ async function runCommand(message, args, RM) {
 										.addField("Insufficient Material", isInsufficientMaterial ? "Yes" : "No")
 										.addField("Winner", whoWon)
 										.addField("PGN", chess.pgn({ newline_char: '\n' }))
-										.addFooter("Use https://lichess.org/paste to analyze your game!")
+										.setFooter("Use https://lichess.org/paste to analyze your game!")
 									m.edit(embed)
 									//offerRematch(message, user)
 								}).catch(console.error)
@@ -439,7 +474,7 @@ async function runCommand(message, args, RM) {
 										name: "board.png"
 									}]
 								}).then(() => {
-									require("fs").unlinkSync(path.join(__dirname, "board.png"))
+									setTimeout(() => { require("fs").unlinkSync(path.join(__dirname, "board.png")) }, 200)
 									if (chess.fen().split(" ")[1] === "w") {
 										activeColor = "white"
 									} else {
@@ -475,7 +510,7 @@ async function runCommand(message, args, RM) {
 										attachment: path.join(__dirname, "board.png"),
 										name: "board.png"
 									}]
-								}).then(() => { require("fs").unlinkSync(path.join(__dirname, "board.png")) }).catch(console.error)
+								}).then(() => { setTimeout(() => { require("fs").unlinkSync(path.join(__dirname, "board.png")) }, 200) }).catch(console.error)
 								message.channel.send("Stalemate, no one wins.")
 								message.channel.send(new RM.Discord.MessageEmbed().setDescription("Loading stats...")).then((m) => {
 									const endFEN = chess.fen()
@@ -529,16 +564,7 @@ async function runCommand(message, args, RM) {
 									const isStalemate = chess.in_stalemate()
 									const isDraw = chess.in_draw()
 									const isInsufficientMaterial = chess.insufficient_material()
-									chess.header(
-										'Event', "Casual Game",
-										'Site', "The III Project",
-										'Date', new Date().toISOString().split('T')[0].replace(/-/g, "."),
-										'Round', 1,
-										'White', whiteUser.username,
-										'Black', blackUser.user.username,
-										'Result', totalResult
 
-									)
 									const embed = new RM.Discord.MessageEmbed()
 										.setTitle("Chess Stats")
 										.setDescription(`${whiteUser.username} vs ${blackUser.user.username}`)
@@ -550,7 +576,7 @@ async function runCommand(message, args, RM) {
 										.addField("Insufficient Material", isInsufficientMaterial ? "Yes" : "No")
 										.addField("Winner", whoWon)
 										.addField("PGN", chess.pgn({ newline_char: '\n' }))
-										.addFooter("Use https://lichess.org/paste to analyze your game!")
+										.setFooter("Use https://lichess.org/paste to analyze your game!")
 									m.edit(embed)
 									//offerRematch(message, user)
 								}).catch(console.error)
@@ -561,7 +587,7 @@ async function runCommand(message, args, RM) {
 										attachment: path.join(__dirname, "board.png"),
 										name: "board.png"
 									}]
-								}).then(() => { require("fs").unlinkSync(path.join(__dirname, "board.png")) }).catch(console.error)
+								}).then(() => { setTimeout(() => { require("fs").unlinkSync(path.join(__dirname, "board.png")) }, 200) }).catch(console.error)
 								message.channel.send("Draw, no one wins.")
 								message.channel.send(new RM.Discord.MessageEmbed().setDescription("Loading stats...")).then((m) => {
 									const endFEN = chess.fen()
@@ -615,16 +641,7 @@ async function runCommand(message, args, RM) {
 									const isStalemate = chess.in_stalemate()
 									const isDraw = chess.in_draw()
 									const isInsufficientMaterial = chess.insufficient_material()
-									chess.header(
-										'Event', "Casual Game",
-										'Site', "The III Project",
-										'Date', new Date().toISOString().split('T')[0].replace(/-/g, "."),
-										'Round', 1,
-										'White', whiteUser.username,
-										'Black', blackUser.user.username,
-										'Result', totalResult
 
-									)
 									const embed = new RM.Discord.MessageEmbed()
 										.setTitle("Chess Stats")
 										.setDescription(`${whiteUser.username} vs ${blackUser.user.username}`)
@@ -636,7 +653,7 @@ async function runCommand(message, args, RM) {
 										.addField("Insufficient Material", isInsufficientMaterial ? "Yes" : "No")
 										.addField("Winner", whoWon)
 										.addField("PGN", chess.pgn({ newline_char: '\n' }))
-										.addFooter("Use https://lichess.org/paste to analyze your game!")
+										.setFooter("Use https://lichess.org/paste to analyze your game!")
 									m.edit(embed)
 									//offerRematch(message, user)
 								}).catch(console.error)
@@ -647,7 +664,7 @@ async function runCommand(message, args, RM) {
 										attachment: path.join(__dirname, "board.png"),
 										name: "board.png"
 									}]
-								}).then(() => { require("fs").unlinkSync(path.join(__dirname, "board.png")) }).catch(console.error)
+								}).then(() => { setTimeout(() => { require("fs").unlinkSync(path.join(__dirname, "board.png")) }, 200) }).catch(console.error)
 								message.channel.send("Draw, no one wins.")
 								message.channel.send(new RM.Discord.MessageEmbed().setDescription("Loading stats...")).then((m) => {
 									const endFEN = chess.fen()
@@ -701,16 +718,6 @@ async function runCommand(message, args, RM) {
 									const isStalemate = chess.in_stalemate()
 									const isDraw = chess.in_draw()
 									const isInsufficientMaterial = chess.insufficient_material()
-									chess.header(
-										'Event', "Casual Game",
-										'Site', "The III Project",
-										'Date', new Date().toISOString().split('T')[0].replace(/-/g, "."),
-										'Round', 1,
-										'White', whiteUser.username,
-										'Black', blackUser.user.username,
-										'Result', totalResult
-
-									)
 									const embed = new RM.Discord.MessageEmbed()
 										.setTitle("Chess Stats")
 										.setDescription(`${whiteUser.username} vs ${blackUser.user.username}`)
@@ -722,7 +729,7 @@ async function runCommand(message, args, RM) {
 										.addField("Insufficient Material", isInsufficientMaterial ? "Yes" : "No")
 										.addField("Winner", whoWon)
 										.addField("PGN", chess.pgn({ newline_char: '\n' }))
-										.addFooter("Use https://lichess.org/paste to analyze your game!")
+										.setFooter("Use https://lichess.org/paste to analyze your game!")
 									m.edit(embed)
 									// offerRematch(message, user)
 								}).catch(console.error)
@@ -747,64 +754,68 @@ async function runCommand(message, args, RM) {
 										name: "board.png"
 									}]
 								}).then(async () => {
-									require("fs").unlinkSync(path.join(__dirname, "board.png"))
+									setTimeout(() => { require("fs").unlinkSync(path.join(__dirname, "board.png")) }, 200)
 
 									if (engineEnabled) {
-										const jsChessEngine = require('js-chess-engine')
-										const engine = new jsChessEngine.Game(chess.fen())
-										const color = chess.turn() === "w" ? "WHITE" : "BLACK"
-										let bestMove = undefined;
-
-										if (engineAutoPlay === "white" && color.toLowerCase() === "white") {
-											message.channel.send("Engine playing for WHITE is thinking...")
-											bestMove = await engine.aiMove(engineAutoPlayLevel)
-										} else if (engineAutoPlay === "black" && color.toLowerCase() === "black") {
-											message.channel.send("Engine playing for BLACK is thinking...")
-											bestMove = await engine.aiMove(engineAutoPlayLevel)
-										}
-
-										if ((engineHelpColors === "white" && color.toLowerCase() === "white") || (engineHelpColors === "black" && color.toLowerCase() === "black")) {
-											message.channel.send(new RM.Discord.MessageEmbed()
-												.setTitle("Chess Engine")
-												.setDescription("Calculating the best move... (May take a bit of time)")).then(async (m) => {
-													bestMove = await engine.aiMove(engineLevel)
-
-													for (let i in bestMove) {
-														return m.edit(new RM.Discord.MessageEmbed()
-															.setTitle("Chess Engine")
-															.setDescription("The engine predicted `" + i + " -> " + bestMove[i] + "` to be the best move for: " + color)
-														)
-
-													}
-
-												}).catch(console.error)
-										} else if (engineHelpColors === "both") {
-											message.channel.send(new RM.Discord.MessageEmbed()
-												.setTitle("Chess Engine")
-												.setDescription("Calculating the best move...")).then(async (m) => {
-													bestMove = await engine.aiMove(engineLevel)
-													for (let i in bestMove) {
-														return m.edit(new RM.Discord.MessageEmbed()
-															.setTitle("Chess Engine")
-															.setDescription("The engine predicted `" + i + " -> " + bestMove[i] + "` to be the best move for: " + color)
-														)
-													}
-												}).catch(console.error)
-										}
-										for (let i in bestMove) {
-											if (engineAutoPlay === "white" && color.toLowerCase() === "white") {
-												autoPlay(i, bestMove[i])
-											}
-											if (engineAutoPlay === "black" && color.toLowerCase() === "black") {
-												autoPlay(i, bestMove[i])
-											}
-										}
+										run()
 									}
 								}).catch(console.error)
 							}
 						}).catch(console.error)
 					}
 					rest()
+					async function run() {
+						const jsChessEngine = require('js-chess-engine')
+						const engine = new jsChessEngine.Game(chess.fen())
+						const color = chess.turn() === "w" ? "WHITE" : "BLACK"
+						let bestMove = undefined;
+
+						if (engineAutoPlay === "white" && color.toLowerCase() === "white") {
+							message.channel.send("Engine playing for WHITE is thinking...")
+							bestMove = await engine.aiMove(engineAutoPlayLevel)
+						} else if (engineAutoPlay === "black" && color.toLowerCase() === "black") {
+							message.channel.send("Engine playing for BLACK is thinking...")
+							bestMove = await engine.aiMove(engineAutoPlayLevel)
+						}
+
+						if ((engineHelpColors === "white" && color.toLowerCase() === "white") || (engineHelpColors === "black" && color.toLowerCase() === "black")) {
+							message.channel.send(new RM.Discord.MessageEmbed()
+								.setTitle("Chess Engine")
+								.setDescription("Calculating the best move... (May take a bit of time)")).then(async (m) => {
+									bestMove = await engine.aiMove(engineLevel)
+
+									for (let i in bestMove) {
+										return m.edit(new RM.Discord.MessageEmbed()
+											.setTitle("Chess Engine")
+											.setDescription("The engine predicted `" + i + " -> " + bestMove[i] + "` to be the best move for: " + color)
+										)
+
+									}
+
+								}).catch(console.error)
+						} else if (engineHelpColors === "both") {
+							message.channel.send(new RM.Discord.MessageEmbed()
+								.setTitle("Chess Engine")
+								.setDescription("Calculating the best move...")).then(async (m) => {
+									bestMove = await engine.aiMove(engineLevel)
+									for (let i in bestMove) {
+										return m.edit(new RM.Discord.MessageEmbed()
+											.setTitle("Chess Engine")
+											.setDescription("The engine predicted `" + i + " -> " + bestMove[i] + "` to be the best move for: " + color)
+										)
+									}
+								}).catch(console.error)
+						}
+						for (let i in bestMove) {
+
+							if (engineAutoPlay === "white" && color.toLowerCase() === "white") {
+								autoPlay(i, bestMove[i])
+							}
+							if (engineAutoPlay === "black" && color.toLowerCase() === "black") {
+								autoPlay(i, bestMove[i])
+							}
+						}
+					}
 				} else if (response === "history") {
 					let history = "";
 					if (chess.history({ verbose: true }).length < 1) {
@@ -854,7 +865,7 @@ async function runCommand(message, args, RM) {
 							var filter = m => [message.author.id, user.user.id].includes(m.author.id)
 							message.channel.awaitMessages(filter, {
 								max: 1,
-								time: 30000
+								time: 60000
 							}).then(messageOther2 => {
 								if (messageOther2.size < 1) {
 									return
@@ -968,9 +979,41 @@ async function runCommand(message, args, RM) {
 							message.channel.send("Exiting settings")
 						}
 					}).catch(console.error)
+				} else if (response.split(" ")[0] === "predict") {
+					if (!engineEnabled) {
+						return message.channel.send(new RM.Discord.MessageEmbed()
+							.setDescription("The engine is currently disabled."))
+					}
+					const jsChessEngine = require('js-chess-engine')
+					const engine = new jsChessEngine.Game(chess.fen())
+					const color = chess.turn() === "w" ? "WHITE" : "BLACK"
+					let bestMove;
+
+					if ((engineHelpColors === "white" && color.toLowerCase() === "white") || (engineHelpColors === "black" && color.toLowerCase() === "black") || (engineHelpColors === "both")) {
+						message.channel.send(new RM.Discord.MessageEmbed()
+							.setTitle("Chess Engine")
+							.setDescription("Calculating the best move... (May take a bit of time)")).then(async (m) => {
+								bestMove = await engine.aiMove(engineLevel)
+
+								for (let i in bestMove) {
+									return m.edit(new RM.Discord.MessageEmbed()
+										.setTitle("Chess Engine")
+										.setDescription("The engine predicted `" + i + " -> " + bestMove[i] + "` to be the best move for: " + color)
+									)
+
+								}
+
+							}).catch(console.error)
+					} else {
+						return message.channel.send(new RM.Discord.MessageEmbed()
+							.setTitle("Chess Engine")
+							.setDescription("The engine will not help your color. Change that in the settings to get results."))
+					}
+				} else if (response.split(" ")[0] === "pgn") {
+					message.channel.send("```\n" + chess.pgn() + "```")
 				}
 			} catch (e) { return message.channel.send("Error: " + e.message) }
-		}).catch(console.error)
+		})
 	}
 }
 function commandTriggers() {
