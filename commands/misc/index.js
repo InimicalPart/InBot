@@ -38,7 +38,12 @@ function run() {
 	return require("./run/run.js")
 }
 
+function v13() {
+	return require("./v13/v13.js")
+}
+
 module.exports = {
+	v13,
 	run,
 	convert,
 	dbinfo,
