@@ -33,8 +33,7 @@
   },
   "name": "iii.exe",
   "engines": {
-    "node": ">=16.6.2",
-    "npm": ">=7.20.3"
+    "node": "16.x"
   },
   "description": "<h1 align=\"center\">The III Project</h1>",
   "version": "1.0.0",
