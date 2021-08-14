@@ -50,9 +50,6 @@
   "description": "<h1 align=\"center\">The III Project</h1>",
   "version": "1.0.0",
   "main": "index.js",
-  "engines": {
-    "node": "16.x"
-  },
   "scripts": {
     "test": "snyk test"
   },
