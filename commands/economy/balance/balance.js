@@ -12,23 +12,27 @@ function numberWithCommas(x) {
 async function runCommand(message, args, RM) {
   //Check if command is disabled
   if (!require("../../../config.js").cmdBalance) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.username, message.author.avatarURL())
-        .setDescription("Command disabled by Administrators.")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Command Disabled")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.username, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
   }
 
   const Discord = RM.Discord;
   message.channel
-    .send(
-      new RM.Discord.MessageEmbed().setDescription(
-        "<a:loading:869354366803509299> *Working on it...*"
-      )
-    )
+    .send({
+      embeds: [
+        new RM.Discord.MessageEmbed().setDescription(
+          "<a:loading:869354366803509299> *Working on it...*"
+        ),
+      ],
+    })
     .then(async (m) => {
       const { connect } = require("../../../databasec");
       await connect();
@@ -49,14 +53,16 @@ async function runCommand(message, args, RM) {
 
       if (!user) {
         await connect.end(true);
-        return m.edit(
-          new Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription(`${args[0]} is not a valid user.`)
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("User Not Found")
-        );
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(`${args[0]} is not a valid user.`)
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("User Not Found"),
+          ],
+        });
       }
       if (user.user) {
         user = user.user;
@@ -91,25 +97,27 @@ async function runCommand(message, args, RM) {
           );
         }
         await connect.end(true);
-        return m.edit(embed);
+        return m.edit({ embeds: [embed] });
       } else {
         await connect.end(true);
-        return m.edit(
-          new Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.username, message.author.avatarURL())
-            .setDescription(
-              "Could not find user. Please make sure you are using a mention, nickname, or ID."
-            )
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Error")
-            .setTimestamp()
-        );
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.username, message.author.avatarURL())
+              .setDescription(
+                "Could not find user. Please make sure you are using a mention, nickname, or ID."
+              )
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Error")
+              .setTimestamp(),
+          ],
+        });
       }
     })
     .catch(async (err) => {
       console.log(err);
-      message.channel.send("Error: " + err);
+      message.channel.send({ content: "Error: " + err });
     });
 }
 

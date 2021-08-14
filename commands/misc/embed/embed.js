@@ -1,95 +1,98 @@
 const commandInfo = {
-	"primaryName": "embed",
-	"possibleTriggers": ["embed", "info"],
-	"help": "Embed creates a test embed.",
-	"aliases": ["info"],
-	"usage": "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
-	"category": "misc"
-}
+  primaryName: "embed",
+  possibleTriggers: ["embed", "info"],
+  help: "Embed creates a test embed.",
+  aliases: ["info"],
+  usage: "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
+  category: "misc",
+};
 
 async function runCommand(message, args, RM) {
-	if (!require("../../../config.js").cmdEmbed) {
-		return message.channel.send(new RM.Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				"Command disabled by Administrators."
-			)
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Command Disabled")
-		)
-	}
+  if (!require("../../../config.js").cmdEmbed) {
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
+  }
 
-	const Discord = RM.Discord;
-	const setImageLinks = RM.setImageLinks
-	const randomLink = setImageLinks[Math.floor(Math.random() * setImageLinks.length)]
-	const embed = new Discord.MessageEmbed()
-		.setAuthor(message.author.tag, message.author.avatarURL())
-		.setColor("RANDOM")
-		.setDescription("**III Project** Invite: [**Click me!**](https://discord.gg/iii) ")
-		.setFooter("This is the footer text, it can hold 2048 characters", "http://i.imgur.com/w1vhFSR.png")
-		.setImage(randomLink) //"https://cdn.discordapp.com/attachments/857343827223117827/858120350633951272/III_29.png")
-		//.setThumbnail("http://i.imgur.com/p2qNFag.png")
-		.setTimestamp()
-		.setURL("https://discord.js.org/#/docs/main/v12/class/MessageEmbed")
-		.addFields({
-			name: "This is a field title, it can hold 256 characters",
-			value: "This is a field value, it can hold 1024 characters."
-		})
-		.addFields({
-			name: "Inline Field",
-			value: "They can also be inline.",
-			inline: true
-		})
-		.addFields({
-			name: '\u200b',
-			value: '\u200b'
-		})
-		.addFields({
-			name: "More information",
-			value: "More information is available [**here**](https://www.github.com/InimicalPart/TheIIIProject)",
-			inline: true
-		});
+  const Discord = RM.Discord;
+  const setImageLinks = RM.setImageLinks;
+  const randomLink =
+    setImageLinks[Math.floor(Math.random() * setImageLinks.length)];
+  const embed = new Discord.MessageEmbed()
+    .setAuthor(message.author.tag, message.author.avatarURL())
+    .setColor("RANDOM")
+    .setDescription(
+      "**III Project** Invite: [**Click me!**](https://discord.gg/iii) "
+    )
+    .setFooter(
+      "This is the footer text, it can hold 2048 characters",
+      "http://i.imgur.com/w1vhFSR.png"
+    )
+    .setImage(randomLink) //"https://cdn.discordapp.com/attachments/857343827223117827/858120350633951272/III_29.png")
+    //.setThumbnail("http://i.imgur.com/p2qNFag.png")
+    .setTimestamp()
+    .setURL("https://discord.js.org/#/docs/main/v12/class/MessageEmbed")
+    .addFields({
+      name: "This is a field title, it can hold 256 characters",
+      value: "This is a field value, it can hold 1024 characters.",
+    })
+    .addFields({
+      name: "Inline Field",
+      value: "They can also be inline.",
+      inline: true,
+    })
+    .addFields({
+      name: "\u200b",
+      value: "\u200b",
+    })
+    .addFields({
+      name: "More information",
+      value:
+        "More information is available [**here**](https://www.github.com/InimicalPart/TheIIIProject)",
+      inline: true,
+    });
 
-
-	message.channel.send(embed);
-
-
-
+  message.channel.send({ embeds: [embed] });
 }
 
 function commandTriggers() {
-	return commandInfo.possibleTriggers;
+  return commandInfo.possibleTriggers;
 }
 function commandPrim() {
-	return commandInfo.primaryName;
+  return commandInfo.primaryName;
 }
 function commandAliases() {
-	return commandInfo.aliases;
+  return commandInfo.aliases;
 }
 function commandHelp() {
-	return commandInfo.help;
+  return commandInfo.help;
 }
 function commandUsage() {
-	return commandInfo.usage;
+  return commandInfo.usage;
 }
 function commandCategory() {
-	return commandInfo.category;
+  return commandInfo.category;
 }
 module.exports = {
-	runCommand,
-	commandTriggers,
-	commandHelp,
-	commandAliases,
-	commandPrim,
-	commandUsage,
-	commandCategory
-}
-
+  runCommand,
+  commandTriggers,
+  commandHelp,
+  commandAliases,
+  commandPrim,
+  commandUsage,
+  commandCategory,
+}; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */
+/* */
 /*
 ------------------[Instruction]------------------
 
@@ -113,4 +116,4 @@ To check if possible triggers has the command call
 ------------------[Instruction]------------------
 */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/* */

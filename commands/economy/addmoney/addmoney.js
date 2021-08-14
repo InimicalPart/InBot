@@ -12,50 +12,60 @@ function numberWithCommas(x) {
 async function runCommand(message, args, RM) {
   //Check if command is disabled
   if (!require("../../../config.js").cmdAddmoney) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("Command disabled by Administrators.")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Command Disabled")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
   }
   const Discord = RM.Discord;
   message.channel
-    .send(
-      new RM.Discord.MessageEmbed().setDescription(
-        "<a:loading:869354366803509299> *Working on it...*"
-      )
-    )
+    .send({
+      embeds: [
+        new RM.Discord.MessageEmbed().setDescription(
+          "<a:loading:869354366803509299> *Working on it...*"
+        ),
+      ],
+    })
     .then(async (m) => {
       const { connect } = require("../../../databasec");
       await connect();
       await connect.create("currency");
 
-      if (!message.member.hasPermission("ADMINISTRATOR")) {
+      if (
+        !message.member.hasPermission(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
+      ) {
         await connect.end(true);
-        return m.edit(
-          new Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.username, message.author.avatarURL())
-            .setDescription("You do not have permission to use this command.")
-            .setTimestamp()
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Permission Denied")
-        );
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.username, message.author.avatarURL())
+              .setDescription("You do not have permission to use this command.")
+              .setTimestamp()
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Permission Denied"),
+          ],
+        });
       }
       if (!args[0]) {
         await connect.end(true);
-        return m.edit(
-          new Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.username, message.author.avatarURL())
-            .setDescription("You need to specify a user to add money to.")
-            .setTimestamp()
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("No User Specified")
-        );
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.username, message.author.avatarURL())
+              .setDescription("You need to specify a user to add money to.")
+              .setTimestamp()
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("No User Specified"),
+          ],
+        });
       }
 
       let user =
@@ -74,14 +84,16 @@ async function runCommand(message, args, RM) {
 
       if (user == null) {
         await connect.end(true);
-        return m.edit(
-          new Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription(`${args[0]} is not a valid user.`)
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("User Not Found")
-        );
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(`${args[0]} is not a valid user.`)
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("User Not Found"),
+          ],
+        });
       }
       if (user.user) {
         user = user.user;
@@ -89,39 +101,45 @@ async function runCommand(message, args, RM) {
       const username = user.username;
       if (!args[1]) {
         await connect.end(true);
-        return m.edit(
-          new Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription(`You need to specify a value to add.`)
-            .setTimestamp()
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("No Value Specified")
-        );
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(`You need to specify a value to add.`)
+              .setTimestamp()
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("No Value Specified"),
+          ],
+        });
       }
       if (Number.isNaN(args[1]) || args[1] < 0) {
         await connect.end(true);
-        return m.edit(
-          new Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription(`The value you specified is not a number.`)
-            .setTimestamp()
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Invalid Value")
-        );
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(`The value you specified is not a number.`)
+              .setTimestamp()
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Invalid Value"),
+          ],
+        });
       }
       if (args[1] > 1000000) {
         await connect.end(true);
-        return m.edit(
-          new Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription(`The value you specified is too high.`)
-            .setTimestamp()
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Invalid Value")
-        );
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(`The value you specified is too high.`)
+              .setTimestamp()
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Invalid Value"),
+          ],
+        });
       }
 
       if ((await connect.fetch("currency", user.id)) === null) {
@@ -132,19 +150,21 @@ async function runCommand(message, args, RM) {
       if (args[2] == "-b") {
         if (info.maxbank - bank < args[1]) {
           await connect.end(true);
-          return m.edit(
-            new Discord.MessageEmbed()
-              .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
-              .setDescription(
-                `You can't add more money to their bank than their max bank cap! They have **\`$${numberWithCommas(
-                  info.maxbank - bank
-                )}\`** of free space in their bank`
-              )
-              .setTimestamp()
-              .setThumbnail(message.guild.iconURL())
-              .setTitle("Invalid Amount")
-          );
+          return m.edit({
+            embeds: [
+              new Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setDescription(
+                  `You can't add more money to their bank than their max bank cap! They have **\`$${numberWithCommas(
+                    info.maxbank - bank
+                  )}\`** of free space in their bank`
+                )
+                .setTimestamp()
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Invalid Amount"),
+            ],
+          });
         }
         await connect.update(
           "currency",
@@ -165,7 +185,7 @@ async function runCommand(message, args, RM) {
           .setThumbnail(message.guild.iconURL())
           .setTitle("Money Added");
 
-        m.edit(moneyEmbed);
+        m.edit({ embeds: [moneyEmbed] });
         return await connect.end(true);
       }
       const res = await connect.fetch("currency", user.id);
@@ -175,24 +195,26 @@ async function runCommand(message, args, RM) {
         user.id,
         res.amountw - 0 + (args[1] - 0)
       );
-      m.edit(
-        new Discord.MessageEmbed()
-          .setColor("GREEN")
-          .setAuthor(message.author.tag, message.author.avatarURL())
-          .setDescription(
-            `**${username}**'s balance has been increased by **\`$${numberWithCommas(
-              args[1]
-            )}\`**!`
-          )
-          .setTimestamp()
-          .setThumbnail(message.guild.iconURL())
-          .setTitle("Success")
-      );
+      m.edit({
+        embeds: [
+          new Discord.MessageEmbed()
+            .setColor("GREEN")
+            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setDescription(
+              `**${username}**'s balance has been increased by **\`$${numberWithCommas(
+                args[1]
+              )}\`**!`
+            )
+            .setTimestamp()
+            .setThumbnail(message.guild.iconURL())
+            .setTitle("Success"),
+        ],
+      });
       await connect.end(true);
     })
     .catch(async (err) => {
       console.log(err);
-      message.channel.send("Error: " + err);
+      message.channel.send({ content: "Error: " + err });
     });
 }
 function commandTriggers() {

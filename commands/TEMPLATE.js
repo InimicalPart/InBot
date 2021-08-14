@@ -1,62 +1,61 @@
 const commandInfo = {
-	"primaryName": "<command name>", // This is the command name used by help.js (gets uppercased).
-	"possibleTriggers": ["command1", "alias2", "alias3"], // These are all commands that will trigger this command.
-	"help": "eats your cake!", // This is the general description of the command.
-	"aliases": ["alias2", "alias3"], // These are command aliases that help.js will use
-	"usage": "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
-	"category": "fun/music/mod/iiisub/misc/economy"
-}
+  primaryName: "<command name>", // This is the command name used by help.js (gets uppercased).
+  possibleTriggers: ["command1", "alias2", "alias3"], // These are all commands that will trigger this command.
+  help: "eats your cake!", // This is the general description of the command.
+  aliases: ["alias2", "alias3"], // These are command aliases that help.js will use
+  usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
+  category: "fun/music/mod/iiisub/misc/economy",
+};
 
 async function runCommand(message, args, RM) {
-	//Check if command is disabled
-	if (!require("../../../config.js").cmd[UpperCMD]) {
-		return message.channel.send(new RM.Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				"Command disabled by Administrators."
-			)
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Command Disabled")
-		)
-	}
+  //Check if command is disabled
+  if (!require("../../../config.js").cmd[UpperCMD]) {
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
+  }
 
-	// cmd stuff here
-
+  // cmd stuff here
 }
 
 function commandTriggers() {
-	return commandInfo.possibleTriggers;
+  return commandInfo.possibleTriggers;
 }
 function commandPrim() {
-	return commandInfo.primaryName;
+  return commandInfo.primaryName;
 }
 function commandAliases() {
-	return commandInfo.aliases;
+  return commandInfo.aliases;
 }
 function commandHelp() {
-	return commandInfo.help;
+  return commandInfo.help;
 }
 function commandUsage() {
-	return commandInfo.usage;
+  return commandInfo.usage;
 }
 function commandCategory() {
-	return commandInfo.category;
+  return commandInfo.category;
 }
 module.exports = {
-	runCommand,
-	commandTriggers,
-	commandHelp,
-	commandAliases,
-	commandPrim,
-	commandUsage,
-	commandCategory
-}
-
+  runCommand,
+  commandTriggers,
+  commandHelp,
+  commandAliases,
+  commandPrim,
+  commandUsage,
+  commandCategory,
+}; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */
+/* */
 /*
 ------------------[Instruction]------------------
 
@@ -80,4 +79,4 @@ To check if possible triggers has the command call
 ------------------[Instruction]------------------
 */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/* */

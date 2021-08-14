@@ -14,7 +14,7 @@
     "convert-units": "^2.3.4",
     "discord-chatbot": "^2.0.2",
     "discord-reply": "^0.1.2",
-    "discord.js": "^12.5.3",
+    "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
     "easy-embed-pages": "^0.0.3",
     "express": "^4.17.1",

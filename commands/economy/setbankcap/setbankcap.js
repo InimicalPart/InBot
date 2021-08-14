@@ -10,50 +10,60 @@ const commandInfo = {
 async function runCommand(message, args, RM) {
   //Check if command is disabled
   if (!require("../../../config.js").cmdSetbankcap) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("Command disabled by Administrators.")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Command Disabled")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
   }
-  if (!message.member.hasPermission("ADMINISTRATOR")) {
+  if (
+    !message.member.hasPermission(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
+  ) {
     await connect.end(true);
-    return m.edit(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.username, message.author.avatarURL())
-        .setDescription("You do not have permission to use this command.")
-        .setTimestamp()
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Permission Denied")
-    );
+    return m.edit({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.username, message.author.avatarURL())
+          .setDescription("You do not have permission to use this command.")
+          .setTimestamp()
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Permission Denied"),
+      ],
+    });
   }
   message.channel
-    .send(
-      new RM.Discord.MessageEmbed().setDescription(
-        "<a:loading:869354366803509299> *Working on it...*"
-      )
-    )
+    .send({
+      embeds: [
+        new RM.Discord.MessageEmbed().setDescription(
+          "<a:loading:869354366803509299> *Working on it...*"
+        ),
+      ],
+    })
     .then(async (m) => {
       const { connect } = require("../../../databasec");
       await connect();
       await connect.create("inventory");
       if (!args[0]) {
         await connect.end(true);
-        return m.edit(
-          new Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.username, message.author.avatarURL())
-            .setDescription(
-              "You need to specify a user to set the bank capacity for."
-            )
-            .setTimestamp()
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Error")
-        );
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.username, message.author.avatarURL())
+              .setDescription(
+                "You need to specify a user to set the bank capacity for."
+              )
+              .setTimestamp()
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Error"),
+          ],
+        });
       }
 
       let user =
@@ -79,32 +89,39 @@ async function runCommand(message, args, RM) {
       const data = await connect.fetch("currency", message.author.id);
       if (!args[1]) {
         await connect.end(true);
-        return m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("GREEN")
-            .setAuthor(message.author.username, message.author.avatarURL())
-            .setDescription(
-              user.username + "'s bank capacity is at: `$" + data.maxbank + "`"
-            )
-            .setTimestamp()
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Success")
-        );
+        return m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("GREEN")
+              .setAuthor(message.author.username, message.author.avatarURL())
+              .setDescription(
+                user.username +
+                  "'s bank capacity is at: `$" +
+                  data.maxbank +
+                  "`"
+              )
+              .setTimestamp()
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Success"),
+          ],
+        });
       }
       if (args[1] === "reset") {
         await connect.update("currency", user.id, undefined, undefined, 1000);
         await connect.end(true);
-        return m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("GREEN")
-            .setAuthor(message.author.username, message.author.avatarURL())
-            .setDescription(
-              user.username + "'s bank capacity has been set to: `$1000`"
-            )
-            .setTimestamp()
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Success")
-        );
+        return m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("GREEN")
+              .setAuthor(message.author.username, message.author.avatarURL())
+              .setDescription(
+                user.username + "'s bank capacity has been set to: `$1000`"
+              )
+              .setTimestamp()
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Success"),
+          ],
+        });
       } else if (!isNaN(parseInt(args[1]))) {
         await connect.update(
           "currency",
@@ -114,38 +131,42 @@ async function runCommand(message, args, RM) {
           parseInt(args[1])
         );
         await connect.end(true);
-        return m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("GREEN")
-            .setAuthor(message.author.username, message.author.avatarURL())
-            .setDescription(
-              user.username +
-                "'s bank capacity has been set to: `$" +
-                parseInt(args[1]) +
-                "`"
-            )
-            .setTimestamp()
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Success")
-        );
+        return m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("GREEN")
+              .setAuthor(message.author.username, message.author.avatarURL())
+              .setDescription(
+                user.username +
+                  "'s bank capacity has been set to: `$" +
+                  parseInt(args[1]) +
+                  "`"
+              )
+              .setTimestamp()
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Success"),
+          ],
+        });
       } else {
         await connect.end(true);
-        return m.edit(
-          new Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.username, message.author.avatarURL())
-            .setDescription(
-              "You need to specify a valid number for the bank capacity."
-            )
-            .setTimestamp()
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Error")
-        );
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.username, message.author.avatarURL())
+              .setDescription(
+                "You need to specify a valid number for the bank capacity."
+              )
+              .setTimestamp()
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Error"),
+          ],
+        });
       }
     })
     .catch(async (err) => {
       console.log(err);
-      message.channel.send("Error: " + err);
+      message.channel.send({ content: "Error: " + err });
     });
 }
 

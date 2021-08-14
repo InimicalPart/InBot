@@ -21,29 +21,28 @@ const commandInfo = {
 async function runCommand(message, args, RM) {
   //Check if command is disabled
   if (!require("../../../config.js").cmdMinesweeper) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("Command disabled by Administrators.")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Command Disabled")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
   }
-  /*  if (
-    !["745783548241248286", "301062520679170066"].includes(message.author.id)
-  ) {
-    return message.channel.send("You are not permitted to use this command");
-  }*/
   if (global.mineSweeperList.includes(message.author.id)) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("You are already playing a game of minesweeper!")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Already Playing")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("You are already playing a game of minesweeper!")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Already Playing"),
+      ],
+    });
   }
   const { Board } = require("minesweeper-board");
   let size = 10;
@@ -52,37 +51,43 @@ async function runCommand(message, args, RM) {
     const sizebombs = args[0].split(":");
     if (!Number.isNaN(parseInt(sizebombs[0]))) {
       if (parseInt(sizebombs[0]) > 18 || parseInt(sizebombs[0]) < 7) {
-        return message.channel.send(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription("Size must be between 7 and 18")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Size Error")
-        );
+        return message.channel.send({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription("Size must be between 7 and 18")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Size Error"),
+          ],
+        });
       } else {
         size = parseInt(sizebombs[0]);
       }
     } else {
-      return message.channel.send(
-        new RM.Discord.MessageEmbed()
-          .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
-          .setDescription("Invalid size")
-          .setThumbnail(message.guild.iconURL())
-          .setTitle("Invalid Size")
-      );
-    }
-    if (!Number.isNaN(parseInt(sizebombs[1]))) {
-      if (parseInt(sizebombs[1]) >= size * size) {
-        return message.channel.send(
+      return message.channel.send({
+        embeds: [
           new RM.Discord.MessageEmbed()
             .setColor("RED")
             .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription("Invalid bombs")
+            .setDescription("Invalid size")
             .setThumbnail(message.guild.iconURL())
-            .setTitle("Invalid Bombs")
-        );
+            .setTitle("Invalid Size"),
+        ],
+      });
+    }
+    if (!Number.isNaN(parseInt(sizebombs[1]))) {
+      if (parseInt(sizebombs[1]) >= size * size) {
+        return message.channel.send({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription("Invalid bombs")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Invalid Bombs"),
+          ],
+        });
       } else if (
         calcPercent(75, parseInt(size * size)) < parseInt(sizebombs[1])
       ) {
@@ -213,15 +218,16 @@ async function runCommand(message, args, RM) {
     }
   }
   const timetaken = new Date().getTime() - gameTime;
-  message.channel.send(
-    "Time: `" +
+  message.channel.send({
+    content:
+      "Time: `" +
       RM.pretty_ms(timetaken) +
       "`. Bombs left: " +
       bombsLeft +
       " ```js\n" +
       renderBoard(boardToShow) +
-      "```"
-  );
+      "```",
+  });
 
   var filter = (m) => [message.author.id].includes(m.author.id);
   const collector = message.channel.createMessageCollector(filter);
@@ -229,7 +235,9 @@ async function runCommand(message, args, RM) {
     const msg = messageNext.content.toLowerCase().split(" ");
     if (msg[0] === "r" || msg[0] === "reveal") {
       if (!msg[1]) {
-        return message.channel.send("You need to enter the position!");
+        return message.channel.send({
+          content: "You need to enter the position!",
+        });
       }
       let positions = msg[1].split(":");
       let x = positions[0];
@@ -238,7 +246,9 @@ async function runCommand(message, args, RM) {
       let ynum = convertToNum(y);
       function reveal(x, y) {
         if (!msg[1]) {
-          return message.channel.send("You need to enter the position!");
+          return message.channel.send({
+            content: "You need to enter the position!",
+          });
         }
         positions = msg[1].split(":");
         x = positions[0];
@@ -246,10 +256,14 @@ async function runCommand(message, args, RM) {
         xnum = convertToNum(x);
         ynum = convertToNum(y);
         if (revealedBoard[xnum - 1][ynum - 1] === true) {
-          return message.channel.send("You have already revealed this space!");
+          return message.channel.send({
+            content: "You have already revealed this space!",
+          });
         }
         if (flagBoard[xnum - 1][ynum - 1] === "F") {
-          return message.channel.send("You cannot reveal a flagged space!");
+          return message.channel.send({
+            content: "You cannot reveal a flagged space!",
+          });
         }
         if (
           textBoard[xnum - 1][ynum - 1] === "x" &&
@@ -351,13 +365,14 @@ async function runCommand(message, args, RM) {
               i--;
             }
           }
-          return message.channel.send(
-            "You lost! You hit a mine. Time: " +
+          return message.channel.send({
+            content:
+              "You lost! You hit a mine. Time: " +
               RM.pretty_ms(time) +
               " ```js\n" +
               renderBoard(textBoard) +
-              "```"
-          );
+              "```",
+          });
         }
 
         if (textBoard[xnum - 1][ynum - 1] === 0) {
@@ -422,15 +437,16 @@ async function runCommand(message, args, RM) {
                   numToSSColumn(parseInt(item[1]) + 1)
               );
             }
-            message.channel.send(
-              "`" +
+            message.channel.send({
+              content:
+                "`" +
                 numToSSColumn(xnum) +
                 ":" +
                 numToSSColumn(ynum) +
                 "` is a `0`, Do you want to automatically uncover: `" +
                 movesA.join(", ") +
-                "`? yes/y/no/n"
-            );
+                "`? yes/y/no/n",
+            });
             message.channel
               .awaitMessages(filter, {
                 max: 1,
@@ -449,7 +465,9 @@ async function runCommand(message, args, RM) {
                     let ynum = parseInt(y);
                     revealedBoard[xnum][ynum] = true;
                   }
-                  message.channel.send("Revealed: `" + movesA.join(", ") + "`");
+                  message.channel.send({
+                    content: "Revealed: `" + movesA.join(", ") + "`",
+                  });
                   const boardToShow = [];
                   for (let row in textBoard) {
                     boardToShow[row] = [];
@@ -464,15 +482,16 @@ async function runCommand(message, args, RM) {
                     }
                   }
                   const timetaken = new Date().getTime() - gameTime;
-                  message.channel.send(
-                    "Bombs left: " +
+                  message.channel.send({
+                    content:
+                      "Bombs left: " +
                       bombsLeft +
                       " ```js\n" +
                       renderBoard(boardToShow) +
-                      "```"
-                  );
+                      "```",
+                  });
                 } else if (msg2[0] === "no" || msg2[0] === "n") {
-                  message.channel.send("Ok, not revealed!");
+                  message.channel.send({ content: "Ok, not revealed!" });
                   const boardToShow = [];
                   for (let row in textBoard) {
                     boardToShow[row] = [];
@@ -487,13 +506,14 @@ async function runCommand(message, args, RM) {
                     }
                   }
                   const timetaken = new Date().getTime() - gameTime;
-                  message.channel.send(
-                    "Bombs left: " +
+                  message.channel.send({
+                    content:
+                      "Bombs left: " +
                       bombsLeft +
                       " ```js\n" +
                       renderBoard(boardToShow) +
-                      "```"
-                  );
+                      "```",
+                  });
                 }
               });
           }
@@ -513,21 +533,24 @@ async function runCommand(message, args, RM) {
             }
           }
           const timetaken = new Date().getTime() - gameTime;
-          message.channel.send(
-            "Time: `" +
+          message.channel.send({
+            content:
+              "Time: `" +
               RM.pretty_ms(timetaken) +
               "`, Bombs left: " +
               bombsLeft +
               " ```js\n" +
               renderBoard(boardToShow) +
-              "```"
-          );
+              "```",
+          });
         }
       }
       reveal(xnum, ynum);
     } else if (msg[0] === "f" || msg[0] === "flag") {
       if (!msg[1]) {
-        return message.channel.send("You need to enter the position!");
+        return message.channel.send({
+          content: "You need to enter the position!",
+        });
       }
       const positions = msg[1].split(":");
       const x = positions[0];
@@ -535,16 +558,18 @@ async function runCommand(message, args, RM) {
       const xnum = convertToNum(x);
       const ynum = convertToNum(y);
       if (revealedBoard[xnum - 1][ynum - 1] === true) {
-        return message.channel.send(
-          "You cannot flag a space that you have already revealed!"
-        );
+        return message.channel.send({
+          content: "You cannot flag a space that you have already revealed!",
+        });
       }
       if (flagBoard[xnum - 1][ynum - 1] === "F") {
         flagBoard[xnum - 1][ynum - 1] = textBoard[xnum - 1][ynum - 1];
         bombsLeft++;
       } else {
         if (bombsLeft === 0) {
-          return message.channel.send("There have no more flags available!");
+          return message.channel.send({
+            content: "There have no more flags available!",
+          });
         }
         bombsLeft--;
         flagBoard[xnum - 1][ynum - 1] = "F";
@@ -568,15 +593,17 @@ async function runCommand(message, args, RM) {
       if (bombPlaces.every((elem) => flagPlaces.includes(elem))) {
         collector.stop();
         const timetaken = new Date().getTime() - gameTime;
-        message.channel.send(
-          new RM.Discord.MessageEmbed()
-            .setTitle("You won!")
-            .setAuthor(message.author.username, message.author.avatarURL)
-            .setDescription(
-              "You beat minesweeper in: `" + RM.pretty_ms(timetaken) + "`"
-            )
-            .setColor("GREEN")
-        );
+        message.channel.send({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setTitle("You won!")
+              .setAuthor(message.author.username, message.author.avatarURL)
+              .setDescription(
+                "You beat minesweeper in: `" + RM.pretty_ms(timetaken) + "`"
+              )
+              .setColor("GREEN"),
+          ],
+        });
         for (var i = 0; i < global.mineSweeperList.length; i++) {
           if (global.mineSweeperList[i] === message.author.id) {
             global.mineSweeperList.splice(i, 1);
@@ -600,15 +627,16 @@ async function runCommand(message, args, RM) {
         }
       }
       const timetaken = new Date().getTime() - gameTime;
-      message.channel.send(
-        "Time: `" +
+      message.channel.send({
+        content:
+          "Time: `" +
           RM.pretty_ms(timetaken) +
           "`, Bombs left: " +
           bombsLeft +
           " ```js\n" +
           renderBoard(boardToShow) +
-          "```"
-      );
+          "```",
+      });
     } else if (msg[0] === "board") {
       const boardToShow = [];
       for (let row in textBoard) {
@@ -624,18 +652,21 @@ async function runCommand(message, args, RM) {
         }
       }
       const timetaken = new Date().getTime() - gameTime;
-      message.channel.send(
-        "Time: `" +
+      message.channel.send({
+        content:
+          "Time: `" +
           RM.pretty_ms(timetaken) +
           "`, Bombs left: " +
           bombsLeft +
           " ```js\n" +
           renderBoard(boardToShow) +
-          "```"
-      );
+          "```",
+      });
     } else if (msg[0] === "clear0s" || msg[0] === "c0") {
       if (!msg[1]) {
-        return message.channel.send("You need to enter the position!");
+        return message.channel.send({
+          content: "You need to enter the position!",
+        });
       }
       const positions = msg[1].split(":");
       const x = positions[0];
@@ -643,7 +674,7 @@ async function runCommand(message, args, RM) {
       const xnum = convertToNum(x);
       const ynum = convertToNum(y);
       if (getCell(textBoard, xnum - 1, ynum - 1) !== 0) {
-        return message.channel.send("Selected space is not a 0!");
+        return message.channel.send({ content: "Selected space is not a 0!" });
       }
       const around = surroundings(textBoard, ynum - 1, xnum - 1);
       const autoReveal = [];
@@ -713,7 +744,9 @@ async function runCommand(message, args, RM) {
           let ynum = parseInt(y);
           revealedBoard[xnum][ynum] = true;
         }
-        message.channel.send("Revealed: `" + movesA.join(", ") + "`");
+        message.channel.send({
+          content: "Revealed: `" + movesA.join(", ") + "`",
+        });
         const boardToShow = [];
         for (let row in textBoard) {
           boardToShow[row] = [];
@@ -729,42 +762,44 @@ async function runCommand(message, args, RM) {
         }
 
         const timetaken = new Date().getTime() - gameTime;
-        message.channel.send(
-          "Bombs left: " +
+        message.channel.send({
+          content:
+            "Bombs left: " +
             bombsLeft +
             " ```js\n" +
             renderBoard(boardToShow) +
-            "```"
-        );
+            "```",
+        });
       }
     } else if (msg[0] === "stop" || msg[0] === "end") {
       // end game
-      message.channel.send("Are you sure you want to end the game? (y/n)");
-      message.channel
-        .awaitMessages(filter, {
-          max: 1,
-        })
-        .then((messageNext2) => {
-          const msg2 = messageNext2.first().content.toLowerCase().split(" ");
-          if (msg2[0] === "yes" || msg2[0] === "y") {
-            message.channel.send(
+      message.channel.send({
+        content: "Are you sure you want to end the game? (y/n)",
+      });
+      message.channel.awaitMessages({ filter, max: 1 }).then((messageNext2) => {
+        const msg2 = messageNext2.first().content.toLowerCase().split(" ");
+        if (msg2[0] === "yes" || msg2[0] === "y") {
+          message.channel.send({
+            content:
               "Game ended! Time: `" +
-                RM.pretty_ms(new Date().getTime() - gameTime) +
-                "`"
-            );
-            for (var i = 0; i < global.mineSweeperList.length; i++) {
-              if (global.mineSweeperList[i] === message.author.id) {
-                global.mineSweeperList.splice(i, 1);
-                i--;
-              }
+              RM.pretty_ms(new Date().getTime() - gameTime) +
+              "`",
+          });
+          for (var i = 0; i < global.mineSweeperList.length; i++) {
+            if (global.mineSweeperList[i] === message.author.id) {
+              global.mineSweeperList.splice(i, 1);
+              i--;
             }
-            message.channel.send("```js\n" + renderBoard(textBoard) + "```");
-            collector.stop();
-            return;
-          } else if (msg2[0] === "no" || msg2[0] === "n") {
-            message.channel.send("Ok.");
           }
-        });
+          message.channel.send({
+            content: "```js\n" + renderBoard(textBoard) + "```",
+          });
+          collector.stop();
+          return;
+        } else if (msg2[0] === "no" || msg2[0] === "n") {
+          message.channel.send({ content: "Ok." });
+        }
+      });
     }
   });
   // cmd stuff here

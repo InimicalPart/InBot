@@ -16,21 +16,25 @@ function between(lower, upper) {
 async function runCommand(message, args, RM) {
   //Check if command is disabled
   if (!require("../../../config.js").cmdRob) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("Command disabled by Administrators.")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Command Disabled")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
   }
   message.channel
-    .send(
-      new RM.Discord.MessageEmbed().setDescription(
-        "<a:loading:869354366803509299> *Working on it...*"
-      )
-    )
+    .send({
+      embeds: [
+        new RM.Discord.MessageEmbed().setDescription(
+          "<a:loading:869354366803509299> *Working on it...*"
+        ),
+      ],
+    })
     .then(async (m) => {
       const { connect } = require("../../../databasec");
       await connect();
@@ -45,14 +49,16 @@ async function runCommand(message, args, RM) {
         await connect.add("cooldown", message.author.id);
       }
       if (!args[0]) {
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription("You need to specify a user to rob!")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Error")
-        );
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription("You need to specify a user to rob!")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Error"),
+          ],
+        });
         return await connect.end(true);
       }
       let user =
@@ -69,14 +75,16 @@ async function runCommand(message, args, RM) {
         (await message.guild.members.fetch(args[0])) ||
         null;
       if (user == null) {
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription("**Error:** User not found!")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Error")
-        );
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription("**Error:** User not found!")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Error"),
+          ],
+        });
         return await connect.end(true);
       }
       if (user.user) {
@@ -90,18 +98,20 @@ async function runCommand(message, args, RM) {
         const timeLeft = RM.pretty_ms;
         if (DITC.toString().includes("-")) {
         } else {
-          m.edit(
-            new RM.Discord.MessageEmbed()
-              .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
-              .setDescription(
-                "**Error:** You are on cooldown! Time left:\n`" +
-                  timeLeft(DITC) +
-                  "`"
-              )
-              .setThumbnail(message.guild.iconURL())
-              .setTitle("Error")
-          );
+          m.edit({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setDescription(
+                  "**Error:** You are on cooldown! Time left:\n`" +
+                    timeLeft(DITC) +
+                    "`"
+                )
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Error"),
+            ],
+          });
           return await connect.end(true);
         }
       }
@@ -129,32 +139,36 @@ async function runCommand(message, args, RM) {
       let authorWal = authorCurrency.amountw;
 
       if (authorWal < 500) {
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription(
-              "**Error:** You need at least 500 coins to rob someone!"
-            )
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Error")
-        );
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(
+                "**Error:** You need at least 500 coins to rob someone!"
+              )
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Error"),
+          ],
+        });
         return await connect.end(true);
       }
       if (userWal < 500) {
         await connect.end(true);
-        return m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription(
-              "**" +
-                user.username +
-                "** needs to have more than 500 coins, otherwise it's just not worth it."
-            )
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Error")
-        );
+        return m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(
+                "**" +
+                  user.username +
+                  "** needs to have more than 500 coins, otherwise it's just not worth it."
+              )
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Error"),
+          ],
+        });
       }
       const victimInv = await connect.fetch("inventory", user.id);
       const thiefInv = await connect.fetch("inventory", message.author.id);
@@ -173,14 +187,16 @@ async function runCommand(message, args, RM) {
             message.author.id,
             victimInv.items
           );
-          user.send(
-            new RM.Discord.MessageEmbed()
-              .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
-              .setDescription("Your padlock expired!")
-              .setThumbnail(message.guild.iconURL())
-              .setTitle("Error")
-          );
+          user.send({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setDescription("Your padlock expired!")
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Error"),
+            ],
+          });
           await connect.updateCooldown(
             "cooldown",
             message.author.id,
@@ -192,18 +208,20 @@ async function runCommand(message, args, RM) {
             thiefInv.items.lockpick !== undefined &&
             thiefInv.items.lockpick <= 1
           ) {
-            m.edit(
-              new RM.Discord.MessageEmbed()
-                .setColor("YELLOW")
-                .setAuthor(message.author.tag, message.author.avatarURL())
-                .setDescription(
-                  "This user has an active padlock! You have `" +
-                    thiefInv.items.lockpick +
-                    "` lockpicks.\nDo you want to use one and try to pick the lock?\n\n`yes/y/no/n`"
-                )
-                .setThumbnail(message.guild.iconURL())
-                .setTitle("Padlock")
-            );
+            m.edit({
+              embeds: [
+                new RM.Discord.MessageEmbed()
+                  .setColor("YELLOW")
+                  .setAuthor(message.author.tag, message.author.avatarURL())
+                  .setDescription(
+                    "This user has an active padlock! You have `" +
+                      thiefInv.items.lockpick +
+                      "` lockpicks.\nDo you want to use one and try to pick the lock?\n\n`yes/y/no/n`"
+                  )
+                  .setThumbnail(message.guild.iconURL())
+                  .setTitle("Padlock"),
+              ],
+            });
             var filter2 = (m) => m.author.id === message.author.id;
             message.channel
               .awaitMessages(filter2, {
@@ -232,20 +250,25 @@ async function runCommand(message, args, RM) {
                     thiefInv.items
                   );
 
-                  m.edit(
-                    new RM.Discord.MessageEmbed()
-                      .setColor("AQUA")
-                      .setAuthor(message.author.tag, message.author.avatarURL())
-                      .setDescription(
-                        "Picking...\n\n:lock: Pin 1: **NOT BOUND**\n" +
-                          ":lock: Pin 2: **NOT BOUND**\n" +
-                          ":lock: Pin 3: **NOT BOUND**\n" +
-                          ":lock: Pin 4: **NOT BOUND**\n" +
-                          ":lock: Pin 5: **NOT BOUND**"
-                      )
-                      .setThumbnail(message.guild.iconURL())
-                      .setTitle("Padlock Picking")
-                  );
+                  m.edit({
+                    embeds: [
+                      new RM.Discord.MessageEmbed()
+                        .setColor("AQUA")
+                        .setAuthor(
+                          message.author.tag,
+                          message.author.avatarURL()
+                        )
+                        .setDescription(
+                          "Picking...\n\n:lock: Pin 1: **NOT BOUND**\n" +
+                            ":lock: Pin 2: **NOT BOUND**\n" +
+                            ":lock: Pin 3: **NOT BOUND**\n" +
+                            ":lock: Pin 4: **NOT BOUND**\n" +
+                            ":lock: Pin 5: **NOT BOUND**"
+                        )
+                        .setThumbnail(message.guild.iconURL())
+                        .setTitle("Padlock Picking"),
+                    ],
+                  });
                   let pin1 = "NOT BOUND";
                   let pin2 = "NOT BOUND";
                   let pin3 = "NOT BOUND";
@@ -276,29 +299,31 @@ async function runCommand(message, args, RM) {
                       pickBroke = true;
                       return broke();
                     }
-                    m.edit(
-                      new RM.Discord.MessageEmbed()
-                        .setColor("AQUA")
-                        .setAuthor(
-                          message.author.tag,
-                          message.author.avatarURL()
-                        )
-                        .setDescription(
-                          "Picking...\n\n:lock: Pin 1: **" +
-                            pin1 +
-                            "**\n:lock: Pin 2: **" +
-                            pin2 +
-                            "**\n:lock: Pin 3: **" +
-                            pin3 +
-                            "**\n:lock: Pin 4: **" +
-                            pin4 +
-                            "**\n:lock: Pin 5: **" +
-                            pin5 +
-                            "**"
-                        )
-                        .setThumbnail(message.guild.iconURL())
-                        .setTitle("Padlock Picking")
-                    );
+                    m.edit({
+                      embeds: [
+                        new RM.Discord.MessageEmbed()
+                          .setColor("AQUA")
+                          .setAuthor(
+                            message.author.tag,
+                            message.author.avatarURL()
+                          )
+                          .setDescription(
+                            "Picking...\n\n:lock: Pin 1: **" +
+                              pin1 +
+                              "**\n:lock: Pin 2: **" +
+                              pin2 +
+                              "**\n:lock: Pin 3: **" +
+                              pin3 +
+                              "**\n:lock: Pin 4: **" +
+                              pin4 +
+                              "**\n:lock: Pin 5: **" +
+                              pin5 +
+                              "**"
+                          )
+                          .setThumbnail(message.guild.iconURL())
+                          .setTitle("Padlock Picking"),
+                      ],
+                    });
                     setTimeout(() => {
                       const selectedPin = Math.floor(
                         Math.random() * pins.length
@@ -324,29 +349,31 @@ async function runCommand(message, args, RM) {
                         pickBroke = true;
                         return broke();
                       }
-                      m.edit(
-                        new RM.Discord.MessageEmbed()
-                          .setColor("AQUA")
-                          .setAuthor(
-                            message.author.tag,
-                            message.author.avatarURL()
-                          )
-                          .setDescription(
-                            "Picking...\n\n:lock: Pin 1: **" +
-                              pin1 +
-                              "**\n:lock: Pin 2: **" +
-                              pin2 +
-                              "**\n:lock: Pin 3: **" +
-                              pin3 +
-                              "**\n:lock: Pin 4: **" +
-                              pin4 +
-                              "**\n:lock: Pin 5: **" +
-                              pin5 +
-                              "**"
-                          )
-                          .setThumbnail(message.guild.iconURL())
-                          .setTitle("Padlock Picking")
-                      );
+                      m.edit({
+                        embeds: [
+                          new RM.Discord.MessageEmbed()
+                            .setColor("AQUA")
+                            .setAuthor(
+                              message.author.tag,
+                              message.author.avatarURL()
+                            )
+                            .setDescription(
+                              "Picking...\n\n:lock: Pin 1: **" +
+                                pin1 +
+                                "**\n:lock: Pin 2: **" +
+                                pin2 +
+                                "**\n:lock: Pin 3: **" +
+                                pin3 +
+                                "**\n:lock: Pin 4: **" +
+                                pin4 +
+                                "**\n:lock: Pin 5: **" +
+                                pin5 +
+                                "**"
+                            )
+                            .setThumbnail(message.guild.iconURL())
+                            .setTitle("Padlock Picking"),
+                        ],
+                      });
                       setTimeout(() => {
                         const selectedPin = Math.floor(
                           Math.random() * pins.length
@@ -372,29 +399,31 @@ async function runCommand(message, args, RM) {
                           pickBroke = true;
                           return broke();
                         }
-                        m.edit(
-                          new RM.Discord.MessageEmbed()
-                            .setColor("AQUA")
-                            .setAuthor(
-                              message.author.tag,
-                              message.author.avatarURL()
-                            )
-                            .setDescription(
-                              "Picking...\n\n:lock: Pin 1: **" +
-                                pin1 +
-                                "**\n:lock: Pin 2: **" +
-                                pin2 +
-                                "**\n:lock: Pin 3: **" +
-                                pin3 +
-                                "**\n:lock: Pin 4: **" +
-                                pin4 +
-                                "**\n:lock: Pin 5: **" +
-                                pin5 +
-                                "**"
-                            )
-                            .setThumbnail(message.guild.iconURL())
-                            .setTitle("Padlock Picking")
-                        );
+                        m.edit({
+                          embeds: [
+                            new RM.Discord.MessageEmbed()
+                              .setColor("AQUA")
+                              .setAuthor(
+                                message.author.tag,
+                                message.author.avatarURL()
+                              )
+                              .setDescription(
+                                "Picking...\n\n:lock: Pin 1: **" +
+                                  pin1 +
+                                  "**\n:lock: Pin 2: **" +
+                                  pin2 +
+                                  "**\n:lock: Pin 3: **" +
+                                  pin3 +
+                                  "**\n:lock: Pin 4: **" +
+                                  pin4 +
+                                  "**\n:lock: Pin 5: **" +
+                                  pin5 +
+                                  "**"
+                              )
+                              .setThumbnail(message.guild.iconURL())
+                              .setTitle("Padlock Picking"),
+                          ],
+                        });
                         setTimeout(() => {
                           const selectedPin = Math.floor(
                             Math.random() * pins.length
@@ -416,29 +445,31 @@ async function runCommand(message, args, RM) {
                             pin5 = "BOUND";
                           }
                           pins.splice(selectedPin, 1);
-                          m.edit(
-                            new RM.Discord.MessageEmbed()
-                              .setColor("AQUA")
-                              .setAuthor(
-                                message.author.tag,
-                                message.author.avatarURL()
-                              )
-                              .setDescription(
-                                "Picking...\n\n:lock: Pin 1: **" +
-                                  pin1 +
-                                  "**\n:lock: Pin 2: **" +
-                                  pin2 +
-                                  "**\n:lock: Pin 3: **" +
-                                  pin3 +
-                                  "**\n:lock: Pin 4: **" +
-                                  pin4 +
-                                  "**\n:lock: Pin 5: **" +
-                                  pin5 +
-                                  "**"
-                              )
-                              .setThumbnail(message.guild.iconURL())
-                              .setTitle("Padlock Picking")
-                          );
+                          m.edit({
+                            embeds: [
+                              new RM.Discord.MessageEmbed()
+                                .setColor("AQUA")
+                                .setAuthor(
+                                  message.author.tag,
+                                  message.author.avatarURL()
+                                )
+                                .setDescription(
+                                  "Picking...\n\n:lock: Pin 1: **" +
+                                    pin1 +
+                                    "**\n:lock: Pin 2: **" +
+                                    pin2 +
+                                    "**\n:lock: Pin 3: **" +
+                                    pin3 +
+                                    "**\n:lock: Pin 4: **" +
+                                    pin4 +
+                                    "**\n:lock: Pin 5: **" +
+                                    pin5 +
+                                    "**"
+                                )
+                                .setThumbnail(message.guild.iconURL())
+                                .setTitle("Padlock Picking"),
+                            ],
+                          });
                           setTimeout(async () => {
                             const selectedPin = Math.floor(
                               Math.random() * pins.length
@@ -464,29 +495,31 @@ async function runCommand(message, args, RM) {
                               pickBroke = true;
                               return broke();
                             }
-                            m.edit(
-                              new RM.Discord.MessageEmbed()
-                                .setColor("AQUA")
-                                .setAuthor(
-                                  message.author.tag,
-                                  message.author.avatarURL()
-                                )
-                                .setDescription(
-                                  "Picking...\n\n:lock: Pin 1: **" +
-                                    pin1 +
-                                    "**\n:lock: Pin 2: **" +
-                                    pin2 +
-                                    "**\n:lock: Pin 3: **" +
-                                    pin3 +
-                                    "**\n:lock: Pin 4: **" +
-                                    pin4 +
-                                    "**\n:lock: Pin 5: **" +
-                                    pin5 +
-                                    "**"
-                                )
-                                .setThumbnail(message.guild.iconURL())
-                                .setTitle("Padlock Picking")
-                            );
+                            m.edit({
+                              embeds: [
+                                new RM.Discord.MessageEmbed()
+                                  .setColor("AQUA")
+                                  .setAuthor(
+                                    message.author.tag,
+                                    message.author.avatarURL()
+                                  )
+                                  .setDescription(
+                                    "Picking...\n\n:lock: Pin 1: **" +
+                                      pin1 +
+                                      "**\n:lock: Pin 2: **" +
+                                      pin2 +
+                                      "**\n:lock: Pin 3: **" +
+                                      pin3 +
+                                      "**\n:lock: Pin 4: **" +
+                                      pin4 +
+                                      "**\n:lock: Pin 5: **" +
+                                      pin5 +
+                                      "**"
+                                  )
+                                  .setThumbnail(message.guild.iconURL())
+                                  .setTitle("Padlock Picking"),
+                              ],
+                            });
                             delete victimInv.items.active.padlock;
                             await connect.updateInv(
                               "inventory",
@@ -501,21 +534,23 @@ async function runCommand(message, args, RM) {
                   }, between(2000, 4000));
                   async function broke() {
                     await connect.end(true);
-                    return m.edit(
-                      new RM.Discord.MessageEmbed()
-                        .setColor("RED")
-                        .setAuthor(
-                          message.author.tag,
-                          message.author.avatarURL()
-                        )
-                        .setDescription(
-                          "Lockpick broke and you failed to rob " +
-                            user.username +
-                            "!"
-                        )
-                        .setThumbnail(message.guild.iconURL())
-                        .setTitle("Lockpick broke!")
-                    );
+                    return m.edit({
+                      embeds: [
+                        new RM.Discord.MessageEmbed()
+                          .setColor("RED")
+                          .setAuthor(
+                            message.author.tag,
+                            message.author.avatarURL()
+                          )
+                          .setDescription(
+                            "Lockpick broke and you failed to rob " +
+                              user.username +
+                              "!"
+                          )
+                          .setThumbnail(message.guild.iconURL())
+                          .setTitle("Lockpick broke!"),
+                      ],
+                    });
                   }
                 } else if (response === "no" || response === "n") {
                   await connect.updateCooldown(
@@ -525,22 +560,27 @@ async function runCommand(message, args, RM) {
                       new Date().setTime(new Date().getTime() + 45 * 60 * 1000)
                     )
                   );
-                  m.edit(
-                    new RM.Discord.MessageEmbed()
-                      .setColor("RED")
-                      .setAuthor(message.author.tag, message.author.avatarURL())
-                      .setDescription(
-                        "User has an active padlock but you didnt use a lockpick!"
-                      )
-                      .setThumbnail(message.guild.iconURL())
-                      .setTitle("Error")
-                  );
+                  m.edit({
+                    embeds: [
+                      new RM.Discord.MessageEmbed()
+                        .setColor("RED")
+                        .setAuthor(
+                          message.author.tag,
+                          message.author.avatarURL()
+                        )
+                        .setDescription(
+                          "User has an active padlock but you didnt use a lockpick!"
+                        )
+                        .setThumbnail(message.guild.iconURL())
+                        .setTitle("Error"),
+                    ],
+                  });
 
                   return await connect.end(true);
                 }
               })
               .catch(async (e) => {
-                message.channel.send("Timeout, " + e.message);
+                message.channel.send({ content: "Timeout, " + e.message });
                 await connect.updateCooldown(
                   "cooldown",
                   message.author.id,
@@ -559,16 +599,18 @@ async function runCommand(message, args, RM) {
                 new Date().setTime(new Date().getTime() + 45 * 60 * 1000)
               )
             );
-            m.edit(
-              new RM.Discord.MessageEmbed()
-                .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
-                .setDescription(
-                  "User has an active padlock but you don't have a lockpick!"
-                )
-                .setThumbnail(message.guild.iconURL())
-                .setTitle("Error")
-            );
+            m.edit({
+              embeds: [
+                new RM.Discord.MessageEmbed()
+                  .setColor("RED")
+                  .setAuthor(message.author.tag, message.author.avatarURL())
+                  .setDescription(
+                    "User has an active padlock but you don't have a lockpick!"
+                  )
+                  .setThumbnail(message.guild.iconURL())
+                  .setTitle("Error"),
+              ],
+            });
 
             return await connect.end(true);
           }
@@ -592,14 +634,16 @@ async function runCommand(message, args, RM) {
           ) {
             delete victimInv.items.active.landmine;
             await connect.updateInv("inventory", user.id, victimInv.items);
-            user.send(
-              new RM.Discord.MessageEmbed()
-                .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
-                .setDescription("Your landmine expired!")
-                .setThumbnail(message.guild.iconURL())
-                .setTitle("Error")
-            );
+            user.send({
+              embeds: [
+                new RM.Discord.MessageEmbed()
+                  .setColor("RED")
+                  .setAuthor(message.author.tag, message.author.avatarURL())
+                  .setDescription("Your landmine expired!")
+                  .setThumbnail(message.guild.iconURL())
+                  .setTitle("Error"),
+              ],
+            });
           } else {
             delete victimInv.items.active.landmine;
             await connect.updateInv("inventory", user.id, victimInv.items);
@@ -610,18 +654,20 @@ async function runCommand(message, args, RM) {
             if (between(1, 100) > 50) {
               //instant death
               await connect.update("currency", message.author.id, 0);
-              m.edit(
-                new RM.Discord.MessageEmbed()
-                  .setColor("RED")
-                  .setAuthor(message.author.tag, message.author.avatarURL())
-                  .setDescription(
-                    "You have been killed by a landmine! You lost **`$" +
-                      victimBal.amountw +
-                      "`**!"
-                  )
-                  .setThumbnail(message.guild.iconURL())
-                  .setTitle("You died!")
-              );
+              m.edit({
+                embeds: [
+                  new RM.Discord.MessageEmbed()
+                    .setColor("RED")
+                    .setAuthor(message.author.tag, message.author.avatarURL())
+                    .setDescription(
+                      "You have been killed by a landmine! You lost **`$" +
+                        victimBal.amountw +
+                        "`**!"
+                    )
+                    .setThumbnail(message.guild.iconURL())
+                    .setTitle("You died!"),
+                ],
+              });
               return await connect.end(true);
             }
           }
@@ -642,20 +688,22 @@ async function runCommand(message, args, RM) {
             parseInt(authorWal) - parseInt(amountToRemove)
           );
 
-          m.edit(
-            new RM.Discord.MessageEmbed()
-              .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
-              .setDescription(
-                "You got caught while trying to rob **" +
-                  user.username +
-                  "** You lost: **`$" +
-                  amountToRemove +
-                  "`**!"
-              )
-              .setThumbnail(message.guild.iconURL())
-              .setTitle("Fail")
-          );
+          m.edit({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setDescription(
+                  "You got caught while trying to rob **" +
+                    user.username +
+                    "** You lost: **`$" +
+                    amountToRemove +
+                    "`**!"
+                )
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Fail"),
+            ],
+          });
           return await connect.end(true);
         }
         const fiftyOfBal = calcPercent(75, userWal);
@@ -673,33 +721,36 @@ async function runCommand(message, args, RM) {
           parseInt(authorWal) + parseInt(amountToRemove)
         );
 
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("GREEN")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription(
-              "You successfully robbed **" +
-                user.username +
-                "** You got: **`$" +
-                amountToRemove +
-                "`**!"
-            )
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Success")
-        );
-        user.send(
-          "**" +
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("GREEN")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(
+                "You successfully robbed **" +
+                  user.username +
+                  "** You got: **`$" +
+                  amountToRemove +
+                  "`**!"
+              )
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Success"),
+          ],
+        });
+        user.send({
+          content:
+            "**" +
             message.author.tag +
             "** just robbed you out of **`$" +
             amountToRemove +
-            "`**!"
-        );
+            "`**!",
+        });
         return await connect.end(true);
       }
     })
     .catch(async (err) => {
       console.log(err);
-      message.channel.send("Error: " + err);
+      message.channel.send({ content: "Error: " + err });
     });
 }
 

@@ -10,38 +10,44 @@ const commandInfo = {
 async function runCommand(message, args, RM) {
   //Check if command is disabled
   if (!require("../../../config.js").cmdChess) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("Command disabled by Administrators.")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Command Disabled")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
   }
   // const valid = ["301062520679170066", "814623079346470993"]
   // if (!valid.includes(message.author.id))
   // 	return
 
   if (global.chessList.includes(message.author.id))
-    return message.channel.send(
-      RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("You are already playing chess with someone!")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Chess")
-    );
+    return message.channel.send({
+      embeds: [
+        RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("You are already playing chess with someone!")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Chess"),
+      ],
+    });
 
   if (!args[0]) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("You need to specify a user to play chess with!")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Error")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("You need to specify a user to play chess with!")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Error"),
+      ],
+    });
   }
 
   const { Chess } = require("chess.js");
@@ -65,47 +71,53 @@ async function runCommand(message, args, RM) {
     (await message.guild.members.fetch(args[0])) ||
     null;
   if (user == null) {
-    m.edit(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("**Error:** User not found!")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Error")
-    );
+    m.edit({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("**Error:** User not found!")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Error"),
+      ],
+    });
     return;
   }
   if (user.user) {
     user = user.user;
   } else user = user;
   if (user.id === message.author.id) {
-    message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("You cannot play chess with yourself!")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Error")
-    );
+    message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("You cannot play chess with yourself!")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Error"),
+      ],
+    });
     return;
   }
   if (global.chessList.includes(user.id)) {
-    return message.channel.send(
-      RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription(
-          user.username + " is already playing chess with someone!"
-        )
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Chess")
-    );
+    return message.channel.send({
+      embeds: [
+        RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription(
+            user.username + " is already playing chess with someone!"
+          )
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Chess"),
+      ],
+    });
   }
 
   message.channel
-    .send(
-      `<@${user.id}>! <@${message.author.id}> is inviting you to a :sparkles: fancy :sparkles: game of chess! Accept invite?`
-    )
+    .send({
+      content: `<@${user.id}>! <@${message.author.id}> is inviting you to a :sparkles: fancy :sparkles: game of chess! Accept invite?`,
+    })
     .then(async (m) => {
       try {
         await m.react("✅");
@@ -126,18 +138,19 @@ async function runCommand(message, args, RM) {
       let blackUser;
       const filter = (reaction, user2) =>
         ["✅", "❌"].includes(reaction.emoji.name) && user2.id === user.id;
-      m.awaitReactions(filter, { max: 1, time: 60000 })
+      m.awaitReactions({ filter, max: 1, time: 60000 })
         .then((collected) => {
           if (collected.size === 0) {
-            return message.channel.send(
-              user.username +
-                " declined your invitation to a fancy game of chess. (Timeout)"
-            );
+            return message.channel.send({
+              content:
+                user.username +
+                " declined your invitation to a fancy game of chess. (Timeout)",
+            });
           } else {
             const reaction = collected.first();
             if (reaction.emoji.name === "✅") {
               message.channel
-                .send("Setting up...")
+                .send({ content: "Setting up..." })
                 .then((m) => {
                   whiteUser = message.author;
                   blackUser = user;
@@ -146,40 +159,45 @@ async function runCommand(message, args, RM) {
                   if (args[1]) {
                     const fen = args.slice(1).join(" ");
                     if (!chess.validate_fen(fen).valid) {
-                      return message.channel.send(
-                        new RM.Discord.MessageEmbed()
-                          .setColor("RED")
-                          .setAuthor(
-                            message.author.tag,
-                            message.author.avatarURL()
-                          )
-                          .setDescription("The provided FEN was invalid.")
-                          .setThumbnail(message.guild.iconURL())
-                          .setTitle("Error")
-                      );
+                      return message.channel.send({
+                        embeds: [
+                          new RM.Discord.MessageEmbed()
+                            .setColor("RED")
+                            .setAuthor(
+                              message.author.tag,
+                              message.author.avatarURL()
+                            )
+                            .setDescription("The provided FEN was invalid.")
+                            .setThumbnail(message.guild.iconURL())
+                            .setTitle("Error"),
+                        ],
+                      });
                     } else {
-                      message.channel.send("FEN validated!");
+                      message.channel.send({ content: "FEN validated!" });
                       chess.load(fen);
                     }
                   }
-                  m.edit(
-                    "Starting game between " +
+                  m.edit({
+                    content:
+                      "Starting game between " +
                       whiteUser.username +
                       " (as White) and " +
                       blackuser.username +
                       " (as Black)\nFEN: `" +
                       chess.fen() +
-                      "`"
-                  );
+                      "`",
+                  });
                   round++;
                   continueC(whiteUser, blackUser);
                 })
                 .catch(console.error);
             } else {
-              return message.channel.send(
-                user.username +
-                  " declined your invitation to a fancy game of chess."
-              );
+              return message.channel.send({
+                embeds: [
+                  user.username +
+                    " declined your invitation to a fancy game of chess.",
+                ],
+              });
             }
           }
         })
@@ -212,7 +230,9 @@ async function runCommand(message, args, RM) {
             }, 200);
           })
           .catch(console.error);
-        message.channel.send(whiteUser.username + " (White) is starting!");
+        message.channel.send({
+          content: whiteUser.username + " (White) is starting!",
+        });
         chess.header(
           "Event",
           "Casual Game",
@@ -258,9 +278,9 @@ async function runCommand(message, args, RM) {
           let color = messageNext.author == whiteUser ? "white" : "black";
           let opposite = messageNext.author == whiteUser ? "Black" : "White";
           chess.header("Result", result);
-          message.channel.send(
-            color.toUpperCase() + " RESIGNED! " + opposite + " wins!"
-          );
+          message.channel.send({
+            content: color.toUpperCase() + " RESIGNED! " + opposite + " wins!",
+          });
           const endFEN = chess.fen();
           const moves = chess.history().length;
           const whoWon = opposite;
@@ -272,7 +292,7 @@ async function runCommand(message, args, RM) {
             .addField("Winner", whoWon)
             .addField("End FEN", endFEN)
             .addField("PGN", chess.pgn({ newline_char: "\n" }));
-          message.channel.send(embed);
+          message.channel.send({ embeds: [embed] });
           for (var i = 0; i < global.chessList.length; i++) {
             if (global.chessList[i] === message.author.id) {
               global.chessList.splice(i, 1);
@@ -289,9 +309,9 @@ async function runCommand(message, args, RM) {
         }
         const response = messageNext.content.toLowerCase();
         if (response === "fen") {
-          message.channel.send(chess.fen());
+          message.channel.send({ content: chess.fen() });
         } else if (response === "ascii") {
-          message.channel.send("```" + chess.ascii() + "```");
+          message.channel.send({ content: "```" + chess.ascii() + "```" });
         } else if (response === "image") {
           if (chess.fen().split(" ")[1] === "w") {
             activeColor = "white";
@@ -343,9 +363,10 @@ async function runCommand(message, args, RM) {
             })
             .catch(console.error);
         } else if (response == "warning") {
-          await message.channel.send(
-            ":warning: WARNING: When promoting, supply another argument which can be `n,b,r,q` (Knight, Bishop, Rook, Queen). If another argument is not supplied, queen will automatically be chosen."
-          );
+          await message.channel.send({
+            content:
+              ":warning: WARNING: When promoting, supply another argument which can be `n,b,r,q` (Knight, Bishop, Rook, Queen). If another argument is not supplied, queen will automatically be chosen.",
+          });
         } else if (response.split(" ")[0] === "move") {
           const moves = messageNext.content.split(" ");
           if (chess.fen().split(" ")[1] === "w") {
@@ -355,45 +376,52 @@ async function runCommand(message, args, RM) {
           }
           if (activeColor === "white") {
             if (whiteUser !== messageNext.author) {
-              message.channel.send("It's not your turn.");
+              message.channel.send({ content: "It's not your turn." });
               return;
             }
           }
           if (activeColor === "black") {
             if (blackUser.user !== messageNext.author) {
-              message.channel.send("It's not your turn.");
+              message.channel.send({ content: "It's not your turn." });
               return;
             }
           }
           if (!moves[3]) {
             if (chess.get(moves[1]) === null) {
-              message.channel.send(
-                "Invalid move. (Piece you're trying to move is an empty space)"
-              );
+              message.channel.send({
+                content:
+                  "Invalid move. (Piece you're trying to move is an empty space)",
+              });
               return;
             }
             if (activeColor === "white") {
               if (chess.get(moves[1]).color !== "w") {
-                message.channel.send(
-                  "Invalid move. (Player character doesnt belong to player)"
-                );
+                message.channel.send({
+                  content:
+                    "Invalid move. (Player character doesnt belong to player)",
+                });
                 return;
               }
             }
             if (activeColor === "black") {
               if (chess.get(moves[1]).color !== "b") {
-                message.channel.send(
-                  "Invalid move. (Player character doesnt belong to player)"
-                );
+                message.channel.send({
+                  content:
+                    "Invalid move. (Player character doesnt belong to player)",
+                });
                 return;
               }
             }
             if (activeColor === "black" && engineAutoPlay == "black") {
-              message.channel.send("Telling engine to make a move");
+              message.channel.send({
+                content: "Telling engine to make a move",
+              });
               return run();
             }
             if (activeColor === "white" && engineAutoPlay == "white") {
-              message.channel.send("Telling engine to make a move");
+              message.channel.send({
+                content: "Telling engine to make a move",
+              });
               return run();
             }
             const success = chess.move({
@@ -402,53 +430,56 @@ async function runCommand(message, args, RM) {
               promotion: "q",
             });
             if (success == null) {
-              return message.channel.send("Invalid move");
+              return message.channel.send({ content: "Invalid move" });
             }
             lastmove = success.from + success.to;
           } else {
             if (chess.get(moves[1]) === null) {
-              message.channel.send(
-                "Invalid move. (Piece you're trying to move is an empty space)"
-              );
+              message.channel.send({
+                content:
+                  "Invalid move. (Piece you're trying to move is an empty space)",
+              });
               return;
             }
             if (activeColor === "white") {
               if (chess.get(moves[1]).color !== "w") {
-                message.channel.send(
-                  "Invalid move. (Player character doesnt belong to player)"
-                );
+                message.channel.send({
+                  content:
+                    "Invalid move. (Player character doesnt belong to player)",
+                });
                 return;
               }
             }
             if (activeColor === "black") {
               if (chess.get(moves[1]).color !== "b") {
-                message.channel.send(
-                  "Invalid move. (Player character doesnt belong to player)"
-                );
+                message.channel.send({
+                  content:
+                    "Invalid move. (Player character doesnt belong to player)",
+                });
                 return;
               }
             }
             if (activeColor === "black" && engineAutoPlay == "black") {
-              message.channel.send("Telling engine to make a move");
+              message.channel.send({
+                content: "Telling engine to make a move",
+              });
               return run();
             }
             if (activeColor === "white" && engineAutoPlay == "white") {
-              message.channel.send("Telling engine to make a move");
+              message.channel.send({
+                content: "Telling engine to make a move",
+              });
               return run();
             }
-            // if (activeColor === "black" && engineAutoPlay == "black") {
-            // 	return message.channel.send("You cannot play while AutoPlay is moving for you!")
-            // }
-            // if (activeColor === "white" && engineAutoPlay == "white") {
-            // 	return message.channel.send("You cannot play while AutoPlay is moving for you!")
-            // }
             const success = chess.move({
               from: moves[1],
               to: moves[2],
               promotion: moves[3],
             });
             if (success == null) {
-              return message.channel.send("Invalid move or invalid promotion.");
+              return message.channel.send({
+                content: "Invalid move or invalid promotion.",
+              });
             }
             lastmove = success.from + success.to;
           }
@@ -459,7 +490,7 @@ async function runCommand(message, args, RM) {
               promotion: "q",
             });
             if (success == null) {
-              return message.channel.send("Invalid move");
+              return message.channel.send({ content: "Invalid move" });
             }
             lastmove = success.from + success.to;
             rest();
@@ -493,7 +524,8 @@ async function runCommand(message, args, RM) {
                 if (chess.in_checkmate()) {
                   collector.stop();
                   await message.channel
-                    .send(":warning: CHECKMATE :warning:", {
+                    .send({
+                      content: ":warning: CHECKMATE :warning:",
                       files: [
                         {
                           attachment: path.join(__dirname, "board.png"),
@@ -515,24 +547,28 @@ async function runCommand(message, args, RM) {
                     activeColor = "black";
                   }
                   if (activeColor === "white") {
-                    message.channel.send(
-                      "White's king is checkmated! " +
+                    message.channel.send({
+                      content:
+                        "White's king is checkmated! " +
                         blackuser.username +
-                        " wins!"
-                    );
+                        " wins!",
+                    });
                   } else {
-                    message.channel.send(
-                      "Black's king is checkmated! " +
+                    message.channel.send({
+                      content:
+                        "Black's king is checkmated! " +
                         whiteUser.username +
-                        " wins!"
-                    );
+                        " wins!",
+                    });
                   }
                   message.channel
-                    .send(
-                      new RM.Discord.MessageEmbed().setDescription(
-                        "Loading stats..."
-                      )
-                    )
+                    .send({
+                      embeds: [
+                        new RM.Discord.MessageEmbed().setDescription(
+                          "Loading stats..."
+                        ),
+                      ],
+                    })
                     .then((m) => {
                       const endFEN = chess.fen();
                       const moves = chess.history().length;
@@ -607,7 +643,7 @@ async function runCommand(message, args, RM) {
                         .setFooter(
                           "Use https://lichess.org/paste to analyze your game!"
                         );
-                      m.edit(embed);
+                      m.edit({ embeds: [embed] });
 
                       for (var i = 0; i < global.chessList.length; i++) {
                         if (global.chessList[i] === message.author.id) {
@@ -626,7 +662,8 @@ async function runCommand(message, args, RM) {
                     .catch(console.error);
                 } else if (chess.in_check()) {
                   await message.channel
-                    .send(":warning: CHECK :warning:", {
+                    .send({
+                      content: ":warning: CHECK :warning:",
                       files: [
                         {
                           attachment: path.join(__dirname, "board.png"),
@@ -646,21 +683,23 @@ async function runCommand(message, args, RM) {
                         activeColor = "black";
                       }
                       if (activeColor === "white") {
-                        message.channel.send(
-                          whiteUser.username + "'s (White) turn!"
-                        );
+                        message.channel.send({
+                          content: whiteUser.username + "'s (White) turn!",
+                        });
                       } else {
-                        message.channel.send(
-                          blackuser.username + "'s (Black) turn!"
-                        );
+                        message.channel.send({
+                          content: blackuser.username + "'s (Black) turn!",
+                        });
                       }
                       if (engineEnabled) {
                         message.channel
-                          .send(
-                            new RM.Discord.MessageEmbed()
-                              .setTitle("Chess Engine")
-                              .setDescription("Calculating the best move...")
-                          )
+                          .send({
+                            embeds: [
+                              new RM.Discord.MessageEmbed()
+                                .setTitle("Chess Engine")
+                                .setDescription("Calculating the best move..."),
+                            ],
+                          })
                           .then(async (m) => {
                             const jsChessEngine = require("js-chess-engine");
                             const engine = new jsChessEngine.Game(chess.fen());
@@ -668,18 +707,20 @@ async function runCommand(message, args, RM) {
                             const color =
                               chess.turn() === "w" ? "WHITE" : "BLACK";
                             for (let i in bestMove) {
-                              m.edit(
-                                new RM.Discord.MessageEmbed()
-                                  .setTitle("Chess Engine")
-                                  .setDescription(
-                                    "The engine predicted `" +
-                                      i +
-                                      " -> " +
-                                      bestMove[i] +
-                                      "` to be the best move for: " +
-                                      color
-                                  )
-                              );
+                              m.edit({
+                                embeds: [
+                                  new RM.Discord.MessageEmbed()
+                                    .setTitle("Chess Engine")
+                                    .setDescription(
+                                      "The engine predicted `" +
+                                        i +
+                                        " -> " +
+                                        bestMove[i] +
+                                        "` to be the best move for: " +
+                                        color
+                                    ),
+                                ],
+                              });
                             }
                           })
                           .catch(console.error);
@@ -689,7 +730,8 @@ async function runCommand(message, args, RM) {
                 } else if (chess.in_stalemate()) {
                   collector.stop();
                   await message.channel
-                    .send(":warning: STALEMATE :warning:", {
+                    .send({
+                      content: ":warning: STALEMATE :warning:",
                       files: [
                         {
                           attachment: path.join(__dirname, "board.png"),
@@ -705,13 +747,15 @@ async function runCommand(message, args, RM) {
                       }, 200);
                     })
                     .catch(console.error);
-                  message.channel.send("Stalemate, no one wins.");
+                  message.channel.send({ content: "Stalemate, no one wins." });
                   message.channel
-                    .send(
-                      new RM.Discord.MessageEmbed().setDescription(
-                        "Loading stats..."
-                      )
-                    )
+                    .send({
+                      embeds: [
+                        new RM.Discord.MessageEmbed().setDescription(
+                          "Loading stats..."
+                        ),
+                      ],
+                    })
                     .then((m) => {
                       const endFEN = chess.fen();
                       const moves = chess.history().length;
@@ -786,7 +830,7 @@ async function runCommand(message, args, RM) {
                         .setFooter(
                           "Use https://lichess.org/paste to analyze your game!"
                         );
-                      m.edit(embed);
+                      m.edit({ embeds: [embed] });
                       for (var i = 0; i < global.chessList.length; i++) {
                         if (global.chessList[i] === message.author.id) {
                           global.chessList.splice(i, 1);
@@ -805,7 +849,8 @@ async function runCommand(message, args, RM) {
                 } else if (chess.in_draw()) {
                   collector.stop();
                   await message.channel
-                    .send(":warning: DRAW :warning:", {
+                    .send({
+                      content: ":warning: DRAW :warning:",
                       files: [
                         {
                           attachment: path.join(__dirname, "board.png"),
@@ -821,13 +866,15 @@ async function runCommand(message, args, RM) {
                       }, 200);
                     })
                     .catch(console.error);
-                  message.channel.send("Draw, no one wins.");
+                  message.channel.send({ content: "Draw, no one wins." });
                   message.channel
-                    .send(
-                      new RM.Discord.MessageEmbed().setDescription(
-                        "Loading stats..."
-                      )
-                    )
+                    .send({
+                      embeds: [
+                        new RM.Discord.MessageEmbed().setDescription(
+                          "Loading stats..."
+                        ),
+                      ],
+                    })
                     .then((m) => {
                       const endFEN = chess.fen();
                       const moves = chess.history().length;
@@ -902,7 +949,7 @@ async function runCommand(message, args, RM) {
                         .setFooter(
                           "Use https://lichess.org/paste to analyze your game!"
                         );
-                      m.edit(embed);
+                      m.edit({ embeds: [embed] });
                       for (var i = 0; i < global.chessList.length; i++) {
                         if (global.chessList[i] === message.author.id) {
                           global.chessList.splice(i, 1);
@@ -921,7 +968,8 @@ async function runCommand(message, args, RM) {
                 } else if (chess.insufficient_material()) {
                   collector.stop();
                   await message.channel
-                    .send(":warning: INSUFFICIENT MATERIAL :warning:", {
+                    .send({
+                      content: ":warning: INSUFFICIENT MATERIAL :warning:",
                       files: [
                         {
                           attachment: path.join(__dirname, "board.png"),
@@ -937,13 +985,15 @@ async function runCommand(message, args, RM) {
                       }, 200);
                     })
                     .catch(console.error);
-                  message.channel.send("Draw, no one wins.");
+                  message.channel.send({ content: "Draw, no one wins." });
                   message.channel
-                    .send(
-                      new RM.Discord.MessageEmbed().setDescription(
-                        "Loading stats..."
-                      )
-                    )
+                    .send({
+                      embeds: [
+                        new RM.Discord.MessageEmbed().setDescription(
+                          "Loading stats..."
+                        ),
+                      ],
+                    })
                     .then((m) => {
                       const endFEN = chess.fen();
                       const moves = chess.history().length;
@@ -1017,7 +1067,7 @@ async function runCommand(message, args, RM) {
                         .setFooter(
                           "Use https://lichess.org/paste to analyze your game!"
                         );
-                      m.edit(embed);
+                      m.edit({ embeds: [embed] });
                       for (var i = 0; i < global.chessList.length; i++) {
                         if (global.chessList[i] === message.author.id) {
                           global.chessList.splice(i, 1);
@@ -1049,7 +1099,8 @@ async function runCommand(message, args, RM) {
                     username = blackuser.username;
                   }
                   message.channel
-                    .send(username + "'s (" + color + ") turn!", {
+                    .send({
+                      content: username + "'s (" + color + ") turn!",
                       files: [
                         {
                           attachment: path.join(__dirname, "board.png"),
@@ -1081,13 +1132,17 @@ async function runCommand(message, args, RM) {
             let bestMove = undefined;
 
             if (engineAutoPlay === "white" && color.toLowerCase() === "white") {
-              message.channel.send("Engine playing for WHITE is thinking...");
+              message.channel.send({
+                content: "Engine playing for WHITE is thinking...",
+              });
               bestMove = await engine.aiMove(engineAutoPlayLevel);
             } else if (
               engineAutoPlay === "black" &&
               color.toLowerCase() === "black"
             ) {
-              message.channel.send("Engine playing for BLACK is thinking...");
+              message.channel.send({
+                content: "Engine playing for BLACK is thinking...",
+              });
               bestMove = await engine.aiMove(engineAutoPlayLevel);
             }
 
@@ -1097,54 +1152,62 @@ async function runCommand(message, args, RM) {
               (engineHelpColors === "black" && color.toLowerCase() === "black")
             ) {
               message.channel
-                .send(
-                  new RM.Discord.MessageEmbed()
-                    .setTitle("Chess Engine")
-                    .setDescription(
-                      "Calculating the best move... (May take a bit of time)"
-                    )
-                )
+                .send({
+                  embeds: [
+                    new RM.Discord.MessageEmbed()
+                      .setTitle("Chess Engine")
+                      .setDescription(
+                        "Calculating the best move... (May take a bit of time)"
+                      ),
+                  ],
+                })
                 .then(async (m) => {
                   bestMove = await engine.aiMove(engineLevel);
 
                   for (let i in bestMove) {
-                    return m.edit(
-                      new RM.Discord.MessageEmbed()
-                        .setTitle("Chess Engine")
-                        .setDescription(
-                          "The engine predicted `" +
-                            i +
-                            " -> " +
-                            bestMove[i] +
-                            "` to be the best move for: " +
-                            color
-                        )
-                    );
+                    return m.edit({
+                      embeds: [
+                        new RM.Discord.MessageEmbed()
+                          .setTitle("Chess Engine")
+                          .setDescription(
+                            "The engine predicted `" +
+                              i +
+                              " -> " +
+                              bestMove[i] +
+                              "` to be the best move for: " +
+                              color
+                          ),
+                      ],
+                    });
                   }
                 })
                 .catch(console.error);
             } else if (engineHelpColors === "both") {
               message.channel
-                .send(
-                  new RM.Discord.MessageEmbed()
-                    .setTitle("Chess Engine")
-                    .setDescription("Calculating the best move...")
-                )
+                .send({
+                  embeds: [
+                    new RM.Discord.MessageEmbed()
+                      .setTitle("Chess Engine")
+                      .setDescription("Calculating the best move..."),
+                  ],
+                })
                 .then(async (m) => {
                   bestMove = await engine.aiMove(engineLevel);
                   for (let i in bestMove) {
-                    return m.edit(
-                      new RM.Discord.MessageEmbed()
-                        .setTitle("Chess Engine")
-                        .setDescription(
-                          "The engine predicted `" +
-                            i +
-                            " -> " +
-                            bestMove[i] +
-                            "` to be the best move for: " +
-                            color
-                        )
-                    );
+                    return m.edit({
+                      embeds: [
+                        new RM.Discord.MessageEmbed()
+                          .setTitle("Chess Engine")
+                          .setDescription(
+                            "The engine predicted `" +
+                              i +
+                              " -> " +
+                              bestMove[i] +
+                              "` to be the best move for: " +
+                              color
+                          ),
+                      ],
+                    });
                   }
                 })
                 .catch(console.error);
@@ -1183,7 +1246,7 @@ async function runCommand(message, args, RM) {
               "'k' - kingside castling\n" +
               "'q' - queenside castling";
           }
-          message.channel.send("```json\n" + history + "```");
+          message.channel.send({ content: "```json\n" + history + "```" });
         } else if (response.split(" ")[0] === "settings") {
           const settings = new RM.Discord.MessageEmbed()
             .setTitle("Chess Game Settings")
@@ -1194,14 +1257,11 @@ async function runCommand(message, args, RM) {
               messageNext.author.avatarURL()
             )
             .setFooter("Type the option you want to change.");
-          message.channel.send(settings);
+          message.channel.send({ embeds: [settings] });
           var filter = (m) =>
             [message.author.id, user.id].includes(m.author.id);
           message.channel
-            .awaitMessages(filter, {
-              max: 1,
-              time: 30000,
-            })
+            .awaitMessages({ filter, max: 1, time: 30000 })
             .then((messageOther) => {
               if (messageOther.size < 1) {
                 return;
@@ -1234,7 +1294,7 @@ async function runCommand(message, args, RM) {
                     "Current Status: " + engineHelpColors + ". ID: `helpcolors`"
                   )
                   .setFooter("Select one of the ids and their new value");
-                message.channel.send(embed);
+                message.channel.send({ embeds: [embed] });
                 var filter = (m) =>
                   [message.author.id, user.id].includes(m.author.id);
                 message.channel
@@ -1255,50 +1315,63 @@ async function runCommand(message, args, RM) {
                       const value = wanted.split(" ")[1];
                       if (name === "enabled") {
                         if (!value) {
-                          return message.channel.send(
-                            "You need to specify a boolean for this value! (true/false)"
-                          );
+                          return message.channel.send({
+                            content:
+                              "You need to specify a boolean for this value! (true/false)",
+                          });
                         }
                         if (typeof Boolean(value) !== "boolean") {
-                          return message.channel.send(
-                            "You need to specify a boolean for this value! (true/false)"
-                          );
+                          return message.channel.send({
+                            content:
+                              "You need to specify a boolean for this value! (true/false)",
+                          });
                         }
                         if (Boolean(value) === engineEnabled) {
-                          return message.channel.send(
-                            "The engine is already set to: " + engineEnabled
-                          );
+                          return message.channel.send({
+                            content:
+                              "The engine is already set to: " + engineEnabled,
+                          });
                         }
                         if (Boolean(value) === true) {
                           engineEnabled = true;
-                          message.channel.send("The engine is now enabled!");
+                          message.channel.send({
+                            content: "The engine is now enabled!",
+                          });
                         } else {
                           engineEnabled = false;
-                          message.channel.send("The engine is now disabled!");
+                          message.channel.send({
+                            content: "The engine is now disabled!",
+                          });
                         }
                       } else if (name === "level") {
                         if (!value) {
-                          return message.channel.send(
-                            "You need to specify a number for this value! (0-4)"
-                          );
+                          return message.channel.send({
+                            content:
+                              "You need to specify a number for this value! (0-4)",
+                          });
                         }
                         if (typeof Number(value) !== "number") {
-                          return message.channel.send(
-                            "You need to specify a number for this value! (0-4)"
-                          );
+                          return message.channel.send({
+                            content:
+                              "You need to specify a number for this value! (0-4)",
+                          });
                         }
                         if (Number(value) === engineLevel) {
-                          return message.channel.send(
-                            "The engine is already set to: " + engineLevel
-                          );
+                          return message.channel.send({
+                            content:
+                              "The engine is already set to: " + engineLevel,
+                          });
                         }
                         if (Number(value) >= 0 && Number(value) <= 4) {
                           engineLevel = Number(value);
-                          message.channel.send(
-                            "The engine is now set to level: " + engineLevel
-                          );
+                          message.channel.send({
+                            content:
+                              "The engine is now set to level: " + engineLevel,
+                          });
                         } else {
-                          return message.channel.send("Invalid number!");
+                          return message.channel.send({
+                            content: "Invalid number!",
+                          });
                         }
                       } else if (name === "autoplay") {
                         if (
@@ -1306,20 +1379,21 @@ async function runCommand(message, args, RM) {
                           value !== "black" &&
                           value !== "white"
                         ) {
-                          return message.channel.send(
-                            "Invalid value! (none/black/white)"
-                          );
+                          return message.channel.send({
+                            content: "Invalid value! (none/black/white)",
+                          });
                         }
                         if (engineAutoPlay === value) {
-                          return message.channel.send(
-                            "AutoPlay is already set to: " + engineAutoPlay
-                          );
+                          return message.channel.send({
+                            content:
+                              "AutoPlay is already set to: " + engineAutoPlay,
+                          });
                         }
                         if (value === "none") {
                           engineAutoPlay = "none";
-                          message.channel.send(
-                            "The engine will not AutoPlay. (none)"
-                          );
+                          message.channel.send({
+                            content: "The engine will not AutoPlay. (none)",
+                          });
                         }
                         if (value === "black") {
                           engineAutoPlay = "black";
@@ -1330,36 +1404,43 @@ async function runCommand(message, args, RM) {
                         }
                         if (value === "white") {
                           engineAutoPlay = "white";
-                          message.channel.send(
-                            "The engine will now AutoPlay for: " +
-                              engineAutoPlay.toUpperCase()
-                          );
+                          message.channel.send({
+                            content:
+                              "The engine will now AutoPlay for: " +
+                              engineAutoPlay.toUpperCase(),
+                          });
                         }
                       } else if (name === "autoplaylevel") {
                         if (!value) {
-                          return message.channel.send(
-                            "You need to specify a number for this value! (0-4)"
-                          );
+                          return message.channel.send({
+                            content:
+                              "You need to specify a number for this value! (0-4)",
+                          });
                         }
                         if (typeof Number(value) !== "number") {
-                          return message.channel.send(
-                            "You need to specify a number for this value! (0-4)"
-                          );
+                          return message.channel.send({
+                            content:
+                              "You need to specify a number for this value! (0-4)",
+                          });
                         }
                         if (Number(value) === engineAutoPlayLevel) {
-                          return message.channel.send(
-                            "The engine is already set to: " +
-                              engineAutoPlayLevel
-                          );
+                          return message.channel.send({
+                            content:
+                              "The engine is already set to: " +
+                              engineAutoPlayLevel,
+                          });
                         }
                         if (Number(value) >= 0 && Number(value) <= 4) {
                           engineAutoPlayLevel = Number(value);
-                          message.channel.send(
-                            "The engine will now AutoPlay with level: " +
-                              engineAutoPlayLevel
-                          );
+                          message.channel.send({
+                            content:
+                              "The engine will now AutoPlay with level: " +
+                              engineAutoPlayLevel,
+                          });
                         } else {
-                          return message.channel.send("Invalid number!");
+                          return message.channel.send({
+                            content: "Invalid number!",
+                          });
                         }
                       } else if (name === "helpcolors") {
                         if (
@@ -1368,52 +1449,58 @@ async function runCommand(message, args, RM) {
                           value !== "white" &&
                           value !== "both"
                         ) {
-                          return message.channel.send(
-                            "Invalid value! (none/black/white/both)"
-                          );
+                          return message.channel.send({
+                            content: "Invalid value! (none/black/white/both)",
+                          });
                         }
                         if (engineHelpColors === value) {
-                          return message.channel.send(
-                            "HelpColors is already set to: " + engineHelpColors
-                          );
+                          return message.channel.send({
+                            content:
+                              "HelpColors is already set to: " +
+                              engineHelpColors,
+                          });
                         }
                         if (value === "none") {
                           engineHelpColors = "none";
-                          message.channel.send(
-                            "The engine will not help any colors. (none)"
-                          );
+                          message.channel.send({
+                            content:
+                              "The engine will not help any colors. (none)",
+                          });
                         } else if (value === "black") {
                           engineHelpColors = "black";
-                          message.channel.send(
-                            "The engine will now help black. (black)"
-                          );
+                          message.channel.send({
+                            content: "The engine will now help black. (black)",
+                          });
                         } else if (value === "white") {
                           engineHelpColors = "white";
-                          message.channel.send(
-                            "The engine will now help white. (white)"
-                          );
+                          message.channel.send({
+                            content: "The engine will now help white. (white)",
+                          });
                         } else if (value === "both") {
                           engineHelpColors = "both";
-                          message.channel.send(
-                            "The engine will now help both colors. (both)"
-                          );
+                          message.channel.send({
+                            content:
+                              "The engine will now help both colors. (both)",
+                          });
                         }
                       }
                     }
                   })
                   .catch(console.error);
               } else if (response === "exit") {
-                message.channel.send("Exiting settings");
+                message.channel.send({ content: "Exiting settings" });
               }
             })
             .catch(console.error);
         } else if (response.split(" ")[0] === "predict") {
           if (!engineEnabled) {
-            return message.channel.send(
-              new RM.Discord.MessageEmbed().setDescription(
-                "The engine is currently disabled."
-              )
-            );
+            return message.channel.send({
+              embeds: [
+                new RM.Discord.MessageEmbed().setDescription(
+                  "The engine is currently disabled."
+                ),
+              ],
+            });
           }
           const jsChessEngine = require("js-chess-engine");
           const engine = new jsChessEngine.Game(chess.fen());
@@ -1426,46 +1513,52 @@ async function runCommand(message, args, RM) {
             engineHelpColors === "both"
           ) {
             message.channel
-              .send(
-                new RM.Discord.MessageEmbed()
-                  .setTitle("Chess Engine")
-                  .setDescription(
-                    "Calculating the best move... (May take a bit of time)"
-                  )
-              )
+              .send({
+                embeds: [
+                  new RM.Discord.MessageEmbed()
+                    .setTitle("Chess Engine")
+                    .setDescription(
+                      "Calculating the best move... (May take a bit of time)"
+                    ),
+                ],
+              })
               .then(async (m) => {
                 bestMove = await engine.aiMove(engineLevel);
 
                 for (let i in bestMove) {
-                  return m.edit(
-                    new RM.Discord.MessageEmbed()
-                      .setTitle("Chess Engine")
-                      .setDescription(
-                        "The engine predicted `" +
-                          i +
-                          " -> " +
-                          bestMove[i] +
-                          "` to be the best move for: " +
-                          color
-                      )
-                  );
+                  return m.edit({
+                    embeds: [
+                      new RM.Discord.MessageEmbed()
+                        .setTitle("Chess Engine")
+                        .setDescription(
+                          "The engine predicted `" +
+                            i +
+                            " -> " +
+                            bestMove[i] +
+                            "` to be the best move for: " +
+                            color
+                        ),
+                    ],
+                  });
                 }
               })
               .catch(console.error);
           } else {
-            return message.channel.send(
-              new RM.Discord.MessageEmbed()
-                .setTitle("Chess Engine")
-                .setDescription(
-                  "The engine will not help your color. Change that in the settings to get results."
-                )
-            );
+            return message.channel.send({
+              embeds: [
+                new RM.Discord.MessageEmbed()
+                  .setTitle("Chess Engine")
+                  .setDescription(
+                    "The engine will not help your color. Change that in the settings to get results."
+                  ),
+              ],
+            });
           }
         } else if (response.split(" ")[0] === "pgn") {
-          message.channel.send("```\n" + chess.pgn() + "```");
+          message.channel.send({ content: "```\n" + chess.pgn() + "```" });
         }
       } catch (e) {
-        return message.channel.send("Error: " + e.message);
+        return message.channel.send({ content: "Error: " + e.message });
       }
     });
   }

@@ -74,10 +74,12 @@ async function runEvent(RM, event) {
     response = result.fulfillmentText; // Set the response to the fulfillment text.
   }
   event.channel.stopTyping(); // Stop the typing indicator.
-  event.lineReply(
-    // Send the response to the user.
-    "Response: " + response + "\nIntent: " + result.intent.displayName
-  );
+  event.channel.send({
+    content:
+      // Send the response to the user.
+      "Response: " + response + "\nIntent: " + result.intent.displayName,
+    reply: { messageReference: event.id },
+  });
 
   function getOrdinalNum(n) {
     return (

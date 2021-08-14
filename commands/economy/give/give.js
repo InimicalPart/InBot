@@ -10,22 +10,26 @@ const commandInfo = {
 async function runCommand(message, args, RM) {
   //Check if command is disabled
   if (!require("../../../config.js").cmdGive) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("Command disabled by Administrators.")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Command Disabled")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
   }
 
   message.channel
-    .send(
-      new RM.Discord.MessageEmbed().setDescription(
-        "<a:loading:869354366803509299> *Working on it...*"
-      )
-    )
+    .send({
+      embeds: [
+        new RM.Discord.MessageEmbed().setDescription(
+          "<a:loading:869354366803509299> *Working on it...*"
+        ),
+      ],
+    })
     .then(async (m) => {
       const { connect } = require("../../../databasec");
       await connect();
@@ -34,26 +38,30 @@ async function runCommand(message, args, RM) {
         await connect.add("inventory", message.author.id);
       }
       if (!args[0]) {
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription("You need to specify a user to give items to!")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Error")
-        );
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription("You need to specify a user to give items to!")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Error"),
+          ],
+        });
         return await connect.end(true);
       }
       let amount;
       if (!args[1]) {
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription("You need to specify an item id!")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Error")
-        );
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription("You need to specify an item id!")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Error"),
+          ],
+        });
         return await connect.end(true);
       }
       if (args[2]) {
@@ -75,14 +83,16 @@ async function runCommand(message, args, RM) {
         (await message.guild.members.fetch(args[0])) ||
         null;
       if (user == null) {
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription("**Error:** User not found!")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Error")
-        );
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription("**Error:** User not found!")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Error"),
+          ],
+        });
         return await connect.end(true);
       }
       if (user.user) {
@@ -97,14 +107,16 @@ async function runCommand(message, args, RM) {
       let userInv = data2.items;
       if (args[1] === "banknote") {
         if (authorInv.banknote === undefined || authorInv.banknote < amount) {
-          m.edit(
-            new RM.Discord.MessageEmbed()
-              .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
-              .setDescription("You don't have enough banknotes!")
-              .setThumbnail(message.guild.iconURL())
-              .setTitle("Error")
-          );
+          m.edit({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setDescription("You don't have enough banknotes!")
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Error"),
+            ],
+          });
           return await connect.end(true);
         }
         authorInv.banknote -= amount;
@@ -116,27 +128,31 @@ async function runCommand(message, args, RM) {
         }
         await connect.updateInv("inventory", message.author.id, authorInv);
         await connect.updateInv("inventory", user.id, userInv);
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("GREEN")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription(
-              `You gave **\`${amount}\`** banknotes to **${user.username}**!`
-            )
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Success")
-        );
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("GREEN")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(
+                `You gave **\`${amount}\`** banknotes to **${user.username}**!`
+              )
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Success"),
+          ],
+        });
         return await connect.end(true);
       } else if (args[1] === "raybrain") {
         if (authorInv.raybrain === undefined || authorInv.raybrain < amount) {
-          m.edit(
-            new RM.Discord.MessageEmbed()
-              .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
-              .setDescription("You don't have enough raybrains!")
-              .setThumbnail(message.guild.iconURL())
-              .setTitle("Error")
-          );
+          m.edit({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setDescription("You don't have enough raybrains!")
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Error"),
+            ],
+          });
           return await connect.end(true);
         }
         authorInv.raybrain -= amount;
@@ -148,27 +164,31 @@ async function runCommand(message, args, RM) {
         }
         await connect.updateInv("inventory", message.author.id, authorInv);
         await connect.updateInv("inventory", user.id, userInv);
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("GREEN")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription(
-              `You gave **\`${amount}\`** raybrains to **${user.username}**!`
-            )
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Success")
-        );
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("GREEN")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(
+                `You gave **\`${amount}\`** raybrains to **${user.username}**!`
+              )
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Success"),
+          ],
+        });
         return await connect.end(true);
       } else if (args[1] === "padlock") {
         if (authorInv.padlock === undefined || authorInv.padlock < amount) {
-          m.edit(
-            new RM.Discord.MessageEmbed()
-              .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
-              .setDescription("You don't have enough padlocks!")
-              .setThumbnail(message.guild.iconURL())
-              .setTitle("Error")
-          );
+          m.edit({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setDescription("You don't have enough padlocks!")
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Error"),
+            ],
+          });
           return await connect.end(true);
         }
         authorInv.padlock -= amount;
@@ -180,27 +200,31 @@ async function runCommand(message, args, RM) {
         }
         await connect.updateInv("inventory", message.author.id, authorInv);
         await connect.updateInv("inventory", user.id, userInv);
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("GREEN")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription(
-              `You gave **\`${amount}\`** padlocks to **${user.username}**!`
-            )
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Success")
-        );
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("GREEN")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(
+                `You gave **\`${amount}\`** padlocks to **${user.username}**!`
+              )
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Success"),
+          ],
+        });
         return await connect.end(true);
       } else if (args[1] === "lockpick") {
         if (authorInv.lockpick === undefined || authorInv.lockpick < amount) {
-          m.edit(
-            new RM.Discord.MessageEmbed()
-              .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
-              .setDescription("You don't have enough lockpicks!")
-              .setThumbnail(message.guild.iconURL())
-              .setTitle("Error")
-          );
+          m.edit({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setDescription("You don't have enough lockpicks!")
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Error"),
+            ],
+          });
           return await connect.end(true);
         }
         authorInv.lockpick -= amount;
@@ -213,27 +237,31 @@ async function runCommand(message, args, RM) {
         }
         await connect.updateInv("inventory", message.author.id, authorInv);
         await connect.updateInv("inventory", user.id, userInv);
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("GREEN")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription(
-              `You gave **\`${amount}\`** lockpicks to **${user.username}**!`
-            )
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Success")
-        );
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("GREEN")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(
+                `You gave **\`${amount}\`** lockpicks to **${user.username}**!`
+              )
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Success"),
+          ],
+        });
         return await connect.end(true);
       } else if (args[1] === "landmine") {
         if (authorInv.landmine === undefined || authorInv.landmine < amount) {
-          m.edit(
-            new RM.Discord.MessageEmbed()
-              .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
-              .setDescription("You don't have enough landmines!")
-              .setThumbnail(message.guild.iconURL())
-              .setTitle("Error")
-          );
+          m.edit({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setDescription("You don't have enough landmines!")
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Error"),
+            ],
+          });
           return await connect.end(true);
         }
         authorInv.landmine -= amount;
@@ -245,32 +273,36 @@ async function runCommand(message, args, RM) {
         }
         await connect.updateInv("inventory", message.author.id, authorInv);
         await connect.updateInv("inventory", user.id, userInv);
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("GREEN")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription(
-              `You gave **\`${amount}\`** landmines to **${user.username}**!`
-            )
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Success")
-        );
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("GREEN")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(
+                `You gave **\`${amount}\`** landmines to **${user.username}**!`
+              )
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Success"),
+          ],
+        });
         return await connect.end(true);
       } else {
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription("Invalid item!")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Error")
-        );
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription("Invalid item!")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Error"),
+          ],
+        });
         return await connect.end(true);
       }
     })
     .catch(async (err) => {
       console.log(err);
-      message.channel.send("Error: " + err);
+      message.channel.send({ content: "Error: " + err });
     });
 }
 

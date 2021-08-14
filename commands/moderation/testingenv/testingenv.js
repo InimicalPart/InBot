@@ -10,14 +10,16 @@ const commandInfo = {
 async function runCommand(message, args, RM) {
   //Check if command is disabled
   if (!require("../../../config.js").cmdTestingenv) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("Command disabled by Administrators.")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Command Disabled")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
   }
   let result;
   if (global.chessList.length === 0) {
@@ -29,7 +31,10 @@ async function runCommand(message, args, RM) {
   if (global.mineSweeperList.length === 0) {
     result += "ms: list empty\n";
   } else result += "ms: " + global.mineSweeperList.join(", ") + "\n";
-  message.channel.send(result);
+  message.channel.send({
+    content: result,
+    reply: { messageReference: message.id },
+  });
 }
 
 function commandTriggers() {

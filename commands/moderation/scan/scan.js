@@ -11,14 +11,16 @@ async function runCommand(message, args, RM) {
   return;
   //Check if command is disabled
   if (!require("../../../config.js").cmdScan) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("Command disabled by Administrators.")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Command Disabled")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
   }
   if (!RM.botOwners.includes(message.author.id)) return;
 
@@ -42,13 +44,13 @@ async function runCommand(message, args, RM) {
       }
     });
   }
-  message.channel.send("Scanning channel...");
+  message.channel.send({ content: "Scanning channel..." });
   scanChannel(message)
     .then((result) => {
-      message.channel.send(result);
+      message.channel.send({ content: result });
     })
     .catch((e) => {
-      message.channel.send(e);
+      message.channel.send({ content: e });
     });
 }
 

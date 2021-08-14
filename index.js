@@ -19,16 +19,26 @@ require("dotenv").config();
 const Discord = require("discord.js");
 require("discord-reply");
 const config = require("./config.js");
-var Heroku = require("heroku-client"),
-  heroku = new Heroku({ token: process.env.HEROKU_API_TOKEN });
+const chalk = require("chalk");
 if (process.env.NotMyToken == null) {
   console.log(
     "Token is missing, please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPart/TheIIIProject for more information."
   );
   process.exit(1);
 }
-const client = new Discord.Client();
+const client = new Discord.Client({
+  intents: [
+    Discord.Intents.FLAGS.GUILDS,
+    Discord.Intents.FLAGS.GUILD_MESSAGES,
+    Discord.Intents.FLAGS.GUILD_MEMBERS,
+  ],
+});
 //!--------------------------
+console.log(
+  chalk.green("TheIIIProject is starting up!") +
+    "\n" +
+    chalk.yellow("Modules are loading up...")
+);
 const fun = require("./commands/fun/index.js");
 const iiisub = require("./commands/iii-submission/index.js");
 const misc = require("./commands/misc/index.js");
@@ -37,6 +47,7 @@ const music = require("./commands/music/index.js");
 const economy = require("./commands/economy/index.js");
 
 const event = require("./events/index.js");
+
 //!--------------------------
 const requiredModules = {
   cmdTest: misc.test(),
@@ -184,9 +195,16 @@ const requiredModules = {
   ytdl: require("ytdl-core"),
   db: require("quick.db"),
 };
-console.log("------------------------\n[I] Logging in...[I]");
+console.log(
+  chalk.blueBright("------------------------\n") +
+    chalk.green("Modules have been loaded") +
+    chalk.blueBright("------------------------\n") +
+    chalk.white("[I] ") +
+    chalk.yellow("Logging in... ") +
+    chalk.white("[I]")
+);
 
-client.on("message", async (message) => {
+client.on("messageCreate", async (message) => {
   for (let i in requiredModules) {
     if (i.startsWith("event")) {
       if (requiredModules[i].eventType() === "onMessage") {
@@ -216,9 +234,10 @@ client.on("message", async (message) => {
     ].includes(message.author.id) &&
     client.user.id == "859513472973537311"
   )
-    return message.channel.send(
-      "This is a DEV edition, where everything is tested. Only bot owners are allowed to use these commands. Please use the main version: <@858108082705006642>"
-    );
+    return message.channel.send({
+      content:
+        "This is a DEV edition, where everything is tested. Only bot owners are allowed to use these commands. Please use the main version: <@858108082705006642>",
+    });
   for (let i in requiredModules) {
     if (i.startsWith("cmd"))
       if (
@@ -235,51 +254,65 @@ client.on("message", async (message) => {
   }
 });
 async function runCMD(k, message) {
-  if (Discord.version > "12.5.3")
-    message.channel.send(
-      "**NOTE:** The discord API has updated. Some commands may not work properly!"
-    );
+  if (Discord.version > "13.1.0")
+    message.channel.send({
+      content:
+        "**NOTE:** The discord API has updated. Some commands may not work properly!",
+    });
   global.commandsUsed++;
   k.runCommand(message, message.content.split(" ").slice(1), requiredModules);
 }
 
 client.on("ready", async () => {
-  console.log("[I] Logged in! [I]");
+  console.log(
+    chalk.white("[I] ") + chalk.green("Logged in!") + chalk.white(" [I]")
+  );
   if (client.user.id == "859513472973537311") {
     client.user.setPresence({
-      activity: {
-        name: `III DEV EDITION`,
-        type: "WATCHING",
-      },
+      activities: [
+        {
+          name: `III V2 [DEV]`,
+          type: "WATCHING",
+        },
+      ],
       status: "dnd",
     });
   } else {
     client.user.setPresence({
-      activity: {
-        name: `III V1`,
-        type: "WATCHING",
-      },
+      activities: [
+        {
+          name: `III V2`,
+          type: "WATCHING",
+        },
+      ],
       status: "dnd",
     });
   }
   let users = [];
-  const list = client.guilds.cache.get("857017449743777812");
-  list.members.cache.forEach(async (member) => {
-    if (
-      String(member.user.username).toLowerCase().includes("| gg") ||
-      String(member.user.username).toLowerCase().includes("|| discord.gg") ||
-      String(member.user.username).toLowerCase().includes("dcgate") ||
-      String(member.user.username).toLowerCase().includes("discordgate")
-    ) {
-      console.log(member.user.username + " is getting banned.");
-      await member.send(
-        "Hello, you have been suspected of being a user bot, for safety concerns, we have banned you. If you think this is a mistake. Please DM InimicalPart ©#4542 or ray.#2021"
-      );
-      member.ban({ reason: "User bots are not allowed." });
-    } else {
-      users.push(member.id);
-    }
-  });
+  const list = await client.guilds.fetch("857017449743777812");
+  await list.members
+    .fetch()
+    .then(async (member) => {
+      member.forEach(async (m) => {
+        if (
+          String(m.user.username).toLowerCase().includes("| gg") ||
+          String(m.user.username).toLowerCase().includes("|| discord.gg") ||
+          String(m.user.username).toLowerCase().includes("dcgate") ||
+          String(m.user.username).toLowerCase().includes("discordgate")
+        ) {
+          console.log(m.user.username + " is getting banned.");
+          await m.send({
+            content:
+              "Hello, you have been suspected of being a user bot, for safety concerns, we have banned you. If you think this is a mistake. Please DM InimicalPart ©#4542 or ray.#2021",
+          });
+          m.ban({ reason: "User bots are not allowed." });
+        } else {
+          users.push(m.id);
+        }
+      });
+    })
+    .catch(console.error);
+
   if (client.user.id != "859513472973537311" && config.showUsers == true)
     await list.channels.cache
       .get("862425213799104512")
@@ -294,53 +327,84 @@ client.on("ready", async () => {
   var daysC = Math.round(DITC / (1000 * 3600 * 24));
 
   console.log(
-    "------------------------\nThe III Society has " +
-      users.length +
+    chalk.blueBright("------------------------\n") +
+      chalk.redBright("The III Society") +
+      " has " +
+      chalk.cyanBright(users.length) +
       " members.\n"
   );
   console.log(
     "Only " +
-      (7000 - users.length) +
+      chalk.cyanBright(7000 - users.length) +
       " more until we reach the Community requirements!"
   );
   console.log(
-    "Only " + (100 - users.length) + " more until we reach 100 members!"
+    "Only " +
+      chalk.cyanBright(100 - users.length) +
+      " more until we reach 100 members!"
   );
   console.log(
-    "Only " + (500 - users.length) + " more until we can see Server Metrics!\n"
+    "Only " +
+      chalk.cyanBright(500 - users.length) +
+      " more until we can see Server Metrics!\n"
   );
   console.log(
-    "The III Society was created at " +
-      createdAt.toLocaleDateString() +
+    chalk.redBright("The III Society") +
+      " was created at " +
+      chalk.cyanBright(createdAt.toLocaleDateString()) +
       ". That's " +
-      days +
+      chalk.cyanBright(days) +
       " days ago!"
   );
   console.log(
     "Only " +
-      daysC +
-      " days until The III Society is old enough to apply to Server Discovery!"
+      chalk.cyanBright(daysC) +
+      " days until " +
+      chalk.redBright("The III Society") +
+      " is old enough to apply to Server Discovery!"
   );
   if (client.user.id == "859513472973537311") {
     console.log(
-      "\n⚠ As this is a DEV edition, Channels will not be updated to avoid interference with the main edition. ⚠"
+      "\n" +
+        chalk.yellowBright("⚠") +
+        " As this is a DEV edition, Channels will not be updated to avoid interference with the main edition. " +
+        chalk.yellowBright("⚠")
     );
   } else if (config.showUsers == false) {
     console.log(
-      "\n⚠ As showUsers in config is disabled, channel won't be updated. ⚠"
+      "\n" +
+        chalk.yellowBright("⚠") +
+        " As showUsers in config is disabled, channel won't be updated. " +
+        chalk.yellowBright("⚠")
     );
   }
   let edition;
   if (client.user.id == "859513472973537311") {
-    edition = "DEV";
+    edition = "DEVELOPMENT";
   } else {
     edition = "MAIN";
   }
+  result = DateFormatter.formatDate(new Date(), `MMMM ????, YYYY HH:mm:ss A`);
+  result = result.replace("????", getOrdinalNum(new Date().getDate()));
+  isDevMode =
+    edition === "DEVELOPMENT"
+      ? chalk.greenBright("YES")
+      : chalk.redBright("NO");
   console.log(
     "------------------------\n" +
-      client.user.tag +
+      "Current time is: " +
+      chalk.cyanBright(result) +
+      "\n" +
+      "Discord.JS version: " +
+      chalk.yellow(Discord.version) +
+      "\n" +
+      "In Development Mode: " +
+      isDevMode +
+      "\n" +
+      "------------------------\n" +
+      chalk.blue.bold(client.user.tag) +
       " is ready and is running " +
-      edition +
+      chalk.blue.bold(edition) +
       " edition!"
   );
 });
@@ -357,8 +421,11 @@ client.on("guildMemberAdd", async (user) => {
   }
   if (client.user.id != "859513472973537311" && config.showUsers == true) {
     let users = [];
-    const list = client.guilds.cache.get("857017449743777812");
-    list.members.cache.forEach((member) => users.push(member.id));
+    const list = await client.guilds.fetch("857017449743777812");
+    await list.members
+      .fetch()
+      .then(async (member) => member.forEach(async (m) => users.push(m.id)))
+      .catch(console.error);
     await list.channels.cache
       .get("862425213799104512")
       .setName("↦ • Members: " + users.length);
@@ -368,8 +435,11 @@ client.on("guildMemberAdd", async (user) => {
 client.on("guildMemberRemove", async () => {
   if (client.user.id != "859513472973537311" && config.showUsers == true) {
     let users = [];
-    const list = client.guilds.cache.get("857017449743777812");
-    list.members.cache.forEach((member) => users.push(member.id));
+    const list = await client.guilds.fetch("857017449743777812");
+    await list.members
+      .fetch()
+      .then(async (member) => member.forEach(async (m) => users.push(m.id)))
+      .catch(console.error);
     await list.channels.cache
       .get("862425213799104512")
       .setName("↦ • Members: " + users.length);
@@ -403,3 +473,80 @@ server.on("error", function (err) {
 });
 server.listen(7380, "0.0.0.0");
 client.login(process.env.NotMyToken);
+function getOrdinalNum(n) {
+  return (
+    n +
+    (n > 0
+      ? ["th", "st", "nd", "rd"][(n > 3 && n < 21) || n % 10 > 3 ? 0 : n % 10]
+      : "")
+  );
+}
+const DateFormatter = {
+  monthNames: [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ],
+  dayNames: [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ],
+  formatDate: function (e, t) {
+    var r = this;
+    return (
+      (t = r.getProperDigits(t, /d+/gi, e.getDate())),
+      (t = (t = r.getProperDigits(t, /M+/g, e.getMonth() + 1)).replace(
+        /y+/gi,
+        function (t) {
+          var r = t.length,
+            g = e.getFullYear();
+          return 2 == r ? (g + "").slice(-2) : 4 == r ? g : t;
+        }
+      )),
+      (t = r.getProperDigits(t, /H+/g, e.getHours())),
+      (t = r.getProperDigits(t, /h+/g, r.getHours12(e.getHours()))),
+      (t = r.getProperDigits(t, /m+/g, e.getMinutes())),
+      (t = (t = r.getProperDigits(t, /s+/gi, e.getSeconds())).replace(
+        /a/gi,
+        function (t) {
+          var g = r.getAmPm(e.getHours());
+          return "A" === t ? g.toUpperCase() : g;
+        }
+      )),
+      (t = r.getFullOr3Letters(t, /d+/gi, r.dayNames, e.getDay())),
+      (t = r.getFullOr3Letters(t, /M+/g, r.monthNames, e.getMonth()))
+    );
+  },
+  getProperDigits: function (e, t, r) {
+    return e.replace(t, function (e) {
+      var t = e.length;
+      return 1 == t ? r : 2 == t ? ("0" + r).slice(-2) : e;
+    });
+  },
+  getHours12: function (e) {
+    return (e + 24) % 12 || 12;
+  },
+  getAmPm: function (e) {
+    return e >= 12 ? "pm" : "am";
+  },
+  getFullOr3Letters: function (e, t, r, g) {
+    return e.replace(t, function (e) {
+      var t = e.length;
+      return 3 == t ? r[g].substr(0, 3) : 4 == t ? r[g] : e;
+    });
+  },
+};

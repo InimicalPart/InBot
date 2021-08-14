@@ -10,18 +10,18 @@ const commandInfo = {
 async function runCommand(message, args, RM) {
   //Check if command is disabled
   if (!require("../../../config.js").cmdV13) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("Command disabled by Administrators.")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Command Disabled")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
   }
-  return message.channel.send(
-    "'We at the III Society, will not change the bot to v13 from v12. They changed so much it's so pointless they even release the version. Every bot owner needs to recreate their ENTIRE bot with the new stuff. Have you ever considered big discord.js projects created that have like 20k+ lines of code? Yeah. Sit through that and edit everything. Then every v12 bot owner needs to learn the changes in v13 and how to use them correctly. Quoted from discordjs.guide : `The shortcuts Intents.ALL, Intents.NON_PRIVILEGED, and Intents.PRIVILEGED have all been removed to discourage bad practices of enabling unused intents.` (found at: <https://discordjs.guide/additional-info/changes-in-v13.html#intents>). This literally means that they changed it just because people should stop being lazy and use all intents. Like, whats wrong with using all intents? You don't have to think about adding them when making something new, You don't need to learn which intents to use, etc. Unless v13 won't get better. We're not moving. I rest my case.' - InimicalPart (The III Project developer)"
-  );
+  return message.channel.send({ content: "i upgraded it. ik" });
   // cmd stuff here
 }
 
