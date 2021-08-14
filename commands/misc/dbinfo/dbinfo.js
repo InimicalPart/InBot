@@ -10,26 +10,32 @@ const commandInfo = {
 async function runCommand(message, args, RM) {
   //Check if command is disabled
   if (!require("../../../config.js").cmdDbinfo) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("Command disabled by Administrators.")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Command Disabled")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
   }
-  if (!message.member.hasPermission("ADMINISTRATOR")) {
+  if (
+    !message.member.hasPermission(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
+  ) {
     await connect.end(true);
-    return m.edit(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.username, message.author.avatarURL())
-        .setDescription("You do not have permission to use this command.")
-        .setTimestamp()
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Permission Denied")
-    );
+    return m.edit({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.username, message.author.avatarURL())
+          .setDescription("You do not have permission to use this command.")
+          .setTimestamp()
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Permission Denied"),
+      ],
+    });
   }
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -41,32 +47,38 @@ async function runCommand(message, args, RM) {
   await connect.create("inventory");
   var SqlString = require("sqlstring");
   message.channel
-    .send(
-      new RM.Discord.MessageEmbed().setDescription(
-        "<a:loading:869354366803509299> *Working on it...*"
-      )
-    )
+    .send({
+      embeds: [
+        new RM.Discord.MessageEmbed().setDescription(
+          "<a:loading:869354366803509299> *Working on it...*"
+        ),
+      ],
+    })
     .then(async (m) => {
       if (!args[0]) {
         connect.end(true);
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setDescription("You need to specify an user id to get info on.")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Error")
-        );
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setDescription("You need to specify an user id to get info on.")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Error"),
+          ],
+        });
         return;
       }
       if (isNaN(parseInt(args[0]))) {
         connect.end(true);
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setDescription("Incorrect argument")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Error")
-        );
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setDescription("Incorrect argument")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Error"),
+          ],
+        });
         return;
       }
       const res = await connect.query(
@@ -74,13 +86,15 @@ async function runCommand(message, args, RM) {
       );
       if (res.rows.length < 1) {
         connect.end(true);
-        m.edit(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setDescription("Could not find a user with that id.")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Error")
-        );
+        m.edit({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setDescription("Could not find a user with that id.")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Error"),
+          ],
+        });
         return;
       }
       const resjson = JSON.parse(JSON.stringify(res.rows[0]));
@@ -218,12 +232,12 @@ async function runCommand(message, args, RM) {
           });
         }
       }
-      m.edit(embed);
+      m.edit({ embeds: [embed] });
       connect.end(true);
     })
     .catch(async (err) => {
       console.log(err);
-      message.channel.send("Error: " + err);
+      message.channel.send({ content: "Error: " + err });
     });
 }
 function commandTriggers() {

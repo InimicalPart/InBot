@@ -12,24 +12,28 @@ const commandInfo = {
 async function runCommand(message, args, RM) {
   //Check if command is disabled
   if (!require("../../../config.js").cmdSudoku) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("Command disabled by Administrators.")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Command Disabled")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
   }
   if (global.sudokuList.includes(message.author.id)) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("You are already playing a game of Sudoku!")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Already Playing")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("You are already playing a game of Sudoku!")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Already Playing"),
+      ],
+    });
   }
 
   const log = console.log;
@@ -42,25 +46,25 @@ async function runCommand(message, args, RM) {
   if (args[0]) {
     if (args[0].toLowerCase() === "easy" || args[0].toLowerCase() === "1") {
       difficulty = 0;
-      message.channel.send("Difficulty set to: EASY");
+      message.channel.send({ content: "Difficulty set to: EASY" });
     } else if (
       args[0].toLowerCase() === "normal" ||
       args[0].toLowerCase() === "2"
     ) {
       difficulty = 1;
-      message.channel.send("Difficulty set to: NORMAL");
+      message.channel.send({ content: "Difficulty set to: NORMAL" });
     } else if (
       args[0].toLowerCase() === "hard" ||
       args[0].toLowerCase() === "3"
     ) {
       difficulty = 2;
-      message.channel.send("Difficulty set to: HARD");
+      message.channel.send({ content: "Difficulty set to: HARD" });
     } else {
       difficulty = 1;
-      message.channel.send("Default difficulty chosen: NORMAL");
+      message.channel.send({ content: "Default difficulty chosen: NORMAL" });
     }
   } else {
-    message.channel.send("Default difficulty chosen: NORMAL");
+    message.channel.send({ content: "Default difficulty chosen: NORMAL" });
   }
   const board = genBoard.getSheet(difficulty);
   console.log = log;
@@ -74,92 +78,107 @@ async function runCommand(message, args, RM) {
   let mistakes = 0;
   let moves = 0;
   const timeStarted = new Date().getTime();
-  message.channel.send(
-    "Moves: " +
+  message.channel.send({
+    content:
+      "Moves: " +
       moves +
       " | Mistakes: " +
       mistakes +
       "/3 ```js\n" +
       renderBoard(board) +
-      "```"
-  );
+      "```",
+  });
   var filter = (m) => [message.author.id].includes(m.author.id);
   const collector = message.channel.createMessageCollector(filter);
   collector.on("collect", async (messageNext) => {
     const msg = messageNext.content.toLowerCase().split(" ");
     if (msg[0] === "set") {
       if (!msg[1]) {
-        return message.channel.send(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription("Invalid input.")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Invalid Input")
-        );
+        return message.channel.send({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription("Invalid input.")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Invalid Input"),
+          ],
+        });
       }
       if (!msg[2]) {
-        return message.channel.send(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription("Invalid input.")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Invalid Input")
-        );
+        return message.channel.send({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription("Invalid input.")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Invalid Input"),
+          ],
+        });
       }
       if (isNaN(parseInt(msg[2]))) {
-        return message.channel.send(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription("Invalid input.")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Invalid Input")
-        );
+        return message.channel.send({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription("Invalid input.")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Invalid Input"),
+          ],
+        });
       }
       const row = parseInt(msg[1].split(":")[0]);
       const col = parseInt(msg[1].split(":")[1]);
       const val = parseInt(msg[2]);
       if (isNaN(row) || isNaN(col)) {
-        return message.channel.send(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription("Invalid input.")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Invalid Input")
-        );
+        return message.channel.send({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription("Invalid input.")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Invalid Input"),
+          ],
+        });
       }
       if (row < 1 || row > 9 || col < 1 || col > 9) {
-        return message.channel.send(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription("Invalid input.")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Invalid Input")
-        );
+        return message.channel.send({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription("Invalid input.")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Invalid Input"),
+          ],
+        });
       }
       if (val < 1 || val > 9) {
-        return message.channel.send(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription("Invalid input.")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Invalid Input")
-        );
+        return message.channel.send({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription("Invalid input.")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Invalid Input"),
+          ],
+        });
       }
       if (board[row - 1][col - 1] !== ".") {
-        return message.channel.send(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription("Invalid board spot.")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Invalid spot")
-        );
+        return message.channel.send({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription("Invalid board spot.")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Invalid spot"),
+          ],
+        });
       }
       let clone = JSON.parse(JSON.stringify(board));
       clone[row - 1][col - 1] = val;
@@ -168,24 +187,28 @@ async function runCommand(message, args, RM) {
         mistakes++;
         if (mistakes === 3) {
           collector.stop();
-          return message.channel.send(
+          return message.channel.send({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setDescription("You lost! Too many mistakes")
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("You lost!"),
+            ],
+          });
+        }
+        return message.channel.send({
+          embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
               .setAuthor(message.author.tag, message.author.avatarURL())
-              .setDescription("You lost! Too many mistakes")
+              .setDescription(":x: The number `" + val + "` is incorrect.")
               .setThumbnail(message.guild.iconURL())
-              .setTitle("You lost!")
-          );
-        }
-        return message.channel.send(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription(":x: The number `" + val + "` is incorrect.")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Invalid Input")
-            .setFooter("You have " + (3 - mistakes) + " tries left.")
-        );
+              .setTitle("Invalid Input")
+              .setFooter("You have " + (3 - mistakes) + " tries left."),
+          ],
+        });
       } else {
         board[row - 1][col - 1] = val;
         moves++;
@@ -215,39 +238,42 @@ async function runCommand(message, args, RM) {
               i--;
             }
           }
-          message.channel.send(embed);
+          message.channel.send({ embeds: [embed] });
           return;
         }
-        message.channel.send(
-          "Moves: " +
+        message.channel.send({
+          content:
+            "Moves: " +
             moves +
             " | Mistakes: " +
             mistakes +
             "/3 ```js\n" +
             renderBoard(board) +
-            "```"
-        );
+            "```",
+        });
       }
     } else if (msg[0] === "giveup") {
       const endTime = new Date().getTime();
       const timeTaken = endTime - timeStarted;
       collector.stop();
-      message.channel.send(
-        new RM.Discord.MessageEmbed()
-          .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
-          .setDescription("You gave up!")
-          .setThumbnail(message.guild.iconURL())
-          .setTitle("You gave up!")
-          .setFooter(
-            RM.pretty_ms(timeTaken) +
-              " | You had " +
-              moves +
-              " moves and " +
-              mistakes +
-              " mistakes."
-          )
-      );
+      message.channel.send({
+        embeds: [
+          new RM.Discord.MessageEmbed()
+            .setColor("RED")
+            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setDescription("You gave up!")
+            .setThumbnail(message.guild.iconURL())
+            .setTitle("You gave up!")
+            .setFooter(
+              RM.pretty_ms(timeTaken) +
+                " | You had " +
+                moves +
+                " moves and " +
+                mistakes +
+                " mistakes."
+            ),
+        ],
+      });
       for (var i = 0; i < global.sudokuList.length; i++) {
         if (global.sudokuList[i] === message.author.id) {
           global.sudokuList.splice(i, 1);
@@ -255,15 +281,16 @@ async function runCommand(message, args, RM) {
         }
       }
     } else if (msg[0] === "board") {
-      message.channel.send(
-        "Moves: " +
+      message.channel.send({
+        content:
+          "Moves: " +
           moves +
           " | Mistakes: " +
           mistakes +
           "/3 ```js\n" +
           renderBoard(board) +
-          "```"
-      );
+          "```",
+      });
     }
   });
 }

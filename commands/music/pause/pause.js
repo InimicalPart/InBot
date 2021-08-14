@@ -1,63 +1,65 @@
 const commandInfo = {
-  "primaryName": "pause",
-  "possibleTriggers": ["pause"],
-  "help": "Allows you to pause or resume (not really working) the music.",
-  "aliases": [],
-  "usage": "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
-  "category": "music"
-}
+  primaryName: "pause",
+  possibleTriggers: ["pause"],
+  help: "Allows you to pause or resume (not really working) the music.",
+  aliases: [],
+  usage: "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
+  category: "music",
+};
 
 async function runCommand(message, args, RM) {
   if (!require("../../../config.js").cmdPause) {
-    return message.channel.send(new RM.Discord.MessageEmbed()
-      .setColor("RED")
-      .setAuthor(message.author.tag, message.author.avatarURL())
-      .setDescription(
-        "Command disabled by Administrators."
-      )
-      .setThumbnail(message.guild.iconURL())
-      .setTitle("Command Disabled")
-    )
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
   }
   const queue2 = global.sQueue2;
   const queue3 = global.sQueue3;
   const queue = global.sQueue;
-  const games = global.games
+  const games = global.games;
 
   let ops = {
     queue2: queue2,
     queue: queue,
     queue3: queue3,
-    games: games
-  }
+    games: games,
+  };
 
   const serverQueue = ops.queue.get(message.guild.id);
   const { channel } = message.member.voice;
 
   try {
-
-    if (!channel) return message.channel.send('You need to be in a voice channel.');
+    if (!channel)
+      return message.channel.send({
+        content: "You need to be in a voice channel.",
+      });
     if (message.guild.me.voice.channel !== message.member.voice.channel) {
-      return message.channel.send("You need to be in the same voice channel as me!");
-    };
+      return message.channel.send({
+        content: "You need to be in the same voice channel as me!",
+      });
+    }
     if (serverQueue && serverQueue.playing) {
       serverQueue.playing = false;
       serverQueue.connection.dispatcher.pause(true);
-      return message.channel.send('Paused ⏸');
+      return message.channel.send({ content: "Paused ⏸" });
     } else if (serverQueue && !serverQueue.playing) {
       serverQueue.playing = true;
       serverQueue.connection.dispatcher.resume();
-      return message.channel.send("Resumed ▶")
+      return message.channel.send({ content: "Resumed ▶" });
     }
-    return message.channel.send(':x: | There is Nothing Playing!');
+    return message.channel.send({ content: ":x: | There is Nothing Playing!" });
   } catch {
     serverQueue.connection.dispatcher.end();
     await channel.leave();
   }
-
 }
-
-
 
 function commandTriggers() {
   return commandInfo.possibleTriggers;
@@ -84,6 +86,5 @@ module.exports = {
   commandAliases,
   commandPrim,
   commandUsage,
-  commandCategory
-}
-
+  commandCategory,
+};
