@@ -47,6 +47,9 @@
     "ytdl-core": "^4.8.3"
   },
   "name": "iii.exe",
+  "engines": {
+    "node": ">=16.6"
+  },
   "description": "<h1 align=\"center\">The III Project</h1>",
   "version": "1.0.0",
   "main": "index.js",
