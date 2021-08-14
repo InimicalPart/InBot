@@ -6,7 +6,7 @@
     "chess.js": "^0.12.0",
     "common-tags": "^1.8.0",
     "convert-units": "^2.3.4",
-    "discord.js": "^12.5.3",
+    "discord.js": "latest",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "fen-to-image": "github:InimicalPart/TheIIIProject#fen2img",
