@@ -1,81 +1,83 @@
 const commandInfo = {
-	"primaryName": "remove",
-	"possibleTriggers": ["remove", "delete"],
-	"help": "Allows admins to remove an approved image submission.",
-	"aliases": ["delete"],
-	"usage": "[COMMAND] <MSG ID>", // [COMMAND] gets replaced with the command and correct prefix later
-	"category": "iiisub"
-}
+  primaryName: "remove",
+  possibleTriggers: ["remove", "delete"],
+  help: "Allows admins to remove an approved image submission.",
+  aliases: ["delete"],
+  usage: "[COMMAND] <MSG ID>", // [COMMAND] gets replaced with the command and correct prefix later
+  category: "iiisub",
+};
 
 async function runCommand(message, args, RM) {
-	if (!require("../../../config.js").cmdRemove) {
-		return message.channel.send(new RM.Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				"Command disabled by Administrators."
-			)
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Command Disabled")
-		)
-	}
+  if (!require("../../../config.js").cmdRemove) {
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
+  }
 
-	const client = RM.client;
-	const submissionChannelID = RM.submissionChannelID;
-	const botOwners = RM.botOwners;
-	if (!botOwners.includes(message.author.id)) return;
+  const client = RM.client;
+  const submissionChannelID = RM.submissionChannelID;
+  const botOwners = RM.botOwners;
+  if (!botOwners.includes(message.author.id)) return;
 
-	if (!args[0]) {
-		return message.channel.send("Please provide the message to remove")
-	}
-	const submissionChannel = client.channels.cache.get(submissionChannelID);
-	const messageID = args[0];
-	let m = await submissionChannel.messages.fetch(messageID).catch((err) => {
-		return message.channel.send("Invalid Message ID.")
-	})
-	if (m == undefined) {
-		return message.channel.send("Invalid Message ID.");
-	}
+  if (!args[0]) {
+    return message.channel.send({
+      content: "Please provide the message to remove",
+    });
+  }
+  const submissionChannel = client.channels.cache.get(submissionChannelID);
+  const messageID = args[0];
+  let m = await submissionChannel.messages.fetch(messageID).catch((err) => {
+    return message.channel.send({ content: "Invalid Message ID." });
+  });
+  if (m == undefined) {
+    return message.channel.send({ content: "Invalid Message ID." });
+  }
 
-
-	//return message.channel.send(messageID + "s content is: " + m.content)
-	m.delete().then(() => message.channel.send("Successfully deleted " + messageID)).catch((err) => message.channel.send("ERROR: " + err));
-
-
+  m.delete()
+    .then(() =>
+      message.channel.send({ content: "Successfully deleted " + messageID })
+    )
+    .catch((err) => message.channel.send({ content: "ERROR: " + err }));
 }
 
 function commandTriggers() {
-	return commandInfo.possibleTriggers;
+  return commandInfo.possibleTriggers;
 }
 function commandPrim() {
-	return commandInfo.primaryName;
+  return commandInfo.primaryName;
 }
 function commandAliases() {
-	return commandInfo.aliases;
+  return commandInfo.aliases;
 }
 function commandHelp() {
-	return commandInfo.help;
+  return commandInfo.help;
 }
 function commandUsage() {
-	return commandInfo.usage;
+  return commandInfo.usage;
 }
 function commandCategory() {
-	return commandInfo.category;
+  return commandInfo.category;
 }
 module.exports = {
-	runCommand,
-	commandTriggers,
-	commandHelp,
-	commandAliases,
-	commandPrim,
-	commandUsage,
-	commandCategory
-}
-
+  runCommand,
+  commandTriggers,
+  commandHelp,
+  commandAliases,
+  commandPrim,
+  commandUsage,
+  commandCategory,
+}; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */
+/* */
 /*
 ------------------[Instruction]------------------
 
@@ -99,4 +101,4 @@ To check if possible triggers has the command call
 ------------------[Instruction]------------------
 */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/* */

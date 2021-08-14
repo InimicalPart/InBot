@@ -1,206 +1,253 @@
 const commandInfo = {
-	"primaryName": "addmoney", // This is the command name used by help.js (gets uppercased).
-	"possibleTriggers": ["addmoney", "am"], // These are all commands that will trigger this command.
-	"help": "Allows admins to add money to a user", // This is the general description of the command.
-	"aliases": ["am"], // These are command aliases that help.js will use
-	"usage": "[COMMAND] <user> <money>", // [COMMAND] gets replaced with the command and correct prefix later
-	"category": "economy"
-}
+  primaryName: "addmoney", // This is the command name used by help.js (gets uppercased).
+  possibleTriggers: ["addmoney", "am"], // These are all commands that will trigger this command.
+  help: "Allows admins to add money to a user", // This is the general description of the command.
+  aliases: ["am"], // These are command aliases that help.js will use
+  usage: "[COMMAND] <user> <money>", // [COMMAND] gets replaced with the command and correct prefix later
+  category: "economy",
+};
 function numberWithCommas(x) {
-	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 async function runCommand(message, args, RM) {
-	//Check if command is disabled
-	if (!require("../../../config.js").cmdAddmoney) {
-		return message.channel.send(new RM.Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				"Command disabled by Administrators."
-			)
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Command Disabled")
-		)
-	}
-	const Discord = RM.Discord
-	message.channel.send(new RM.Discord.MessageEmbed().setDescription("<a:loading:869354366803509299> *Working on it...*")).then(async (m) => {
-		const { connect } = require("../../../databasec")
-		await connect()
-		await connect.create("currency")
+  //Check if command is disabled
+  if (!require("../../../config.js").cmdAddmoney) {
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
+  }
+  const Discord = RM.Discord;
+  message.channel
+    .send({
+      embeds: [
+        new RM.Discord.MessageEmbed().setDescription(
+          "<a:loading:869354366803509299> *Working on it...*"
+        ),
+      ],
+    })
+    .then(async (m) => {
+      const { connect } = require("../../../databasec");
+      await connect();
+      await connect.create("currency");
 
-		if (!message.member.hasPermission("ADMINISTRATOR")) {
-			await connect.end(true)
-			return m.edit(new Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.username, message.author.avatarURL())
-				.setDescription(
-					"You do not have permission to use this command."
-				)
-				.setTimestamp()
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Permission Denied")
-			)
-		};
-		if (!args[0]) {
-			await connect.end(true)
-			return m.edit(new Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.username, message.author.avatarURL())
-				.setDescription(
-					"You need to specify a user to add money to."
-				)
-				.setTimestamp()
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("No User Specified")
-			)
-		}
+      if (
+        !message.member.hasPermission(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
+      ) {
+        await connect.end(true);
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.username, message.author.avatarURL())
+              .setDescription("You do not have permission to use this command.")
+              .setTimestamp()
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Permission Denied"),
+          ],
+        });
+      }
+      if (!args[0]) {
+        await connect.end(true);
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.username, message.author.avatarURL())
+              .setDescription("You need to specify a user to add money to.")
+              .setTimestamp()
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("No User Specified"),
+          ],
+        });
+      }
 
-		//copilot fix the fucking error please
-		//ty copilot human version
-		let user = undefined
-		if (Number.isInteger(parseInt(args[0]))) {
-			message.guild.members.cache.forEach((member) => { if (member.id == args[0]) user = member.user; })
-		} else {
-			user = message.mentions.members.first() || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args[0].toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args[0].toLocaleLowerCase());
-		}
-		if (user == undefined) {
-			await connect.end(true)
-			return m.edit(new Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setDescription(
-					`${args[0]} is not a valid user.`
-				)
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("User Not Found")
-			)
-		}
-		const username = user.username || user.user.username  // here was the error it was user.username
-		if (!args[1]) {
-			await connect.end(true)
-			return m.edit(new Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setDescription(
-					`You need to specify a value to add.`
-				)
-				.setTimestamp()
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("No Value Specified")
-			)
-		}
-		if (Number.isNaN(args[1]) || args[1] < 0) {
-			await connect.end(true)
-			return m.edit(new Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setDescription(
-					`The value you specified is not a number.`
-				)
-				.setTimestamp()
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Invalid Value")
-			)
-		}
-		if (args[1] > 1000000) {
-			await connect.end(true)
-			return m.edit(new Discord.MessageEmbed()
-				.setColor("RED")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setDescription(
-					`The value you specified is too high.`
-				)
-				.setTimestamp()
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Invalid Value")
-			)
-		}
+      let user =
+        message.mentions.members.first() ||
+        message.guild.members.cache.get(args[0]) ||
+        message.guild.members.cache.find(
+          (r) =>
+            r.user.username.toLowerCase() === args.join(" ").toLocaleLowerCase()
+        ) ||
+        message.guild.members.cache.find(
+          (r) =>
+            r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
+        ) ||
+        (await message.guild.members.fetch(args[0])) ||
+        null;
 
-		if (await connect.fetch("currency", user.id) === null) {
-			await connect.add("currency", user.id, 0, 0, 1000, 0)
-		}
-		const info = await connect.fetch("currency", user.id)
-		const bank = parseInt(info.amountb)
-		if (args[2] == "-b") {
-			if (info.maxbank - bank < args[1]) {
-				await connect.end(true)
-				return m.edit(new Discord.MessageEmbed()
-					.setColor("RED")
-					.setAuthor(message.author.tag, message.author.avatarURL())
-					.setDescription(
-						`You can't add more money to their bank than their max bank cap! They have **\`$${numberWithCommas(info.maxbank - bank)}\`** of free space in their bank`
-					)
-					.setTimestamp()
-					.setThumbnail(message.guild.iconURL())
-					.setTitle("Invalid Amount")
-				)
-			}
-			await connect.update("currency", user.id, undefined, ((bank - 0) + (args[1] - 0)))
-			let moneyEmbed = new Discord.MessageEmbed()
-				.setColor("GREEN")
-				.setAuthor(message.author.tag, message.author.avatarURL())
-				.setDescription(
-					`**${username}**'s bank has been increased by  **\`$${numberWithCommas(args[1])}\`**. Their bank balance is now **\`$${numberWithCommas(bank + args[1])}\`**`
-				)
-				.setThumbnail(message.guild.iconURL())
-				.setTitle("Money Added")
+      if (user == null) {
+        await connect.end(true);
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(`${args[0]} is not a valid user.`)
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("User Not Found"),
+          ],
+        });
+      }
+      if (user.user) {
+        user = user.user;
+      } else user = user;
+      const username = user.username;
+      if (!args[1]) {
+        await connect.end(true);
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(`You need to specify a value to add.`)
+              .setTimestamp()
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("No Value Specified"),
+          ],
+        });
+      }
+      if (Number.isNaN(args[1]) || args[1] < 0) {
+        await connect.end(true);
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(`The value you specified is not a number.`)
+              .setTimestamp()
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Invalid Value"),
+          ],
+        });
+      }
+      if (args[1] > 1000000) {
+        await connect.end(true);
+        return m.edit({
+          embeds: [
+            new Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setDescription(`The value you specified is too high.`)
+              .setTimestamp()
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Invalid Value"),
+          ],
+        });
+      }
 
-			m.edit(moneyEmbed)
-			return await connect.end(true)
-		}
-		const res = await connect.fetch("currency", user.id)
+      if ((await connect.fetch("currency", user.id)) === null) {
+        await connect.add("currency", user.id, 0, 0, 1000, 0);
+      }
+      const info = await connect.fetch("currency", user.id);
+      const bank = parseInt(info.amountb);
+      if (args[2] == "-b") {
+        if (info.maxbank - bank < args[1]) {
+          await connect.end(true);
+          return m.edit({
+            embeds: [
+              new Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setDescription(
+                  `You can't add more money to their bank than their max bank cap! They have **\`$${numberWithCommas(
+                    info.maxbank - bank
+                  )}\`** of free space in their bank`
+                )
+                .setTimestamp()
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Invalid Amount"),
+            ],
+          });
+        }
+        await connect.update(
+          "currency",
+          user.id,
+          undefined,
+          bank - 0 + (args[1] - 0)
+        );
+        let moneyEmbed = new Discord.MessageEmbed()
+          .setColor("GREEN")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription(
+            `**${username}**'s bank has been increased by  **\`$${numberWithCommas(
+              args[1]
+            )}\`**. Their bank balance is now **\`$${numberWithCommas(
+              bank + args[1]
+            )}\`**`
+          )
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Money Added");
 
-		await connect.update("currency", user.id, ((res.amountw - 0) + (args[1] - 0)))
-		m.edit(new Discord.MessageEmbed()
-			.setColor("GREEN")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				`**${username}**'s balance has been increased by **\`$${numberWithCommas(args[1])}\`**!`
-			)
-			.setTimestamp()
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Success")
-		)
-		await connect.end(true)
+        m.edit({ embeds: [moneyEmbed] });
+        return await connect.end(true);
+      }
+      const res = await connect.fetch("currency", user.id);
 
-
-	}).catch(async (err) => {
-		console.log(err)
-		message.channel.send("Error: " + err)
-	})
+      await connect.update(
+        "currency",
+        user.id,
+        res.amountw - 0 + (args[1] - 0)
+      );
+      m.edit({
+        embeds: [
+          new Discord.MessageEmbed()
+            .setColor("GREEN")
+            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setDescription(
+              `**${username}**'s balance has been increased by **\`$${numberWithCommas(
+                args[1]
+              )}\`**!`
+            )
+            .setTimestamp()
+            .setThumbnail(message.guild.iconURL())
+            .setTitle("Success"),
+        ],
+      });
+      await connect.end(true);
+    })
+    .catch(async (err) => {
+      console.log(err);
+      message.channel.send({ content: "Error: " + err });
+    });
 }
 function commandTriggers() {
-	return commandInfo.possibleTriggers;
+  return commandInfo.possibleTriggers;
 }
 function commandPrim() {
-	return commandInfo.primaryName;
+  return commandInfo.primaryName;
 }
 function commandAliases() {
-	return commandInfo.aliases;
+  return commandInfo.aliases;
 }
 function commandHelp() {
-	return commandInfo.help;
+  return commandInfo.help;
 }
 function commandUsage() {
-	return commandInfo.usage;
+  return commandInfo.usage;
 }
 function commandCategory() {
-	return commandInfo.category;
+  return commandInfo.category;
 }
 module.exports = {
-	runCommand,
-	commandTriggers,
-	commandHelp,
-	commandAliases,
-	commandPrim,
-	commandUsage,
-	commandCategory
-}
-
+  runCommand,
+  commandTriggers,
+  commandHelp,
+  commandAliases,
+  commandPrim,
+  commandUsage,
+  commandCategory,
+}; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */
+/* */
 /*
 ------------------[Instruction]------------------
 
@@ -224,4 +271,4 @@ To check if possible triggers has the command call
 ------------------[Instruction]------------------
 */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/* */

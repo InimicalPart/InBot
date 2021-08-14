@@ -1,74 +1,84 @@
 const commandInfo = {
-	"primaryName": "ping",
-	"possibleTriggers": ["ping", "test"],
-	"help": "Checks the latency of the bot and the discord API and the bot uptime.",
-	"aliases": ["test"],
-	"usage": "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
-	"category": "misc"
-}
+  primaryName: "ping",
+  possibleTriggers: ["ping", "test"],
+  help: "Checks the latency of the bot and the discord API and the bot uptime.",
+  aliases: ["test"],
+  usage: "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
+  category: "misc",
+};
 async function runCommand(message, args, RM) {
-	if (!require("../../../config.js").cmdTest) {
-		return message.channel.send(new RM.Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				"Command disabled by Administrators."
-			)
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Command Disabled")
-		)
-	}
+  if (!require("../../../config.js").cmdTest) {
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
+  }
 
-	//assign Discord from RM
-	const Discord = RM.Discord;
-	let a
-	const client = RM.client;
-	const prettyMilliseconds = RM.pretty_ms;
-	const pinging = new RM.Discord.MessageEmbed()
-		.setDescription("Pinging...  :ping_pong:")
-	message.channel.send(pinging).then((m) => {
-		const embed = new Discord.MessageEmbed()
-			.setColor("RANDOM")
-			.setDescription(`<:bitelip:857350270513971221> | Latency is \`${m.createdTimestamp - message.createdTimestamp}ms\` and API Latency is \`${Math.round(client.ws.ping)}ms\`, Bot has been up for: \`${prettyMilliseconds(client.uptime)}\``)
-		m.edit(embed);
-	}).catch(async (err) => {
-		console.log(err)
-		message.channel.send("Error: " + err)
-	})
+  //assign Discord from RM
+  const Discord = RM.Discord;
+  let a;
+  const client = RM.client;
+  const prettyMilliseconds = RM.pretty_ms;
+  const pinging = new RM.Discord.MessageEmbed().setDescription(
+    "Pinging...  :ping_pong:"
+  );
+  message.channel
+    .send({ embeds: [pinging] })
+    .then((m) => {
+      const embed = new Discord.MessageEmbed()
+        .setColor("RANDOM")
+        .setDescription(
+          `<:bitelip:857350270513971221> | Latency is \`${
+            m.createdTimestamp - message.createdTimestamp
+          }ms\` and API Latency is \`${Math.round(
+            client.ws.ping
+          )}ms\`, Bot has been up for: \`${prettyMilliseconds(client.uptime)}\``
+        );
+      m.edit({ embeds: [embed] });
+    })
+    .catch(async (err) => {
+      console.log(err);
+      message.channel.send({ content: "Error: " + err });
+    });
 }
 
 function commandTriggers() {
-	return commandInfo.possibleTriggers;
+  return commandInfo.possibleTriggers;
 }
 function commandPrim() {
-	return commandInfo.primaryName;
+  return commandInfo.primaryName;
 }
 function commandAliases() {
-	return commandInfo.aliases;
+  return commandInfo.aliases;
 }
 function commandHelp() {
-	return commandInfo.help;
+  return commandInfo.help;
 }
 function commandUsage() {
-	return commandInfo.usage;
+  return commandInfo.usage;
 }
 function commandCategory() {
-	return commandInfo.category;
+  return commandInfo.category;
 }
 module.exports = {
-	runCommand,
-	commandTriggers,
-	commandHelp,
-	commandAliases,
-	commandPrim,
-	commandUsage,
-	commandCategory
-}
-
+  runCommand,
+  commandTriggers,
+  commandHelp,
+  commandAliases,
+  commandPrim,
+  commandUsage,
+  commandCategory,
+}; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */
+/* */
 /*
 ------------------[Instruction]------------------
 
@@ -92,4 +102,4 @@ To check if possible triggers has the command call
 ------------------[Instruction]------------------
 */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/* */

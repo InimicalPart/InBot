@@ -1,69 +1,72 @@
 const commandInfo = {
-	"primaryName": "random",
-	"possibleTriggers": ["random", "r"],
-	"help": "Gets a random III image",
-	"aliases": ["r"],
-	"usage": "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
-	"category": "misc"
-}
+  primaryName: "random",
+  possibleTriggers: ["random", "r"],
+  help: "Gets a random III image",
+  aliases: ["r"],
+  usage: "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
+  category: "misc",
+};
 
 async function runCommand(message, args, RM) {
-	if (!require("../../../config.js").cmdRandom) {
-		return message.channel.send(new RM.Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				"Command disabled by Administrators."
-			)
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Command Disabled")
-		)
-	}
-	const Discord = RM.Discord;
-	const setImageLinks = RM.setImageLinks
-	const randomLink = setImageLinks[Math.floor(Math.random() * setImageLinks.length)]
-	const embed = new Discord.MessageEmbed()
-		.setTitle("Random III Image")
-		.setColor("RANDOM")
-		.setImage(randomLink)
-		.setTimestamp(new Date())
-		.setFooter(`Requested by ${message.author.tag}`, message.author.avatarURL())
-	message.channel.send(embed);
-
+  if (!require("../../../config.js").cmdRandom) {
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
+  }
+  const Discord = RM.Discord;
+  const setImageLinks = RM.setImageLinks;
+  const randomLink =
+    setImageLinks[Math.floor(Math.random() * setImageLinks.length)];
+  const embed = new Discord.MessageEmbed()
+    .setTitle("Random III Image")
+    .setColor("RANDOM")
+    .setImage(randomLink)
+    .setTimestamp(new Date())
+    .setFooter(
+      `Requested by ${message.author.tag}`,
+      message.author.avatarURL()
+    );
+  message.channel.send({ embeds: [embed] });
 }
 
 function commandTriggers() {
-	return commandInfo.possibleTriggers;
+  return commandInfo.possibleTriggers;
 }
 function commandPrim() {
-	return commandInfo.primaryName;
+  return commandInfo.primaryName;
 }
 function commandAliases() {
-	return commandInfo.aliases;
+  return commandInfo.aliases;
 }
 function commandHelp() {
-	return commandInfo.help;
+  return commandInfo.help;
 }
 function commandUsage() {
-	return commandInfo.usage;
+  return commandInfo.usage;
 }
 function commandCategory() {
-	return commandInfo.category;
+  return commandInfo.category;
 }
 module.exports = {
-	runCommand,
-	commandTriggers,
-	commandHelp,
-	commandAliases,
-	commandPrim,
-	commandUsage,
-	commandCategory
-}
-
+  runCommand,
+  commandTriggers,
+  commandHelp,
+  commandAliases,
+  commandPrim,
+  commandUsage,
+  commandCategory,
+}; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */
+/* */
 /*
 ------------------[Instruction]------------------
 
@@ -87,4 +90,4 @@ To check if possible triggers has the command call
 ------------------[Instruction]------------------
 */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/* */

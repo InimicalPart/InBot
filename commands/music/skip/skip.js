@@ -1,80 +1,86 @@
 const commandInfo = {
-	"primaryName": "skip",
-	"possibleTriggers": ["skip", "s"],
-	"help": "Skips a song.",
-	"aliases": ["s"],
-	"usage": "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
-	"category": "music"
-}
+  primaryName: "skip",
+  possibleTriggers: ["skip", "s"],
+  help: "Skips a song.",
+  aliases: ["s"],
+  usage: "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
+  category: "music",
+};
 
 async function runCommand(message, args, RM) {
-	if (!require("../../../config.js").cmdSkip) {
-		return message.channel.send(new RM.Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				"Command disabled by Administrators."
-			)
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Command Disabled")
-		)
-	}
-	const queue2 = global.sQueue2;
-	const queue3 = global.sQueue3;
-	const queue = global.sQueue;
-	const games = global.games
+  if (!require("../../../config.js").cmdSkip) {
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
+  }
+  const queue2 = global.sQueue2;
+  const queue3 = global.sQueue3;
+  const queue = global.sQueue;
+  const games = global.games;
 
-	let ops = {
-		queue2: queue2,
-		queue: queue,
-		queue3: queue3,
-		games: games,
-	};
+  let ops = {
+    queue2: queue2,
+    queue: queue,
+    queue3: queue3,
+    games: games,
+  };
 
-	const serverQueue = ops.queue.get(message.guild.id);
-	if (!serverQueue) return message.channel.send(":x: | There is nothing playing!")
+  const serverQueue = ops.queue.get(message.guild.id);
+  if (!serverQueue)
+    return message.channel.send({
+      content: ":x: | There is nothing playing!",
+    });
 
-	const { channel } = message.member.voice;
-	if (!channel) return message.channel.send('You need to be in a voice channel!');
-	const embed = new RM.Discord.MessageEmbed()
-		.setDescription(`Skipping: [${serverQueue.songs[0].title}](${serverQueue.songs[0].url})`)
-	message.channel.send(embed)
-	global.seekMS = 0;
-	serverQueue.connection.dispatcher.end()
-
+  const { channel } = message.member.voice;
+  if (!channel)
+    return message.channel.send({
+      content: "You need to be in a voice channel!",
+    });
+  const embed = new RM.Discord.MessageEmbed().setDescription(
+    `Skipping: [${serverQueue.songs[0].title}](${serverQueue.songs[0].url})`
+  );
+  message.channel.send({ embeds: [embed] });
+  global.seekMS = 0;
+  serverQueue.connection.dispatcher.end();
 }
 
 function commandTriggers() {
-	return commandInfo.possibleTriggers;
+  return commandInfo.possibleTriggers;
 }
 function commandPrim() {
-	return commandInfo.primaryName;
+  return commandInfo.primaryName;
 }
 function commandAliases() {
-	return commandInfo.aliases;
+  return commandInfo.aliases;
 }
 function commandHelp() {
-	return commandInfo.help;
+  return commandInfo.help;
 }
 function commandUsage() {
-	return commandInfo.usage;
+  return commandInfo.usage;
 }
 function commandCategory() {
-	return commandInfo.category;
+  return commandInfo.category;
 }
 module.exports = {
-	runCommand,
-	commandTriggers,
-	commandHelp,
-	commandAliases,
-	commandPrim,
-	commandUsage,
-	commandCategory
-}
-
+  runCommand,
+  commandTriggers,
+  commandHelp,
+  commandAliases,
+  commandPrim,
+  commandUsage,
+  commandCategory,
+}; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/* */
 /*
 ------------------[Instruction]------------------
 
@@ -97,4 +103,4 @@ To check if possible triggers has the command call
 
 ------------------[Instruction]------------------
 */
-/* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
+/* */

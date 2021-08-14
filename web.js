@@ -113,9 +113,9 @@ app.get("/iii-admin", (req, res) => {
   }
   console.log(
     "[I] User " +
-    jwtPayload.name +
-    " logged in at: " +
-    new Date().toLocaleString()
+      jwtPayload.name +
+      " logged in at: " +
+      new Date().toLocaleString()
   );
   res.sendFile(__dirname + "/public/admin.html");
 });
@@ -123,7 +123,7 @@ app.post("/system/reboot", (req, res) => {
   if (!req.headers.authorization) {
     return res.status(403).json({ error: "No credentials sent!" });
   }
-  res.setHeader('Content-Type', 'text/html; charset=utf-8')
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
   //parse req.headers.authorization using parseJwt
   var token = req.headers.authorization;
   var jwtPayload = parseJwt(token);
@@ -133,6 +133,7 @@ app.post("/system/reboot", (req, res) => {
   res.redirect("/iii-admin");
   // When NodeJS exits
   console.log("⚠ SYSTEM IS REBOOTING ⚠");
+
   heroku.delete("/apps/iii-project/dynos/worker");
   setTimeout(function () {
     process.on("exit", function () {
@@ -149,7 +150,7 @@ app.post("/api/v1/cmdTrigger", (req, res) => {
   if (!req.headers.authorization) {
     return res.status(403).json({ error: "No credentials sent!" });
   }
-  res.setHeader('Content-Type', 'text/html; charset=utf-8')
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
   //parse req.headers.authorization using parseJwt
   var token = req.headers.authorization;
   var jwtPayload = parseJwt(token);
@@ -201,15 +202,15 @@ app.post("/api/v1/cmdTrigger", (req, res) => {
   function restOfIndex() {
     const newConfig = config.replace(
       "cmd" +
-      selectedCommand.charAt(0).toUpperCase() +
-      selectedCommand.slice(1) +
-      " = " +
-      list[list.length - 1],
+        selectedCommand.charAt(0).toUpperCase() +
+        selectedCommand.slice(1) +
+        " = " +
+        list[list.length - 1],
       "cmd" +
-      selectedCommand.charAt(0).toUpperCase() +
-      selectedCommand.slice(1) +
-      " = " +
-      newState.toString()
+        selectedCommand.charAt(0).toUpperCase() +
+        selectedCommand.slice(1) +
+        " = " +
+        newState.toString()
     );
     require("fs").writeFile(
       require("path").join(__dirname + "/config.js"),
