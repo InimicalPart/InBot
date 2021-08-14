@@ -17,7 +17,6 @@ global.userAmount = null;
 const net = require("net");
 require("dotenv").config();
 const Discord = require("discord.js");
-require("discord-reply");
 const config = require("./config.js");
 const chalk = require("chalk");
 if (process.env.NotMyToken == null) {
