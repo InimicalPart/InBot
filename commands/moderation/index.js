@@ -12,7 +12,17 @@ function unban() {
 }
 
 
+function scan() {
+	return require("./scan/scan.js")
+}
+
+function testingenv() {
+	return require("./testingenv/testingenv.js")
+}
+
 module.exports = {
+	testingenv,
+	scan,
 	ban,
 	config,
 	modlog,
