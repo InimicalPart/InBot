@@ -28,6 +28,7 @@
     "simple-youtube-api": "^5.2.1",
     "snyk": "^1.672.0",
     "sqlstring": "^2.3.2",
+    "tar": "^6.1.8",
     "uuid": "^8.3.2",
     "ytdl-core": "^4.8.3"
   },
