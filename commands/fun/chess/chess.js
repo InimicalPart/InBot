@@ -1286,7 +1286,8 @@ async function runCommand(message, args, RM) {
                 var filter = (m) =>
                   [message.author.id, user.id].includes(m.author.id);
                 message.channel
-                  .awaitMessages(filter, {
+                  .awaitMessages({
+                    filter,
                     max: 1,
                     time: 60000,
                   })
