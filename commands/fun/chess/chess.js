@@ -214,8 +214,8 @@ async function runCommand(message, args, RM) {
       lastMove: false, //The last move that happened so far; d4: where the piece was; d5: where the piece went; put false for not place!
       dirsave: path.join(__dirname, "board.png"), //Where the image will be saved!
     })
-      .then(() => {
-        message.channel
+      .then(async () => {
+        await message.channel
           .send({
             files: [
               {
@@ -342,8 +342,8 @@ async function runCommand(message, args, RM) {
             lastMove: lastmove, //The last move that happened so far; d4: where the piece was; d5: where the piece went; put false for not place!
             dirsave: path.join(__dirname, "board.png"), //Where the image will be saved!
           })
-            .then(() => {
-              message.channel
+            .then(async () => {
+              await message.channel
                 .send({
                   files: [
                     {
@@ -374,13 +374,17 @@ async function runCommand(message, args, RM) {
           } else {
             activeColor = "black";
           }
-          if (whiteUser !== messageNext.author && activeColor === "white") {
-            message.channel.send({ content: "It's not your turn." });
-            return;
+          if (activeColor === "white") {
+            if (whiteUser !== messageNext.author) {
+              message.channel.send({ content: "It's not your turn." });
+              return;
+            }
           }
-          if (blackUser.user !== messageNext.author && activeColor === "black") {
-            message.channel.send({ content: "It's not your turn." });
-            return;
+          if (activeColor === "black") {
+            if (blackUser !== messageNext.author) {
+              message.channel.send({ content: "It's not your turn." });
+              return;
+            }
           }
           if (!moves[3]) {
             if (chess.get(moves[1]) === null) {
