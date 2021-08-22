@@ -406,6 +406,11 @@ client.on("ready", async () => {
     chalk.blue.bold(edition) +
     " edition!"
   );
+  require("glob")("**/board_*.png", function (er, files) {
+    for (const file of files) {
+      require("fs").unlinkSync(file);
+    }
+  })
 });
 //import express and start a server on port 3000
 

@@ -28,7 +28,7 @@ async function runCommand(message, args, RM) {
   if (global.chessList.includes(message.author.id))
     return message.channel.send({
       embeds: [
-        RM.Discord.MessageEmbed()
+        new RM.Discord.MessageEmbed()
           .setColor("RED")
           .setAuthor(message.author.tag, message.author.avatarURL())
           .setDescription("You are already playing chess with someone!")
@@ -193,10 +193,9 @@ async function runCommand(message, args, RM) {
                 .catch(console.error);
             } else {
               return message.channel.send({
-                embeds: [
+                content:
                   user.username +
                   " declined your invitation to a fancy game of chess.",
-                ],
               });
             }
           }
@@ -212,24 +211,21 @@ async function runCommand(message, args, RM) {
       whiteCheck: false, //If white is in check!
       blackCheck: false, //If black is in check!
       lastMove: false, //The last move that happened so far; d4: where the piece was; d5: where the piece went; put false for not place!
-      dirsave: path.join(__dirname, "board.png"), //Where the image will be saved!
+      dirsave: path.join(__dirname, "board_" + message.author.id + ".png"), //Where the image will be saved!
     })
       .then(async () => {
-        await message.channel
-          .send({
-            files: [
-              {
-                attachment: path.join(__dirname, "board.png"),
-                name: "board.png",
-              },
-            ],
-          })
-          .then(() => {
-            setTimeout(() => {
-              require("fs").unlinkSync(path.join(__dirname, "board.png"));
-            }, 500);
-          })
-          .catch(console.error);
+        setTimeout(async () => {
+          await message.channel
+            .send({
+              files: [
+                {
+                  attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                  name: "board_" + message.author.id + ".png",
+                },
+              ],
+            })
+            .catch(console.error);
+        }, 1000)
         message.channel.send({
           content: whiteUser.username + " (White) is starting!",
         });
@@ -287,7 +283,7 @@ async function runCommand(message, args, RM) {
           const embed = new RM.Discord.MessageEmbed()
             .setTitle("Chess Stats")
             .setDescription(`${whiteUser.username} vs ${blackUser.username}`)
-            .addField("Round", round)
+            .addField("Round", String(round))
             .addField("Moves", moves)
             .addField("Winner", whoWon)
             .addField("End FEN", endFEN)
@@ -305,6 +301,11 @@ async function runCommand(message, args, RM) {
               i--;
             }
           }
+          setTimeout(() => {
+            require("fs").unlinkSync(
+              path.join(__dirname, "board_" + message.author.id + ".png")
+            );
+          }, 1000);
           return collector.stop();
         }
         const response = messageNext.content.toLowerCase();
@@ -340,24 +341,20 @@ async function runCommand(message, args, RM) {
             whiteCheck: whitecheck, //If white is in check!
             blackCheck: blackcheck, //If black is in check!
             lastMove: lastmove, //The last move that happened so far; d4: where the piece was; d5: where the piece went; put false for not place!
-            dirsave: path.join(__dirname, "board.png"), //Where the image will be saved!
+            dirsave: path.join(__dirname, "board_" + message.author.id + ".png"), //Where the image will be saved!
           })
             .then(async () => {
-              await message.channel
-                .send({
-                  files: [
-                    {
-                      attachment: path.join(__dirname, "board.png"),
-                      name: "board.png",
-                    },
-                  ],
-                })
-                .then(() => {
-                  setTimeout(() => {
-                    require("fs").unlinkSync(path.join(__dirname, "board.png"));
-                  }, 400);
-                })
-                .catch(console.error);
+              setTimeout(async () => {
+                await message.channel
+                  .send({
+                    files: [
+                      {
+                        attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                        name: "board_" + message.author.id + ".png",
+                      },
+                    ],
+                  }).catch(console.error);
+              }, 1000)
               whitecheck = false;
               blackcheck = false;
             })
@@ -518,29 +515,24 @@ async function runCommand(message, args, RM) {
               whiteCheck: whitecheck, //If white is in check!
               blackCheck: blackcheck, //If black is in check!
               lastMove: lastmove, //The last move that happened so far; d4: where the piece was; d5: where the piece went; put false for not place!
-              dirsave: path.join(__dirname, "board.png"), //Where the image will be saved!
+              dirsave: path.join(__dirname, "board_" + message.author.id + ".png"), //Where the image will be saved!
             })
               .then(async () => {
                 if (chess.in_checkmate()) {
                   collector.stop();
-                  await message.channel
-                    .send({
-                      content: ":warning: CHECKMATE :warning:",
-                      files: [
-                        {
-                          attachment: path.join(__dirname, "board.png"),
-                          name: "board.png",
-                        },
-                      ],
-                    })
-                    .then(() => {
-                      setTimeout(() => {
-                        require("fs").unlinkSync(
-                          path.join(__dirname, "board.png")
-                        );
-                      }, 400);
-                    })
-                    .catch(console.error);
+                  setTimeout(async () => {
+                    await message.channel
+                      .send({
+                        content: ":warning: CHECKMATE :warning:",
+                        files: [
+                          {
+                            attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                            name: "board_" + message.author.id + ".png",
+                          },
+                        ],
+                      })
+                      .catch(console.error);
+                  }, 1000)
                   if (chess.fen().split(" ")[1] === "w") {
                     activeColor = "white";
                   } else {
@@ -628,7 +620,7 @@ async function runCommand(message, args, RM) {
                         .setDescription(
                           `${whiteUser.username} vs ${blackUser.username}`
                         )
-                        .addField("Round", round)
+                        .addField("Round", String(round))
                         .addField("Moves", moves)
                         .addField("End FEN", endFEN)
                         .addField("Checkmate", isCheckmate ? "Yes" : "No")
@@ -660,93 +652,90 @@ async function runCommand(message, args, RM) {
                       //offerRematch(message, user)
                     })
                     .catch(console.error);
+                  setTimeout(() => {
+                    require("fs").unlinkSync(
+                      path.join(__dirname, "board_" + message.author.id + ".png")
+                    );
+                  }, 1000);
                 } else if (chess.in_check()) {
-                  await message.channel
-                    .send({
-                      content: ":warning: CHECK :warning:",
-                      files: [
-                        {
-                          attachment: path.join(__dirname, "board.png"),
-                          name: "board.png",
-                        },
-                      ],
-                    })
-                    .then(() => {
-                      setTimeout(() => {
-                        require("fs").unlinkSync(
-                          path.join(__dirname, "board.png")
-                        );
-                      }, 400);
-                      if (chess.fen().split(" ")[1] === "w") {
-                        activeColor = "white";
-                      } else {
-                        activeColor = "black";
-                      }
-                      if (activeColor === "white") {
-                        message.channel.send({
-                          content: whiteUser.username + "'s (White) turn!",
-                        });
-                      } else {
-                        message.channel.send({
-                          content: blackUser.username + "'s (Black) turn!",
-                        });
-                      }
-                      if (engineEnabled) {
-                        message.channel
-                          .send({
-                            embeds: [
-                              new RM.Discord.MessageEmbed()
-                                .setTitle("Chess Engine")
-                                .setDescription("Calculating the best move..."),
-                            ],
-                          })
-                          .then(async (m) => {
-                            const jsChessEngine = require("js-chess-engine");
-                            const engine = new jsChessEngine.Game(chess.fen());
-                            const bestMove = await engine.aiMove(engineLevel);
-                            const color =
-                              chess.turn() === "w" ? "WHITE" : "BLACK";
-                            for (let i in bestMove) {
-                              m.edit({
-                                embeds: [
-                                  new RM.Discord.MessageEmbed()
-                                    .setTitle("Chess Engine")
-                                    .setDescription(
-                                      "The engine predicted `" +
-                                      i +
-                                      " -> " +
-                                      bestMove[i] +
-                                      "` to be the best move for: " +
-                                      color
-                                    ),
-                                ],
-                              });
-                            }
-                          })
-                          .catch(console.error);
-                      }
-                    })
-                    .catch(console.error);
+                  setTimeout(async () => {
+                    await message.channel
+                      .send({
+                        content: ":warning: CHECK :warning:",
+                        files: [
+                          {
+                            attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                            name: "board_" + message.author.id + ".png",
+                          },
+                        ],
+                      })
+                      .then(() => {
+                        if (chess.fen().split(" ")[1] === "w") {
+                          activeColor = "white";
+                        } else {
+                          activeColor = "black";
+                        }
+                        if (activeColor === "white") {
+                          message.channel.send({
+                            content: whiteUser.username + "'s (White) turn!",
+                          });
+                        } else {
+                          message.channel.send({
+                            content: blackUser.username + "'s (Black) turn!",
+                          });
+                        }
+                        if (engineEnabled) {
+                          message.channel
+                            .send({
+                              embeds: [
+                                new RM.Discord.MessageEmbed()
+                                  .setTitle("Chess Engine")
+                                  .setDescription("Calculating the best move..."),
+                              ],
+                            })
+                            .then(async (m) => {
+                              const jsChessEngine = require("js-chess-engine");
+                              const engine = new jsChessEngine.Game(chess.fen());
+                              const bestMove = await engine.aiMove(engineLevel);
+                              const color =
+                                chess.turn() === "w" ? "WHITE" : "BLACK";
+                              for (let i in bestMove) {
+                                m.edit({
+                                  embeds: [
+                                    new RM.Discord.MessageEmbed()
+                                      .setTitle("Chess Engine")
+                                      .setDescription(
+                                        "The engine predicted `" +
+                                        i +
+                                        " -> " +
+                                        bestMove[i] +
+                                        "` to be the best move for: " +
+                                        color
+                                      ),
+                                  ],
+                                });
+                              }
+                            })
+                            .catch(console.error);
+                        }
+                      })
+                      .catch(console.error);
+                  }, 1000)
                 } else if (chess.in_stalemate()) {
                   collector.stop();
-                  await message.channel
-                    .send({
-                      content: ":warning: STALEMATE :warning:",
-                      files: [
-                        {
-                          attachment: path.join(__dirname, "board.png"),
-                          name: "board.png",
-                        },
-                      ],
-                    })
-                    .then(() => {
-                      setTimeout(() => {
-                        require("fs").unlinkSync(
-                          path.join(__dirname, "board.png")
-                        );
-                      }, 400);
-                    })
-                    .catch(console.error);
+                  setTimeout(async () => {
+                    await message.channel
+                      .send({
+                        content: ":warning: STALEMATE :warning:",
+                        files: [
+                          {
+                            attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                            name: "board_" + message.author.id + ".png",
+                          },
+                        ],
+                      })
+                      .catch(console.error);
+                  }, 1000)
                   message.channel.send({ content: "Stalemate, no one wins." });
                   message.channel
                     .send({
@@ -815,7 +804,7 @@ async function runCommand(message, args, RM) {
                         .setDescription(
                           `${whiteUser.username} vs ${blackUser.username}`
                         )
-                        .addField("Round", round)
+                        .addField("Round", String(round))
                         .addField("Moves", moves)
                         .addField("End FEN", endFEN)
                         .addField("Checkmate", isCheckmate ? "Yes" : "No")
@@ -846,26 +835,26 @@ async function runCommand(message, args, RM) {
                       //offerRematch(message, user)
                     })
                     .catch(console.error);
+                  setTimeout(() => {
+                    require("fs").unlinkSync(
+                      path.join(__dirname, "board_" + message.author.id + ".png")
+                    );
+                  }, 1000);
                 } else if (chess.in_draw()) {
                   collector.stop();
-                  await message.channel
-                    .send({
-                      content: ":warning: DRAW :warning:",
-                      files: [
-                        {
-                          attachment: path.join(__dirname, "board.png"),
-                          name: "board.png",
-                        },
-                      ],
-                    })
-                    .then(() => {
-                      setTimeout(() => {
-                        require("fs").unlinkSync(
-                          path.join(__dirname, "board.png")
-                        );
-                      }, 400);
-                    })
-                    .catch(console.error);
+                  setTimeout(async () => {
+                    await message.channel
+                      .send({
+                        content: ":warning: DRAW :warning:",
+                        files: [
+                          {
+                            attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                            name: "board_" + message.author.id + ".png",
+                          },
+                        ],
+                      })
+                      .catch(console.error);
+                  }, 1000)
                   message.channel.send({ content: "Draw, no one wins." });
                   message.channel
                     .send({
@@ -934,7 +923,7 @@ async function runCommand(message, args, RM) {
                         .setDescription(
                           `${whiteUser.username} vs ${blackUser.username}`
                         )
-                        .addField("Round", round)
+                        .addField("Round", String(round))
                         .addField("Moves", moves)
                         .addField("End FEN", endFEN)
                         .addField("Checkmate", isCheckmate ? "Yes" : "No")
@@ -965,26 +954,26 @@ async function runCommand(message, args, RM) {
                       //offerRematch(message, user)
                     })
                     .catch(console.error);
+                  setTimeout(() => {
+                    require("fs").unlinkSync(
+                      path.join(__dirname, "board_" + message.author.id + ".png")
+                    );
+                  }, 1000);
                 } else if (chess.insufficient_material()) {
                   collector.stop();
-                  await message.channel
-                    .send({
-                      content: ":warning: INSUFFICIENT MATERIAL :warning:",
-                      files: [
-                        {
-                          attachment: path.join(__dirname, "board.png"),
-                          name: "board.png",
-                        },
-                      ],
-                    })
-                    .then(() => {
-                      setTimeout(() => {
-                        require("fs").unlinkSync(
-                          path.join(__dirname, "board.png")
-                        );
-                      }, 400);
-                    })
-                    .catch(console.error);
+                  setTimeout(async () => {
+                    await message.channel
+                      .send({
+                        content: ":warning: INSUFFICIENT MATERIAL :warning:",
+                        files: [
+                          {
+                            attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                            name: "board_" + message.author.id + ".png",
+                          },
+                        ],
+                      })
+                      .catch(console.error);
+                  }, 1000)
                   message.channel.send({ content: "Draw, no one wins." });
                   message.channel
                     .send({
@@ -1052,7 +1041,7 @@ async function runCommand(message, args, RM) {
                         .setDescription(
                           `${whiteUser.username} vs ${blackUser.username}`
                         )
-                        .addField("Round", round)
+                        .addField("Round", String(round))
                         .addField("Moves", moves)
                         .addField("End FEN", endFEN)
                         .addField("Checkmate", isCheckmate ? "Yes" : "No")
@@ -1083,6 +1072,11 @@ async function runCommand(message, args, RM) {
                       // offerRematch(message, user)
                     })
                     .catch(console.error);
+                  setTimeout(() => {
+                    require("fs").unlinkSync(
+                      path.join(__dirname, "board_" + message.author.id + ".png")
+                    );
+                  }, 1000);
                 } else {
                   let color;
                   let username;
@@ -1103,18 +1097,12 @@ async function runCommand(message, args, RM) {
                       content: username + "'s (" + color + ") turn!",
                       files: [
                         {
-                          attachment: path.join(__dirname, "board.png"),
-                          name: "board.png",
+                          attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                          name: "board_" + message.author.id + ".png",
                         },
                       ],
                     })
                     .then(async () => {
-                      setTimeout(() => {
-                        require("fs").unlinkSync(
-                          path.join(__dirname, "board.png")
-                        );
-                      }, 400);
-
                       if (engineEnabled) {
                         run();
                       }
