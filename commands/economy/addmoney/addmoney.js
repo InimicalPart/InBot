@@ -38,11 +38,7 @@ async function runCommand(message, args, RM) {
       await connect.create("currency");
 
       if (
-<<<<<<< HEAD
         !message.member.permissions.has(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
-=======
-        !message.member.hasPermission(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
       ) {
         await connect.end(true);
         return m.edit({
@@ -101,11 +97,7 @@ async function runCommand(message, args, RM) {
       }
       if (user.user) {
         user = user.user;
-<<<<<<< HEAD
       }
-=======
-      } else user = user;
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
       const username = user.username;
       if (!args[1]) {
         await connect.end(true);

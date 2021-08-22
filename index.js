@@ -445,32 +445,6 @@ client.on("guildMemberRemove", async () => {
     global.userAmount = users.length;
   }
 });
-var server = net.createServer(function (socket) {
-  socket.on("data", function (data) {
-    if (data.toString() == "200 ok") {
-      console.log("[-] Connection closed.");
-      socket.destroy();
-    }
-  });
-  socket.write(
-    "III_CLIENT_DATA: " +
-    `{"userAmount": ${global.userAmount}, "commandsUsed": ${global.commandsUsed}}`
-  );
-  socket.pipe(socket);
-});
-
-server.on("connection", function () {
-  console.log("[+] Connection received.");
-});
-server.on("close", function () {
-  console.log("[-] Server closed.");
-});
-server.on("error", function (err) {
-  console.log("[-] ERROR");
-  console.log(err);
-  server.close();
-});
-server.listen(7380, "0.0.0.0");
 client.login(process.env.NotMyToken);
 function getOrdinalNum(n) {
   return (

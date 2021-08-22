@@ -8,10 +8,6 @@ const commandInfo = {
 };
 
 async function runCommand(message, args, RM) {
-<<<<<<< HEAD
-=======
-  return;
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
   //Check if command is disabled
   if (!require("../../../config.js").cmdScan) {
     return message.channel.send({
@@ -26,39 +22,7 @@ async function runCommand(message, args, RM) {
     });
   }
   if (!RM.botOwners.includes(message.author.id)) return;
-<<<<<<< HEAD
   return;
-=======
-
-  // cmd stuff here
-  function scanChannel(prompt) {
-    return new Promise((fulfill, reject) => {
-      try {
-        let channel = RM.client.channels.cache.get(prompt.channel.id);
-        let messages = [];
-        scanChannelLoop(channel, messages, prompt.id).then((result) => {
-          let encoded = encodeChannel(result);
-          let dir = "./" + prompt.guild.id;
-          if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
-          }
-          fs.writeFileSync(dir + "/" + prompt.channel.id + ".txt", encoded);
-          fulfill("Finished with " + result.length);
-        });
-      } catch (e) {
-        fulfill(e.stack.toString());
-      }
-    });
-  }
-  message.channel.send({ content: "Scanning channel..." });
-  scanChannel(message)
-    .then((result) => {
-      message.channel.send({ content: result });
-    })
-    .catch((e) => {
-      message.channel.send({ content: e });
-    });
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
 }
 
 function commandTriggers() {

@@ -70,11 +70,7 @@ async function runCommand(message, args, RM) {
         let user = (await message.guild.members.fetch(row.userid)) || null;
         if (user.user) {
           user = user.user;
-<<<<<<< HEAD
         }
-=======
-        } else user = user;
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
         if (user == null) {
           top5names.push("Unknown#0000");
         } else {

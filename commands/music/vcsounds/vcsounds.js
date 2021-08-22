@@ -44,11 +44,7 @@ async function runCommand(message, args, RM) {
     .setColor("GREEN")
     .setDescription("**❌ You do not have permissions to add money!**");
   if (
-<<<<<<< HEAD
     !message.member.permissions.has(
-=======
-    !message.member.hasPermission(
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
       RM.Discord.Permission.FLAGS.CONNECT,
       RM.Discord.Permission.FLAGS.SPEAK
     )
@@ -196,7 +192,6 @@ async function runCommand(message, args, RM) {
               m.react("✅");
             } else if (
               m.content.toLowerCase() ===
-<<<<<<< HEAD
               queue[0].singer.toLowerCase() +
               " " +
               queue[0].title.toLowerCase() ||
@@ -204,15 +199,6 @@ async function runCommand(message, args, RM) {
               queue[0].title.toLowerCase() +
               " " +
               queue[0].singer.toLowerCase()
-=======
-                queue[0].singer.toLowerCase() +
-                  " " +
-                  queue[0].title.toLowerCase() ||
-              m.content.toLowerCase() ===
-                queue[0].title.toLowerCase() +
-                  " " +
-                  queue[0].singer.toLowerCase()
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
             ) {
               if (
                 (songSingerFound && !songNameFound) ||
