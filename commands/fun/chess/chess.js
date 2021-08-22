@@ -227,7 +227,7 @@ async function runCommand(message, args, RM) {
           .then(() => {
             setTimeout(() => {
               require("fs").unlinkSync(path.join(__dirname, "board.png"));
-            }, 200);
+            }, 400);
           })
           .catch(console.error);
         message.channel.send({
@@ -245,7 +245,7 @@ async function runCommand(message, args, RM) {
           "White",
           whiteUser.username,
           "Black",
-          blackuser.username,
+          blackUser.username,
           "Result",
           totalResult
         );
@@ -266,7 +266,7 @@ async function runCommand(message, args, RM) {
       try {
         const msg = messageNext.content.split(" ");
         if (msg[0] === "resign") {
-          // add 1 to blackusers win score in the database
+          // add 1 to blackUsers win score in the database
 
           // add 1 to whiteusers loss score in the database
           let result;
@@ -286,7 +286,7 @@ async function runCommand(message, args, RM) {
           const whoWon = opposite;
           const embed = new RM.Discord.MessageEmbed()
             .setTitle("Chess Stats")
-            .setDescription(`${whiteUser.username} vs ${blackuser.username}`)
+            .setDescription(`${whiteUser.username} vs ${blackUser.username}`)
             .addField("Round", round)
             .addField("Moves", moves)
             .addField("Winner", whoWon)
@@ -355,7 +355,7 @@ async function runCommand(message, args, RM) {
                 .then(() => {
                   setTimeout(() => {
                     require("fs").unlinkSync(path.join(__dirname, "board.png"));
-                  }, 200);
+                  }, 400);
                 })
                 .catch(console.error);
               whitecheck = false;
@@ -538,7 +538,7 @@ async function runCommand(message, args, RM) {
                         require("fs").unlinkSync(
                           path.join(__dirname, "board.png")
                         );
-                      }, 200);
+                      }, 400);
                     })
                     .catch(console.error);
                   if (chess.fen().split(" ")[1] === "w") {
@@ -550,7 +550,7 @@ async function runCommand(message, args, RM) {
                     message.channel.send({
                       content:
                         "White's king is checkmated! " +
-                        blackuser.username +
+                        blackUser.username +
                         " wins!",
                     });
                   } else {
@@ -626,7 +626,7 @@ async function runCommand(message, args, RM) {
                       const embed = new RM.Discord.MessageEmbed()
                         .setTitle("Chess Stats")
                         .setDescription(
-                          `${whiteUser.username} vs ${blackuser.username}`
+                          `${whiteUser.username} vs ${blackUser.username}`
                         )
                         .addField("Round", round)
                         .addField("Moves", moves)
@@ -676,7 +676,7 @@ async function runCommand(message, args, RM) {
                         require("fs").unlinkSync(
                           path.join(__dirname, "board.png")
                         );
-                      }, 200);
+                      }, 400);
                       if (chess.fen().split(" ")[1] === "w") {
                         activeColor = "white";
                       } else {
@@ -688,7 +688,7 @@ async function runCommand(message, args, RM) {
                         });
                       } else {
                         message.channel.send({
-                          content: blackuser.username + "'s (Black) turn!",
+                          content: blackUser.username + "'s (Black) turn!",
                         });
                       }
                       if (engineEnabled) {
@@ -744,7 +744,7 @@ async function runCommand(message, args, RM) {
                         require("fs").unlinkSync(
                           path.join(__dirname, "board.png")
                         );
-                      }, 200);
+                      }, 400);
                     })
                     .catch(console.error);
                   message.channel.send({ content: "Stalemate, no one wins." });
@@ -813,7 +813,7 @@ async function runCommand(message, args, RM) {
                       const embed = new RM.Discord.MessageEmbed()
                         .setTitle("Chess Stats")
                         .setDescription(
-                          `${whiteUser.username} vs ${blackuser.username}`
+                          `${whiteUser.username} vs ${blackUser.username}`
                         )
                         .addField("Round", round)
                         .addField("Moves", moves)
@@ -863,7 +863,7 @@ async function runCommand(message, args, RM) {
                         require("fs").unlinkSync(
                           path.join(__dirname, "board.png")
                         );
-                      }, 200);
+                      }, 400);
                     })
                     .catch(console.error);
                   message.channel.send({ content: "Draw, no one wins." });
@@ -932,7 +932,7 @@ async function runCommand(message, args, RM) {
                       const embed = new RM.Discord.MessageEmbed()
                         .setTitle("Chess Stats")
                         .setDescription(
-                          `${whiteUser.username} vs ${blackuser.username}`
+                          `${whiteUser.username} vs ${blackUser.username}`
                         )
                         .addField("Round", round)
                         .addField("Moves", moves)
@@ -982,7 +982,7 @@ async function runCommand(message, args, RM) {
                         require("fs").unlinkSync(
                           path.join(__dirname, "board.png")
                         );
-                      }, 200);
+                      }, 400);
                     })
                     .catch(console.error);
                   message.channel.send({ content: "Draw, no one wins." });
@@ -1050,7 +1050,7 @@ async function runCommand(message, args, RM) {
                       const embed = new RM.Discord.MessageEmbed()
                         .setTitle("Chess Stats")
                         .setDescription(
-                          `${whiteUser.username} vs ${blackuser.username}`
+                          `${whiteUser.username} vs ${blackUser.username}`
                         )
                         .addField("Round", round)
                         .addField("Moves", moves)
@@ -1096,7 +1096,7 @@ async function runCommand(message, args, RM) {
                     username = whiteUser.username;
                   } else {
                     color = "Black";
-                    username = blackuser.username;
+                    username = blackUser.username;
                   }
                   message.channel
                     .send({
@@ -1113,7 +1113,7 @@ async function runCommand(message, args, RM) {
                         require("fs").unlinkSync(
                           path.join(__dirname, "board.png")
                         );
-                      }, 200);
+                      }, 400);
 
                       if (engineEnabled) {
                         run();
