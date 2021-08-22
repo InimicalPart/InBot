@@ -11,14 +11,16 @@ const commandInfo = {
 
 async function runCommand(message, args, RM) {
   if (!require("../../../config.js").cmdRemove) {
-    return message.channel.send(
-      new RM.Discord.MessageEmbed()
-        .setColor("RED")
-        .setAuthor(message.author.tag, message.author.avatarURL())
-        .setDescription("Command disabled by Administrators.")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Command Disabled")
-    );
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
   }
   const queue2 = global.sQueue2;
   const queue3 = global.sQueue3;
@@ -37,26 +39,29 @@ async function runCommand(message, args, RM) {
 
   const { channel } = message.member.voice;
   if (!channel)
-    return message.channel.send(
-      "You need to be in a voice channel to remove something from the queue!"
-    );
+    return message.channel.send({
+      content:
+        "You need to be in a voice channel to remove something from the queue!",
+    });
   if (message.guild.me.voice.channel !== message.member.voice.channel) {
-    return message.channel.send(
-      "You need to be in the same voice channel as me!"
-    );
+    return message.channel.send({
+      content: "You need to be in the same voice channel as me!",
+    });
   }
   if (!serverQueue || serverQueue.songs.length < 2) {
-    return message.channel.send(":x: | The queue is empty!");
+    return message.channel.send({ content: ":x: | The queue is empty!" });
   }
   if (!args[0]) {
-    return message.channel.send(
-      "Which song do you want to remove? (queue num)"
-    );
+    return message.channel.send({
+      content: "Which song do you want to remove? (queue num)",
+    });
   } else {
     if (!Number(args[0]))
-      return message.channel.send(":x: | The argument is not a number!");
+      return message.channel.send({
+        content: ":x: | The argument is not a number!",
+      });
     if (args[0] < 1 || args[0] > serverQueue.songs.length - 1)
-      return message.channel.send(":x: | Incorrect number!");
+      return message.channel.send({ content: ":x: | Incorrect number!" });
     const title = serverQueue.songs[args[0]].title;
     const url = serverQueue.songs[args[0]].url;
     const embed = new Discord.MessageEmbed()
@@ -65,7 +70,7 @@ async function runCommand(message, args, RM) {
       .setFooter(message.author.username, message.author.avatarURL());
 
     serverQueue.songs.splice(args[0], 1);
-    message.channel.send(embed);
+    message.channel.send({ embeds: [embed] });
   }
 }
 

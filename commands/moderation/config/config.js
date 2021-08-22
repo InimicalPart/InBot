@@ -1,168 +1,228 @@
 const commandInfo = {
-	"primaryName": "config",
-	"possibleTriggers": ["config", "co"],
-	"help": "Allows admins to change the server config.",
-	"aliases": ["co"],
-	"usage": "[COMMAND] <config name> [new value]", // [COMMAND] gets replaced with the command and correct prefix later
-	"category": "mod"
-}
+  primaryName: "config",
+  possibleTriggers: ["config", "co"],
+  help: "Allows admins to change the server config.",
+  aliases: ["co"],
+  usage: "[COMMAND] <config name> [new value]", // [COMMAND] gets replaced with the command and correct prefix later
+  category: "mod",
+};
 
 async function runCommand(message, args, RM) {
-	if (!require("../../../config.js").cmdConfig) {
-		return message.channel.send(new RM.Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				"Command disabled by Administrators."
-			)
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Command Disabled")
-		)
-	}
-	const botOwners = RM.botOwners;
-	if (!botOwners.includes(message.author.id)) return;
-	let config
-	try {
-		config = require("../../../config")
-	} catch (e) {
-		var gline = null
-		try {
-			var caller_line = e.stack.split("\n")[1].toString().match(/:[0-9]+:/).toString().replace(/:/g, "");
-		} catch (e) {
-			var fs = require('fs')
-			const path = require("path")
-			const data = fs.readFileSync(path.join(__dirname, 'config.js.TEMPLATE'), { encoding: 'utf8', flag: 'r' });
-			const newData = data
-			fs.writeFileSync(path.join(__dirname, '../../../config.js'), newData);
-			return message.channel.send("config.js required a full restore.")
-		}
-		message.channel.send("There was an error in config.js, the line number is: " + caller_line + ". It contains:")
-		count = 0
-		const wantedPath = require("path").join(__dirname, "../../../config.js")
-		require('fs').createReadStream(wantedPath).on('data', function (chunk) {
-			for (i = 0; i < chunk.length; ++i)
-				if (chunk[i] == 10) count++;
-		}).on('end', async function () {
-			const data = require('fs').readFileSync(wantedPath, 'UTF-8');
+  if (!require("../../../config.js").cmdConfig) {
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
+  }
+  const botOwners = RM.botOwners;
+  if (!botOwners.includes(message.author.id)) return;
+  let config;
+  try {
+    config = require("../../../config");
+  } catch (e) {
+    var gline = null;
+    try {
+      var caller_line = e.stack
+        .split("\n")[1]
+        .toString()
+        .match(/:[0-9]+:/)
+        .toString()
+        .replace(/:/g, "");
+    } catch (e) {
+      var fs = require("fs");
+      const path = require("path");
+      const data = fs.readFileSync(path.join(__dirname, "config.js.TEMPLATE"), {
+        encoding: "utf8",
+        flag: "r",
+      });
+      const newData = data;
+      fs.writeFileSync(path.join(__dirname, "../../../config.js"), newData);
+      return message.channel.send({
+        content: "config.js required a full restore.",
+      });
+    }
+    message.channel.send({
+      content:
+        "There was an error in config.js, the line number is: " +
+        caller_line +
+        ". It contains:",
+    });
+    count = 0;
+    const wantedPath = require("path").join(__dirname, "../../../config.js");
+    require("fs")
+      .createReadStream(wantedPath)
+      .on("data", function (chunk) {
+        for (i = 0; i < chunk.length; ++i) if (chunk[i] == 10) count++;
+      })
+      .on("end", async function () {
+        const data = require("fs").readFileSync(wantedPath, "UTF-8");
 
-			// split the contents by new line
-			const lines = data.split(/\r?\n/);
+        // split the contents by new line
+        const lines = data.split(/\r?\n/);
 
-			// print all lines
-			let curLine = 0
-			lines.forEach((line) => {
-				curLine++;
-				if (curLine == parseInt(caller_line)) { message.channel.send(line); message.channel.send("Do you want to restore the line? (yes/no)"); gline = line }
-			});
-		});
-		var filter2 = m => m.author.id === message.author.id
-		message.channel.awaitMessages(filter2, {
-			max: 1,
-			time: 30000,
-			errors: ['time']
-		}).then(messageNext => {
-			messageNext = messageNext.first()
-			if (messageNext.content.toLowerCase() == "no") {
-				return message.channel.send("Ok.")
-			} else if (messageNext.content.toLowerCase() == "yes") {
-				var start = gline.split(" ")[0]
-				const data = require('fs').readFileSync(require("path").join(__dirname, '../../../config.js'), { encoding: 'utf8', flag: 'r' });
-				var newData = data.replace(gline, start + " = 'RESTORED';")
-				require('fs').writeFileSync(require("path").join(__dirname, '../../../config.js'), newData);
-				require('fs').createReadStream(wantedPath).on('data', function (chunk) {
-					for (i = 0; i < chunk.length; ++i)
-						if (chunk[i] == 10) count++;
-				}).on('end', async function () {
-					const data = require('fs').readFileSync(wantedPath, 'UTF-8');
+        // print all lines
+        let curLine = 0;
+        lines.forEach((line) => {
+          curLine++;
+          if (curLine == parseInt(caller_line)) {
+            message.channel.send({ content: line });
+            message.channel.send({
+              content: "Do you want to restore the line? (yes/no)",
+            });
+            gline = line;
+          }
+        });
+      });
+    var filter2 = (m) => m.author.id === message.author.id;
+    message.channel
+      .awaitMessages({ filter2, max: 1, time: 30000, errors: ["time"] })
+      .then((messageNext) => {
+        messageNext = messageNext.first();
+        if (messageNext.content.toLowerCase() == "no") {
+          return message.channel.send({ content: "Ok." });
+        } else if (messageNext.content.toLowerCase() == "yes") {
+          var start = gline.split(" ")[0];
+          const data = require("fs").readFileSync(
+            require("path").join(__dirname, "../../../config.js"),
+            { encoding: "utf8", flag: "r" }
+          );
+          var newData = data.replace(gline, start + " = 'RESTORED';");
+          require("fs").writeFileSync(
+            require("path").join(__dirname, "../../../config.js"),
+            newData
+          );
+          require("fs")
+            .createReadStream(wantedPath)
+            .on("data", function (chunk) {
+              for (i = 0; i < chunk.length; ++i) if (chunk[i] == 10) count++;
+            })
+            .on("end", async function () {
+              const data = require("fs").readFileSync(wantedPath, "UTF-8");
 
-					// split the contents by new line
-					const lines = data.split(/\r?\n/);
+              // split the contents by new line
+              const lines = data.split(/\r?\n/);
 
-					// print all lines
-					let curLine = 0
-					lines.forEach((line) => {
-						curLine++;
-						if (curLine == parseInt(caller_line)) { message.channel.send(line); gline = line }
-					});
-				});
-				message.channel.send("Alright. The line is now:\n" + gline)
-			} else {
-				return message.channel.send("Sorry, I didn't catch that. Cancelling.")
-			}
-		}).catch((e) => {
-			console.log(e)
-			return message.channel.send("Time limit reached. Canceling.")
-		});;
-		return
-	}
-	if (!args[0]) {
-		return message.channel.send("Please provide the config name to change/see")
-	} else if (!args[1]) {
-		const configName = args[0]
-		if (configName === "su") {
-			return message.channel.send("`showUsers` current value: `" + config.showUsers + "`")
-		}
-	}
-	const configName = args[0]
-	const configValue = args.slice(1)
-	if (configName === "su") {
-		let cline = config.showUsers
-		if (cline == "") cline = "EMPTY"
-		message.channel.send(`showUsers is selected.\nCurrent value: ${cline}`)
-		let oldVal = config.showUsers
-		if (typeof oldVal == "string") {
-			oldVal = "\"" + oldVal + "\""
-		}
-		config.showUsers = configValue
-		var fs = require('fs')
-		const path = require("path")
-		const data = fs.readFileSync(path.join(__dirname, '../../../config.js'), { encoding: 'utf8', flag: 'r' });
-		const newData = data.replace(`showUsers = ${oldVal}`, `showUsers = ${configValue}`);
-		fs.writeFileSync(path.join(__dirname, '../../../config.js'), newData);
-		const verifyData = fs.readFileSync(path.join(__dirname, '../../../config.js'), { encoding: 'utf8', flag: 'r' });
-		if (verifyData.includes("showUsers = " + oldVal)) {
-			if (typeof oldVal == "string") {
-				oldVal = "'" + oldVal + "'"
-				const data = fs.readFileSync(path.join(__dirname, '../../../config.js'), { encoding: 'utf8', flag: 'r' });
-				const newData = data.replace(`showUsers = ${oldVal}`, `showUsers = ${configValue}`);
-				fs.writeFileSync(path.join(__dirname, '../../../config.js'), newData);
-			}
-		}
-		message.channel.send(`showUsers was changed. New value: ${config.showUsers}`)
-
-	}
+              // print all lines
+              let curLine = 0;
+              lines.forEach((line) => {
+                curLine++;
+                if (curLine == parseInt(caller_line)) {
+                  message.channel.send({ content: line });
+                  gline = line;
+                }
+              });
+            });
+          message.channel.send({
+            content: "Alright. The line is now:\n" + gline,
+          });
+        } else {
+          return message.channel.send({
+            content: "Sorry, I didn't catch that. Cancelling.",
+          });
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+        return message.channel.send({
+          content: "Time limit reached. Canceling.",
+        });
+      });
+    return;
+  }
+  if (!args[0]) {
+    return message.channel.send({
+      content: "Please provide the config name to change/see",
+    });
+  } else if (!args[1]) {
+    const configName = args[0];
+    if (configName === "su") {
+      return message.channel.send({
+        content: "`showUsers` current value: `" + config.showUsers + "`",
+      });
+    }
+  }
+  const configName = args[0];
+  const configValue = args.slice(1);
+  if (configName === "su") {
+    let cline = config.showUsers;
+    if (cline == "") cline = "EMPTY";
+    message.channel.send({
+      content: `showUsers is selected.\nCurrent value: ${cline}`,
+    });
+    let oldVal = config.showUsers;
+    if (typeof oldVal == "string") {
+      oldVal = '"' + oldVal + '"';
+    }
+    config.showUsers = configValue;
+    var fs = require("fs");
+    const path = require("path");
+    const data = fs.readFileSync(path.join(__dirname, "../../../config.js"), {
+      encoding: "utf8",
+      flag: "r",
+    });
+    const newData = data.replace(
+      `showUsers = ${oldVal}`,
+      `showUsers = ${configValue}`
+    );
+    fs.writeFileSync(path.join(__dirname, "../../../config.js"), newData);
+    const verifyData = fs.readFileSync(
+      path.join(__dirname, "../../../config.js"),
+      { encoding: "utf8", flag: "r" }
+    );
+    if (verifyData.includes("showUsers = " + oldVal)) {
+      if (typeof oldVal == "string") {
+        oldVal = "'" + oldVal + "'";
+        const data = fs.readFileSync(
+          path.join(__dirname, "../../../config.js"),
+          { encoding: "utf8", flag: "r" }
+        );
+        const newData = data.replace(
+          `showUsers = ${oldVal}`,
+          `showUsers = ${configValue}`
+        );
+        fs.writeFileSync(path.join(__dirname, "../../../config.js"), newData);
+      }
+    }
+    message.channel.send({
+      content: `showUsers was changed. New value: ${config.showUsers}`,
+    });
+  }
 }
 function commandTriggers() {
-	return commandInfo.possibleTriggers;
+  return commandInfo.possibleTriggers;
 }
 function commandPrim() {
-	return commandInfo.primaryName;
+  return commandInfo.primaryName;
 }
 function commandAliases() {
-	return commandInfo.aliases;
+  return commandInfo.aliases;
 }
 function commandHelp() {
-	return commandInfo.help;
+  return commandInfo.help;
 }
 function commandUsage() {
-	return commandInfo.usage;
+  return commandInfo.usage;
 }
 function commandCategory() {
-	return commandInfo.category;
+  return commandInfo.category;
 }
 module.exports = {
-	runCommand,
-	commandTriggers,
-	commandHelp,
-	commandAliases,
-	commandPrim,
-	commandUsage,
-	commandCategory
-}
+  runCommand,
+  commandTriggers,
+  commandHelp,
+  commandAliases,
+  commandPrim,
+  commandUsage,
+  commandCategory,
+}; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /*
 
-
-
-/* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /*
+/*
 ------------------[Instruction]------------------
 
 1. Make a directory in commands/ with your command name
