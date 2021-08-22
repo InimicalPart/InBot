@@ -182,7 +182,7 @@ async function runCommand(message, args, RM) {
                       "Starting game between " +
                       whiteUser.username +
                       " (as White) and " +
-                      blackuser.username +
+                      blackUser.username +
                       " (as Black)\nFEN: `" +
                       chess.fen() +
                       "`",
