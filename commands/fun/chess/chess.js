@@ -227,7 +227,7 @@ async function runCommand(message, args, RM) {
           .then(() => {
             setTimeout(() => {
               require("fs").unlinkSync(path.join(__dirname, "board.png"));
-            }, 400);
+            }, 500);
           })
           .catch(console.error);
         message.channel.send({
@@ -369,22 +369,18 @@ async function runCommand(message, args, RM) {
           });
         } else if (response.split(" ")[0] === "move") {
           const moves = messageNext.content.split(" ");
-          if (chess.fen().split(" ")[1] === "w") {
+          if (chess.turn() === "w") {
             activeColor = "white";
           } else {
             activeColor = "black";
           }
-          if (activeColor === "white") {
-            if (whiteUser !== messageNext.author) {
-              message.channel.send({ content: "It's not your turn." });
-              return;
-            }
+          if (whiteUser !== messageNext.author && activeColor === "white") {
+            message.channel.send({ content: "It's not your turn." });
+            return;
           }
-          if (activeColor === "black") {
-            if (blackUser.user !== messageNext.author) {
-              message.channel.send({ content: "It's not your turn." });
-              return;
-            }
+          if (blackUser.user !== messageNext.author && activeColor === "black") {
+            message.channel.send({ content: "It's not your turn." });
+            return;
           }
           if (!moves[3]) {
             if (chess.get(moves[1]) === null) {
