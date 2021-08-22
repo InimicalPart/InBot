@@ -23,7 +23,11 @@ async function runCommand(message, args, RM) {
   const client = RM.client;
   const db = RM.db;
 
+<<<<<<< HEAD
   if (!message.member.permissions.has(RM.Discord.Permission.FLAGS.ADMINISTRATOR))
+=======
+  if (!message.member.hasPermission(RM.Discord.Permission.FLAGS.ADMINISTRATOR))
+>>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
     return message.channel.send({
       content:
         "**You Do Not Have The Required Permissions! - [ADMINISTRATOR]**",

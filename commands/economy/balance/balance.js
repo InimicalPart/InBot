@@ -66,7 +66,11 @@ async function runCommand(message, args, RM) {
       }
       if (user.user) {
         user = user.user;
+<<<<<<< HEAD
       }
+=======
+      } else user = user;
+>>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
       const username = user.username;
       if ((await connect.fetch("currency", user.id)) === null) {
         await connect.add("currency", user.id, 0, 0, 1000, 0);

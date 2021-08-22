@@ -23,7 +23,6 @@ async function runCommand(message, args, RM) {
   const { MessageEmbed } = RM.Discord;
   const db = RM.db;
   try {
-    console.log(message.member)
     if (!message.member.permissions.has(RM.Discord.Permissions.FLAGS.BAN_MEMBERS))
       return message.channel.send({
         content: "You need permission [BAN_MEMBERS] to be able to ban users.",

@@ -59,5 +59,6 @@ exports.cmdScan = false;
 exports.cmdSudoku = true;
 exports.cmdMinesweeper = true;
 exports.cmdTestingenv = true;
-exports.cmdV13 = false;exports.cmdUno = true
+exports.cmdV13 = false;
+exports.cmdUno = true
 exports.cmdBombparty = true

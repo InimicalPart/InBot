@@ -23,7 +23,11 @@ async function runCommand(message, args, RM) {
   const { MessageEmbed } = RM.Discord;
   const db = RM.db;
 
+<<<<<<< HEAD
   if (!message.member.permissions.has(RM.Discord.Permission.FLAGS.BAN_MEMBERS))
+=======
+  if (!message.member.hasPermission(RM.Discord.Permission.FLAGS.BAN_MEMBERS))
+>>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
     return message.channel.send({
       content:
         "**You Dont Have The Permissions To Unban Someone! - [BAN_MEMBERS]**",
@@ -51,7 +55,11 @@ async function runCommand(message, args, RM) {
 
   let reason = args.slice(1).join(" ");
 
+<<<<<<< HEAD
   if (!message.guild.me.permissions.has(RM.Discord.Permission.FLAGS.BAN_MEMBERS))
+=======
+  if (!message.guild.me.hasPermission(RM.Discord.Permission.FLAGS.BAN_MEMBERS))
+>>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
     return message.channel.send({
       content: "**I Don't Have Permissions To Unban Someone! - [BAN_MEMBERS]**",
     });
@@ -73,7 +81,11 @@ async function runCommand(message, args, RM) {
         .setDescription(`**${bannedMember.user.tag} has been unbanned**`);
       message.channel.send({ embeds: [sembed2] });
     }
+<<<<<<< HEAD
   } catch { }
+=======
+  } catch {}
+>>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
 
   let channel = db.fetch(`modlog_${message.guild.id}`);
   if (!channel) return;
