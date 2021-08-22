@@ -39,11 +39,7 @@ async function runCommand(message, args, RM) {
       await connect.create("currency");
 
       if (
-<<<<<<< HEAD
         !message.member.permissions.has(
-=======
-        !message.member.hasPermission(
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
           RM.Discord.Permission.FLAGS.ADMINISTRATOR,
           RM.Discord.Permission.FLAGS.MANAGE_GUILD
         )
@@ -89,11 +85,7 @@ async function runCommand(message, args, RM) {
         null;
       if (user.user) {
         user = user.user;
-<<<<<<< HEAD
       }
-=======
-      } else user = user;
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
       if (!user) {
         await connect.end(true);
         return m.edit({
@@ -178,12 +170,7 @@ async function runCommand(message, args, RM) {
           .setColor("GREEN")
           .setAuthor(message.author.tag, message.author.avatarURL())
           .setDescription(
-<<<<<<< HEAD
             `You took **\`$${numberWithCommas(args[1])}\`** from **${user.username
-=======
-            `You took **\`$${numberWithCommas(args[1])}\`** from **${
-              user.username
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
             }**'s bank. Their bank balance is now **\`$${numberWithCommas(
               bank - args[1]
             )}\`**`
@@ -244,12 +231,7 @@ async function runCommand(message, args, RM) {
         .setColor("GREEN")
         .setAuthor(message.author.tag, message.author.avatarURL())
         .setDescription(
-<<<<<<< HEAD
           `You took **\`$${numberWithCommas(args[1])}\`** from **${user.username
-=======
-          `You took **\`$${numberWithCommas(args[1])}\`** from **${
-            user.username
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
           }**'s wallet. Their new balance is: **\`$${numberWithCommas(
             bal - parseInt(args[1])
           )}\`**`

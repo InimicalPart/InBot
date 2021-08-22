@@ -1,7 +1,6 @@
 .env
 .history/
-
-./json.sqlite
 .vscode/
 #.dcignore | Like .gitignore but for SNYK
 node_modules/
+package-lock.json

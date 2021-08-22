@@ -22,11 +22,7 @@ async function runCommand(message, args, RM) {
     });
   }
   if (
-<<<<<<< HEAD
     !message.member.permissions.has(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
-=======
-    !message.member.hasPermission(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
   ) {
     await connect.end(true);
     return m.edit({
@@ -85,11 +81,7 @@ async function runCommand(message, args, RM) {
         null;
       if (user.user) {
         user = user.user;
-<<<<<<< HEAD
       }
-=======
-      } else user = user;
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
 
       if ((await connect.fetch("currency", user.id)) === null) {
         await connect.add("currency", user.id);
@@ -104,15 +96,9 @@ async function runCommand(message, args, RM) {
               .setAuthor(message.author.username, message.author.avatarURL())
               .setDescription(
                 user.username +
-<<<<<<< HEAD
                 "'s bank capacity is at: `$" +
                 data.maxbank +
                 "`"
-=======
-                  "'s bank capacity is at: `$" +
-                  data.maxbank +
-                  "`"
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
               )
               .setTimestamp()
               .setThumbnail(message.guild.iconURL())
@@ -152,15 +138,9 @@ async function runCommand(message, args, RM) {
               .setAuthor(message.author.username, message.author.avatarURL())
               .setDescription(
                 user.username +
-<<<<<<< HEAD
                 "'s bank capacity has been set to: `$" +
                 parseInt(args[1]) +
                 "`"
-=======
-                  "'s bank capacity has been set to: `$" +
-                  parseInt(args[1]) +
-                  "`"
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
               )
               .setTimestamp()
               .setThumbnail(message.guild.iconURL())

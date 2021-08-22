@@ -88,48 +88,18 @@ async function runCommand(message, args, RM) {
               .setTitle("Invalid Bombs"),
           ],
         });
-<<<<<<< HEAD
       } else if (parseInt(sizebombs[1]) < 10 || calcPercent(75, parseInt(size * size)) < parseInt(sizebombs[1])) {
-=======
-      } else if (
-        calcPercent(75, parseInt(size * size)) < parseInt(sizebombs[1])
-      ) {
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
         return message.channel.send(
           new RM.Discord.MessageEmbed()
             .setColor("RED")
             .setAuthor(message.author.tag, message.author.avatarURL())
             .setDescription(
               "Invalid bombs. Must be between 10-" +
-<<<<<<< HEAD
               calcPercent(75, parseInt(size * size)) +
               " for size: " +
               size +
               "x" +
               size
-=======
-                calcPercent(75, parseInt(size * size)) +
-                " for size: " +
-                size +
-                "x" +
-                size
-            )
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Invalid Bombs")
-        );
-      } else if (parseInt(sizebombs[1]) < 10) {
-        return message.channel.send(
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
-            .setDescription(
-              "Invalid bombs. Must be between 10-" +
-                calcPercent(75, parseInt(size * size)) +
-                " for size: " +
-                size +
-                "x" +
-                size
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
             )
             .setThumbnail(message.guild.iconURL())
             .setTitle("Invalid Bombs")
@@ -445,13 +415,8 @@ async function runCommand(message, args, RM) {
               let item = autoReveal[i].split(":");
               movesA.push(
                 numToSSColumn(parseInt(item[0]) + 1) +
-<<<<<<< HEAD
                 ":" +
                 numToSSColumn(parseInt(item[1]) + 1)
-=======
-                  ":" +
-                  numToSSColumn(parseInt(item[1]) + 1)
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
               );
             }
             message.channel.send({
@@ -532,11 +497,7 @@ async function runCommand(message, args, RM) {
                       "```",
                   });
                 }
-<<<<<<< HEAD
               }).catch(console.error);
-=======
-              });
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
           }
         } else {
           revealedBoard[xnum - 1][ynum - 1] = true;
@@ -753,13 +714,8 @@ async function runCommand(message, args, RM) {
           let item = autoReveal[i].split(":");
           movesA.push(
             numToSSColumn(parseInt(item[0]) + 1) +
-<<<<<<< HEAD
             ":" +
             numToSSColumn(parseInt(item[1]) + 1)
-=======
-              ":" +
-              numToSSColumn(parseInt(item[1]) + 1)
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
           );
         }
         for (let i in autoReveal) {
@@ -825,11 +781,7 @@ async function runCommand(message, args, RM) {
         } else if (msg2[0] === "no" || msg2[0] === "n") {
           message.channel.send({ content: "Ok." });
         }
-<<<<<<< HEAD
       }).catch(console.error);
-=======
-      });
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
     }
   });
   // cmd stuff here
@@ -894,17 +846,10 @@ function renderBoard(board) {
   for (let i in a) {
     newerBoard.push(
       numToSSColumn(parseInt(i) + 1) +
-<<<<<<< HEAD
       " | " +
       a[i] +
       " | " +
       numToSSColumn(parseInt(i) + 1)
-=======
-        " | " +
-        a[i] +
-        " | " +
-        numToSSColumn(parseInt(i) + 1)
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
     );
   }
   newerBoard.push(bottom);
@@ -1001,11 +946,7 @@ function numToSSColumn(num) {
   let s = "",
     t;
 
-<<<<<<< HEAD
   while (num >= 1) {
-=======
-  while (num > 0) {
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
     t = (num - 1) % 26;
     s = String.fromCharCode(65 + t) + s;
     num = ((num - t) / 26) | 0;

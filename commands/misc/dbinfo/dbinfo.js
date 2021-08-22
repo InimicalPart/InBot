@@ -22,11 +22,7 @@ async function runCommand(message, args, RM) {
     });
   }
   if (
-<<<<<<< HEAD
     !message.member.permissions.has(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
-=======
-    !message.member.hasPermission(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
   ) {
     await connect.end(true);
     return m.edit({
@@ -105,11 +101,7 @@ async function runCommand(message, args, RM) {
       const user = await message.guild.members.fetch(resjson.userid);
       if (user.user) {
         user = user.user;
-<<<<<<< HEAD
       }
-=======
-      } else user = user;
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
       const tag = user.tag;
       const iconURL = user.avatarURL();
       let embed = new RM.Discord.MessageEmbed()

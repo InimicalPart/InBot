@@ -97,11 +97,7 @@ async function runCommand(message, args, RM) {
       }
       if (user.user) {
         user = user.user;
-<<<<<<< HEAD
       }
-=======
-      } else user = user;
->>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
       if ((await connect.fetch("inventory", user.id)) === null) {
         await connect.add("inventory", user.id);
       }
