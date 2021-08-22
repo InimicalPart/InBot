@@ -4,4 +4,4 @@
 ./json.sqlite
 .vscode/
 #.dcignore | Like .gitignore but for SNYK
-node_modules
+node_modules/
