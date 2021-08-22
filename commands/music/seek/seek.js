@@ -1,119 +1,138 @@
 const commandInfo = {
-	"primaryName": "seek", // This is the command name used by help.js (gets uppercased).
-	"possibleTriggers": ["seek"], // These are all commands that will trigger this command.
-	"help": "Changes position in the song", // This is the general description of the command.
-	"aliases": [], // These are command aliases that help.js will use
-	"usage": "[COMMAND] <xx:xx/ms>", // [COMMAND] gets replaced with the command and correct prefix later
-	"category": "music"
-}
+  primaryName: "seek", // This is the command name used by help.js (gets uppercased).
+  possibleTriggers: ["seek"], // These are all commands that will trigger this command.
+  help: "Changes position in the song", // This is the general description of the command.
+  aliases: [], // These are command aliases that help.js will use
+  usage: "[COMMAND] <xx:xx/ms>", // [COMMAND] gets replaced with the command and correct prefix later
+  category: "music",
+};
 
 async function runCommand(message, args, RM) {
-	if (!require("../../../config.js").cmdSeek) {
-		return message.channel.send(new RM.Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				"Command disabled by Administrators."
-			)
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Command Disabled")
-		)
-	}
+  if (!require("../../../config.js").cmdSeek) {
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
+  }
 
-	const queue2 = global.sQueue2;
-	const queue3 = global.sQueue3;
-	const queue = global.sQueue;
-	const games = global.games;
+  const queue2 = global.sQueue2;
+  const queue3 = global.sQueue3;
+  const queue = global.sQueue;
+  const games = global.games;
 
-	let ops = {
-		queue2: queue2,
-		queue: queue,
-		queue3: queue3,
-		games: games,
-	};
-	const serverQueue = ops.queue.get(message.guild.id);
+  let ops = {
+    queue2: queue2,
+    queue: queue,
+    queue3: queue3,
+    games: games,
+  };
+  const serverQueue = ops.queue.get(message.guild.id);
 
-
-	if (!args[0]) return message.channel.send("Please provide a number!")
-	if (args[0].includes(":")) {
-		const queuee = serverQueue.songs[0]
-		const ms = hmsToSecondsOnly(args[0])
-		if (ms > queuee.time) return message.channel.send("You seek argument is longer than the song!")
-		global.seekMS = ms * 1000;
-		serverQueue.connection.play(require("ytdl-core")(queuee.url, { highWaterMark: 1 << 20, quality: "highestaudio" }), { seek: ms })
-		const hms = msToTime(Number(ms))
-		message.channel.send("Song seeked to: `" + hms + "`")
-	} else {
-		const queuee = serverQueue.songs[0]
-		const ms = args[0]
-		if (ms > queuee.time) return message.channel.send("You seek argument is longer than the song!")
-		global.seekMS = ms;
-		serverQueue.connection.play(require("ytdl-core")(queuee.url, { highWaterMark: 1 << 20, quality: "highestaudio" }), { seek: ms })
-		const hms = msToTime(Number(ms))
-		message.channel.send("Song seeked to: `" + hms + "`")
-	}
-	//
+  if (!args[0])
+    return message.channel.send({ content: "Please provide a number!" });
+  if (args[0].includes(":")) {
+    const queuee = serverQueue.songs[0];
+    const ms = hmsToSecondsOnly(args[0]);
+    if (ms > queuee.time)
+      return message.channel.send({
+        content: "You seek argument is longer than the song!",
+      });
+    global.seekMS = ms * 1000;
+    serverQueue.connection.play(
+      require("ytdl-core")(queuee.url, {
+        highWaterMark: 1 << 20,
+        quality: "highestaudio",
+      }),
+      { seek: ms }
+    );
+    const hms = msToTime(Number(ms));
+    message.channel.send({ content: "Song seeked to: `" + hms + "`" });
+  } else {
+    const queuee = serverQueue.songs[0];
+    const ms = args[0];
+    if (ms > queuee.time)
+      return message.channel.send({
+        content: "You seek argument is longer than the song!",
+      });
+    global.seekMS = ms;
+    serverQueue.connection.play(
+      require("ytdl-core")(queuee.url, {
+        highWaterMark: 1 << 20,
+        quality: "highestaudio",
+      }),
+      { seek: ms }
+    );
+    const hms = msToTime(Number(ms));
+    message.channel.send({ content: "Song seeked to: `" + hms + "`" });
+  }
+  //
 }
 function hmsToSecondsOnly(str) {
-	var p = str.split(':'),
-		s = 0, m = 1;
+  var p = str.split(":"),
+    s = 0,
+    m = 1;
 
-	while (p.length > 0) {
-		s += m * parseInt(p.pop(), 10);
-		m *= 60;
-	}
+  while (p.length > 0) {
+    s += m * parseInt(p.pop(), 10);
+    m *= 60;
+  }
 
-	return s;
+  return s;
 }
 function msToTime(s) {
-	s = s * 1000
-	// Pad to 2 or 3 digits, default is 2
-	function pad(n, z) {
-		z = z || 2;
-		return ('00' + n).slice(-z);
-	}
+  s = s * 1000;
+  // Pad to 2 or 3 digits, default is 2
+  function pad(n, z) {
+    z = z || 2;
+    return ("00" + n).slice(-z);
+  }
 
-	var ms = s % 1000;
-	s = (s - ms) / 1000;
-	var secs = s % 60;
-	s = (s - secs) / 60;
-	var mins = s % 60;
-	var hrs = (s - mins) / 60;
+  var ms = s % 1000;
+  s = (s - ms) / 1000;
+  var secs = s % 60;
+  s = (s - secs) / 60;
+  var mins = s % 60;
+  var hrs = (s - mins) / 60;
 
-	return pad(hrs) + ':' + pad(mins) + ':' + pad(secs)
+  return pad(hrs) + ":" + pad(mins) + ":" + pad(secs);
 }
 function commandTriggers() {
-	return commandInfo.possibleTriggers;
+  return commandInfo.possibleTriggers;
 }
 function commandPrim() {
-	return commandInfo.primaryName;
+  return commandInfo.primaryName;
 }
 function commandAliases() {
-	return commandInfo.aliases;
+  return commandInfo.aliases;
 }
 function commandHelp() {
-	return commandInfo.help;
+  return commandInfo.help;
 }
 function commandUsage() {
-	return commandInfo.usage;
+  return commandInfo.usage;
 }
 function commandCategory() {
-	return commandInfo.category;
+  return commandInfo.category;
 }
 module.exports = {
-	runCommand,
-	commandTriggers,
-	commandHelp,
-	commandAliases,
-	commandPrim,
-	commandUsage,
-	commandCategory
-}
-
+  runCommand,
+  commandTriggers,
+  commandHelp,
+  commandAliases,
+  commandPrim,
+  commandUsage,
+  commandCategory,
+}; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */
+/* */
 /*
 ------------------[Instruction]------------------
 
@@ -137,4 +156,4 @@ To check if possible triggers has the command call
 ------------------[Instruction]------------------
 */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/* */

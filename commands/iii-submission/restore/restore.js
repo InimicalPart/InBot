@@ -1,118 +1,121 @@
 const commandInfo = {
-	"primaryName": "restore",
-	"possibleTriggers": ["restore"],
-	"help": "Allows admins to restore an approved/denied image submission.",
-	"aliases": [],
-	"usage": "[COMMAND] <MSG ID>", // [COMMAND] gets replaced with the command and correct prefix later
-	"category": "iiisub"
-}
+  primaryName: "restore",
+  possibleTriggers: ["restore"],
+  help: "Allows admins to restore an approved/denied image submission.",
+  aliases: [],
+  usage: "[COMMAND] <MSG ID>", // [COMMAND] gets replaced with the command and correct prefix later
+  category: "iiisub",
+};
 
 async function runCommand(message, args, RM) {
-	if (!require("../../../config.js").cmdRestore) {
-		return message.channel.send(new RM.Discord.MessageEmbed()
-			.setColor("RED")
-			.setAuthor(message.author.tag, message.author.avatarURL())
-			.setDescription(
-				"Command disabled by Administrators."
-			)
-			.setThumbnail(message.guild.iconURL())
-			.setTitle("Command Disabled")
-		)
-	}
+  if (!require("../../../config.js").cmdRestore) {
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setDescription("Command disabled by Administrators.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Command Disabled"),
+      ],
+    });
+  }
 
-	const Discord = RM.Discord;
-	const client = RM.client;
-	const submissionChannelID = RM.submissionChannelID;
-	const botOwners = RM.botOwners;
-	if (!botOwners.includes(message.author.id)) return // message.channel.send("Hmm... You don't seem to have enough permissions to do that.")
-	message.delete();
-	if (!args[0]) {
-		return message.channel.send("Please provide the message to restore")
-	}
-	const submissionChannel = client.channels.cache.get(submissionChannelID);
-	const messageID = args[0];
-	let m = await submissionChannel.messages.fetch(messageID).catch((err) => {
-		return message.channel.send("Invalid Message ID.")
-	})
-	if (m == undefined) {
-		return message.channel.send("Invalid Message ID.");
-	}
+  const Discord = RM.Discord;
+  const client = RM.client;
+  const submissionChannelID = RM.submissionChannelID;
+  const botOwners = RM.botOwners;
+  if (!botOwners.includes(message.author.id)) return;
+  message.delete();
+  if (!args[0]) {
+    return message.channel.send({
+      content: "Please provide the message to restore",
+    });
+  }
+  const submissionChannel = client.channels.cache.get(submissionChannelID);
+  const messageID = args[0];
+  let m = await submissionChannel.messages.fetch(messageID).catch((err) => {
+    return message.channel.send({ content: "Invalid Message ID." });
+  });
+  if (m == undefined) {
+    return message.channel.send({ content: "Invalid Message ID." });
+  }
 
+  if (!m.editable)
+    return message.channel.send({ content: "I cannot edit that message." });
+  if (m.embeds.length < 1)
+    return message.channel.send({ content: "This isn't an image submission." });
+  const url = m.embeds[0].image.url;
+  const authorID = m.embeds[0].author.iconURL.match(/[0-9]{18}/gim);
+  let title = null;
+  for (let field of m.embeds[0].fields) {
+    if (field.name == "Title:") {
+      title = field.value;
+      break;
+    }
+  }
+  if (title == null) {
+    return message.channel.send({ content: "This isn't an image submission." });
+  }
+  const author = await client.users.fetch(String(authorID));
 
-	//return message.channel.send(messageID + "s content is: " + m.content)
-	if (!m.editable) return message.channel.send("I cannot edit that message.")
-	if (m.embeds.length < 1) return message.channel.send("This isn't an image submission.")
-	const url = m.embeds[0].image.url
-	const authorID = m.embeds[0].author.iconURL.match(/[0-9]{18}/gmi)
-	let title = null;
-	for (let field of m.embeds[0].fields) {
-		if (field.name == 'Title:') {
-			title = field.value;
-			break
-		}
-	}
-	if (title == null) {
-		return message.channel.send("This isn't an image submission.")
-	}
-	const author = await client.users.fetch(String(authorID));
-
-	//console.log(url, authorID, title, author.tag)
-	let exists = null;
-	for (let field of m.embeds[0].fields) {
-		if (field.name == 'Information:') {
-			exists = field.value;
-			break
-		}
-	}
-	//console.log(exists)
-	const newEmbed = new Discord.MessageEmbed()
-		.setAuthor(author.tag, author.avatarURL())
-		.setImage(url)
-		.setColor("#FFFF00")
-		.addField("Title:", "**" + title + "**")
-		.addField("Amazing picture by:", "<@" + message.author + ">")
-	m.edit(newEmbed).then((msg) => {
-		msg.reactions.removeAll()
-		msg.react("👍")
-		msg.react("👎")
-	}).catch(function (err) {
-		console.error("ERROR: " + err.message)
-	});
-
+  //console.log(url, authorID, title, author.tag)
+  let exists = null;
+  for (let field of m.embeds[0].fields) {
+    if (field.name == "Information:") {
+      exists = field.value;
+      break;
+    }
+  }
+  //console.log(exists)
+  const newEmbed = new Discord.MessageEmbed()
+    .setAuthor(author.tag, author.avatarURL())
+    .setImage(url)
+    .setColor("#FFFF00")
+    .addField("Title:", "**" + title + "**")
+    .addField("Amazing picture by:", "<@" + message.author + ">");
+  m.edit({ embeds: [newEmbed] })
+    .then((msg) => {
+      msg.reactions.removeAll();
+      msg.react("👍");
+      msg.react("👎");
+    })
+    .catch(function (err) {
+      console.error("ERROR: " + err.message);
+    });
 }
 
 function commandTriggers() {
-	return commandInfo.possibleTriggers;
+  return commandInfo.possibleTriggers;
 }
 function commandPrim() {
-	return commandInfo.primaryName;
+  return commandInfo.primaryName;
 }
 function commandAliases() {
-	return commandInfo.aliases;
+  return commandInfo.aliases;
 }
 function commandHelp() {
-	return commandInfo.help;
+  return commandInfo.help;
 }
 function commandUsage() {
-	return commandInfo.usage;
+  return commandInfo.usage;
 }
 function commandCategory() {
-	return commandInfo.category;
+  return commandInfo.category;
 }
 module.exports = {
-	runCommand,
-	commandTriggers,
-	commandHelp,
-	commandAliases,
-	commandPrim,
-	commandUsage,
-	commandCategory
-}
-
+  runCommand,
+  commandTriggers,
+  commandHelp,
+  commandAliases,
+  commandPrim,
+  commandUsage,
+  commandCategory,
+}; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */
+/* */
 /*
 ------------------[Instruction]------------------
 
@@ -136,4 +139,4 @@ To check if possible triggers has the command call
 ------------------[Instruction]------------------
 */
 /* */
-/* */ /* */ /* */ /* */ /* */ /* */ /* */
+/* */
