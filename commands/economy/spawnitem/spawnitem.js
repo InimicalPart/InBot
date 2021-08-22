@@ -22,7 +22,11 @@ async function runCommand(message, args, RM) {
     });
   }
   if (
+<<<<<<< HEAD
     !message.member.permissions.has(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
+=======
+    !message.member.hasPermission(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
+>>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
   ) {
     await connect.end(true);
     return m.edit({
@@ -83,8 +87,13 @@ async function runCommand(message, args, RM) {
               .setAuthor(message.author.tag, message.author.avatarURL())
               .setDescription(
                 "You have summoned a banknote! You now have **" +
+<<<<<<< HEAD
                 inventory.banknote +
                 "** banknote(s)"
+=======
+                  inventory.banknote +
+                  "** banknote(s)"
+>>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
               )
               .setThumbnail(message.guild.iconURL())
               .setTitle("Banknote(s) summoned"),
@@ -105,8 +114,13 @@ async function runCommand(message, args, RM) {
               .setAuthor(message.author.tag, message.author.avatarURL())
               .setDescription(
                 "You have summoned a padlock! You now have **" +
+<<<<<<< HEAD
                 inventory.padlock +
                 "** padlock(s)"
+=======
+                  inventory.padlock +
+                  "** padlock(s)"
+>>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
               )
               .setThumbnail(message.guild.iconURL())
               .setTitle("Padlock(s) summoned"),
@@ -127,8 +141,13 @@ async function runCommand(message, args, RM) {
               .setAuthor(message.author.tag, message.author.avatarURL())
               .setDescription(
                 "You have summoned a landmine! You now have **" +
+<<<<<<< HEAD
                 inventory.landmine +
                 "** landmine(s)"
+=======
+                  inventory.landmine +
+                  "** landmine(s)"
+>>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
               )
               .setThumbnail(message.guild.iconURL())
               .setTitle("Landmine(s) summoned"),
@@ -149,8 +168,13 @@ async function runCommand(message, args, RM) {
               .setAuthor(message.author.tag, message.author.avatarURL())
               .setDescription(
                 "You have summoned a lockpick! You now have **" +
+<<<<<<< HEAD
                 inventory.lockpick +
                 "** lockpick(s)"
+=======
+                  inventory.lockpick +
+                  "** lockpick(s)"
+>>>>>>> 82fbc2ea8c9c1ab43c06c7c72143bfbab5fcfbb4
               )
               .setThumbnail(message.guild.iconURL())
               .setTitle("Lockpick(s) summoned"),
