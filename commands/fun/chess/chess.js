@@ -206,7 +206,7 @@ async function runCommand(message, args, RM) {
     .catch(console.error);
   // cmd stuff here
   async function continueC(whiteUser, blackUser) {
-    FTI({
+    await FTI({
       fen: chess.fen(), //The FEN of game!
       color: "white", //The color of the side you want to see!
       whiteCheck: false, //If white is in check!
