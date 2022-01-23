@@ -1,0 +1,20 @@
+{
+  "name": "fen-to-image",
+  "version": "0.0.10",
+  "description": "Convert a chess FEN to chessboard image",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "chess",
+    "chessboard",
+    "fen",
+    "image"
+  ],
+  "author": "GToddy200",
+  "license": "ISC",
+  "dependencies": {
+    "jimp": "^0.16.1"
+  }
+}
