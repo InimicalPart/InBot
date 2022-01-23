@@ -31,14 +31,14 @@ const client = new Discord.Client({
     Discord.Intents.FLAGS.GUILD_MESSAGES,
     Discord.Intents.FLAGS.GUILD_MEMBERS,
     Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
+    Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
   ],
 });
 //!--------------------------
 console.log(
   chalk.green("TheIIIProject is starting up!") +
-  "\n" +
-  chalk.yellow("Modules are loading up...")
+    "\n" +
+    chalk.yellow("Modules are loading up...")
 );
 const fun = require("./commands/fun/index.js");
 const iiisub = require("./commands/iii-submission/index.js");
@@ -112,8 +112,8 @@ const requiredModules = {
   cmdTestingenv: moderation.testingenv(),
   cmdV13: misc.v13(),
   cmdUno: fun.uno(),
-  "cmdBombparty": fun.bombparty(),
-  "Discord": Discord,
+  cmdBombparty: fun.bombparty(),
+  Discord: Discord,
   process_env: process.env,
   pretty_ms: require("pretty-ms"),
   client: client,
@@ -200,11 +200,11 @@ const requiredModules = {
 };
 console.log(
   chalk.blueBright("------------------------\n") +
-  chalk.green("Added!\n") +
-  chalk.blueBright("------------------------\n") +
-  chalk.white("[I] ") +
-  chalk.yellow("Logging in... ") +
-  chalk.white("[I]")
+    chalk.green("Added!\n") +
+    chalk.blueBright("------------------------\n") +
+    chalk.white("[I] ") +
+    chalk.yellow("Logging in... ") +
+    chalk.white("[I]")
 );
 
 client.on("messageCreate", async (message) => {
@@ -257,7 +257,7 @@ client.on("messageCreate", async (message) => {
   }
 });
 async function runCMD(k, message) {
-  if (Discord.version > "13.1.0")
+  if (Discord.version > "13.6.0")
     message.channel.send({
       content:
         "**NOTE:** The discord API has updated. Some commands may not work properly!",
@@ -331,47 +331,47 @@ client.on("ready", async () => {
 
   console.log(
     chalk.blueBright("------------------------\n") +
+      chalk.redBright("The III Society") +
+      " has " +
+      chalk.cyanBright(users.length) +
+      " members.\n"
+  );
+  console.log(
+    "Only " +
+      chalk.cyanBright(7000 - users.length) +
+      " more until we reach the Community requirements!"
+  );
+  console.log(
+    "Only " +
+      chalk.cyanBright(100 - users.length) +
+      " more until we reach 100 members!"
+  );
+  console.log(
+    "Only " +
+      chalk.cyanBright(500 - users.length) +
+      " more until we can see Server Metrics!\n"
+  );
+  console.log(
     chalk.redBright("The III Society") +
-    " has " +
-    chalk.cyanBright(users.length) +
-    " members.\n"
-  );
-  console.log(
-    "Only " +
-    chalk.cyanBright(7000 - users.length) +
-    " more until we reach the Community requirements!"
-  );
-  console.log(
-    "Only " +
-    chalk.cyanBright(100 - users.length) +
-    " more until we reach 100 members!"
-  );
-  console.log(
-    "Only " +
-    chalk.cyanBright(500 - users.length) +
-    " more until we can see Server Metrics!\n"
-  );
-  console.log(
-    chalk.redBright("The III Society") +
-    " was created at " +
-    chalk.cyanBright(createdAt.toLocaleDateString()) +
-    ". That's " +
-    chalk.cyanBright(days) +
-    " days ago!"
+      " was created at " +
+      chalk.cyanBright(createdAt.toLocaleDateString()) +
+      ". That's " +
+      chalk.cyanBright(days) +
+      " days ago!"
   );
   if (client.user.id == "859513472973537311") {
     console.log(
       "\n" +
-      chalk.yellowBright("⚠") +
-      " As this is a DEV edition, Channels will not be updated to avoid interference with the main edition. " +
-      chalk.yellowBright("⚠")
+        chalk.yellowBright("⚠") +
+        " As this is a DEV edition, Channels will not be updated to avoid interference with the main edition. " +
+        chalk.yellowBright("⚠")
     );
   } else if (config.showUsers == false) {
     console.log(
       "\n" +
-      chalk.yellowBright("⚠") +
-      " As showUsers in config is disabled, channel won't be updated. " +
-      chalk.yellowBright("⚠")
+        chalk.yellowBright("⚠") +
+        " As showUsers in config is disabled, channel won't be updated. " +
+        chalk.yellowBright("⚠")
     );
   }
   let edition;
@@ -388,29 +388,29 @@ client.on("ready", async () => {
       : chalk.redBright("NO");
   console.log(
     "------------------------\n" +
-    "Current time is: " +
-    chalk.cyanBright(result) +
-    "\n" +
-    "Discord.JS version: " +
-    chalk.yellow(Discord.version) +
-    "\n" +
-    "In Development Mode: " +
-    isDevMode +
-    "\n" +
-    "Current API Latency: " +
-    chalk.cyanBright(client.ws.ping) +
-    " ms\n" +
-    "------------------------\n" +
-    chalk.blue.bold(client.user.tag) +
-    " is ready and is running " +
-    chalk.blue.bold(edition) +
-    " edition!"
+      "Current time is: " +
+      chalk.cyanBright(result) +
+      "\n" +
+      "Discord.JS version: " +
+      chalk.yellow(Discord.version) +
+      "\n" +
+      "In Development Mode: " +
+      isDevMode +
+      "\n" +
+      "Current API Latency: " +
+      chalk.cyanBright(client.ws.ping) +
+      " ms\n" +
+      "------------------------\n" +
+      chalk.blue.bold(client.user.tag) +
+      " is ready and is running " +
+      chalk.blue.bold(edition) +
+      " edition!"
   );
   require("glob")("**/board_*.png", function (er, files) {
     for (const file of files) {
       require("fs").unlinkSync(file);
     }
-  })
+  });
 });
 //import express and start a server on port 3000
 
