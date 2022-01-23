@@ -11,6 +11,7 @@
     "express": "^4.17.1",
     "fen-to-image": "github:InimicalPart/TheIIIProject#fen2img",
     "genius-lyrics": "^4.2.9",
+    "glob": "^7.2.0",
     "heroku-client": "^3.1.0",
     "inquirer": "^8.1.2",
     "js-chess-engine": "^0.11.3",
