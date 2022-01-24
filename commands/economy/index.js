@@ -78,7 +78,12 @@ function monthly() {
 	return require("./monthly/monthly.js")
 }
 
+function slots() {
+	return require("./slots/slots.js")
+}
+
 module.exports = {
+	slots,
 	monthly,
 	weekly,
 	daily,

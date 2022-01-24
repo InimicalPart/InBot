@@ -225,9 +225,11 @@ async function runCommand(message, args, RM) {
           );
           rest();
         } else {
+          console.log(thiefInv.items.lockpick);
           if (
+            thiefInv.items.lockpick !== null &&
             thiefInv.items.lockpick !== undefined &&
-            thiefInv.items.lockpick <= 1
+            thiefInv.items.lockpick >= 1
           ) {
             m.edit({
               embeds: [
@@ -247,8 +249,9 @@ async function runCommand(message, args, RM) {
               ],
             });
             var filter2 = (m) => m.author.id === message.author.id;
-            message.channel
-              .awaitMessages(filter2, {
+            await message.channel
+              .awaitMessages({
+                filter: filter2,
                 max: 1,
                 time: 30000,
                 errors: ["time"],
@@ -427,9 +430,9 @@ async function runCommand(message, args, RM) {
                           embeds: [
                             new RM.Discord.MessageEmbed()
                               .setColor("AQUA")
-                              .setAuthor({ name:
-                                message.author.tag, iconURL:
-                                message.author.avatarURL()
+                              .setAuthor({
+                                name: message.author.tag,
+                                iconURL: message.author.avatarURL(),
                               })
                               .setDescription(
                                 "Picking...\n\n:lock: Pin 1: **" +
@@ -473,9 +476,9 @@ async function runCommand(message, args, RM) {
                             embeds: [
                               new RM.Discord.MessageEmbed()
                                 .setColor("AQUA")
-                                .setAuthor({ name:
-                                  message.author.tag, iconURL:
-                                  message.author.avatarURL()
+                                .setAuthor({
+                                  name: message.author.tag,
+                                  iconURL: message.author.avatarURL(),
                                 })
                                 .setDescription(
                                   "Picking...\n\n:lock: Pin 1: **" +
@@ -523,9 +526,9 @@ async function runCommand(message, args, RM) {
                               embeds: [
                                 new RM.Discord.MessageEmbed()
                                   .setColor("AQUA")
-                                  .setAuthor({ name:
-                                    message.author.tag, iconURL:
-                                    message.author.avatarURL()
+                                  .setAuthor({
+                                    name: message.author.tag,
+                                    iconURL: message.author.avatarURL(),
                                   })
                                   .setDescription(
                                     "Picking...\n\n:lock: Pin 1: **" +
@@ -562,9 +565,9 @@ async function runCommand(message, args, RM) {
                       embeds: [
                         new RM.Discord.MessageEmbed()
                           .setColor("RED")
-                          .setAuthor({ name:
-                            message.author.tag, iconURL:
-                            message.author.avatarURL()
+                          .setAuthor({
+                            name: message.author.tag,
+                            iconURL: message.author.avatarURL(),
                           })
                           .setDescription(
                             "Lockpick broke and you failed to rob " +
@@ -588,9 +591,9 @@ async function runCommand(message, args, RM) {
                     embeds: [
                       new RM.Discord.MessageEmbed()
                         .setColor("RED")
-                        .setAuthor({ name:
-                          message.author.tag, iconURL:
-                          message.author.avatarURL()
+                        .setAuthor({
+                          name: message.author.tag,
+                          iconURL: message.author.avatarURL(),
                         })
                         .setDescription(
                           "User has an active padlock but you didnt use a lockpick!"

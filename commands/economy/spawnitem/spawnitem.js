@@ -1,10 +1,10 @@
 const commandInfo = {
   primaryName: "spawnitem", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["spawnitem", "si"], // These are all commands that will trigger this command.
-  help: "Allows admins to spawn items!", // This is the general description of the command.
+  help: "Spawn an item in your inventory.", // This is the general description of the command.
   aliases: ["si"], // These are command aliases that help.js will use
   usage: "[COMMAND] <itemid> [amount]", // [COMMAND] gets replaced with the command and correct prefix later
-  category: "economy",
+  category: "developer",
 };
 
 async function runCommand(message, args, RM) {

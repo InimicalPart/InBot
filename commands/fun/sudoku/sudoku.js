@@ -2,10 +2,10 @@ const { neutronMassDependencies } = require("mathjs");
 
 const commandInfo = {
   primaryName: "sudoku", // This is the command name used by help.js (gets uppercased).
-  possibleTriggers: ["sudoku", "alias2", "alias3"], // These are all commands that will trigger this command.
-  help: "eats your cake!", // This is the general description of the command.
-  aliases: ["alias2", "alias3"], // These are command aliases that help.js will use
-  usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
+  possibleTriggers: ["sudoku"], // These are all commands that will trigger this command.
+  help: "Play sudoku!", // This is the general description of the command.
+  aliases: [], // These are command aliases that help.js will use
+  usage: "[COMMAND] <difficulty> <size>", // [COMMAND] gets replaced with the command and correct prefix later
   category: "fun",
 };
 
@@ -239,7 +239,9 @@ async function runCommand(message, args, RM) {
               .setDescription(":x: The number `" + val + "` is incorrect.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invalid Input")
-              .setFooter({text:"You have " + (3 - mistakes) + " tries left."}),
+              .setFooter({
+                text: "You have " + (3 - mistakes) + " tries left.",
+              }),
           ],
         });
       } else {
@@ -303,14 +305,15 @@ async function runCommand(message, args, RM) {
             .setDescription("You gave up!")
             .setThumbnail(message.guild.iconURL())
             .setTitle("You gave up!")
-            .setFooter({text:
-              RM.pretty_ms(timeTaken) +
+            .setFooter({
+              text:
+                RM.pretty_ms(timeTaken) +
                 " | You had " +
                 moves +
                 " moves and " +
                 mistakes +
-                " mistakes."
-             }),
+                " mistakes.",
+            }),
         ],
       });
       for (var i = 0; i < global.sudokuList.length; i++) {

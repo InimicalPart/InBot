@@ -1,10 +1,10 @@
 const commandInfo = {
   primaryName: "dbinfo", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["dbinfo"], // These are all commands that will trigger this command.
-  help: "Allows admins to check information in the database!", // This is the general description of the command.
+  help: "Get information of a user from the database.", // This is the general description of the command.
   aliases: [], // These are command aliases that help.js will use
   usage: "[COMMAND] <userid>", // [COMMAND] gets replaced with the command and correct prefix later
-  category: "misc",
+  category: "developer",
 };
 
 async function runCommand(message, args, RM) {
@@ -104,7 +104,7 @@ async function runCommand(message, args, RM) {
         return;
       }
       const resjson = JSON.parse(JSON.stringify(res.rows[0]));
-      const user = await message.guild.members.fetch(resjson.userid);
+      let user = await message.guild.members.fetch(resjson.userid);
       if (user.user) {
         user = user.user;
       }
@@ -120,7 +120,7 @@ async function runCommand(message, args, RM) {
         .setTitle("DB Data")
         .addFields({
           name: "ID",
-          value: resjson.id,
+          value: String(resjson.id),
         })
         .addFields({
           name: "Name",
@@ -128,7 +128,7 @@ async function runCommand(message, args, RM) {
         })
         .addFields({
           name: "User ID",
-          value: resjson.userid,
+          value: String(resjson.userid),
         })
         .addFields({
           name: "Wallet",
@@ -144,7 +144,7 @@ async function runCommand(message, args, RM) {
         })
         .addFields({
           name: "Level",
-          value: resjson.level,
+          value: String(resjson.level),
         });
       const res2 = await connect.query(
         "SELECT * FROM inventory WHERE userid=" + resjson.userid

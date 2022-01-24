@@ -67,7 +67,22 @@ async function runCommand(message, args, RM) {
               value: k.commandCategory().toUpperCase(),
             })
             .setTimestamp();
-          return message.channel.send({ embeds: [embed] });
+          if (
+            k.commandCategory() == "developer" &&
+            RM.botOwners.includes(message.author.id)
+          ) {
+            return message.channel.send({ embeds: [embed] });
+          } else if (k.commandCategory() == "developer") {
+            message.channel.send({
+              embeds: [
+                new RM.Discord.MessageEmbed().setDescription(
+                  "Command was not found."
+                ),
+              ],
+            });
+          } else {
+            return message.channel.send({ embeds: [embed] });
+          }
         }
       }
     }
@@ -81,7 +96,7 @@ async function runCommand(message, args, RM) {
       .setTitle("Commands")
       .setColor(11730464)
       .setTimestamp()
-      .setFooter({text:"Please send a category name!"})
+      .setFooter({ text: "Please send a category name!" })
       .setAuthor({
         name: message.author.tag,
         iconURL: message.author.avatarURL(),
@@ -104,6 +119,9 @@ async function runCommand(message, args, RM) {
         "Here can you find commands that you can use to listen to music!"
       )
       .addField("💰 Economy", "Here are all the money related commands");
+    if (RM.botOwners.includes(message.author.id)) {
+      embed.addField("🔧 Developer", "Here are all the developer commands!");
+    }
     message.channel
       .send({ embeds: [embed] })
       .then((m) => {
@@ -207,6 +225,25 @@ async function runCommand(message, args, RM) {
                 if (i.startsWith("cmd")) {
                   let k = RM[i];
                   if (k.commandCategory() == "economy") {
+                    if (k.commandHelp() == "") {
+                      description = "No description.";
+                    } else {
+                      description = k.commandHelp().replace("[PREFIX]", prefix);
+                    }
+                    embed.addField(prefix + k.commandPrim(), description);
+                  }
+                }
+              }
+              m.edit({ embeds: [embed] });
+            } else if (
+              (wanting === "dev" || wanting === "developer") &&
+              RM.botOwners.includes(message.author.id)
+            ) {
+              let embed = new RM.Discord.MessageEmbed().setTitle("Economy");
+              for (let i in RM) {
+                if (i.startsWith("cmd")) {
+                  let k = RM[i];
+                  if (k.commandCategory() == "developer") {
                     if (k.commandHelp() == "") {
                       description = "No description.";
                     } else {

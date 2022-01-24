@@ -37,7 +37,7 @@ async function runCommand(message, args, RM) {
       const embed = new Discord.MessageEmbed()
         .setColor("RANDOM")
         .setDescription(
-          `<:bitelip:857350270513971221> | Latency is \`${
+          `<:bitelip:935248091580350614> | Latency is \`${
             m.createdTimestamp - message.createdTimestamp
           }ms\` and API Latency is \`${Math.round(
             client.ws.ping

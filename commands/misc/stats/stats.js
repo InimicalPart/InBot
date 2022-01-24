@@ -4,7 +4,7 @@ const commandInfo = {
   help: "Get bot statistics and information", // This is the general description of the command.
   aliases: ["statistics"], // These are command aliases that help.js will use
   usage: "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
-  category: "misc",
+  category: "developer",
 };
 
 async function runCommand(message, args, RM) {
