@@ -73,7 +73,7 @@ async function runCommand(message, args, RM) {
           ) {
             return message.channel.send({ embeds: [embed] });
           } else if (k.commandCategory() == "developer") {
-            message.channel.send({
+            return message.channel.send({
               embeds: [
                 new RM.Discord.MessageEmbed().setDescription(
                   "Command was not found."

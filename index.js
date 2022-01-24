@@ -255,8 +255,14 @@ client.on("messageCreate", async (message) => {
               .toLowerCase()
               .replace(process.env.prefix, "")
           )
-      )
+      ) {
+        if (
+          requiredModules[i].commandCategory() === "developer" &&
+          !requiredModules.botOwners.includes(message.author.id)
+        )
+          return;
         runCMD(requiredModules[i], message);
+      }
   }
 });
 async function runCMD(k, message) {
