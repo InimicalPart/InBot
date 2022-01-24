@@ -14,7 +14,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -42,7 +45,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("You need to specify a user to give items to!")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),
@@ -56,7 +62,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("You need to specify an item id!")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),
@@ -87,7 +96,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("**Error:** User not found!")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),
@@ -111,7 +123,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new RM.Discord.MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription("You don't have enough banknotes!")
                 .setThumbnail(message.guild.iconURL())
                 .setTitle("Error"),
@@ -132,7 +147,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("GREEN")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 `You gave **\`${amount}\`** banknotes to **${user.username}**!`
               )
@@ -147,7 +165,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new RM.Discord.MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription("You don't have enough raybrains!")
                 .setThumbnail(message.guild.iconURL())
                 .setTitle("Error"),
@@ -168,7 +189,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("GREEN")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 `You gave **\`${amount}\`** raybrains to **${user.username}**!`
               )
@@ -183,7 +207,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new RM.Discord.MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription("You don't have enough padlocks!")
                 .setThumbnail(message.guild.iconURL())
                 .setTitle("Error"),
@@ -204,7 +231,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("GREEN")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 `You gave **\`${amount}\`** padlocks to **${user.username}**!`
               )
@@ -219,7 +249,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new RM.Discord.MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription("You don't have enough lockpicks!")
                 .setThumbnail(message.guild.iconURL())
                 .setTitle("Error"),
@@ -241,7 +274,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("GREEN")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 `You gave **\`${amount}\`** lockpicks to **${user.username}**!`
               )
@@ -256,7 +292,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new RM.Discord.MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription("You don't have enough landmines!")
                 .setThumbnail(message.guild.iconURL())
                 .setTitle("Error"),
@@ -277,7 +316,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("GREEN")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 `You gave **\`${amount}\`** landmines to **${user.username}**!`
               )
@@ -291,7 +333,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("Invalid item!")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),

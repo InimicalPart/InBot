@@ -14,7 +14,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -27,7 +30,10 @@ async function runCommand(message, args, RM) {
   let result = Math.floor(Math.random() * 2);
   let embed = new Discord.MessageEmbed()
     .setColor("GREEN")
-    .setAuthor(message.author.tag, message.author.avatarURL())
+    .setAuthor({
+      name: message.author.tag,
+      iconURL: message.author.avatarURL(),
+    })
     .setDescription(
       `You flipped a coin and got ${result === 0 ? "heads" : "tails"}!`
     )

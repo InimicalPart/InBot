@@ -16,7 +16,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -49,7 +52,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("You do not have permission to use this command.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Permission Denied"),
@@ -63,7 +69,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("Please specify a user.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invalid Arguments"),
@@ -92,7 +101,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("Please specify a user.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invalid Arguments"),
@@ -105,7 +117,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("Please specify a value.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invalid Arguments"),
@@ -127,7 +142,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new Discord.MessageEmbed()
                 .setColor("GREEN")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription(`${user.username}'s bank was cleared.`)
                 .setThumbnail(message.guild.iconURL())
                 .setTitle("Success"),
@@ -140,7 +158,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new Discord.MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription("Please specify a valid bank value.")
                 .setThumbnail(message.guild.iconURL())
                 .setTitle("Invalid Arguments"),
@@ -153,7 +174,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new Discord.MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription("you cannot take more than they have :/")
                 .setThumbnail(message.guild.iconURL())
                 .setTitle("Invalid Arguments"),
@@ -168,9 +192,13 @@ async function runCommand(message, args, RM) {
         );
         let moneyEmbed = new Discord.MessageEmbed()
           .setColor("GREEN")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription(
-            `You took **\`$${numberWithCommas(args[1])}\`** from **${user.username
+            `You took **\`$${numberWithCommas(args[1])}\`** from **${
+              user.username
             }**'s bank. Their bank balance is now **\`$${numberWithCommas(
               bank - args[1]
             )}\`**`
@@ -188,7 +216,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new Discord.MessageEmbed()
               .setColor("GREEN")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(`${user.username}'s wallet was cleared.`)
               .setThumbnail(message.guild.iconURL())
               .setTitle("Success"),
@@ -201,7 +232,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("Please specify a valid bank value.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invalid Arguments"),
@@ -214,7 +248,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 "User does not have **`$" + numberWithCommas(args[1]) + "`**"
               )
@@ -229,9 +266,13 @@ async function runCommand(message, args, RM) {
       let bal2 = info2.amountw;
       let moneyEmbed = new Discord.MessageEmbed()
         .setColor("GREEN")
-        .setAuthor(message.author.tag, message.author.avatarURL())
+        .setAuthor({
+          name: message.author.tag,
+          iconURL: message.author.avatarURL(),
+        })
         .setDescription(
-          `You took **\`$${numberWithCommas(args[1])}\`** from **${user.username
+          `You took **\`$${numberWithCommas(args[1])}\`** from **${
+            user.username
           }**'s wallet. Their new balance is: **\`$${numberWithCommas(
             bal - parseInt(args[1])
           )}\`**`

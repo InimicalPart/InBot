@@ -13,7 +13,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -38,8 +41,8 @@ async function runCommand(message, args, RM) {
 
   const { channel } = message.member.voice;
   if (!channel)
-    return message.channel.send({content:
-      "I'm sorry but you need to be in a voice channel to see lyrics!"
+    return message.channel.send({
+      content: "I'm sorry but you need to be in a voice channel to see lyrics!",
     });
   if (message.guild.me.voice.channel !== message.member.voice.channel) {
     return message.channel.send({

@@ -13,7 +13,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -23,7 +26,9 @@ async function runCommand(message, args, RM) {
   const client = RM.client;
   const db = RM.db;
 
-  if (!message.member.permissions.has(RM.Discord.Permission.FLAGS.ADMINISTRATOR))
+  if (
+    !message.member.permissions.has(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
+  )
     return message.channel.send({
       content:
         "**You Do Not Have The Required Permissions! - [ADMINISTRATOR]**",

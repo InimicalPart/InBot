@@ -13,7 +13,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -192,13 +195,13 @@ async function runCommand(message, args, RM) {
               m.react("✅");
             } else if (
               m.content.toLowerCase() ===
-              queue[0].singer.toLowerCase() +
-              " " +
-              queue[0].title.toLowerCase() ||
+                queue[0].singer.toLowerCase() +
+                  " " +
+                  queue[0].title.toLowerCase() ||
               m.content.toLowerCase() ===
-              queue[0].title.toLowerCase() +
-              " " +
-              queue[0].singer.toLowerCase()
+                queue[0].title.toLowerCase() +
+                  " " +
+                  queue[0].singer.toLowerCase()
             ) {
               if (
                 (songSingerFound && !songNameFound) ||

@@ -52,7 +52,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.username,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -67,7 +70,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.username,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("You need to specify a bet amount.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Error"),
@@ -80,7 +86,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("GREEN")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.username,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription(
             "You can play blackjack with the bot!\n\n" +
               "Welcome to III's Blackjack! Here you can play blackjack with a dealer which even tho the dealer is a robot, it's pretty good at it.\n\n**Card values:**\nAce = **11**\n10, Jack, Queen, King = **10**\n9 = **9**\n8 = **8**\n7 = **7**\n6 = **6**\n5 = **5**\n4 = **4**\n3 = **3**\n2 = **2**\n\n" +
@@ -89,7 +98,7 @@ async function runCommand(message, args, RM) {
           )
           .setThumbnail(message.guild.iconURL())
           .setTitle("Blackjack Help")
-          .setFooter("Blackjack Help")
+          .setFooter({text:"Blackjack Help"})
           .setTimestamp(),
       ],
     });
@@ -105,7 +114,10 @@ async function runCommand(message, args, RM) {
         embeds: [
           new RM.Discord.MessageEmbed()
             .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURL: message.author.avatarURL(),
+            })
             .setDescription("You don't have enough money to make this bet.")
             .setThumbnail(message.guild.iconURL())
             .setTitle("Error"),
@@ -116,7 +128,10 @@ async function runCommand(message, args, RM) {
         embeds: [
           new RM.Discord.MessageEmbed()
             .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURL: message.author.avatarURL(),
+            })
             .setDescription("You can't bet less than 500.")
             .setThumbnail(message.guild.iconURL())
             .setTitle("Error"),
@@ -127,7 +142,10 @@ async function runCommand(message, args, RM) {
         embeds: [
           new RM.Discord.MessageEmbed()
             .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURL: message.author.avatarURL(),
+            })
             .setDescription("You can't bet more than 3,000,000.")
             .setThumbnail(message.guild.iconURL())
             .setTitle("Error"),
@@ -194,7 +212,10 @@ async function runCommand(message, args, RM) {
       if (totalNum == 21) {
         const embed = new RM.Discord.MessageEmbed()
           .setColor("YELLOW")
-          .setAuthor(message.author.username, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.username,
+            iconURL: message.author.avatarURL(),
+          })
           .setTitle(":warning: PUSH :warning:")
           .setDescription(
             `Both the dealer and the player got a blackjack! You don't lose anything`
@@ -212,7 +233,10 @@ async function runCommand(message, args, RM) {
       }
       const embed = new RM.Discord.MessageEmbed()
         .setColor("RED")
-        .setAuthor(message.author.username, message.author.avatarURL())
+        .setAuthor({
+          name: message.author.username,
+          iconURL: message.author.avatarURL(),
+        })
         .setTitle(":x: LOSE :x:")
         .setDescription(`Dealer got a blackjack!`)
         .addFields({
@@ -230,7 +254,10 @@ async function runCommand(message, args, RM) {
     if (totalNum == 21) {
       const embed = new RM.Discord.MessageEmbed()
         .setColor("GREEN")
-        .setAuthor(message.author.username, message.author.avatarURL())
+        .setAuthor({
+          name: message.author.username,
+          iconURL: message.author.avatarURL(),
+        })
         .setTitle(":money_with_wings: BLACKJACK :money_with_wings:")
         .setDescription(`You got a blackjack! You win $${bet * 2}!`)
         .addFields({
@@ -246,7 +273,10 @@ async function runCommand(message, args, RM) {
     }
     const embed = new RM.Discord.MessageEmbed()
       .setColor("GREEN")
-      .setAuthor(message.author.username, message.author.avatarURL())
+      .setAuthor({
+        name: message.author.username,
+        iconURL: message.author.avatarURL(),
+      })
       .setTitle("Blackjack")
       .addFields({
         name: "Your cards",
@@ -257,7 +287,7 @@ async function runCommand(message, args, RM) {
         value: "`" + d1 + " | " + "X" + "`\nValue: " + dFirstNum,
       })
       .setTimestamp()
-      .setFooter("HIT or STAND");
+      .setFooter({text:"HIT or STAND"});
 
     await message.channel.send({ embeds: [embed] });
 
@@ -282,7 +312,8 @@ async function runCommand(message, args, RM) {
     function runGame() {
       var filter2 = (m) => m.author.id === message.author.id;
       message.channel
-        .awaitMessages(filter2, {
+        .awaitMessages({
+          filter: filter2,
           max: 1,
           time: 30000,
           errors: ["time"],
@@ -293,6 +324,7 @@ async function runCommand(message, args, RM) {
             messageNext.content.toLowerCase() === "hit" ||
             messageNext.content.toLowerCase() === "h"
           ) {
+            console.log("a");
             let aCard = getCard();
             let aCardVal = `${aCard}`.substring(1);
             if (aCardVal == "J" || aCardVal == "Q" || aCardVal == "K") {
@@ -326,7 +358,10 @@ async function runCommand(message, args, RM) {
               }
               const embed = new RM.Discord.MessageEmbed()
                 .setColor("GREEN")
-                .setAuthor(message.author.username, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.username,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setTitle(":money_with_wings: BLACKJACK :money_with_wings:")
                 .setDescription(`You got a blackjack! You win $${bet * 2}!`)
                 .addFields({
@@ -351,7 +386,10 @@ async function runCommand(message, args, RM) {
               }
               const embed = new RM.Discord.MessageEmbed()
                 .setColor("GREEN")
-                .setAuthor(message.author.username, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.username,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setTitle("Blackjack")
                 .addFields({
                   name: "Your cards",
@@ -362,7 +400,7 @@ async function runCommand(message, args, RM) {
                   value: "`" + d1 + " | " + "X" + "`\nValue: " + dFirstNum,
                 })
                 .setTimestamp()
-                .setFooter("HIT or STAND, 30 seconds to answer");
+                .setFooter({ text: "HIT or STAND, 30 seconds to answer" });
 
               message.channel.send({ embeds: [embed] });
             }
@@ -390,6 +428,7 @@ async function runCommand(message, args, RM) {
           return gameFinished("timeout");
         });
     }
+    console.log("running game");
     runGame();
     function makeDealerEnd(player, reason) {
       //Dealer makes his moves
@@ -416,7 +455,10 @@ async function runCommand(message, args, RM) {
             if (reason === "bust") {
               const embed = new RM.Discord.MessageEmbed()
                 .setColor("YELLOW")
-                .setAuthor(message.author.username, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.username,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setTitle(":warning: PUSH :warning:")
                 .setDescription(`Both the dealer and you busted!`)
                 .addFields({
@@ -433,7 +475,10 @@ async function runCommand(message, args, RM) {
             } else {
               const embed = new RM.Discord.MessageEmbed()
                 .setColor("GREEN")
-                .setAuthor(message.author.username, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.username,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setTitle(":white_check_mark: YOU WIN :white_check_mark:")
                 .setDescription(`The dealer BUSTED!`)
                 .addFields({
@@ -452,7 +497,10 @@ async function runCommand(message, args, RM) {
           } else if (dTotalNumF === 21) {
             const embed = new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.username, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.username,
+                iconURL: message.author.avatarURL(),
+              })
               .setTitle(":x: DEALER WINS :x:")
               .setDescription(`The dealer got a blackjack!`)
               .addFields({
@@ -471,7 +519,10 @@ async function runCommand(message, args, RM) {
             //dealer stands
             const embed = new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.username, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.username,
+                iconURL: message.author.avatarURL(),
+              })
               .setTitle(":x: DEALER WINS :x:")
               .setDescription(
                 `The dealer had \`${dTotalNumF}\` and you had \`${totalNum}\`.`
@@ -491,7 +542,10 @@ async function runCommand(message, args, RM) {
           } else if (dTotalNumF === totalNum) {
             const embed = new RM.Discord.MessageEmbed()
               .setColor("YELLOW")
-              .setAuthor(message.author.username, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.username,
+                iconURL: message.author.avatarURL(),
+              })
               .setTitle(":warning: PUSH :warning:")
               .addFields({
                 name: "Your cards",
@@ -508,7 +562,10 @@ async function runCommand(message, args, RM) {
           } else if (dTotalNumF < totalNum && reason !== "bust") {
             const embed = new RM.Discord.MessageEmbed()
               .setColor("GREEN")
-              .setAuthor(message.author.username, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.username,
+                iconURL: message.author.avatarURL(),
+              })
               .setTitle(":white_check_mark: YOU WIN :white_check_mark:")
               .setDescription(
                 `The dealer had \`${dTotalNumF}\` and you had \`${totalNum}\`. You won!`
@@ -537,7 +594,10 @@ async function runCommand(message, args, RM) {
             }
             const embed = new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.username, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.username,
+                iconURL: message.author.avatarURL(),
+              })
               .setTitle(":x: BUST :x:")
               .setDescription(`You BUSTED! You lose ${bet}!`)
               .addFields({
@@ -568,23 +628,25 @@ async function runCommand(message, args, RM) {
     }
     async function gameFinished(reason) {
       if (reason == "timeout") {
-        message.channel.send({content:
-          "Game ended because time ran out. You lost: `$" + bet + "`"
-          }  );
+        message.channel.send({
+          content: "Game ended because time ran out. You lost: `$" + bet + "`",
+        });
       } else if (reason == "bust") {
-        message.channel.send({content:
-          "Game ended because of bust. You lost: `$" + bet + "`"
-          }  );
+        message.channel.send({
+          content: "Game ended because of bust. You lost: `$" + bet + "`",
+        });
       } else if (reason == "invalid") {
-        message.channel.send({content:
-          "Game ended because of invalid input. You lost: `$" + bet + "`"
-          }  );
+        message.channel.send({
+          content:
+            "Game ended because of invalid input. You lost: `$" + bet + "`",
+        });
       } else if (reason == "dblackjack") {
         const info = await connect.fetch("currency", message.author.id);
-        message.channel.send({content:
-          "Game ended because the dealer got a blackjack. You lost: `$" +
+        message.channel.send({
+          content:
+            "Game ended because the dealer got a blackjack. You lost: `$" +
             bet * 2 +
-                  "`"
+            "`",
         });
         connect.update(
           "currency",
@@ -598,19 +660,21 @@ async function runCommand(message, args, RM) {
           message.author.id,
           info.amountw - 0 + bet * 2
         );
-        message.channel.send({content:
-          "Game ended because the player got a blackjack. You win: `$" +
+        message.channel.send({
+          content:
+            "Game ended because the player got a blackjack. You win: `$" +
             bet * 2 +
-            "`"
-         } );
-        message.channel.send({content:
-          "`$" + bet * 2 + "` has been added to your account"
+            "`",
+        });
+        message.channel.send({
+          content: "`$" + bet * 2 + "` has been added to your account",
         });
       } else if (reason == "dealerwin") {
-        message.channel.send({content:
-          "Game ended because the dealer got a blackjack or got closest to a blackjack. You lost: `$" +
+        message.channel.send({
+          content:
+            "Game ended because the dealer got a blackjack or got closest to a blackjack. You lost: `$" +
             bet +
-            "`"
+            "`",
         });
       } else if (reason == "playerwin") {
         const info = await connect.fetch("currency", message.author.id);
@@ -619,30 +683,33 @@ async function runCommand(message, args, RM) {
           message.author.id,
           info.amountw - 0 + bet * 2
         );
-        message.channel.send({content:
-          "Game ended because the player got a blackjack or got closest to a blackjack. You win: `$" +
+        message.channel.send({
+          content:
+            "Game ended because the player got a blackjack or got closest to a blackjack. You win: `$" +
             bet * 2 +
-            "`"
+            "`",
         });
-        message.channel.send({content:
-          "`$" + bet * 2 + "` has been added to your account"
+        message.channel.send({
+          content: "`$" + bet * 2 + "` has been added to your account",
         });
       } else if (reason == "push") {
         const info = await connect.fetch("currency", message.author.id);
         connect.update("currency", message.author.id, info.amountw - 0 + bet);
-        message.channel.send({content:
-          "Game ended because both the dealer and the player got a blackjack, busted or have the same card value. You didn't lose anything."
+        message.channel.send({
+          content:
+            "Game ended because both the dealer and the player got a blackjack, busted or have the same card value. You didn't lose anything.",
         });
       }
       const newMoney = await connect.fetch("currency", message.author.id);
       const wallet = "" + newMoney.amountw;
       if (wallet.includes("-")) {
-        message.channel.send({content:
-          "**Oh shoot! You're in the negatives, work to earn back your money!**"
+        message.channel.send({
+          content:
+            "**Oh shoot! You're in the negatives, work to earn back your money!**",
         });
       }
-      message.channel.send({content:
-         "Your balance is now: `$" + newMoney.amountw + "`",
+      message.channel.send({
+        content: "Your balance is now: `$" + newMoney.amountw + "`",
       });
 
       await connect.end(true);

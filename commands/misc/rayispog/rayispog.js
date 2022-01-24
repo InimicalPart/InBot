@@ -14,7 +14,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -142,7 +145,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new Discord.MessageEmbed()
               .setColor("#000000")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 `**Dealer's First Card -** ${
                   dealerHand[0].display
@@ -150,7 +156,7 @@ async function runCommand(message, args, RM) {
                   .map((card) => card.display)
                   .join(" | ")}`
               )
-              .setFooter("[Hit / Stand]")
+              .setFooter({text:"[Hit / Stand]"})
               .setThumbnail(message.guild.iconURL())
               .setTitle("Blackjack"),
           ],

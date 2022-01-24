@@ -16,7 +16,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.username, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.username,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -37,19 +40,26 @@ async function runCommand(message, args, RM) {
       const { connect } = require("../../../databasec");
       await connect();
       await connect.create("currency");
-      let user =
-        message.mentions.members.first() ||
-        message.guild.members.cache.get(args[0]) ||
-        message.guild.members.cache.find(
-          (r) =>
-            r.user.username.toLowerCase() === args.join(" ").toLocaleLowerCase()
-        ) ||
-        message.guild.members.cache.find(
-          (r) =>
-            r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
-        ) ||
-        (await message.guild.members.fetch(args[0])) ||
-        message.member;
+      console.log("Connected to database & created currency table");
+      let user;
+      if (args[0]) {
+        user =
+          message.mentions.members.first() ||
+          a ||
+          message.guild.members.cache.find(
+            (r) =>
+              r.user.username.toLowerCase() ===
+              args.join(" ").toLocaleLowerCase()
+          ) ||
+          message.guild.members.cache.find(
+            (r) =>
+              r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
+          ) ||
+          b ||
+          message.member;
+      } else {
+        user = message.member;
+      }
 
       if (!user) {
         await connect.end(true);
@@ -57,7 +67,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(`${args[0]} is not a valid user.`)
               .setThumbnail(message.guild.iconURL())
               .setTitle("User Not Found"),
@@ -67,6 +80,7 @@ async function runCommand(message, args, RM) {
       if (user.user) {
         user = user.user;
       }
+      console.log(message.member);
       const username = user.username;
       if ((await connect.fetch("currency", user.id)) === null) {
         await connect.add("currency", user.id, 0, 0, 1000, 0);
@@ -76,7 +90,10 @@ async function runCommand(message, args, RM) {
       const bank = parseInt(info.amountb);
       if (user) {
         let embed = new Discord.MessageEmbed()
-          .setAuthor(message.author.username, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.username,
+            iconURL: message.author.avatarURL(),
+          })
           .setThumbnail(message.guild.iconURL())
           .setTitle(`${username}'s Balance`)
           .setTimestamp();
@@ -104,7 +121,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.username, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.username,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 "Could not find user. Please make sure you are using a mention, nickname, or ID."
               )

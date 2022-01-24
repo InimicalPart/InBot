@@ -16,7 +16,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -28,7 +31,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("You are already playing a game of Sudoku!")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Already Playing"),
@@ -98,7 +104,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("Invalid input.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invalid Input"),
@@ -110,7 +119,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("Invalid input.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invalid Input"),
@@ -122,7 +134,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("Invalid input.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invalid Input"),
@@ -137,7 +152,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("Invalid input.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invalid Input"),
@@ -149,7 +167,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("Invalid input.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invalid Input"),
@@ -161,7 +182,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("Invalid input.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invalid Input"),
@@ -173,7 +197,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("Invalid board spot.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invalid spot"),
@@ -191,7 +218,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new RM.Discord.MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription("You lost! Too many mistakes")
                 .setThumbnail(message.guild.iconURL())
                 .setTitle("You lost!"),
@@ -202,11 +232,14 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(":x: The number `" + val + "` is incorrect.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invalid Input")
-              .setFooter("You have " + (3 - mistakes) + " tries left."),
+              .setFooter({text:"You have " + (3 - mistakes) + " tries left."}),
           ],
         });
       } else {
@@ -218,7 +251,10 @@ async function runCommand(message, args, RM) {
           collector.stop();
           const embed = new RM.Discord.MessageEmbed()
             .setColor("GREEN")
-            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURL: message.author.avatarURL(),
+            })
             .setDescription(
               ":white_check_mark: You solved the sudoku in `" +
                 RM.pretty_ms(timeTaken) +
@@ -260,18 +296,21 @@ async function runCommand(message, args, RM) {
         embeds: [
           new RM.Discord.MessageEmbed()
             .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURL: message.author.avatarURL(),
+            })
             .setDescription("You gave up!")
             .setThumbnail(message.guild.iconURL())
             .setTitle("You gave up!")
-            .setFooter(
+            .setFooter({text:
               RM.pretty_ms(timeTaken) +
                 " | You had " +
                 moves +
                 " moves and " +
                 mistakes +
                 " mistakes."
-            ),
+             }),
         ],
       });
       for (var i = 0; i < global.sudokuList.length; i++) {

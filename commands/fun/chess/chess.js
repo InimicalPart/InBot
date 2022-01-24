@@ -14,7 +14,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -30,7 +33,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("You are already playing chess with someone!")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Chess"),
@@ -42,7 +48,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("You need to specify a user to play chess with!")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Error"),
@@ -75,7 +84,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("**Error:** User not found!")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Error"),
@@ -91,7 +103,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("You cannot play chess with yourself!")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Error"),
@@ -104,7 +119,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription(
             user.username + " is already playing chess with someone!"
           )
@@ -163,10 +181,8 @@ async function runCommand(message, args, RM) {
                         embeds: [
                           new RM.Discord.MessageEmbed()
                             .setColor("RED")
-                            .setAuthor(
-                              message.author.tag,
-                              message.author.avatarURL()
-                            )
+                            .setAuthor({ name:
+                              message.author.tag, iconURL: message.author.avatarURL() })
                             .setDescription("The provided FEN was invalid.")
                             .setThumbnail(message.guild.iconURL())
                             .setTitle("Error"),
@@ -219,13 +235,16 @@ async function runCommand(message, args, RM) {
             .send({
               files: [
                 {
-                  attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                  attachment: path.join(
+                    __dirname,
+                    "board_" + message.author.id + ".png"
+                  ),
                   name: "board_" + message.author.id + ".png",
                 },
               ],
             })
             .catch(console.error);
-        }, 1000)
+        }, 1000);
         message.channel.send({
           content: whiteUser.username + " (White) is starting!",
         });
@@ -341,7 +360,10 @@ async function runCommand(message, args, RM) {
             whiteCheck: whitecheck, //If white is in check!
             blackCheck: blackcheck, //If black is in check!
             lastMove: lastmove, //The last move that happened so far; d4: where the piece was; d5: where the piece went; put false for not place!
-            dirsave: path.join(__dirname, "board_" + message.author.id + ".png"), //Where the image will be saved!
+            dirsave: path.join(
+              __dirname,
+              "board_" + message.author.id + ".png"
+            ), //Where the image will be saved!
           })
             .then(async () => {
               setTimeout(async () => {
@@ -349,12 +371,16 @@ async function runCommand(message, args, RM) {
                   .send({
                     files: [
                       {
-                        attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                        attachment: path.join(
+                          __dirname,
+                          "board_" + message.author.id + ".png"
+                        ),
                         name: "board_" + message.author.id + ".png",
                       },
                     ],
-                  }).catch(console.error);
-              }, 1000)
+                  })
+                  .catch(console.error);
+              }, 1000);
               whitecheck = false;
               blackcheck = false;
             })
@@ -515,7 +541,10 @@ async function runCommand(message, args, RM) {
               whiteCheck: whitecheck, //If white is in check!
               blackCheck: blackcheck, //If black is in check!
               lastMove: lastmove, //The last move that happened so far; d4: where the piece was; d5: where the piece went; put false for not place!
-              dirsave: path.join(__dirname, "board_" + message.author.id + ".png"), //Where the image will be saved!
+              dirsave: path.join(
+                __dirname,
+                "board_" + message.author.id + ".png"
+              ), //Where the image will be saved!
             })
               .then(async () => {
                 if (chess.in_checkmate()) {
@@ -526,13 +555,16 @@ async function runCommand(message, args, RM) {
                         content: ":warning: CHECKMATE :warning:",
                         files: [
                           {
-                            attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                            attachment: path.join(
+                              __dirname,
+                              "board_" + message.author.id + ".png"
+                            ),
                             name: "board_" + message.author.id + ".png",
                           },
                         ],
                       })
                       .catch(console.error);
-                  }, 1000)
+                  }, 1000);
                   if (chess.fen().split(" ")[1] === "w") {
                     activeColor = "white";
                   } else {
@@ -632,9 +664,9 @@ async function runCommand(message, args, RM) {
                         )
                         .addField("Winner", whoWon)
                         .addField("PGN", chess.pgn({ newline_char: "\n" }))
-                        .setFooter(
-                          "Use https://lichess.org/paste to analyze your game!"
-                        );
+                        .setFooter({
+                          text: "Use https://lichess.org/paste to analyze your game!",
+                        });
                       m.edit({ embeds: [embed] });
 
                       for (var i = 0; i < global.chessList.length; i++) {
@@ -654,7 +686,10 @@ async function runCommand(message, args, RM) {
                     .catch(console.error);
                   setTimeout(() => {
                     require("fs").unlinkSync(
-                      path.join(__dirname, "board_" + message.author.id + ".png")
+                      path.join(
+                        __dirname,
+                        "board_" + message.author.id + ".png"
+                      )
                     );
                   }, 1000);
                 } else if (chess.in_check()) {
@@ -664,7 +699,10 @@ async function runCommand(message, args, RM) {
                         content: ":warning: CHECK :warning:",
                         files: [
                           {
-                            attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                            attachment: path.join(
+                              __dirname,
+                              "board_" + message.author.id + ".png"
+                            ),
                             name: "board_" + message.author.id + ".png",
                           },
                         ],
@@ -690,12 +728,16 @@ async function runCommand(message, args, RM) {
                               embeds: [
                                 new RM.Discord.MessageEmbed()
                                   .setTitle("Chess Engine")
-                                  .setDescription("Calculating the best move..."),
+                                  .setDescription(
+                                    "Calculating the best move..."
+                                  ),
                               ],
                             })
                             .then(async (m) => {
                               const jsChessEngine = require("js-chess-engine");
-                              const engine = new jsChessEngine.Game(chess.fen());
+                              const engine = new jsChessEngine.Game(
+                                chess.fen()
+                              );
                               const bestMove = await engine.aiMove(engineLevel);
                               const color =
                                 chess.turn() === "w" ? "WHITE" : "BLACK";
@@ -706,11 +748,11 @@ async function runCommand(message, args, RM) {
                                       .setTitle("Chess Engine")
                                       .setDescription(
                                         "The engine predicted `" +
-                                        i +
-                                        " -> " +
-                                        bestMove[i] +
-                                        "` to be the best move for: " +
-                                        color
+                                          i +
+                                          " -> " +
+                                          bestMove[i] +
+                                          "` to be the best move for: " +
+                                          color
                                       ),
                                   ],
                                 });
@@ -720,7 +762,7 @@ async function runCommand(message, args, RM) {
                         }
                       })
                       .catch(console.error);
-                  }, 1000)
+                  }, 1000);
                 } else if (chess.in_stalemate()) {
                   collector.stop();
                   setTimeout(async () => {
@@ -729,13 +771,16 @@ async function runCommand(message, args, RM) {
                         content: ":warning: STALEMATE :warning:",
                         files: [
                           {
-                            attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                            attachment: path.join(
+                              __dirname,
+                              "board_" + message.author.id + ".png"
+                            ),
                             name: "board_" + message.author.id + ".png",
                           },
                         ],
                       })
                       .catch(console.error);
-                  }, 1000)
+                  }, 1000);
                   message.channel.send({ content: "Stalemate, no one wins." });
                   message.channel
                     .send({
@@ -816,9 +861,9 @@ async function runCommand(message, args, RM) {
                         )
                         .addField("Winner", whoWon)
                         .addField("PGN", chess.pgn({ newline_char: "\n" }))
-                        .setFooter(
-                          "Use https://lichess.org/paste to analyze your game!"
-                        );
+                        .setFooter({
+                          text: "Use https://lichess.org/paste to analyze your game!",
+                        });
                       m.edit({ embeds: [embed] });
                       for (var i = 0; i < global.chessList.length; i++) {
                         if (global.chessList[i] === message.author.id) {
@@ -837,7 +882,10 @@ async function runCommand(message, args, RM) {
                     .catch(console.error);
                   setTimeout(() => {
                     require("fs").unlinkSync(
-                      path.join(__dirname, "board_" + message.author.id + ".png")
+                      path.join(
+                        __dirname,
+                        "board_" + message.author.id + ".png"
+                      )
                     );
                   }, 1000);
                 } else if (chess.in_draw()) {
@@ -848,13 +896,16 @@ async function runCommand(message, args, RM) {
                         content: ":warning: DRAW :warning:",
                         files: [
                           {
-                            attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                            attachment: path.join(
+                              __dirname,
+                              "board_" + message.author.id + ".png"
+                            ),
                             name: "board_" + message.author.id + ".png",
                           },
                         ],
                       })
                       .catch(console.error);
-                  }, 1000)
+                  }, 1000);
                   message.channel.send({ content: "Draw, no one wins." });
                   message.channel
                     .send({
@@ -935,9 +986,9 @@ async function runCommand(message, args, RM) {
                         )
                         .addField("Winner", whoWon)
                         .addField("PGN", chess.pgn({ newline_char: "\n" }))
-                        .setFooter(
-                          "Use https://lichess.org/paste to analyze your game!"
-                        );
+                        .setFooter({
+                          text: "Use https://lichess.org/paste to analyze your game!",
+                        });
                       m.edit({ embeds: [embed] });
                       for (var i = 0; i < global.chessList.length; i++) {
                         if (global.chessList[i] === message.author.id) {
@@ -956,7 +1007,10 @@ async function runCommand(message, args, RM) {
                     .catch(console.error);
                   setTimeout(() => {
                     require("fs").unlinkSync(
-                      path.join(__dirname, "board_" + message.author.id + ".png")
+                      path.join(
+                        __dirname,
+                        "board_" + message.author.id + ".png"
+                      )
                     );
                   }, 1000);
                 } else if (chess.insufficient_material()) {
@@ -967,13 +1021,16 @@ async function runCommand(message, args, RM) {
                         content: ":warning: INSUFFICIENT MATERIAL :warning:",
                         files: [
                           {
-                            attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                            attachment: path.join(
+                              __dirname,
+                              "board_" + message.author.id + ".png"
+                            ),
                             name: "board_" + message.author.id + ".png",
                           },
                         ],
                       })
                       .catch(console.error);
-                  }, 1000)
+                  }, 1000);
                   message.channel.send({ content: "Draw, no one wins." });
                   message.channel
                     .send({
@@ -1053,9 +1110,9 @@ async function runCommand(message, args, RM) {
                         )
                         .addField("Winner", whoWon)
                         .addField("PGN", chess.pgn({ newline_char: "\n" }))
-                        .setFooter(
-                          "Use https://lichess.org/paste to analyze your game!"
-                        );
+                        .setFooter({
+                          text: "Use https://lichess.org/paste to analyze your game!",
+                        });
                       m.edit({ embeds: [embed] });
                       for (var i = 0; i < global.chessList.length; i++) {
                         if (global.chessList[i] === message.author.id) {
@@ -1074,7 +1131,10 @@ async function runCommand(message, args, RM) {
                     .catch(console.error);
                   setTimeout(() => {
                     require("fs").unlinkSync(
-                      path.join(__dirname, "board_" + message.author.id + ".png")
+                      path.join(
+                        __dirname,
+                        "board_" + message.author.id + ".png"
+                      )
                     );
                   }, 1000);
                 } else {
@@ -1097,7 +1157,10 @@ async function runCommand(message, args, RM) {
                       content: username + "'s (" + color + ") turn!",
                       files: [
                         {
-                          attachment: path.join(__dirname, "board_" + message.author.id + ".png"),
+                          attachment: path.join(
+                            __dirname,
+                            "board_" + message.author.id + ".png"
+                          ),
                           name: "board_" + message.author.id + ".png",
                         },
                       ],
@@ -1159,11 +1222,11 @@ async function runCommand(message, args, RM) {
                           .setTitle("Chess Engine")
                           .setDescription(
                             "The engine predicted `" +
-                            i +
-                            " -> " +
-                            bestMove[i] +
-                            "` to be the best move for: " +
-                            color
+                              i +
+                              " -> " +
+                              bestMove[i] +
+                              "` to be the best move for: " +
+                              color
                           ),
                       ],
                     });
@@ -1188,11 +1251,11 @@ async function runCommand(message, args, RM) {
                           .setTitle("Chess Engine")
                           .setDescription(
                             "The engine predicted `" +
-                            i +
-                            " -> " +
-                            bestMove[i] +
-                            "` to be the best move for: " +
-                            color
+                              i +
+                              " -> " +
+                              bestMove[i] +
+                              "` to be the best move for: " +
+                              color
                           ),
                       ],
                     });
@@ -1240,11 +1303,11 @@ async function runCommand(message, args, RM) {
             .setTitle("Chess Game Settings")
             .setDescription("Change the game settings such as the engine")
             .addField("♟️ Chess Engine", "Engine Settings. ID: `engine`", true)
-            .setAuthor(
-              messageNext.author.username,
+            .setAuthor({ name:
+              messageNext.author.username, iconURL:
               messageNext.author.avatarURL()
-            )
-            .setFooter("Type the option you want to change.");
+            })
+            .setFooter({ text: "Type the option you want to change." });
           message.channel.send({ embeds: [settings] });
           var filter = (m) =>
             [message.author.id, user.id].includes(m.author.id);
@@ -1274,14 +1337,16 @@ async function runCommand(message, args, RM) {
                   .addField(
                     "Auto-Play Level 0-4",
                     "Current Level: " +
-                    engineAutoPlayLevel +
-                    ". ID: `autoplaylevel`"
+                      engineAutoPlayLevel +
+                      ". ID: `autoplaylevel`"
                   )
                   .addField(
                     "Help Colors (none/white/black/both)",
                     "Current Status: " + engineHelpColors + ". ID: `helpcolors`"
                   )
-                  .setFooter("Select one of the ids and their new value");
+                  .setFooter({
+                    text: "Select one of the ids and their new value",
+                  });
                 message.channel.send({ embeds: [embed] });
                 var filter = (m) =>
                   [message.author.id, user.id].includes(m.author.id);
@@ -1388,7 +1453,7 @@ async function runCommand(message, args, RM) {
                           engineAutoPlay = "black";
                           message.channel.send(
                             "The engine will now AutoPlay for: " +
-                            engineAutoPlay.toUpperCase()
+                              engineAutoPlay.toUpperCase()
                           );
                         }
                         if (value === "white") {
@@ -1521,11 +1586,11 @@ async function runCommand(message, args, RM) {
                         .setTitle("Chess Engine")
                         .setDescription(
                           "The engine predicted `" +
-                          i +
-                          " -> " +
-                          bestMove[i] +
-                          "` to be the best move for: " +
-                          color
+                            i +
+                            " -> " +
+                            bestMove[i] +
+                            "` to be the best move for: " +
+                            color
                         ),
                     ],
                   });

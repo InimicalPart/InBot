@@ -14,55 +14,56 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
       ],
     });
   }
-  const { Game, Colors, Values } = require('uno-engine');
-  const players = [message.author.username, 'Unknown#0000'];// you can add your own rules (see https://github.com/danguilherme/uno/tree/v0.1.0-alpha/src/house-rules)
+  const { Game, Colors, Values } = require("uno-engine");
+  const players = [message.author.username, "Unknown#0000"]; // you can add your own rules (see https://github.com/danguilherme/uno/tree/v0.1.0-alpha/src/house-rules)
   const game = new Game(players);
 
-  const card = game.discardedCard;  // current card in-play
+  const card = game.discardedCard; // current card in-play
   const cardColor = card.color;
   const cardValue = card.value;
   //send a message to the channel about the card
   message.channel.send({
-    embeds:[new RM.Discord.MessageEmbed()
-      
-    ]
-  })
+    embeds: [new RM.Discord.MessageEmbed()],
+  });
 }
 
 function commandTriggers() {
-      return commandInfo.possibleTriggers;
-    }
+  return commandInfo.possibleTriggers;
+}
 function commandPrim() {
-      return commandInfo.primaryName;
-    }
+  return commandInfo.primaryName;
+}
 function commandAliases() {
-      return commandInfo.aliases;
-    }
+  return commandInfo.aliases;
+}
 function commandHelp() {
-      return commandInfo.help;
-    }
+  return commandInfo.help;
+}
 function commandUsage() {
-      return commandInfo.usage;
-    }
+  return commandInfo.usage;
+}
 function commandCategory() {
-      return commandInfo.category;
-    }
+  return commandInfo.category;
+}
 module.exports = {
-      runCommand,
-      commandTriggers,
-      commandHelp,
-      commandAliases,
-      commandPrim,
-      commandUsage,
-      commandCategory,
-    }; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
+  runCommand,
+  commandTriggers,
+  commandHelp,
+  commandAliases,
+  commandPrim,
+  commandUsage,
+  commandCategory,
+}; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */
 /* */

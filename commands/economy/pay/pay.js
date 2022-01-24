@@ -14,7 +14,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -65,7 +68,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .fsetColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("**ERROR:** Could not find user.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),
@@ -87,7 +93,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("You can't pay nothing!")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),
@@ -102,7 +111,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("**ERROR:** Invalid amount.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),
@@ -115,7 +127,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("**ERROR:** Invalid amount.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),
@@ -130,7 +145,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("You don't have $" + amount)
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),
@@ -151,13 +169,16 @@ async function runCommand(message, args, RM) {
         embeds: [
           new RM.Discord.MessageEmbed()
             .setColor("GREEN")
-            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURL: message.author.avatarURL(),
+            })
             .setDescription(
               "You have transfered $" +
-              amount +
-              " to **" +
-              user.username +
-              "**."
+                amount +
+                " to **" +
+                user.username +
+                "**."
             )
             .setThumbnail(message.guild.iconURL())
             .setTitle("Success"),
