@@ -14,7 +14,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -29,7 +32,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.username, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.username,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("You do not have permission to use this command.")
           .setTimestamp()
           .setThumbnail(message.guild.iconURL())
@@ -59,7 +65,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("You need to specify an item to summon.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),
@@ -80,11 +89,14 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("GREEN")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 "You have summoned a banknote! You now have **" +
-                inventory.banknote +
-                "** banknote(s)"
+                  inventory.banknote +
+                  "** banknote(s)"
               )
               .setThumbnail(message.guild.iconURL())
               .setTitle("Banknote(s) summoned"),
@@ -102,11 +114,14 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("GREEN")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 "You have summoned a padlock! You now have **" +
-                inventory.padlock +
-                "** padlock(s)"
+                  inventory.padlock +
+                  "** padlock(s)"
               )
               .setThumbnail(message.guild.iconURL())
               .setTitle("Padlock(s) summoned"),
@@ -124,13 +139,17 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("GREEN")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 "You have summoned a landmine! You now have **" +
-                inventory.landmine +
-                "** landmine(s)"
-              )]
-        })
+                  inventory.landmine +
+                  "** landmine(s)"
+              ),
+          ],
+        });
       } else if (args[0] === "lockpick") {
         if (inventory.lockpick === undefined) {
           inventory.lockpick = amount;
@@ -143,11 +162,14 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("GREEN")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 "You have summoned a lockpick! You now have **" +
-                inventory.lockpick +
-                "** lockpick(s)"
+                  inventory.lockpick +
+                  "** lockpick(s)"
               )
               .setThumbnail(message.guild.iconURL())
               .setTitle("Lockpick(s) summoned"),
@@ -159,7 +181,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("There is no item with that id")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),

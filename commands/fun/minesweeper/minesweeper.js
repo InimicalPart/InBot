@@ -25,7 +25,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -37,7 +40,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("You are already playing a game of minesweeper!")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Already Playing"),
@@ -55,7 +61,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("Size must be between 7 and 18")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Size Error"),
@@ -69,7 +78,10 @@ async function runCommand(message, args, RM) {
         embeds: [
           new RM.Discord.MessageEmbed()
             .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURL: message.author.avatarURL(),
+            })
             .setDescription("Invalid size")
             .setThumbnail(message.guild.iconURL())
             .setTitle("Invalid Size"),
@@ -82,24 +94,33 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("Invalid bombs")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invalid Bombs"),
           ],
         });
-      } else if (parseInt(sizebombs[1]) < 10 || calcPercent(75, parseInt(size * size)) < parseInt(sizebombs[1])) {
+      } else if (
+        parseInt(sizebombs[1]) < 10 ||
+        calcPercent(75, parseInt(size * size)) < parseInt(sizebombs[1])
+      ) {
         return message.channel.send(
           new RM.Discord.MessageEmbed()
             .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURL: message.author.avatarURL(),
+            })
             .setDescription(
               "Invalid bombs. Must be between 10-" +
-              calcPercent(75, parseInt(size * size)) +
-              " for size: " +
-              size +
-              "x" +
-              size
+                calcPercent(75, parseInt(size * size)) +
+                " for size: " +
+                size +
+                "x" +
+                size
             )
             .setThumbnail(message.guild.iconURL())
             .setTitle("Invalid Bombs")
@@ -110,7 +131,10 @@ async function runCommand(message, args, RM) {
       return message.channel.send(
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Invalid bomb amount")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Invalid bomb amount")
@@ -415,8 +439,8 @@ async function runCommand(message, args, RM) {
               let item = autoReveal[i].split(":");
               movesA.push(
                 numToSSColumn(parseInt(item[0]) + 1) +
-                ":" +
-                numToSSColumn(parseInt(item[1]) + 1)
+                  ":" +
+                  numToSSColumn(parseInt(item[1]) + 1)
               );
             }
             message.channel.send({
@@ -497,7 +521,8 @@ async function runCommand(message, args, RM) {
                       "```",
                   });
                 }
-              }).catch(console.error);
+              })
+              .catch(console.error);
           }
         } else {
           revealedBoard[xnum - 1][ynum - 1] = true;
@@ -579,7 +604,7 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setTitle("You won!")
-              .setAuthor(message.author.username, message.author.avatarURL)
+              .setAuthor({ name:message.author.username,iconURL: message.author.avatarURL})
               .setDescription(
                 "You beat minesweeper in: `" + RM.pretty_ms(timetaken) + "`"
               )
@@ -714,8 +739,8 @@ async function runCommand(message, args, RM) {
           let item = autoReveal[i].split(":");
           movesA.push(
             numToSSColumn(parseInt(item[0]) + 1) +
-            ":" +
-            numToSSColumn(parseInt(item[1]) + 1)
+              ":" +
+              numToSSColumn(parseInt(item[1]) + 1)
           );
         }
         for (let i in autoReveal) {
@@ -758,30 +783,33 @@ async function runCommand(message, args, RM) {
       message.channel.send({
         content: "Are you sure you want to end the game? (y/n)",
       });
-      message.channel.awaitMessages({ filter, max: 1 }).then((messageNext2) => {
-        const msg2 = messageNext2.first().content.toLowerCase().split(" ");
-        if (msg2[0] === "yes" || msg2[0] === "y") {
-          message.channel.send({
-            content:
-              "Game ended! Time: `" +
-              RM.pretty_ms(new Date().getTime() - gameTime) +
-              "`",
-          });
-          for (var i = 0; i < global.mineSweeperList.length; i++) {
-            if (global.mineSweeperList[i] === message.author.id) {
-              global.mineSweeperList.splice(i, 1);
-              i--;
+      message.channel
+        .awaitMessages({ filter, max: 1 })
+        .then((messageNext2) => {
+          const msg2 = messageNext2.first().content.toLowerCase().split(" ");
+          if (msg2[0] === "yes" || msg2[0] === "y") {
+            message.channel.send({
+              content:
+                "Game ended! Time: `" +
+                RM.pretty_ms(new Date().getTime() - gameTime) +
+                "`",
+            });
+            for (var i = 0; i < global.mineSweeperList.length; i++) {
+              if (global.mineSweeperList[i] === message.author.id) {
+                global.mineSweeperList.splice(i, 1);
+                i--;
+              }
             }
+            message.channel.send({
+              content: "```js\n" + renderBoard(textBoard) + "```",
+            });
+            collector.stop();
+            return;
+          } else if (msg2[0] === "no" || msg2[0] === "n") {
+            message.channel.send({ content: "Ok." });
           }
-          message.channel.send({
-            content: "```js\n" + renderBoard(textBoard) + "```",
-          });
-          collector.stop();
-          return;
-        } else if (msg2[0] === "no" || msg2[0] === "n") {
-          message.channel.send({ content: "Ok." });
-        }
-      }).catch(console.error);
+        })
+        .catch(console.error);
     }
   });
   // cmd stuff here
@@ -846,10 +874,10 @@ function renderBoard(board) {
   for (let i in a) {
     newerBoard.push(
       numToSSColumn(parseInt(i) + 1) +
-      " | " +
-      a[i] +
-      " | " +
-      numToSSColumn(parseInt(i) + 1)
+        " | " +
+        a[i] +
+        " | " +
+        numToSSColumn(parseInt(i) + 1)
     );
   }
   newerBoard.push(bottom);

@@ -223,7 +223,7 @@ client.on("messageCreate", async (message) => {
       .setColor("RED")
       .setTitle("Error")
       .setDescription(`:x: Commands can only be used in servers.`)
-      .setFooter(`${message.author.tag} (${message.author.id})`)
+      .setFooter({ text: `${message.author.tag} (${message.author.id})` })
       .setTimestamp();
     return message.reply(em);
   }

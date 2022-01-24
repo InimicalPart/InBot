@@ -90,7 +90,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -102,7 +105,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("You need to specify the type to convert.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("No Command Specified"),
@@ -114,7 +120,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("You need to specify the value to convert.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("No Value Specified"),
@@ -146,7 +155,10 @@ async function runCommand(message, args, RM) {
         embeds: [
           new RM.Discord.MessageEmbed()
             .setColor("RED")
-            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURL: message.author.avatarURL(),
+            })
             .setDescription("Unknown type.")
             .setThumbnail(message.guild.iconURL())
             .setTitle("Unknown Type"),
@@ -157,7 +169,10 @@ async function runCommand(message, args, RM) {
     embeds: [
       new RM.Discord.MessageEmbed()
         .setColor("GREEN")
-        .setAuthor(message.author.tag, message.author.avatarURL())
+        .setAuthor({
+          name: message.author.tag,
+          iconURL: message.author.avatarURL(),
+        })
         .setDescription("```" + result + "```")
         .setThumbnail(message.guild.iconURL())
         .setTitle("Converted"),

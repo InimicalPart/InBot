@@ -13,7 +13,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -51,7 +54,9 @@ async function runCommand(message, args, RM) {
 
   let reason = args.slice(1).join(" ");
 
-  if (!message.guild.me.permissions.has(RM.Discord.Permission.FLAGS.BAN_MEMBERS))
+  if (
+    !message.guild.me.permissions.has(RM.Discord.Permission.FLAGS.BAN_MEMBERS)
+  )
     return message.channel.send({
       content: "**I Don't Have Permissions To Unban Someone! - [BAN_MEMBERS]**",
     });
@@ -60,7 +65,10 @@ async function runCommand(message, args, RM) {
       message.guild.members.unban(bannedMember.user.id, reason);
       var sembed = new MessageEmbed()
         .setColor("GREEN")
-        .setAuthor(message.guild.name, message.guild.iconURL())
+        .setAuthor({
+          name: message.guild.name,
+          iconURL: message.guild.iconURL(),
+        })
         .setDescription(
           `**${bannedMember.user.tag} has been unbanned for ${reason}**`
         );
@@ -69,11 +77,14 @@ async function runCommand(message, args, RM) {
       message.guild.members.unban(bannedMember.user.id, reason);
       var sembed2 = new MessageEmbed()
         .setColor("GREEN")
-        .setAuthor(message.guild.name, message.guild.iconURL())
+        .setAuthor({
+          name: message.guild.name,
+          iconURL: message.guild.iconURL(),
+        })
         .setDescription(`**${bannedMember.user.tag} has been unbanned**`);
       message.channel.send({ embeds: [sembed2] });
     }
-  } catch { }
+  } catch {}
 
   let channel = db.fetch(`modlog_${message.guild.id}`);
   if (!channel) return;
@@ -85,14 +96,17 @@ async function runCommand(message, args, RM) {
         dynamic: true,
       })
     )
-    .setAuthor(`${message.guild.name} Modlogs`, message.guild.iconURL())
+    .setAuthor({
+      name: `${message.guild.name} Modlogs`,
+      iconURL: message.guild.iconURL(),
+    })
     .addField("**Moderation**", "unban")
     .addField("**Unbanned**", `${bannedMember.user.username}`)
     .addField("**ID**", `${bannedMember.user.id}`)
     .addField("**Moderator**", message.author.username)
     .addField("**Reason**", `${reason}` || "**No Reason**")
     .addField("**Date**", message.createdAt.toLocaleString())
-    .setFooter(message.guild.name, message.guild.iconURL())
+    .setFooter({ text: message.guild.name, iconURL: message.guild.iconURL() })
     .setTimestamp();
 
   var sChannel = message.guild.channels.cache.get(channel);

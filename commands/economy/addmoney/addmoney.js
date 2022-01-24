@@ -16,7 +16,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -38,14 +41,19 @@ async function runCommand(message, args, RM) {
       await connect.create("currency");
 
       if (
-        !message.member.permissions.has(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
+        !message.member.permissions.has(
+          RM.Discord.Permissions.FLAGS.ADMINISTRATOR
+        )
       ) {
         await connect.end(true);
         return m.edit({
           embeds: [
             new Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.username, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.username,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("You do not have permission to use this command.")
               .setTimestamp()
               .setThumbnail(message.guild.iconURL())
@@ -59,7 +67,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.username, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.username,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("You need to specify a user to add money to.")
               .setTimestamp()
               .setThumbnail(message.guild.iconURL())
@@ -88,7 +99,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(`${args[0]} is not a valid user.`)
               .setThumbnail(message.guild.iconURL())
               .setTitle("User Not Found"),
@@ -105,7 +119,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(`You need to specify a value to add.`)
               .setTimestamp()
               .setThumbnail(message.guild.iconURL())
@@ -119,7 +136,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(`The value you specified is not a number.`)
               .setTimestamp()
               .setThumbnail(message.guild.iconURL())
@@ -133,7 +153,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(`The value you specified is too high.`)
               .setTimestamp()
               .setThumbnail(message.guild.iconURL())
@@ -154,7 +177,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new Discord.MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription(
                   `You can't add more money to their bank than their max bank cap! They have **\`$${numberWithCommas(
                     info.maxbank - bank
@@ -174,7 +200,10 @@ async function runCommand(message, args, RM) {
         );
         let moneyEmbed = new Discord.MessageEmbed()
           .setColor("GREEN")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription(
             `**${username}**'s bank has been increased by  **\`$${numberWithCommas(
               args[1]
@@ -199,7 +228,10 @@ async function runCommand(message, args, RM) {
         embeds: [
           new Discord.MessageEmbed()
             .setColor("GREEN")
-            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURL: message.author.avatarURL(),
+            })
             .setDescription(
               `**${username}**'s balance has been increased by **\`$${numberWithCommas(
                 args[1]

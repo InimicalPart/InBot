@@ -14,7 +14,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -41,7 +44,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 "I can't read minds, you need to tell me what you're buying."
               )
@@ -67,7 +73,10 @@ async function runCommand(message, args, RM) {
               embeds: [
                 new RM.Discord.MessageEmbed()
                   .setColor("RED")
-                  .setAuthor(message.author.tag, message.author.avatarURL())
+                  .setAuthor({
+                    name: message.author.tag,
+                    iconURL: message.author.avatarURL(),
+                  })
                   .setDescription("You don't have enough money to buy this.")
                   .setThumbnail(message.guild.iconURL())
                   .setTitle("Not enough money"),
@@ -91,7 +100,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new RM.Discord.MessageEmbed()
                 .setColor("GREEN")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription(
                   "You have successfully bought a banknote for $80,000."
                 )
@@ -108,7 +120,10 @@ async function runCommand(message, args, RM) {
               embeds: [
                 new RM.Discord.MessageEmbed()
                   .setColor("RED")
-                  .setAuthor(message.author.tag, message.author.avatarURL())
+                  .setAuthor({
+                    name: message.author.tag,
+                    iconURL: message.author.avatarURL(),
+                  })
                   .setDescription("You don't have enough money to buy this.")
                   .setThumbnail(message.guild.iconURL())
                   .setTitle("Not enough money"),
@@ -132,7 +147,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new RM.Discord.MessageEmbed()
                 .setColor("GREEN")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription(
                   "You have successfully bought a raybrain for $20,000."
                 )
@@ -150,7 +168,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new RM.Discord.MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription("You don't have enough money to buy this.")
                 .setThumbnail(message.guild.iconURL())
                 .setTitle("Not enough money"),
@@ -174,7 +195,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("GREEN")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 "You have successfully bought a padlock for $5,000."
               )
@@ -191,7 +215,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new RM.Discord.MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription("You don't have enough money to buy this.")
                 .setThumbnail(message.guild.iconURL())
                 .setTitle("Not enough money"),
@@ -215,7 +242,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("GREEN")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 "You have successfully bought a landmine for $10,000."
               )
@@ -232,7 +262,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new RM.Discord.MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription("You don't have enough money to buy this.")
                 .setThumbnail(message.guild.iconURL())
                 .setTitle("Not enough money"),
@@ -256,7 +289,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("GREEN")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 "You have successfully bought a lockpick for $7,000." //here? um what was i supposed to do again i forgot
               )
@@ -270,7 +306,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("I don't know what you're trying to buy.")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invalid Item"),

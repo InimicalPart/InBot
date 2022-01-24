@@ -13,7 +13,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -40,7 +43,10 @@ async function runCommand(message, args, RM) {
             description = k.commandHelp().replace("[PREFIX]", prefix);
           }
           const embed = new RM.Discord.MessageEmbed()
-            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURL: message.author.avatarURL(),
+            })
             .setDescription(
               "Command: **" + k.commandPrim().toUpperCase() + "**"
             )
@@ -75,8 +81,11 @@ async function runCommand(message, args, RM) {
       .setTitle("Commands")
       .setColor(11730464)
       .setTimestamp()
-      .setFooter("Please send a category name!")
-      .setAuthor(message.author.tag, message.author.avatarURL())
+      .setFooter({text:"Please send a category name!"})
+      .setAuthor({
+        name: message.author.tag,
+        iconURL: message.author.avatarURL(),
+      })
       .addField("🎉Fun", "Here can you find some commands that are fun!")
       .addField(
         "🖼 III Submission",

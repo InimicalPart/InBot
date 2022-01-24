@@ -15,7 +15,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -67,7 +70,10 @@ async function runCommand(message, args, RM) {
     const embed = new Discord.MessageEmbed()
       .setDescription(`Removed [${title}](${url})`)
       .setTimestamp()
-      .setFooter(message.author.username, message.author.avatarURL());
+      .setFooter({
+        text: message.author.username,
+        iconURL: message.author.avatarURL(),
+      });
 
     serverQueue.songs.splice(args[0], 1);
     message.channel.send({ embeds: [embed] });

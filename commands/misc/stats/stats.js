@@ -13,7 +13,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -103,7 +106,10 @@ async function runCommand(message, args, RM) {
     .then((m) => {
       latency = m.createdTimestamp - message.createdTimestamp;
       let embed = new Discord.MessageEmbed()
-        .setAuthor(message.author.username, message.author.avatarURL())
+        .setAuthor({
+          name: message.author.username,
+          iconURL: message.author.avatarURL(),
+        })
         .addFields({
           name: "Basic Info",
           value: `Latency: **${latency}**ms\nAPI Latency: **${apilatency}**ms\nBot Uptime: **${botuptime}**`,

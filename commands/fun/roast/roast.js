@@ -17,7 +17,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -38,7 +41,7 @@ async function runCommand(message, args, RM) {
   var linesInRoasts;
   if (!args[0]) {
     const a = new RM.Discord.MessageEmbed()
-      .setAuthor(message.guild.name, message.guild.iconURL())
+      .setAuthor({ name: message.guild.name, iconURL: message.guild.iconURL() })
       .setColor("RANDOM")
       .setDescription(
         "**" +
@@ -48,7 +51,10 @@ async function runCommand(message, args, RM) {
           "**"
       )
       .setTimestamp()
-      .setFooter(message.author.username, message.author.avatarURL());
+      .setFooter({
+        text: message.author.username,
+        iconURL: message.author.avatarURL(),
+      });
     message;
   } else {
     const roastedUser = args.join(" ");
@@ -69,7 +75,10 @@ async function runCommand(message, args, RM) {
       )
     ) {
       const a = new RM.Discord.MessageEmbed()
-        .setAuthor(message.guild.name, message.guild.iconURL())
+        .setAuthor({
+          name: message.guild.name,
+          iconURL: message.guild.iconURL(),
+        })
         .setColor("RANDOM")
         .setDescription(
           "**" +
@@ -79,7 +88,10 @@ async function runCommand(message, args, RM) {
             "**"
         )
         .setTimestamp()
-        .setFooter(message.author.username, message.author.avatarURL());
+        .setFooter({
+          text: message.author.username,
+          iconURL: message.author.avatarURL(),
+        });
       return message.channel.send({ embeds: [a] });
     }
 

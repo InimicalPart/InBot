@@ -20,7 +20,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -53,7 +56,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("You need to specify a user to rob!")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),
@@ -79,7 +85,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription("**Error:** User not found!")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),
@@ -102,11 +111,14 @@ async function runCommand(message, args, RM) {
             embeds: [
               new RM.Discord.MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription(
                   "**Error:** You are on cooldown! Time left:\n`" +
-                  timeLeft(DITC) +
-                  "`"
+                    timeLeft(DITC) +
+                    "`"
                 )
                 .setThumbnail(message.guild.iconURL())
                 .setTitle("Error"),
@@ -143,7 +155,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 "**Error:** You need at least 500 coins to rob someone!"
               )
@@ -159,11 +174,14 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("RED")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 "**" +
-                user.username +
-                "** needs to have more than 500 coins, otherwise it's just not worth it."
+                  user.username +
+                  "** needs to have more than 500 coins, otherwise it's just not worth it."
               )
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),
@@ -191,7 +209,10 @@ async function runCommand(message, args, RM) {
             embeds: [
               new RM.Discord.MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription("Your padlock expired!")
                 .setThumbnail(message.guild.iconURL())
                 .setTitle("Error"),
@@ -212,11 +233,14 @@ async function runCommand(message, args, RM) {
               embeds: [
                 new RM.Discord.MessageEmbed()
                   .setColor("YELLOW")
-                  .setAuthor(message.author.tag, message.author.avatarURL())
+                  .setAuthor({
+                    name: message.author.tag,
+                    iconURL: message.author.avatarURL(),
+                  })
                   .setDescription(
                     "This user has an active padlock! You have `" +
-                    thiefInv.items.lockpick +
-                    "` lockpicks.\nDo you want to use one and try to pick the lock?\n\n`yes/y/no/n`"
+                      thiefInv.items.lockpick +
+                      "` lockpicks.\nDo you want to use one and try to pick the lock?\n\n`yes/y/no/n`"
                   )
                   .setThumbnail(message.guild.iconURL())
                   .setTitle("Padlock"),
@@ -254,16 +278,16 @@ async function runCommand(message, args, RM) {
                     embeds: [
                       new RM.Discord.MessageEmbed()
                         .setColor("AQUA")
-                        .setAuthor(
-                          message.author.tag,
-                          message.author.avatarURL()
-                        )
+                        .setAuthor({
+                          name: message.author.tag,
+                          iconURL: message.author.avatarURL(),
+                        })
                         .setDescription(
                           "Picking...\n\n:lock: Pin 1: **NOT BOUND**\n" +
-                          ":lock: Pin 2: **NOT BOUND**\n" +
-                          ":lock: Pin 3: **NOT BOUND**\n" +
-                          ":lock: Pin 4: **NOT BOUND**\n" +
-                          ":lock: Pin 5: **NOT BOUND**"
+                            ":lock: Pin 2: **NOT BOUND**\n" +
+                            ":lock: Pin 3: **NOT BOUND**\n" +
+                            ":lock: Pin 4: **NOT BOUND**\n" +
+                            ":lock: Pin 5: **NOT BOUND**"
                         )
                         .setThumbnail(message.guild.iconURL())
                         .setTitle("Padlock Picking"),
@@ -303,22 +327,22 @@ async function runCommand(message, args, RM) {
                       embeds: [
                         new RM.Discord.MessageEmbed()
                           .setColor("AQUA")
-                          .setAuthor(
-                            message.author.tag,
-                            message.author.avatarURL()
-                          )
+                          .setAuthor({
+                            name: message.author.tag,
+                            iconURL: message.author.avatarURL(),
+                          })
                           .setDescription(
                             "Picking...\n\n:lock: Pin 1: **" +
-                            pin1 +
-                            "**\n:lock: Pin 2: **" +
-                            pin2 +
-                            "**\n:lock: Pin 3: **" +
-                            pin3 +
-                            "**\n:lock: Pin 4: **" +
-                            pin4 +
-                            "**\n:lock: Pin 5: **" +
-                            pin5 +
-                            "**"
+                              pin1 +
+                              "**\n:lock: Pin 2: **" +
+                              pin2 +
+                              "**\n:lock: Pin 3: **" +
+                              pin3 +
+                              "**\n:lock: Pin 4: **" +
+                              pin4 +
+                              "**\n:lock: Pin 5: **" +
+                              pin5 +
+                              "**"
                           )
                           .setThumbnail(message.guild.iconURL())
                           .setTitle("Padlock Picking"),
@@ -353,22 +377,22 @@ async function runCommand(message, args, RM) {
                         embeds: [
                           new RM.Discord.MessageEmbed()
                             .setColor("AQUA")
-                            .setAuthor(
-                              message.author.tag,
-                              message.author.avatarURL()
-                            )
+                            .setAuthor({
+                              name: message.author.tag,
+                              iconURL: message.author.avatarURL(),
+                            })
                             .setDescription(
                               "Picking...\n\n:lock: Pin 1: **" +
-                              pin1 +
-                              "**\n:lock: Pin 2: **" +
-                              pin2 +
-                              "**\n:lock: Pin 3: **" +
-                              pin3 +
-                              "**\n:lock: Pin 4: **" +
-                              pin4 +
-                              "**\n:lock: Pin 5: **" +
-                              pin5 +
-                              "**"
+                                pin1 +
+                                "**\n:lock: Pin 2: **" +
+                                pin2 +
+                                "**\n:lock: Pin 3: **" +
+                                pin3 +
+                                "**\n:lock: Pin 4: **" +
+                                pin4 +
+                                "**\n:lock: Pin 5: **" +
+                                pin5 +
+                                "**"
                             )
                             .setThumbnail(message.guild.iconURL())
                             .setTitle("Padlock Picking"),
@@ -403,22 +427,22 @@ async function runCommand(message, args, RM) {
                           embeds: [
                             new RM.Discord.MessageEmbed()
                               .setColor("AQUA")
-                              .setAuthor(
-                                message.author.tag,
+                              .setAuthor({ name:
+                                message.author.tag, iconURL:
                                 message.author.avatarURL()
-                              )
+                              })
                               .setDescription(
                                 "Picking...\n\n:lock: Pin 1: **" +
-                                pin1 +
-                                "**\n:lock: Pin 2: **" +
-                                pin2 +
-                                "**\n:lock: Pin 3: **" +
-                                pin3 +
-                                "**\n:lock: Pin 4: **" +
-                                pin4 +
-                                "**\n:lock: Pin 5: **" +
-                                pin5 +
-                                "**"
+                                  pin1 +
+                                  "**\n:lock: Pin 2: **" +
+                                  pin2 +
+                                  "**\n:lock: Pin 3: **" +
+                                  pin3 +
+                                  "**\n:lock: Pin 4: **" +
+                                  pin4 +
+                                  "**\n:lock: Pin 5: **" +
+                                  pin5 +
+                                  "**"
                               )
                               .setThumbnail(message.guild.iconURL())
                               .setTitle("Padlock Picking"),
@@ -449,22 +473,22 @@ async function runCommand(message, args, RM) {
                             embeds: [
                               new RM.Discord.MessageEmbed()
                                 .setColor("AQUA")
-                                .setAuthor(
-                                  message.author.tag,
+                                .setAuthor({ name:
+                                  message.author.tag, iconURL:
                                   message.author.avatarURL()
-                                )
+                                })
                                 .setDescription(
                                   "Picking...\n\n:lock: Pin 1: **" +
-                                  pin1 +
-                                  "**\n:lock: Pin 2: **" +
-                                  pin2 +
-                                  "**\n:lock: Pin 3: **" +
-                                  pin3 +
-                                  "**\n:lock: Pin 4: **" +
-                                  pin4 +
-                                  "**\n:lock: Pin 5: **" +
-                                  pin5 +
-                                  "**"
+                                    pin1 +
+                                    "**\n:lock: Pin 2: **" +
+                                    pin2 +
+                                    "**\n:lock: Pin 3: **" +
+                                    pin3 +
+                                    "**\n:lock: Pin 4: **" +
+                                    pin4 +
+                                    "**\n:lock: Pin 5: **" +
+                                    pin5 +
+                                    "**"
                                 )
                                 .setThumbnail(message.guild.iconURL())
                                 .setTitle("Padlock Picking"),
@@ -499,22 +523,22 @@ async function runCommand(message, args, RM) {
                               embeds: [
                                 new RM.Discord.MessageEmbed()
                                   .setColor("AQUA")
-                                  .setAuthor(
-                                    message.author.tag,
+                                  .setAuthor({ name:
+                                    message.author.tag, iconURL:
                                     message.author.avatarURL()
-                                  )
+                                  })
                                   .setDescription(
                                     "Picking...\n\n:lock: Pin 1: **" +
-                                    pin1 +
-                                    "**\n:lock: Pin 2: **" +
-                                    pin2 +
-                                    "**\n:lock: Pin 3: **" +
-                                    pin3 +
-                                    "**\n:lock: Pin 4: **" +
-                                    pin4 +
-                                    "**\n:lock: Pin 5: **" +
-                                    pin5 +
-                                    "**"
+                                      pin1 +
+                                      "**\n:lock: Pin 2: **" +
+                                      pin2 +
+                                      "**\n:lock: Pin 3: **" +
+                                      pin3 +
+                                      "**\n:lock: Pin 4: **" +
+                                      pin4 +
+                                      "**\n:lock: Pin 5: **" +
+                                      pin5 +
+                                      "**"
                                   )
                                   .setThumbnail(message.guild.iconURL())
                                   .setTitle("Padlock Picking"),
@@ -538,14 +562,14 @@ async function runCommand(message, args, RM) {
                       embeds: [
                         new RM.Discord.MessageEmbed()
                           .setColor("RED")
-                          .setAuthor(
-                            message.author.tag,
+                          .setAuthor({ name:
+                            message.author.tag, iconURL:
                             message.author.avatarURL()
-                          )
+                          })
                           .setDescription(
                             "Lockpick broke and you failed to rob " +
-                            user.username +
-                            "!"
+                              user.username +
+                              "!"
                           )
                           .setThumbnail(message.guild.iconURL())
                           .setTitle("Lockpick broke!"),
@@ -564,10 +588,10 @@ async function runCommand(message, args, RM) {
                     embeds: [
                       new RM.Discord.MessageEmbed()
                         .setColor("RED")
-                        .setAuthor(
-                          message.author.tag,
+                        .setAuthor({ name:
+                          message.author.tag, iconURL:
                           message.author.avatarURL()
-                        )
+                        })
                         .setDescription(
                           "User has an active padlock but you didnt use a lockpick!"
                         )
@@ -603,7 +627,10 @@ async function runCommand(message, args, RM) {
               embeds: [
                 new RM.Discord.MessageEmbed()
                   .setColor("RED")
-                  .setAuthor(message.author.tag, message.author.avatarURL())
+                  .setAuthor({
+                    name: message.author.tag,
+                    iconURL: message.author.avatarURL(),
+                  })
                   .setDescription(
                     "User has an active padlock but you don't have a lockpick!"
                   )
@@ -638,7 +665,10 @@ async function runCommand(message, args, RM) {
               embeds: [
                 new RM.Discord.MessageEmbed()
                   .setColor("RED")
-                  .setAuthor(message.author.tag, message.author.avatarURL())
+                  .setAuthor({
+                    name: message.author.tag,
+                    iconURL: message.author.avatarURL(),
+                  })
                   .setDescription("Your landmine expired!")
                   .setThumbnail(message.guild.iconURL())
                   .setTitle("Error"),
@@ -658,11 +688,14 @@ async function runCommand(message, args, RM) {
                 embeds: [
                   new RM.Discord.MessageEmbed()
                     .setColor("RED")
-                    .setAuthor(message.author.tag, message.author.avatarURL())
+                    .setAuthor({
+                      name: message.author.tag,
+                      iconURL: message.author.avatarURL(),
+                    })
                     .setDescription(
                       "You have been killed by a landmine! You lost **`$" +
-                      victimBal.amountw +
-                      "`**!"
+                        victimBal.amountw +
+                        "`**!"
                     )
                     .setThumbnail(message.guild.iconURL())
                     .setTitle("You died!"),
@@ -692,13 +725,16 @@ async function runCommand(message, args, RM) {
             embeds: [
               new RM.Discord.MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
                 .setDescription(
                   "You got caught while trying to rob **" +
-                  user.username +
-                  "** You lost: **`$" +
-                  amountToRemove +
-                  "`**!"
+                    user.username +
+                    "** You lost: **`$" +
+                    amountToRemove +
+                    "`**!"
                 )
                 .setThumbnail(message.guild.iconURL())
                 .setTitle("Fail"),
@@ -725,13 +761,16 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setColor("GREEN")
-              .setAuthor(message.author.tag, message.author.avatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
               .setDescription(
                 "You successfully robbed **" +
-                user.username +
-                "** You got: **`$" +
-                amountToRemove +
-                "`**!"
+                  user.username +
+                  "** You got: **`$" +
+                  amountToRemove +
+                  "`**!"
               )
               .setThumbnail(message.guild.iconURL())
               .setTitle("Success"),

@@ -14,7 +14,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -29,7 +32,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.username, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.username,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("You do not have permission to use this command.")
           .setTimestamp()
           .setThumbnail(message.guild.iconURL())
@@ -106,7 +112,10 @@ async function runCommand(message, args, RM) {
       const iconURL = user.avatarURL();
       let embed = new RM.Discord.MessageEmbed()
         .setColor("GREEN")
-        .setAuthor(message.author.tag, message.author.avatarURL())
+        .setAuthor({
+          name: message.author.tag,
+          iconURL: message.author.avatarURL(),
+        })
         .setThumbnail(iconURL)
         .setTitle("DB Data")
         .addFields({

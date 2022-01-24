@@ -13,7 +13,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -177,10 +180,10 @@ async function runCommand(message, args, RM) {
           .setThumbnail(song.thumbnail)
           .setTimestamp()
           .setDescription(`**${song.title}** has been added to queue!`)
-          .setFooter(
-            message.member.displayName,
-            message.author.displayAvatarURL()
-          );
+          .setFooter({
+            text: message.member.displayName,
+            iconURL: message.author.displayAvatarURL(),
+          });
         message.channel.send({ embeds: [embed] });
       }
     }
@@ -220,7 +223,10 @@ async function runCommand(message, args, RM) {
       .setThumbnail(song.thumbnail)
       .setTimestamp()
       .setDescription(`🎵 Now playing:\n **${song.title}** 🎵`)
-      .setFooter(msg.member.displayName, msg.author.displayAvatarURL());
+      .setFooter({
+        text: msg.member.displayName,
+        iconURL: msg.author.displayAvatarURL(),
+      });
     serverQueue.textChannel.send({ embeds: [embed] });
   }
 }

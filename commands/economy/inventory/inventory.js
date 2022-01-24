@@ -14,7 +14,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -31,7 +34,10 @@ async function runCommand(message, args, RM) {
   connect.end(true);
   const embed = new RM.Discord.MessageEmbed()
     .setColor("GREEN")
-    .setAuthor(message.author.tag, message.author.avatarURL())
+    .setAuthor({
+      name: message.author.tag,
+      iconURL: message.author.avatarURL(),
+    })
     .setDescription("Inventory:\n" + JSON.stringify(inventory.items))
     .setThumbnail(message.guild.iconURL())
     .setTitle("Inventory");

@@ -13,7 +13,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -52,7 +55,7 @@ async function runCommand(message, args, RM) {
       .setColor("GREEN")
       .setTitle(video.title)
       .setDescription(description)
-      .setFooter(message.member.displayName, message.author.displayAvatarURL())
+      .setFooter({text:message.member.displayName, iconURL:message.author.displayAvatarURL()})
       .setTimestamp();
     message.channel.send({ embeds: [videoEmbed] });
     return;

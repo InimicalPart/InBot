@@ -13,7 +13,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -23,12 +26,16 @@ async function runCommand(message, args, RM) {
   const { MessageEmbed } = RM.Discord;
   const db = RM.db;
   try {
-    if (!message.member.permissions.has(RM.Discord.Permissions.FLAGS.BAN_MEMBERS))
+    if (
+      !message.member.permissions.has(RM.Discord.Permissions.FLAGS.BAN_MEMBERS)
+    )
       return message.channel.send({
         content: "You need permission [BAN_MEMBERS] to be able to ban users.",
       });
     if (
-      !message.guild.me.permissions.has(RM.Discord.Permissions.FLAGS.BAN_MEMBERS)
+      !message.guild.me.permissions.has(
+        RM.Discord.Permissions.FLAGS.BAN_MEMBERS
+      )
     )
       return message.channel.send({
         content: "I need permission [BAN_MEMBERS] to be able to ban users.",
@@ -71,8 +78,9 @@ async function runCommand(message, args, RM) {
       });
       banMember
         .send({
-          content: `You have been banned from **${message.guild.name}** for '${reason || "No Reason"
-            }'`,
+          content: `You have been banned from **${message.guild.name}** for '${
+            reason || "No Reason"
+          }'`,
         })
         .catch(() => null); // user probably has dms closed
     } catch {
@@ -86,7 +94,10 @@ async function runCommand(message, args, RM) {
     if (reason) {
       var sembed = new MessageEmbed()
         .setColor("GREEN")
-        .setAuthor(message.guild.name, message.guild.iconURL())
+        .setAuthor({
+          name: message.guild.name,
+          iconURL: message.guild.iconURL(),
+        })
         .setDescription(
           `**${banMember.user.username}** has been banned for ${reason}`
         );
@@ -94,7 +105,10 @@ async function runCommand(message, args, RM) {
     } else {
       var sembed2 = new MessageEmbed()
         .setColor("GREEN")
-        .setAuthor(message.guild.name, message.guild.iconURL())
+        .setAuthor({
+          name: message.guild.name,
+          iconURL: message.guild.iconURL(),
+        })
         .setDescription(`**${banMember.user.username}** has been banned`);
       message.channel.send({ embeds: [sembed2] });
     }
@@ -104,14 +118,17 @@ async function runCommand(message, args, RM) {
     if (!channel) return;
 
     const embed = new MessageEmbed()
-      .setAuthor(`${message.guild.name} Modlogs`, message.guild.iconURL())
+      .setAuthor({
+        name: `${message.guild.name} Modlogs`,
+        iconURL: message.guild.iconURL(),
+      })
       .setColor("GREEN")
       .setThumbnail(
         banMember.user.displayAvatarURL({
           dynamic: true,
         })
       )
-      .setFooter(message.guild.name, message.guild.iconURL())
+      .setFooter({ text: message.guild.name, iconURL: message.guild.iconURL() })
       .addField("**Action**", "ban")
       .addField("**Banned User**", banMember.user.username)
       .addField("**ID**", `${banMember.id}`)

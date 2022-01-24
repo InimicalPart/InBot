@@ -13,7 +13,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -78,7 +81,7 @@ async function runCommand(message, args, RM) {
   let newEmbed;
   if (!args[1]) {
     newEmbed = new Discord.MessageEmbed()
-      .setAuthor(author.tag, author.avatarURL())
+      .setAuthor({ name: author.tag, iconURL: author.avatarURL() })
       .setImage(url)
       .setColor("#FFFF00")
       .addField("Title:", "**" + title + "**")
@@ -88,7 +91,7 @@ async function runCommand(message, args, RM) {
   } else {
     const reason = args.slice(1).join(" ");
     newEmbed = new Discord.MessageEmbed()
-      .setAuthor(author.tag, author.avatarURL())
+      .setAuthor({ name: author.tag, iconURL: author.avatarURL() })
       .setImage(url)
       .setColor("#FFFF00")
       .addField("Title:", "**" + title + "**")

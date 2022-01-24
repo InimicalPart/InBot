@@ -14,43 +14,64 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
       ],
     });
   }
-  return
-  message.channel.send({ content: "React with 🚪 to join! (0/10)" }).then(async msg => {
-    await msg.react("🚪")
-    const filter = (reaction, user) => {
-      return reaction.emoji.name === '🚪' && user.id !== message.author.id && user.id !== RM.client.user.id;
-    };
-    let playingUsers = []
-    const collector = msg.createReactionCollector({ filter, time: 15000, dispose: true });
-    let totalReactions = 0;
-    collector.on('collect', (reaction, user) => {
-      if (totalReactions >= 10) {
-        message.channel.send({ content: "Only 10 people can play BombParty at one time! Join back later!" })
-      } else {
-        totalReactions++;
-        msg.edit(`React with 🚪 to join! (${totalReactions}/10)`)
-        playingUsers.push(user.id)
-        console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
-      }
+  return;
+  message.channel
+    .send({ content: "React with 🚪 to join! (0/10)" })
+    .then(async (msg) => {
+      await msg.react("🚪");
+      const filter = (reaction, user) => {
+        return (
+          reaction.emoji.name === "🚪" &&
+          user.id !== message.author.id &&
+          user.id !== RM.client.user.id
+        );
+      };
+      let playingUsers = [];
+      const collector = msg.createReactionCollector({
+        filter,
+        time: 15000,
+        dispose: true,
+      });
+      let totalReactions = 0;
+      collector.on("collect", (reaction, user) => {
+        if (totalReactions >= 10) {
+          message.channel.send({
+            content:
+              "Only 10 people can play BombParty at one time! Join back later!",
+          });
+        } else {
+          totalReactions++;
+          msg.edit(`React with 🚪 to join! (${totalReactions}/10)`);
+          playingUsers.push(user.id);
+          console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
+        }
+      });
+      collector.on("remove", (reaction, user) => {
+        totalReactions--;
+        msg.edit(`React with 🚪 to join! (${totalReactions}/10)`);
+        playingUsers.splice(playingUsers.indexOf(user.id), 1);
+        console.log(`${user.tag} removed reaction: ${reaction.emoji.name}`);
+      });
+      collector.on("end", (collected) => {
+        message.channel.send(
+          "Reaction collector ended with " +
+            collected.size +
+            " reactions, playing users are:\n\n" +
+            playingUsers.join("\n")
+        );
+        console.log(`Collected ${collected.size} items`);
+      });
     });
-    collector.on("remove", (reaction, user) => {
-      totalReactions--;
-      msg.edit(`React with 🚪 to join! (${totalReactions}/10)`)
-      playingUsers.splice(playingUsers.indexOf(user.id), 1)
-      console.log(`${user.tag} removed reaction: ${reaction.emoji.name}`);
-    })
-    collector.on('end', collected => {
-      message.channel.send("Reaction collector ended with " + collected.size + " reactions, playing users are:\n\n" + playingUsers.join("\n"));
-      console.log(`Collected ${collected.size} items`);
-    })
-  })
 }
 
 function commandTriggers() {

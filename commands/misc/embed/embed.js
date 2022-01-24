@@ -13,7 +13,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -26,15 +29,18 @@ async function runCommand(message, args, RM) {
   const randomLink =
     setImageLinks[Math.floor(Math.random() * setImageLinks.length)];
   const embed = new Discord.MessageEmbed()
-    .setAuthor(message.author.tag, message.author.avatarURL())
+    .setAuthor({
+      name: message.author.tag,
+      iconURL: message.author.avatarURL(),
+    })
     .setColor("RANDOM")
     .setDescription(
       "**III Project** Invite: [**Click me!**](https://discord.gg/iii) "
     )
-    .setFooter(
-      "This is the footer text, it can hold 2048 characters",
+    .setFooter({text:
+      "This is the footer text, it can hold 2048 characters", iconURL:
       "http://i.imgur.com/w1vhFSR.png"
-    )
+    })
     .setImage(randomLink) //"https://cdn.discordapp.com/attachments/857343827223117827/858120350633951272/III_29.png")
     //.setThumbnail("http://i.imgur.com/p2qNFag.png")
     .setTimestamp()

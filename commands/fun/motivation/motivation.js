@@ -13,7 +13,10 @@ async function runCommand(message, args, RM) {
       embeds: [
         new RM.Discord.MessageEmbed()
           .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
           .setDescription("Command disabled by Administrators.")
           .setThumbnail(message.guild.iconURL())
           .setTitle("Command Disabled"),
@@ -41,22 +44,28 @@ async function runCommand(message, args, RM) {
     jsonQuotes.quotes[Math.floor(Math.random() * jsonQuotes.quotes.length)];
   if (!args[0]) {
     const quoteEmbed = new Discord.MessageEmbed()
-      .setAuthor(message.guild.name, message.guild.iconURL())
+    .setAuthor({ name:message.guild.name, iconURL:message.guild.iconURL()})
       .setTitle(randomQuote.author)
       .setDescription(randomQuote.text)
       .setColor("GREEN")
-      .setFooter(member.displayName, member.user.displayAvatarURL())
+      .setFooter({
+        text: member.displayName,
+        iconURL: member.user.displayAvatarURL(),
+      })
       .setTimestamp();
     return message.channel.send({ embeds: [quoteEmbed] });
   } else if (args[0]) {
     const embed = new Discord.MessageEmbed()
-      .setAuthor(message.guild.name, message.guild.iconURL())
+    .setAuthor({ name:message.guild.name, iconURL:message.guild.iconURL()})
       .setColor("GREEN")
       .setTitle(`${randomQuote.author} -`)
       .setDescription(
         `**${randomQuote.text}** \n\nBy ${message.member.displayName} to ${member.displayName}`
       )
-      .setFooter(member.displayName, member.user.displayAvatarURL())
+      .setFooter({
+        text: member.displayName,
+        iconURL: member.user.displayAvatarURL(),
+      })
       .setTimestamp();
     message.channel.send({ embeds: [embed] });
   }
