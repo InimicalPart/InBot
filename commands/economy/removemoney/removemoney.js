@@ -43,8 +43,8 @@ async function runCommand(message, args, RM) {
 
       if (
         !message.member.permissions.has(
-          RM.Discord.Permission.FLAGS.ADMINISTRATOR,
-          RM.Discord.Permission.FLAGS.MANAGE_GUILD
+          RM.Discord.Permissions.FLAGS.ADMINISTRATOR,
+          RM.Discord.Permissions.FLAGS.MANAGE_GUILD
         )
       ) {
         await connect.end(true);

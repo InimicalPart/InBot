@@ -48,8 +48,8 @@ async function runCommand(message, args, RM) {
     .setDescription("**❌ You do not have permissions to add money!**");
   if (
     !message.member.permissions.has(
-      RM.Discord.Permission.FLAGS.CONNECT,
-      RM.Discord.Permission.FLAGS.SPEAK
+      RM.Discord.Permissions.FLAGS.CONNECT,
+      RM.Discord.Permissions.FLAGS.SPEAK
     )
   )
     return message.channel.send({ embeds: [noperm] });

@@ -27,7 +27,7 @@ async function runCommand(message, args, RM) {
   const db = RM.db;
 
   if (
-    !message.member.permissions.has(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
+    !message.member.permissions.has(RM.Discord.Permissions.FLAGS.ADMINISTRATOR)
   )
     return message.channel.send({
       content:

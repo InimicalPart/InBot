@@ -26,7 +26,7 @@ async function runCommand(message, args, RM) {
   const { MessageEmbed } = RM.Discord;
   const db = RM.db;
 
-  if (!message.member.permissions.has(RM.Discord.Permission.FLAGS.BAN_MEMBERS))
+  if (!message.member.permissions.has(RM.Discord.Permissions.FLAGS.BAN_MEMBERS))
     return message.channel.send({
       content:
         "**You Dont Have The Permissions To Unban Someone! - [BAN_MEMBERS]**",
@@ -55,7 +55,7 @@ async function runCommand(message, args, RM) {
   let reason = args.slice(1).join(" ");
 
   if (
-    !message.guild.me.permissions.has(RM.Discord.Permission.FLAGS.BAN_MEMBERS)
+    !message.guild.me.permissions.has(RM.Discord.Permissions.FLAGS.BAN_MEMBERS)
   )
     return message.channel.send({
       content: "**I Don't Have Permissions To Unban Someone! - [BAN_MEMBERS]**",
