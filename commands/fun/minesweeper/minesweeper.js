@@ -5,16 +5,16 @@
  *  Discord: InimicalPart ©#4542
  *  GitHub: https://www.github.com/InimicalPart
  *
- *  Copyright © 2021 InimicalPart
+ *  Copyright © 2022 InimicalPart
  *
  **/
 
 const commandInfo = {
   primaryName: "minesweeper", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["minesweeper", "ms"], // These are all commands that will trigger this command.
-  help: "eats your cake!", // This is the general description of the command.
+  help: "Play minesweeper!", // This is the general description of the command.
   aliases: ["ms"], // These are command aliases that help.js will use
-  usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
+  usage: "[COMMAND] <size:bombs>", // [COMMAND] gets replaced with the command and correct prefix later
   category: "fun",
 };
 
@@ -454,9 +454,7 @@ async function runCommand(message, args, RM) {
                 "`? yes/y/no/n",
             });
             message.channel
-              .awaitMessages(filter, {
-                max: 1,
-              })
+              .awaitMessages({ filter: filter, max: 1 })
               .then((messageNext2) => {
                 const msg2 = messageNext2
                   .first()
@@ -604,7 +602,10 @@ async function runCommand(message, args, RM) {
           embeds: [
             new RM.Discord.MessageEmbed()
               .setTitle("You won!")
-              .setAuthor({ name:message.author.username,iconURL: message.author.avatarURL})
+              .setAuthor({
+                name: message.author.username,
+                iconURL: message.author.avatarURL,
+              })
               .setDescription(
                 "You beat minesweeper in: `" + RM.pretty_ms(timetaken) + "`"
               )

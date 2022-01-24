@@ -84,7 +84,7 @@ const requiredModules = {
   cmdBalance: economy.balance(),
   cmdRemovemoney: economy.removemoney(),
   cmdFlipacoin: misc.flipacoin(),
-  cmdRayispog: misc.rayispog(),
+  cmdRayblackjack: misc.rayblackjack(),
   cmdWork: economy.work(),
   cmdDeposit: economy.deposit(),
   cmdWithdraw: economy.withdraw(),
@@ -105,14 +105,15 @@ const requiredModules = {
   cmdConvert: misc.convert(),
   cmdRun: misc.run(),
   cmdChess: fun.chess(),
-  cmdScan: moderation.scan(),
+  //   cmdScan: moderation.scan(),
   cmdSudoku: fun.sudoku(),
   cmdMinesweeper: fun.minesweeper(),
   eventonAIMsg: event.onAIMsg(),
-  cmdTestingenv: moderation.testingenv(),
-  cmdV13: misc.v13(),
-  cmdUno: fun.uno(),
-  cmdBombparty: fun.bombparty(),
+  //   cmdTestingenv: moderation.testingenv(),
+  //   cmdV13: misc.v13(),
+  //   cmdBombparty: fun.bombparty(),
+  cmdTodo: misc.todo(),
+  cmdSlots: economy.slots(),
   Discord: Discord,
   process_env: process.env,
   pretty_ms: require("pretty-ms"),
@@ -197,6 +198,7 @@ const requiredModules = {
   path: require("path"),
   ytdl: require("ytdl-core"),
   db: require("quick.db"),
+  request: require("request"),
 };
 console.log(
   chalk.blueBright("------------------------\n") +
@@ -234,6 +236,7 @@ client.on("messageCreate", async (message) => {
       "426826826220961821",
       "814623079346470993",
       "755934610579259432",
+      "516333697163853828",
     ].includes(message.author.id) &&
     client.user.id == "859513472973537311"
   )
@@ -362,8 +365,8 @@ client.on("ready", async () => {
   if (client.user.id == "859513472973537311") {
     console.log(
       "\n" +
-        chalk.yellowBright("⚠") +
-        " As this is a DEV edition, Channels will not be updated to avoid interference with the main edition. " +
+        chalk.yellowBright("⚠  ") +
+        "As this is a DEV edition, Channels will not be updated to avoid interference with the main edition. " +
         chalk.yellowBright("⚠")
     );
   } else if (config.showUsers == false) {

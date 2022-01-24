@@ -1,10 +1,10 @@
 const commandInfo = {
   primaryName: "config",
   possibleTriggers: ["config", "co"],
-  help: "Allows admins to change the server config.",
+  help: "Change the server config.",
   aliases: ["co"],
   usage: "[COMMAND] <config name> [new value]", // [COMMAND] gets replaced with the command and correct prefix later
-  category: "mod",
+  category: "developer",
 };
 
 async function runCommand(message, args, RM) {

@@ -1,10 +1,10 @@
 const commandInfo = {
   primaryName: "run", // This is the command name used by help.js (gets uppercased).
-  possibleTriggers: ["run", "alias2", "alias3"], // These are all commands that will trigger this command.
-  help: "eats your cake!", // This is the general description of the command.
-  aliases: ["alias2", "alias3"], // These are command aliases that help.js will use
-  usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
-  category: "misc",
+  possibleTriggers: ["run"], // These are all commands that will trigger this command.
+  help: "Owner only command to execute commands.", // This is the general description of the command.
+  aliases: [], // These are command aliases that help.js will use
+  usage: "[COMMAND] <commands>", // [COMMAND] gets replaced with the command and correct prefix later
+  category: "developer",
 };
 
 async function runCommand(message, args, RM) {

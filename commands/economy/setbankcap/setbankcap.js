@@ -1,10 +1,10 @@
 const commandInfo = {
   primaryName: "setbankcap", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["setbankcap", "sbc"], // These are all commands that will trigger this command.
-  help: "Allows admins to change a users max bank capacity!", // This is the general description of the command.
+  help: "Set a users maximum bank capacity.", // This is the general description of the command.
   aliases: ["sbc"], // These are command aliases that help.js will use
   usage: "[COMMAND] <user> <amount/reset>", // [COMMAND] gets replaced with the command and correct prefix later
-  category: "economy",
+  category: "developer",
 };
 
 async function runCommand(message, args, RM) {
@@ -91,7 +91,9 @@ async function runCommand(message, args, RM) {
       if (user.user) {
         user = user.user;
       }
-
+      function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
       if ((await connect.fetch("currency", user.id)) === null) {
         await connect.add("currency", user.id);
       }
@@ -109,7 +111,7 @@ async function runCommand(message, args, RM) {
               .setDescription(
                 user.username +
                   "'s bank capacity is at: `$" +
-                  data.maxbank +
+                  numberWithCommas(data.maxbank) +
                   "`"
               )
               .setTimestamp()
@@ -130,7 +132,7 @@ async function runCommand(message, args, RM) {
                 iconURL: message.author.avatarURL(),
               })
               .setDescription(
-                user.username + "'s bank capacity has been set to: `$1000`"
+                user.username + "'s bank capacity has been set to: `$1,000`"
               )
               .setTimestamp()
               .setThumbnail(message.guild.iconURL())
@@ -157,7 +159,7 @@ async function runCommand(message, args, RM) {
               .setDescription(
                 user.username +
                   "'s bank capacity has been set to: `$" +
-                  parseInt(args[1]) +
+                  numberWithCommas(parseInt(args[1])) +
                   "`"
               )
               .setTimestamp()

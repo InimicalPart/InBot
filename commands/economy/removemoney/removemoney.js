@@ -1,10 +1,10 @@
 const commandInfo = {
   primaryName: "removemoney", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["removemoney", "rm"], // These are all commands that will trigger this command.
-  help: "removes a certain amount of money from a user", // This is the general description of the command.
+  help: "Remove some money from a users wallet/bank", // This is the general description of the command.
   aliases: ["rm"], // These are command aliases that help.js will use
-  usage: "[COMMAND] <user> <amount>", // [COMMAND] gets replaced with the command and correct prefix later
-  category: "economy",
+  usage: "[COMMAND] <user> <amount> (-b for bank)", // [COMMAND] gets replaced with the command and correct prefix later
+  category: "developer",
 };
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

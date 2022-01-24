@@ -65,7 +65,9 @@ async function runCommand(message, args, RM) {
         return m.edit({
           embeds: [
             new RM.Discord.MessageEmbed()
-              .setDescription(`You don't have $${amount} in the bank!`)
+              .setDescription(
+                `You don't have $${numberWithCommas(amount)} in the bank!`
+              )
               .setColor("RED")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),
@@ -108,7 +110,7 @@ async function runCommand(message, args, RM) {
           new RM.Discord.MessageEmbed()
             .setDescription(
               `Withdrew **\`$` +
-                amount +
+                numberWithCommas(amount) +
                 `\`** from the bank! Your balance is now:\n\nWallet: **\`$${numberWithCommas(
                   newBal.amountw
                 )}\`**\nBank: **\`$${numberWithCommas(newBal.amountb)}\`**`

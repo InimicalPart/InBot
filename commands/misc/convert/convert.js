@@ -1,88 +1,12 @@
 const commandInfo = {
   primaryName: "convert", // This is the command name used by help.js (gets uppercased).
-  possibleTriggers: ["convert", "alias2", "alias3"], // These are all commands that will trigger this command.
-  help: "eats your cake!", // This is the general description of the command.
-  aliases: ["alias2", "alias3"], // These are command aliases that help.js will use
-  usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
+  possibleTriggers: ["convert", "cv", "conv"], // These are all commands that will trigger this command.
+  help: "Convert currencies!", // This is the general description of the command.
+  aliases: ["cv", "conv"], // These are command aliases that help.js will use
+  usage: "[COMMAND] <amount> <from> to <to>", // [COMMAND] gets replaced with the command and correct prefix later
   category: "misc",
 };
-function getOrdinalNum(n) {
-  return (
-    n +
-    (n > 0
-      ? ["th", "st", "nd", "rd"][(n > 3 && n < 21) || n % 10 > 3 ? 0 : n % 10]
-      : "")
-  );
-}
-const DateFormatter = {
-  monthNames: [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ],
-  dayNames: [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ],
-  formatDate: function (e, t) {
-    var r = this;
-    return (
-      (t = r.getProperDigits(t, /d+/gi, e.getUTCDate())),
-      (t = (t = r.getProperDigits(t, /M+/g, e.getUTCMonth() + 1)).replace(
-        /y+/gi,
-        function (t) {
-          var r = t.length,
-            g = e.getUTCFullYear();
-          return 2 == r ? (g + "").slice(-2) : 4 == r ? g : t;
-        }
-      )),
-      (t = r.getProperDigits(t, /H+/g, e.getUTCHours())),
-      (t = r.getProperDigits(t, /h+/g, r.getHours12(e.getUTCHours()))),
-      (t = r.getProperDigits(t, /m+/g, e.getUTCMinutes())),
-      (t = (t = r.getProperDigits(t, /s+/gi, e.getUTCSeconds())).replace(
-        /a/gi,
-        function (t) {
-          var g = r.getAmPm(e.getUTCHours());
-          return "A" === t ? g.toUpperCase() : g;
-        }
-      )),
-      (t = r.getFullOr3Letters(t, /d+/gi, r.dayNames, e.getUTCDay())),
-      (t = r.getFullOr3Letters(t, /M+/g, r.monthNames, e.getUTCMonth()))
-    );
-  },
-  getProperDigits: function (e, t, r) {
-    return e.replace(t, function (e) {
-      var t = e.length;
-      return 1 == t ? r : 2 == t ? ("0" + r).slice(-2) : e;
-    });
-  },
-  getHours12: function (e) {
-    return (e + 24) % 12 || 12;
-  },
-  getAmPm: function (e) {
-    return e >= 12 ? "pm" : "am";
-  },
-  getFullOr3Letters: function (e, t, r, g) {
-    return e.replace(t, function (e) {
-      var t = e.length;
-      return 3 == t ? r[g].substr(0, 3) : 4 == t ? r[g] : e;
-    });
-  },
-};
+
 async function runCommand(message, args, RM) {
   //Check if command is disabled
   if (!require("../../../config.js").cmdConvert) {
@@ -100,7 +24,78 @@ async function runCommand(message, args, RM) {
       ],
     });
   }
-  if (!args[0]) {
+  /* prettier-ignore */
+  let valid = ["AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BIF","BMD","BND","BOB","BRL","BSD","BTC","BTN","BWP","BYN","BZD","CAD","CDF","CHF","CLF","CLP","CNH","CNY","COP","CRC","CUC","CUP","CVE","CZK","DJF","DKK","DOP","DZD","EGP","ERN","ETB","EUR","FJD","FKP","GBP","GEL","GGP","GHS","GIP","GMD","GNF","GTQ","GYD","HKD","HNL","HRK","HTG","HUF","IDR","ILS","IMP","INR","IQD","IRR","ISK","JEP","JMD","JOD","JPY","KES","KGS","KHR","KMF","KPW","KRW","KWD","KYD","KZT","LAK","LBP","LKR","LRD","LSL","LYD","MAD","MDL","MGA","MKD","MMK","MNT","MOP","MRO","MRU","MUR","MVR","MWK","MXN","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","RWF","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SLL","SOS","SRD","SSP","STD","STN","SVC","SYP","SZL","THB","TJS","TMT","TND","TOP","TRY","TTD","TWD","TZS","UAH","UGX","USD","UYU","UZS","VES","VND","VUV","WST","XAF","XAG","XAU","XCD","XDR","XOF","XPD","XPF","XPT","YER","ZAR","ZMW","ZWL"]
+  // https://api.exchangerate.host/convert?from=USD&to=BTC&amount=999999999999
+  // we need a from currency, to currency and amount, if amount is not supplied, we will assume 1, if from is not supplied, we will assume USD
+  // if to is not supplied, we will assume USD
+  let amount = args[0];
+  let from = args[1];
+  let to = args[2];
+  if (amount.toLowerCase() === "r") {
+    return RM.request(
+      {
+        url:
+          "https://api.exchangerate.host/convert?from=" +
+          from.toUpperCase() +
+          "&to=" +
+          to.toUpperCase(),
+        json: true,
+      },
+      function (error, response, body) {
+        if (error) {
+          message.channel.send({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
+                .setDescription("An error occured, please try again later.")
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Error"),
+            ],
+          });
+        }
+        message.channel.send({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("GREEN")
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
+              .setDescription(
+                "The exchange rate from **" +
+                  from.toUpperCase() +
+                  "** to **" +
+                  to.toUpperCase() +
+                  "** is **" +
+                  body.info.rate +
+                  "**."
+              )
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Rate"),
+          ],
+        });
+      }
+    );
+  }
+  if (!from) {
+    from = "USD";
+  }
+  if (!to) {
+    to = "USD";
+  }
+  if (to.toLowerCase() === "to" || to.toLowerCase() === "->") {
+    to = args[3];
+  }
+  if (!amount) {
+    amount = 1;
+  }
+  // we need to make sure the currency is valid
+  if (!valid.includes(from.toUpperCase())) {
     return message.channel.send({
       embeds: [
         new RM.Discord.MessageEmbed()
@@ -109,13 +104,17 @@ async function runCommand(message, args, RM) {
             name: message.author.tag,
             iconURL: message.author.avatarURL(),
           })
-          .setDescription("You need to specify the type to convert.")
+          .setDescription(
+            "Currency: **" +
+              from.toUpperCase() +
+              "** is not valid. (ERR_FROM_INV)"
+          )
           .setThumbnail(message.guild.iconURL())
-          .setTitle("No Command Specified"),
+          .setTitle("Invalid Currency"),
       ],
     });
   }
-  if (!args[1]) {
+  if (!valid.includes(to.toUpperCase())) {
     return message.channel.send({
       embeds: [
         new RM.Discord.MessageEmbed()
@@ -124,60 +123,108 @@ async function runCommand(message, args, RM) {
             name: message.author.tag,
             iconURL: message.author.avatarURL(),
           })
-          .setDescription("You need to specify the value to convert.")
+          .setDescription(
+            "Currency: **" + to.toUpperCase() + "** is not valid. (ERR_TO_INV)"
+          )
           .setThumbnail(message.guild.iconURL())
-          .setTitle("No Value Specified"),
+          .setTitle("Invalid Currency"),
       ],
     });
   }
-  var value = parseInt(args[1]);
-  var result = "";
-  switch (args[0].toLowerCase()) {
-    case "epocht":
-      result = DateFormatter.formatDate(new Date(value), "HH:mm:ss UTC");
-      break;
-    case "epochd":
-      result = DateFormatter.formatDate(new Date(value), `MMMM ????, YYYY UTC`);
-      result = result.replace("????", getOrdinalNum(new Date(value).getDate()));
-      break;
-    case "epoch":
-      result = DateFormatter.formatDate(
-        new Date(value),
-        `MMMM ????, YYYY HH:mm:ss A UTC`
-      );
-      result = result.replace(
-        "????",
-        getOrdinalNum(new Date(value).getUTCDate())
-      );
-      break;
-    default:
-      return message.channel.send({
+  // make a request to https://api.exchangerate.host/convert?from=USD&to=BTC&amount=999999999999 and set the proper values
+  // we need to make sure the amount is a number
+  if (isNaN(amount)) {
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
+          .setDescription(
+            "Amount: **" + amount + "** is not a number. (ERR_AMOUNT_INV)"
+          )
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Invalid Amount"),
+      ],
+    });
+  }
+  // use the request module which is RM.request to make a request to https://api.exchangerate.host/convert?from=USD&to=BTC&amount=999999999999
+  // set the proper values
+  RM.request(
+    {
+      url:
+        "https://api.exchangerate.host/convert?from=" +
+        from.toUpperCase() +
+        "&to=" +
+        to.toUpperCase() +
+        "&amount=" +
+        amount,
+      json: true,
+    },
+    (error, response, body) => {
+      // if there is an error, send a message to the channel
+      if (error) {
+        return message.channel.send({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
+              .setDescription("Error: " + error + " (ERR_REQ_ERR)")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Request Error"),
+          ],
+        });
+      }
+      // if the response is not 200, send a message to the channel
+      //check if the response json has a result property
+      if (!body.result) {
+        return message.channel.send({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
+              .setDescription("Error: " + body.error + " (ERR_RES_ERR)")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Response Error"),
+          ],
+        });
+      }
+      //send the message to the channel about the conversion
+      message.channel.send({
         embeds: [
           new RM.Discord.MessageEmbed()
-            .setColor("RED")
+            .setColor("GREEN")
             .setAuthor({
               name: message.author.tag,
               iconURL: message.author.avatarURL(),
             })
-            .setDescription("Unknown type.")
+            .setDescription(
+              "Conversion: **" +
+                amount +
+                " " +
+                from.toUpperCase() +
+                "** to **" +
+                to.toUpperCase() +
+                "** is **" +
+                body.result +
+                " " +
+                to.toUpperCase() +
+                "**"
+            )
             .setThumbnail(message.guild.iconURL())
-            .setTitle("Unknown Type"),
+            .setTitle("Conversion"),
         ],
       });
-  }
-  return message.channel.send({
-    embeds: [
-      new RM.Discord.MessageEmbed()
-        .setColor("GREEN")
-        .setAuthor({
-          name: message.author.tag,
-          iconURL: message.author.avatarURL(),
-        })
-        .setDescription("```" + result + "```")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Converted"),
-    ],
-  });
+    }
+  );
 }
 
 function commandTriggers() {

@@ -4,7 +4,7 @@ const commandInfo = {
   help: "eats your cake!", // This is the general description of the command.
   aliases: ["alias2", "alias3"], // These are command aliases that help.js will use
   usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
-  category: "misc",
+  category: "developer",
 };
 
 async function runCommand(message, args, RM) {

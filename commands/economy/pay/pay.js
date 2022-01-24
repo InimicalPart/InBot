@@ -103,23 +103,28 @@ async function runCommand(message, args, RM) {
           ],
         });
       }
-
-      let amount = parseInt(args[1]);
-      if (isNaN(amount)) {
-        await connect.end(true);
-        return m.edit({
-          embeds: [
-            new RM.Discord.MessageEmbed()
-              .setColor("RED")
-              .setAuthor({
-                name: message.author.tag,
-                iconURL: message.author.avatarURL(),
-              })
-              .setDescription("**ERROR:** Invalid amount.")
-              .setThumbnail(message.guild.iconURL())
-              .setTitle("Error"),
-          ],
-        });
+      let amount = null;
+      if (args[1].toLowerCase() === "all") {
+        let authorBal = await connect.fetch("currency", message.author.id);
+        amount = authorBal.amountw;
+      } else {
+        let amount = parseInt(args[1]);
+        if (isNaN(amount)) {
+          await connect.end(true);
+          return m.edit({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
+                .setDescription("**ERROR:** Invalid amount.")
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Error"),
+            ],
+          });
+        }
       }
       if (amount < 1) {
         await connect.end(true);
@@ -131,7 +136,7 @@ async function runCommand(message, args, RM) {
                 name: message.author.tag,
                 iconURL: message.author.avatarURL(),
               })
-              .setDescription("**ERROR:** Invalid amount.")
+              .setDescription("**ERROR:** Invalid amount (less than 1).")
               .setThumbnail(message.guild.iconURL())
               .setTitle("Error"),
           ],

@@ -1,10 +1,10 @@
 const commandInfo = {
   primaryName: "embed",
   possibleTriggers: ["embed", "info"],
-  help: "Embed creates a test embed.",
+  help: "Creates a test embed.",
   aliases: ["info"],
   usage: "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
-  category: "misc",
+  category: "developer",
 };
 
 async function runCommand(message, args, RM) {
@@ -37,9 +37,9 @@ async function runCommand(message, args, RM) {
     .setDescription(
       "**III Project** Invite: [**Click me!**](https://discord.gg/iii) "
     )
-    .setFooter({text:
-      "This is the footer text, it can hold 2048 characters", iconURL:
-      "http://i.imgur.com/w1vhFSR.png"
+    .setFooter({
+      text: "This is the footer text, it can hold 2048 characters",
+      iconURL: "http://i.imgur.com/w1vhFSR.png",
     })
     .setImage(randomLink) //"https://cdn.discordapp.com/attachments/857343827223117827/858120350633951272/III_29.png")
     //.setThumbnail("http://i.imgur.com/p2qNFag.png")

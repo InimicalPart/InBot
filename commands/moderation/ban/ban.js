@@ -69,8 +69,8 @@ async function runCommand(message, args, RM) {
 
     var reason = args.slice(1).join(" ");
 
-    if (!banMember.bannable)
-      return message.channel.send({ content: "I cannot ban that user" });
+    // if (!banMember.bannable)
+    //   return message.channel.send({ content: "I cannot ban that user" });
     try {
       message.guild.members.ban(banMember, {
         days: 7,
@@ -99,7 +99,7 @@ async function runCommand(message, args, RM) {
           iconURL: message.guild.iconURL(),
         })
         .setDescription(
-          `**${banMember.user.username}** has been banned for ${reason}`
+          `**${banMember.username}** has been banned for ${reason}`
         );
       message.channel.send({ embeds: [sembed] });
     } else {
@@ -109,7 +109,7 @@ async function runCommand(message, args, RM) {
           name: message.guild.name,
           iconURL: message.guild.iconURL(),
         })
-        .setDescription(`**${banMember.user.username}** has been banned`);
+        .setDescription(`**${banMember.username}** has been banned`);
       message.channel.send({ embeds: [sembed2] });
     }
     let channel = db.fetch(`modlog_${message.guild.id}`);
@@ -124,13 +124,13 @@ async function runCommand(message, args, RM) {
       })
       .setColor("GREEN")
       .setThumbnail(
-        banMember.user.displayAvatarURL({
+        banMember.displayAvatarURL({
           dynamic: true,
         })
       )
       .setFooter({ text: message.guild.name, iconURL: message.guild.iconURL() })
       .addField("**Action**", "ban")
-      .addField("**Banned User**", banMember.user.username)
+      .addField("**Banned User**", banMember.username)
       .addField("**ID**", `${banMember.id}`)
       .addField("**Banned By**", message.author.username)
       .addField("**Reason**", `${reason || "**No Reason**"}`)
