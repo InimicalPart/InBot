@@ -66,13 +66,13 @@ async function runCommand(message, args, RM) {
     });
 
   const permissions = channel.permissionsFor(message.client.user);
-  if (!permissions.has(RM.Discord.Permission.FLAGS.CONNECT)) {
+  if (!permissions.has(RM.Discord.Permissions.FLAGS.CONNECT)) {
     return message.channel.send({
       content:
         "I cannot connect to your voice channel, make sure I have the proper permissions!",
     });
   }
-  if (!permissions.has(RM.Discord.Permission.FLAGS.SPEAK)) {
+  if (!permissions.has(RM.Discord.Permissions.FLAGS.SPEAK)) {
     return message.channel.send({
       content:
         "I cannot speak in this voice channel, make sure I have the proper permissions!",

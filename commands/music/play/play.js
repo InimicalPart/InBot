@@ -71,12 +71,12 @@ async function runCommand(message, args, RM) {
       });
 
     const permissions = channel.permissionsFor(message.client.user);
-    if (!permissions.has(RM.Discord.Permission.FLAGS.CONNECT))
+    if (!permissions.has(RM.Discord.Permissions.FLAGS.CONNECT))
       return message.channel.send({
         content:
           "I cannot connect to your voice channel, make sure I have the proper permissions!",
       });
-    if (!permissions.has(RM.Discord.Permission.FLAGS.SPEAK))
+    if (!permissions.has(RM.Discord.Permissions.FLAGS.SPEAK))
       return message.channel.send({
         content:
           "I cannot speak in this voice channel, make sure I have the proper permissions!",
@@ -143,9 +143,9 @@ async function runCommand(message, args, RM) {
             .setDescription(
               `**${song.title}** has been added to queue!\n\nRequested By **${message.author.username}**`
             )
-            .setFooter({text:
-              message.member.displayName, iconURL:
-              message.author.displayAvatarURL()
+            .setFooter({
+              text: message.member.displayName,
+              iconURL: message.author.displayAvatarURL(),
             });
           message.channel.send({ embeds: [sembed] });
         }
@@ -220,9 +220,9 @@ async function runCommand(message, args, RM) {
         .setDescription(
           `🎵 Now playing:\n **${song.title}** 🎵\n\n Song Length: **${np}**`
         )
-        .setFooter({text:
-          message.member.displayName, iconURL:
-          message.author.displayAvatarURL()
+        .setFooter({
+          text: message.member.displayName,
+          iconURL: message.author.displayAvatarURL(),
         });
       queue.textChannel.send({ embeds: [embed] });
     }
