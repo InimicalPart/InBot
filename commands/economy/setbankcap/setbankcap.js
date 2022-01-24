@@ -25,7 +25,7 @@ async function runCommand(message, args, RM) {
     });
   }
   if (
-    !message.member.permissions.has(RM.Discord.Permission.FLAGS.ADMINISTRATOR)
+    !message.member.permissions.has(RM.Discord.Permissions.FLAGS.ADMINISTRATOR)
   ) {
     await connect.end(true);
     return m.edit({
