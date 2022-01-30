@@ -174,6 +174,9 @@ async function runCommand(message, args, RM) {
         wanted = "CET";
       }
       simple = true;
+    } else if (args[0].toLowerCase() == "lethal") {
+      wanted = "UTC";
+      simple = true;
     }
     if (timeAbbreviations.includes(wanted)) {
       for (let i of time) {
