@@ -285,17 +285,23 @@ async function runCMD(k, message) {
     });
   //check if user id "814623079346470993" is in the server
   let ownerHere = false;
+  let main = false;
+  let alt = false;
   const list = await client.guilds.fetch("857017449743777812");
   await list.members
     .fetch()
     .then(async (member) => {
       if (member.id == "814623079346470993") {
-        ownerHere = true;
+        main = true;
+      }
+      if (member.id == "301062520679170066") {
+        alt = true;
       }
     })
     .catch(() => {
       ownerHere = false;
     });
+  if (main && alt) ownerHere = true;
   if (!ownerHere) {
     return message.channel.send({
       embeds: [
