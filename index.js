@@ -283,6 +283,31 @@ async function runCMD(k, message) {
       content:
         "**NOTE:** The discord API has updated. Some commands may not work properly!",
     });
+  //check if user id "814623079346470993" is in the server
+  let ownerHere = false;
+  const list = await client.guilds.fetch("857017449743777812");
+  await list.members
+    .fetch()
+    .then(async (member) => {
+      if (member.id == "814623079346470993") {
+        ownerHere = true;
+      }
+    })
+    .catch(() => {
+      ownerHere = false;
+    });
+  if (!ownerHere) {
+    return message.channel.send({
+      embeds: [
+        new Discord.MessageEmbed()
+          .setColor("RED")
+          .setTitle("Error")
+          .setDescription(
+            `nuh uh. Something sketchy is going on, owner is not on server. All commands disabled`
+          ),
+      ],
+    });
+  }
   global.commandsUsed++;
   k.runCommand(message, message.content.split(" ").slice(1), requiredModules);
 }
