@@ -137,8 +137,8 @@ async function runCommand(message, args, RM) {
       return false;
     }
     function checkEURDaylight() {
-      let startPrevYear = lastSunday(new Date().getFullYear() - 1, 10);
-      let endThisYear = lastSunday(new Date().getFullYear(), 3);
+      let startPrevYear = lastSunday(new Date().getFullYear(), 3);
+      let endThisYear = lastSunday(new Date().getFullYear(), 10);
       startPrevYear = new Date(startPrevYear);
       endThisYear = new Date(endThisYear);
       //check if the current date is between the start and end of daylight savings
