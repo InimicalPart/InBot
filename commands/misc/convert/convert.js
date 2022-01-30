@@ -1,3 +1,5 @@
+const { isKeyObject } = require("util/types");
+
 const commandInfo = {
   primaryName: "convert", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["convert", "cv", "conv"], // These are all commands that will trigger this command.
@@ -47,7 +49,8 @@ async function runCommand(message, args, RM) {
     args[0]?.toLowerCase() == "ini" ||
     args[0]?.toLowerCase() == "ray" ||
     args[0]?.toLowerCase() == "space" ||
-    args[0]?.toLowerCase() == "lethal"
+    args[0]?.toLowerCase() == "lethal" ||
+    args[0]?.toLowerCase() == "all"
   ) {
     setting = "date";
   } else if (currencies.includes(args[1]?.toUpperCase())) {
@@ -178,27 +181,54 @@ async function runCommand(message, args, RM) {
     } else if (args[0].toLowerCase() == "lethal") {
       wanted = "UTC";
       simple = true;
+    } else if (args[0].toLowerCase() == "all") {
+      wanted = [];
+      names = ["ini", "ray", "space", "lethal"];
+      if (checkEURDaylight()) {
+        wanted.push("CEST");
+      } else {
+        wanted.push("CET");
+      }
+      if (checkAUSDaylight()) {
+        wanted.push("AEDT");
+      } else {
+        wanted.push("AEST");
+      }
+      wanted.push("UTC");
     }
-    if (timeAbbreviations.includes(wanted)) {
-      for (let i of time) {
-        if (i.Abbreviation == wanted) {
-          wanted = i;
+    if (!Array.isArray(wanted)) {
+      if (timeAbbreviations.includes(wanted)) {
+        for (let i of time) {
+          if (i.Abbreviation == wanted) {
+            wanted = i;
+          }
         }
+      } else {
+        return message.channel.send({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
+              .setDescription("Invalid timezone.")
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Invalid Timezone"),
+          ],
+        });
       }
     } else {
-      return message.channel.send({
-        embeds: [
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor({
-              name: message.author.tag,
-              iconURL: message.author.avatarURL(),
-            })
-            .setDescription("Invalid timezone.")
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Invalid Timezone"),
-        ],
-      });
+      let timezones = [];
+      for (let i of time) {
+        if (wanted.includes(i.Abbreviation)) {
+          if (i.Abbreviation == "CEST" || i.Abbreviation == "CET") {
+            timezones.push(i);
+          }
+          timezones.push(i);
+        }
+      }
+      wanted = timezones;
     }
     let dateNowUTC;
     if (args[1]) {
@@ -223,15 +253,70 @@ async function runCommand(message, args, RM) {
     } else {
       dateNowUTC = new Date().toUTCString();
     }
-    let hours = wanted.Offset.replace(" hours", "");
-    let date = fixDate(dateNowUTC, hours);
-    let off;
-    if (wanted.Offset.includes("-")) {
-      off = wanted.Offset.replace("-", "**-** ");
+    let hours,
+      date,
+      off = null;
+    let final = [];
+    let usedname = [];
+    let name = "";
+    if (Array.isArray(wanted)) {
+      for (let one in wanted) {
+        if (
+          wanted[one].Abbreviation === "AEST" ||
+          wanted[one].Abbreviation === "AEDT"
+        ) {
+          usedname.push("space");
+          name = "space";
+        } else if (wanted[one].Abbreviation == "UTC") {
+          usedname.push("lethal");
+          name = "lethal";
+        } else if (
+          wanted[one].Abbreviation == "CEST" ||
+          wanted[one].Abbreviation == "CET"
+        ) {
+          if (usedname.includes("ini")) {
+            usedname.push("ray");
+            name = "ray";
+          } else {
+            usedname.push("ini");
+            name = "ini";
+          }
+        }
+        hours = wanted[one].Offset.replace(" hours", "");
+        date = fixDate(dateNowUTC, hours);
+        if (wanted[one].Offset.includes("-")) {
+          off = wanted[one].Offset.replace("-", "**-** ");
+        } else {
+          off = "**+** " + wanted[one].Offset;
+        }
+        final.push({
+          abbr: wanted[one].Abbreviation,
+          offset: off,
+          time: momentTimestamp(date)
+            .tz("UTC")
+            .format("ddd, MMM Do, YYYY \\at hh:mm:ss A"),
+          name: name,
+        });
+      }
+      final.sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
     } else {
-      off = "**+** " + wanted.Offset;
+      hours = wanted.Offset.replace(" hours", "");
+      date = fixDate(dateNowUTC, hours);
+      if (wanted.Offset.includes("-")) {
+        off = wanted.Offset.replace("-", "**-** ");
+      } else {
+        off = "**+** " + wanted.Offset;
+      }
     }
-    if (!simple) {
+    if (!simple && !Array.isArray(wanted)) {
       message.channel.send({
         embeds: [
           new RM.Discord.MessageEmbed()
@@ -256,7 +341,7 @@ async function runCommand(message, args, RM) {
             .setTitle("Timezone"),
         ],
       });
-    } else {
+    } else if (simple) {
       message.channel.send({
         content:
           "The time for: **" +
@@ -271,6 +356,21 @@ async function runCommand(message, args, RM) {
           "**",
         split: true,
       });
+    } else if (wanted instanceof Array) {
+      let embed = new RM.Discord.MessageEmbed()
+        .setColor("GREEN")
+        .setAuthor({
+          name: message.author.tag,
+          iconURL: message.author.avatarURL(),
+        })
+        .setTitle("Timezones");
+      for (let i of final) {
+        embed.addField(
+          "Time for: **" + i.name.toUpperCase() + "** (**" + i.abbr + "**)",
+          i.time + " (Offset: " + i.offset + ")"
+        );
+      }
+      message.channel.send({ embeds: [embed] });
     }
   }
   if (setting == "currency") {
