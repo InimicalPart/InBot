@@ -1,3 +1,5 @@
+let moment = require("moment");
+let chalk = require("chalk");
 function motivation() {
   return require("./motivation/motivation.js");
 }
@@ -28,4 +30,7 @@ module.exports = {
   motivation,
   roast,
 };
-console.log("[I] Category FUN loaded");
+console.log(
+  chalk.white.bold("[" + moment().format("M/D/y HH:mm:ss") + "] [MODULE] ") +
+    "[I] Category FUN loaded"
+);

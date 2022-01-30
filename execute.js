@@ -1,1 +1,1 @@
-let discord=require("discord.js");console.log(discord.version)
+process.env.prefix = "---"

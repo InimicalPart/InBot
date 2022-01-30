@@ -15,6 +15,7 @@ global.userAmount = null;
 
 //import modules
 const net = require("net");
+const moment = require("moment");
 require("dotenv").config();
 const Discord = require("discord.js");
 const config = require("./config.js");
@@ -35,9 +36,12 @@ const client = new Discord.Client({
   ],
 });
 //!--------------------------
+console.clear();
 console.log(
-  chalk.green("TheIIIProject is starting up!") +
+  chalk.white.bold("[" + moment().format("M/D/y HH:mm:ss") + "] [MAIN] ") +
+    chalk.green("TheIIIProject is starting up!") +
     "\n" +
+    chalk.white.bold("[" + moment().format("M/D/y HH:mm:ss") + "] [LOADER] ") +
     chalk.yellow("Modules are loading up...")
 );
 const fun = require("./commands/fun/index.js");
@@ -48,7 +52,10 @@ const music = require("./commands/music/index.js");
 const economy = require("./commands/economy/index.js");
 
 const event = require("./events/index.js");
-console.log(chalk.green("Modules loaded! Adding to requiredModules...."));
+console.log(
+  chalk.white.bold("[" + moment().format("M/D/y HH:mm:ss") + "] [MAIN] ") +
+    chalk.green("Modules loaded! Adding to requiredModules....")
+);
 //!--------------------------
 const requiredModules = {
   cmdTest: misc.test(),
@@ -108,7 +115,9 @@ const requiredModules = {
   //   cmdScan: moderation.scan(),
   cmdSudoku: fun.sudoku(),
   cmdMinesweeper: fun.minesweeper(),
+  cmdSpotify: music.spotify(),
   eventonAIMsg: event.onAIMsg(),
+
   //   cmdTestingenv: moderation.testingenv(),
   //   cmdV13: misc.v13(),
   //   cmdBombparty: fun.bombparty(),
@@ -127,6 +136,7 @@ const requiredModules = {
     "301062520679170066",
     "426826826220961821",
     "814623079346470993",
+    "516333697163853828",
   ],
   setImageLinks: [
     "https://cdn.discordapp.com/attachments/857343827223117827/858124182981050408/Twitter_Header_2.png",
@@ -199,6 +209,8 @@ const requiredModules = {
   ytdl: require("ytdl-core"),
   db: require("quick.db"),
   request: require("request"),
+  ESA: require("spotify-web-api-node"),
+  CU: require("convert-units"),
 };
 console.log(
   chalk.blueBright("------------------------\n") +

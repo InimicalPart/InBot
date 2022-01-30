@@ -24,6 +24,9 @@ async function runCommand(message, args, RM) {
       ],
     });
   }
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
   const { connect } = require("../../../databasec");
   await connect();
   await connect.create("currency");
@@ -108,7 +111,7 @@ async function runCommand(message, args, RM) {
         let authorBal = await connect.fetch("currency", message.author.id);
         amount = authorBal.amountw;
       } else {
-        let amount = parseInt(args[1]);
+        amount = parseInt(args[1]);
         if (isNaN(amount)) {
           await connect.end(true);
           return m.edit({
@@ -179,9 +182,9 @@ async function runCommand(message, args, RM) {
               iconURL: message.author.avatarURL(),
             })
             .setDescription(
-              "You have transfered $" +
-                amount +
-                " to **" +
+              "You have transfered **`$" +
+                numberWithCommas(amount) +
+                "`** to **" +
                 user.username +
                 "**."
             )

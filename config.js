@@ -63,3 +63,4 @@ exports.cmdV13 = false;
 exports.cmdBombparty = true;
 exports.cmdTodo = true;
 exports.cmdSlots = true;
+exports.cmdSpotify = true

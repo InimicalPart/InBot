@@ -45,7 +45,7 @@ async function runCommand(message, args, RM) {
       if (args[0]) {
         user =
           message.mentions.members.first() ||
-          a ||
+          message.guild.members.cache.get(args[0]) ||
           message.guild.members.cache.find(
             (r) =>
               r.user.username.toLowerCase() ===
@@ -55,8 +55,8 @@ async function runCommand(message, args, RM) {
             (r) =>
               r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
           ) ||
-          b ||
-          message.member;
+          (await message.guild.members.fetch(args[0])) ||
+          null;
       } else {
         user = message.member;
       }
@@ -91,8 +91,8 @@ async function runCommand(message, args, RM) {
       if (user) {
         let embed = new Discord.MessageEmbed()
           .setAuthor({
-            name: message.author.username,
-            iconURL: message.author.avatarURL(),
+            name: user.username,
+            iconURL: user.avatarURL(),
           })
           .setThumbnail(message.guild.iconURL())
           .setTitle(`${username}'s Balance`)
