@@ -1,52 +1,62 @@
+let moment = require("moment");
+let chalk = require("chalk");
 function nowplaying() {
-	return require('./nowplaying/nowplaying.js')
+  return require("./nowplaying/nowplaying.js");
 }
 function pause() {
-	return require('./pause/pause.js')
+  return require("./pause/pause.js");
 }
 function play() {
-	return require('./play/play.js')
+  return require("./play/play.js");
 }
 function queue() {
-	return require('./queue/queue.js')
+  return require("./queue/queue.js");
 }
 function search() {
-	return require('./search/search.js')
+  return require("./search/search.js");
 }
 function skip() {
-	return require('./skip/skip.js')
+  return require("./skip/skip.js");
 }
 function stop() {
-	return require('./stop/stop.js')
+  return require("./stop/stop.js");
 }
 function vcsounds() {
-	return require('./vcsounds/vcsounds.js')
+  return require("./vcsounds/vcsounds.js");
 }
 function lyrics() {
-	return require('./lyrics/lyrics.js')
+  return require("./lyrics/lyrics.js");
 }
 function remove() {
-	return require('./remove/remove.js')
+  return require("./remove/remove.js");
 }
 function seek() {
-	return require('./seek/seek.js')
+  return require("./seek/seek.js");
 }
 function shuffle() {
-	return require('./shuffle/shuffle.js')
+  return require("./shuffle/shuffle.js");
+}
+
+function spotify() {
+  return require("./spotify/spotify.js");
 }
 
 module.exports = {
-	nowplaying,
-	pause,
-	play,
-	queue,
-	search,
-	skip,
-	stop,
-	vcsounds,
-	lyrics,
-	remove,
-	seek,
-	shuffle
-}
-console.log("[I] Category MUSIC loaded")
+  spotify,
+  nowplaying,
+  pause,
+  play,
+  queue,
+  search,
+  skip,
+  stop,
+  vcsounds,
+  lyrics,
+  remove,
+  seek,
+  shuffle,
+};
+console.log(
+  chalk.white.bold("[" + moment().format("M/D/y HH:mm:ss") + "] [MODULE] ") +
+    "[I] Category MUSIC loaded"
+);

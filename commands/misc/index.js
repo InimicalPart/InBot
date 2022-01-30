@@ -1,3 +1,5 @@
+let moment = require("moment");
+let chalk = require("chalk");
 function calculate() {
   return require("./calculate/calculate.js");
 }
@@ -60,4 +62,7 @@ module.exports = {
   random,
   test,
 };
-console.log("[I] Category MISC loaded");
+console.log(
+  chalk.white.bold("[" + moment().format("M/D/y HH:mm:ss") + "] [MODULE] ") +
+    "[I] Category MISC loaded"
+);

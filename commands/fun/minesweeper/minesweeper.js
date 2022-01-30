@@ -236,6 +236,7 @@ async function runCommand(message, args, RM) {
   });
 
   var filter = (m) => [message.author.id].includes(m.author.id);
+  let uncoverZeroAuto = false;
   const collector = message.channel.createMessageCollector(filter);
   collector.on("collect", async (messageNext) => {
     const msg = messageNext.content.toLowerCase().split(" ");
@@ -443,6 +444,7 @@ async function runCommand(message, args, RM) {
                   numToSSColumn(parseInt(item[1]) + 1)
               );
             }
+
             message.channel.send({
               content:
                 "`" +
@@ -811,6 +813,16 @@ async function runCommand(message, args, RM) {
           }
         })
         .catch(console.error);
+    } else if (msg[0] === "settings") {
+      if (msg[1] === "set") {
+        if (msg[2] === "uncoverzeroauto") {
+          if (msg[3] === "true") {
+            uncoverZeroAuto = true;
+          } else if (msg[3] === "false") {
+            uncoverZeroAuto = false;
+          }
+        }
+      }
     }
   });
   // cmd stuff here
