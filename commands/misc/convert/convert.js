@@ -46,7 +46,8 @@ async function runCommand(message, args, RM) {
     timeAbbreviations.includes(args[0]?.toUpperCase()) ||
     args[0]?.toLowerCase() == "ini" ||
     args[0]?.toLowerCase() == "ray" ||
-    args[0]?.toLowerCase() == "space"
+    args[0]?.toLowerCase() == "space" ||
+    args[0]?.toLowerCase() == "lethal"
   ) {
     setting = "date";
   } else if (currencies.includes(args[1]?.toUpperCase())) {
