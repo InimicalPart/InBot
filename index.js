@@ -309,7 +309,7 @@ async function runCMD(k, message) {
           .setColor("RED")
           .setTitle("Error")
           .setDescription(
-            `nuh uh. Something sketchy is going on, owner is not on server. All commands disabled`
+            `nuh uh. Something sketchy is going on, the BOT owner is not on server. All commands disabled`
           ),
       ],
     });
