@@ -296,13 +296,14 @@ async function runCommand(message, args, RM) {
             .tz("UTC")
             .format("ddd, MMM Do, YYYY \\at hh:mm:ss A"),
           name: name,
+          offsetInt: parseInt(wanted[one].Offset.replace(" hours", "")),
         });
       }
       final.sort((a, b) => {
-        if (a.name < b.name) {
+        if (a.offsetInt < b.offsetInt) {
           return -1;
         }
-        if (a.name > b.name) {
+        if (a.offsetInt > b.offsetInt) {
           return 1;
         }
         return 0;
