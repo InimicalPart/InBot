@@ -42,9 +42,24 @@ async function runCommand(message, args, RM) {
           .setTitle("Invalid Arguments");
         return m.edit({ embeds: [songNotDefined] });
       }
-
+      let timeStart = new Date().getTime();
       const searches = await Client.songs.search(args.join(" "));
-
+      let timeTaken = new Date().getTime() - timeStart; // time taken to get lyrics in milliseconds
+      if (searches.length < 1) {
+        const noLyricsFound = new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor({
+            name: `${message.author.tag}`,
+            iconURL: `${message.author.avatarURL()}`,
+          })
+          .setDescription("No lyrics found.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("No Lyrics Found")
+          .setFooter({
+            text: "Time taken: " + timeTaken / 1000 + " seconds",
+          });
+        return m.edit({ embeds: [noLyricsFound] });
+      }
       const firstSong = searches[0];
       const lyrics = await firstSong.lyrics();
 
@@ -58,7 +73,10 @@ async function runCommand(message, args, RM) {
           })
           .setDescription("No lyrics found.")
           .setThumbnail(message.guild.iconURL())
-          .setTitle("No Lyrics Found");
+          .setTitle("No Lyrics Found")
+          .setFooter({
+            text: "Time taken: " + timeTaken / 1000 + " seconds",
+          });
         return m.edit({ embeds: [noLyricsFound] });
       }
 
@@ -72,14 +90,16 @@ async function runCommand(message, args, RM) {
           })
           .setDescription("No results found.")
           .setThumbnail(message.guild.iconURL())
-          .setTitle("No Results Found");
+          .setTitle("No Results Found")
+          .setFooter({
+            text: "Time taken: " + timeTaken / 1000 + " seconds",
+          });
         return m.edit({ embeds: [noResults] });
       }
 
       // if the length of the lyrics is greater than 2000 characters, split it into multiple messages
       // split it at end of the line around 4000 characters
       // then send in multiple embeds
-
       if (lyrics.length > 3500) {
         const lyricsArray = lyrics.split("\n");
         const lyricsArrayLength = lyricsArray.length;
@@ -113,7 +133,10 @@ async function runCommand(message, args, RM) {
                       " - " +
                       firstSong.artist.name
                   )
-                  .setURL(firstSong.url),
+                  .setURL(firstSong.url)
+                  .setFooter({
+                    text: "Time taken: " + timeTaken / 1000 + " seconds",
+                  }),
                 // set the thumbnail to the song art
               ],
             });
@@ -141,10 +164,12 @@ async function runCommand(message, args, RM) {
             "Lyrics for " + firstSong.title + " - " + firstSong.artist.name
           )
           .setImage(firstSong.image)
-          .setURL(firstSong.url);
+          .setURL(firstSong.url)
+          .setFooter({
+            text: "Time taken: " + timeTaken / 1000 + " seconds",
+          });
 
         m.edit({ embeds: [lyricmsg] });
-        console.log(firstSong);
       }
     });
 }
