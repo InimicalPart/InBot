@@ -140,6 +140,13 @@ async function runCommand(message, args, RM) {
       }
       return false;
     }
+    function flipVal(amount) {
+      console.log(amount, amount * -1);
+      if (amount === 0) {
+        return amount;
+      }
+      return amount * -1;
+    }
     function checkEURDaylight() {
       let startPrevYear = lastSunday(new Date().getFullYear(), 3);
       let endThisYear = lastSunday(new Date().getFullYear(), 10);
@@ -160,6 +167,8 @@ async function runCommand(message, args, RM) {
     //     split: true,
     //   });
     let wanted = args[0].toUpperCase();
+    let wanted2 = null;
+    let conv = false;
     let simple = false;
     if (args[0].toLowerCase() == "space") {
       if (checkAUSDaylight()) {
@@ -233,22 +242,105 @@ async function runCommand(message, args, RM) {
     let dateNowUTC;
     if (args[1]) {
       // connect all args together except the first one
-      dateNowUTC = args.slice(1).join(" ");
-      dateNowUTC = new Date(dateNowUTC).toUTCString();
-      if (dateNowUTC.toString() == "Invalid Date") {
-        return message.channel.send({
-          embeds: [
-            new RM.Discord.MessageEmbed()
-              .setColor("RED")
-              .setAuthor({
-                name: message.author.tag,
-                iconURL: message.author.avatarURL(),
-              })
-              .setDescription("Invalid date.")
-              .setThumbnail(message.guild.iconURL())
-              .setTitle("Invalid Date"),
-          ],
-        });
+      if (timeAbbreviations.includes(args[1].toUpperCase())) {
+        wanted2 = args[1].toUpperCase();
+        for (let i of time) {
+          if (i.Abbreviation == wanted2) {
+            wanted2 = i;
+          }
+        }
+        if (wanted2.Abbreviation === wanted.Abbreviation) {
+          message.channel.send({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
+                .setDescription("You can't use the same timezone.")
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Invalid Timezone"),
+            ],
+          });
+          return;
+        }
+        if (!args[2]) {
+          message.channel.send({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
+                .setDescription("You need to specify a time.")
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Invalid Date"),
+            ],
+          });
+          return;
+        }
+        //TODO: fix
+        let date = new Date();
+        //get the offset for wanted, then subtract it from the current time to get the UTC time, then add the offset of wanted2 to get the wanted time
+        let fix1 = wanted.Offset.replace(" hours", "");
+        let fix2 = wanted2.Offset.replace(" hours", "");
+        let wOffset,
+          w2Offset,
+          minute1,
+          minute2,
+          hour1,
+          hour2 = null;
+        if (fix1.includes(":")) wOffset = fix1.split(":");
+        else wOffset = fix1;
+        if (fix2.includes(":")) w2Offset = fix2.split(":");
+        else w2Offset = fix2;
+        if (Array.isArray(wOffset)) {
+          hour1 = parseInt(wOffset[0]);
+          minute1 = parseInt(wOffset[1]);
+        } else {
+          hour1 = parseInt(wOffset);
+          minute1 = 0;
+        }
+        if (Array.isArray(w2Offset)) {
+          hour2 = parseInt(w2Offset[0]);
+          minute2 = parseInt(w2Offset[1]);
+        } else {
+          hour2 = parseInt(w2Offset);
+          minute2 = 0;
+        }
+        let offsetHours = parseInt(hour1);
+        let offsetMinutes = parseInt(minute1);
+        let w2OffsetHours = parseInt(hour2);
+        let w2OffsetMinutes = parseInt(minute2);
+        let offset = offsetHours * 60 + offsetMinutes;
+        let w2OffsetTotal = w2OffsetHours * 60 + w2OffsetMinutes;
+        offset = w2OffsetTotal - offset;
+        //offset is in minutes
+        date.setMinutes(date.getMinutes() + offset);
+        dateNowUTC = date.toUTCString();
+        console.log(offset, dateNowUTC);
+        conv = true;
+        //the time should be now in the timezone which is specified by wanted
+      } else {
+        dateNowUTC = args.slice(1).join(" ");
+        dateNowUTC = new Date(dateNowUTC).toUTCString();
+        if (dateNowUTC.toString() == "Invalid Date") {
+          return message.channel.send({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
+                .setDescription("Invalid date.")
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Invalid Date"),
+            ],
+          });
+        }
       }
     } else {
       dateNowUTC = new Date().toUTCString();
@@ -308,6 +400,67 @@ async function runCommand(message, args, RM) {
         }
         return 0;
       });
+    } else if (conv) {
+      //remove the wanted offset from the wanted 2 offset
+      let afix1 = wanted.Offset.replace(" hours", "");
+      let afix2 = wanted2.Offset.replace(" hours", "");
+      let awOffset,
+        aw2Offset,
+        aminute1,
+        aminute2,
+        ahour1,
+        ahour2 = null;
+      if (afix1.includes(":")) awOffset = afix1.split(":");
+      else awOffset = afix1;
+      if (afix2.includes(":")) aw2Offset = afix2.split(":");
+      else aw2Offset = afix2;
+      if (Array.isArray(awOffset)) {
+        ahour1 = parseInt(awOffset[0]);
+        aminute1 = parseInt(awOffset[1]);
+      } else {
+        ahour1 = parseInt(awOffset);
+        aminute1 = 0;
+      }
+      if (Array.isArray(aw2Offset)) {
+        ahour2 = parseInt(aw2Offset[0]);
+        aminute2 = parseInt(aw2Offset[1]);
+      } else {
+        ahour2 = parseInt(aw2Offset);
+        aminute2 = 0;
+      }
+      let aoffsetHours = parseInt(ahour1);
+      let aoffsetMinutes = parseInt(aminute1);
+      let aw2OffsetHours = parseInt(ahour2);
+      let aw2OffsetMinutes = parseInt(aminute2);
+      //   aw2OffsetHours = flipVal(aw2OffsetHours);
+      //   aw2OffsetMinutes = flipVal(aw2OffsetMinutes);
+      console.log(aoffsetHours, aoffsetMinutes);
+      console.log(aw2OffsetHours, aw2OffsetMinutes);
+      let aoffset = aoffsetHours * 60 + aoffsetMinutes;
+      let aw2OffsetTotal = aw2OffsetHours * 60 + aw2OffsetMinutes;
+      aoffset = aw2OffsetTotal - aoffset;
+      //offset is in minutes
+      date = new Date(dateNowUTC);
+      console.log(dateNowUTC);
+      date = date.setMinutes(date.getMinutes() + aoffset); // convert the minutes to hours and minutes
+      let hours = Math.floor(aoffset / 60);
+      let minutes = aoffset % 60;
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+      if (hours < 10) {
+        hours = "0" + hours;
+      }
+      if (aoffset < 0) {
+        off =
+          "**-** " +
+          Math.abs(hours) +
+          " hours " +
+          Math.abs(minutes) +
+          " minutes";
+      } else {
+        off = "**+** " + hours + " hours " + minutes + " minutes";
+      }
     } else {
       hours = wanted.Offset.replace(" hours", "");
       date = fixDate(dateNowUTC, hours);
@@ -317,7 +470,7 @@ async function runCommand(message, args, RM) {
         off = "**+** " + wanted.Offset;
       }
     }
-    if (!simple && !Array.isArray(wanted)) {
+    if (!simple && !Array.isArray(wanted) && !conv) {
       message.channel.send({
         embeds: [
           new RM.Discord.MessageEmbed()
@@ -332,6 +485,25 @@ async function runCommand(message, args, RM) {
             //       .tz("UTC")
             //       .format("ddd, MMM Do, YYYY \\at hh:mm:ss A")
             //   )
+            .addField(
+              wanted.Abbreviation + " Time",
+              momentTimestamp(date)
+                .tz("UTC")
+                .format("ddd, MMM Do, YYYY \\at hh:mm:ss A")
+            )
+            .addField("Offset", off)
+            .setTitle("Timezone"),
+        ],
+      });
+    } else if (!simple && !Array.isArray(wanted) && conv) {
+      message.channel.send({
+        embeds: [
+          new RM.Discord.MessageEmbed()
+            .setColor("GREEN")
+            .setAuthor({
+              name: message.author.tag,
+              iconURL: message.author.avatarURL(),
+            })
             .addField(
               wanted.Abbreviation + " Time",
               momentTimestamp(date)
