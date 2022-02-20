@@ -140,6 +140,8 @@ async function runCommand(message, args, RM) {
                 await connect.query(
                   "DELETE FROM timer WHERE timerid = " + time
                 );
+                global.updatedTimers = true;
+
                 return message.channel.send({
                   embeds: [
                     new RM.Discord.MessageEmbed()
@@ -266,6 +268,7 @@ async function runCommand(message, args, RM) {
                       "' WHERE timerid = " +
                       time
                   );
+                  global.updatedTimers = true;
                   return message.channel.send({
                     embeds: [
                       new RM.Discord.MessageEmbed()
@@ -275,7 +278,11 @@ async function runCommand(message, args, RM) {
                           iconURL: message.author.avatarURL(),
                         })
                         .setDescription(
-                          "Timer with the ID " + time + " has been updated."
+                          "Changed message of timer with ID **" +
+                            time +
+                            "** to: **'" +
+                            args.slice(3).join(" ") +
+                            "'**"
                         )
                         .setThumbnail(message.guild.iconURL())
                         .setTitle("Timer Edited"),
@@ -346,7 +353,8 @@ async function runCommand(message, args, RM) {
             let newTime = null;
             try {
               newTime =
-                new Date().getTime() + convert(args[3]).from(args[4]).to("ms");
+                new Date().getTime() +
+                convert(Math.abs(args[3])).from(args[4]).to("ms");
             } catch (e) {
               return message.channel.send({
                 embeds: [
@@ -393,6 +401,7 @@ async function runCommand(message, args, RM) {
                       " WHERE timerid = " +
                       time
                   );
+                  global.updatedTimers = true;
                   return message.channel.send({
                     embeds: [
                       new RM.Discord.MessageEmbed()
@@ -402,7 +411,11 @@ async function runCommand(message, args, RM) {
                           iconURL: message.author.avatarURL(),
                         })
                         .setDescription(
-                          "Timer with the ID " + time + " has been updated."
+                          "The time on timer with ID **" +
+                            time +
+                            "** has been changed to: **" +
+                            RM.pretty_ms(newTime - Date.now()) +
+                            "**"
                         )
                         .setThumbnail(message.guild.iconURL())
                         .setTitle("Timer Edited"),

@@ -1,1 +1,1 @@
-console.log(new Date().getTime()+1200)
+let child_process = require("child_process");child_process.exec('cd /coding/projects/iii.exe && git add . && git commit -m "hi" && git push')
