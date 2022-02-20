@@ -17,12 +17,12 @@ function scan() {
   return require("./scan/scan.js");
 }
 
-function testingenv() {
-  return require("./testingenv/testingenv.js");
+function testing() {
+  return require("./testing/testing.js");
 }
 
 module.exports = {
-  testingenv,
+  testing,
   scan,
   ban,
   config,

@@ -1,15 +1,15 @@
 const commandInfo = {
-  primaryName: "testingenv", // This is the command name used by help.js (gets uppercased).
-  possibleTriggers: ["testingenv", "alias2", "alias3"], // These are all commands that will trigger this command.
+  primaryName: "testing", // This is the command name used by help.js (gets uppercased).
+  possibleTriggers: ["testing"], // These are all commands that will trigger this command.
   help: "eats your cake!", // This is the general description of the command.
-  aliases: ["alias2", "alias3"], // These are command aliases that help.js will use
+  aliases: [], // These are command aliases that help.js will use
   usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
   category: "developer",
 };
 
 async function runCommand(message, args, RM) {
   //Check if command is disabled
-  if (!require("../../../config.js").cmdTestingenv) {
+  if (!require("../../../config.js").cmdTesting) {
     return message.channel.send({
       embeds: [
         new RM.Discord.MessageEmbed()
@@ -24,15 +24,14 @@ async function runCommand(message, args, RM) {
       ],
     });
   }
-  //make a reaction collector
-}
-function randomLetters(length) {
-  const chars = "abcdefghijklmnopqrstuvwxyz1234567890";
-  const randomString = [];
-  for (let i = 0; i < length; i++) {
-    randomString.push(chars[Math.floor(Math.random() * chars.length)]);
-  }
-  return randomString.join("");
+  const row = new RM.Discord.MessageActionRow().addComponents(
+    new RM.Discord.MessageButton()
+      .setLabel("Click me!")
+      .setStyle("DANGER")
+      .setCustomId("testBtn")
+  );
+  // send a message with a button
+  message.channel.send({ content: "a", components: [row] });
 }
 function commandTriggers() {
   return commandInfo.possibleTriggers;
