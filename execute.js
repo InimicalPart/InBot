@@ -1,1 +1,1 @@
-var Heroku = require("heroku-client"),heroku = new Heroku({ token: process.env.HEROKU_API_TOKEN });heroku.delete("/apps/theiiiproject/dynos/worker");
+console.log(new Date().getTime()+1200)

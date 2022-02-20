@@ -24,10 +24,10 @@ async function runCommand(message, args, RM) {
       ],
     });
   }
+
   if (
     !message.member.permissions.has(RM.Discord.Permissions.FLAGS.ADMINISTRATOR)
   ) {
-    await connect.end(true);
     return m.edit({
       embeds: [
         new RM.Discord.MessageEmbed()
@@ -51,6 +51,7 @@ async function runCommand(message, args, RM) {
   await connect.create("currency");
   await connect.create("cooldown");
   await connect.create("inventory");
+  await connect.create("timer");
   var SqlString = require("sqlstring");
   message.channel
     .send({

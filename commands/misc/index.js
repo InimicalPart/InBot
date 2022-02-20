@@ -47,7 +47,12 @@ function todo() {
   return require("./todo/todo.js");
 }
 
+function timer() {
+	return require("./timer/timer.js")
+}
+
 module.exports = {
+	timer,
   todo,
   v13,
   run,

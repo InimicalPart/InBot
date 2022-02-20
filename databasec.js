@@ -14,6 +14,9 @@ async function connect() {
     },
   });
   await client.connect();
+  async function reconnect() {
+    await client.connect();
+  }
   async function create(/** @type string */ table_name) {
     if (table_name == "currency") {
       const res = await client.query(`CREATE TABLE IF NOT EXISTS ${table_name}(
@@ -56,6 +59,19 @@ async function connect() {
                 );`);
       return res;
     }
+    if (table_name == "timer") {
+      const res = await client.query(`CREATE TABLE IF NOT EXISTS ${table_name}(
+                    id SERIAL,
+                    timerId bigint not null,
+                    userid bigint not null,
+                    time bigint null,
+                    settings json not null default '${JSON.stringify({})}',
+                    channelId bigint null,
+                    messageId bigint null,
+                    message text null
+                    );`);
+      return res;
+    }
   }
 
   async function add(
@@ -79,6 +95,10 @@ async function connect() {
     } else if (table_name == "settings") {
       const res = await client.query(
         `INSERT INTO ${table_name}(botid, settings) VALUES(${userid}, '{}');`
+      );
+    } else if (table_name == "timer") {
+      const res = await client.query(
+        `INSERT INTO ${table_name}(timerId, userid, time, settings, channel, messageId) VALUES(${userid}, null, '{}', null, null);`
       );
     }
   }
@@ -116,6 +136,59 @@ async function connect() {
       )}' WHERE botid=${botid}`
     );
   }
+  async function updateTimer(
+    /** @type string */ table_name,
+    /** @type number */ userid,
+    /** @type number */ time,
+    /** @type json @optional */ settings
+  ) {
+    //check if time is a number
+    if (isNaN(time)) throw new Error("Time is not a number");
+    //check if settings is a json
+    if (settings && typeof settings !== "object")
+      throw new Error("Settings is not a json");
+    //check if at least one of the variables is set
+    if (!time && !settings) throw new Error("No data provided");
+
+    //if settings, use fetch to get the current settings
+    let currentSettings;
+    if (settings) {
+      let res = await fetch(table_name, userid);
+      if (!res) throw new Error("User not found");
+      currentSettings = res.settings;
+      //make sure the current settings are a json if not try to make it into one
+      if (typeof currentSettings !== "object") {
+        try {
+          currentSettings = JSON.parse(currentSettings);
+        } catch (e) {
+          throw new Error("Settings is not a json");
+        }
+      }
+      //merge the new settings with the old ones
+      currentSettings = Object.assign(currentSettings, settings);
+    }
+    //if time, update the time
+    if (time && !settings) {
+      client.query(
+        `UPDATE ${table_name} SET time=${time} WHERE userid=${userid}`
+      );
+    } else if (time && settings) {
+      client.query(
+        `UPDATE ${table_name} SET time=${time}, settings='${JSON.stringify(
+          currentSettings
+        )}' WHERE userid=${userid}`
+      );
+    } else if (!time && settings) {
+      client.query(
+        `UPDATE ${table_name} SET settings='${JSON.stringify(
+          currentSettings
+        )}' WHERE userid=${userid}`
+      );
+    } else {
+      throw new Error("No data provided");
+    }
+  }
+
   async function updateInv(
     /** @type string */ table_name,
     /** @type number */ userid,
@@ -257,7 +330,14 @@ async function connect() {
     client.end();
   }
   async function query(/** @type string */ query) {
-    const res = await client.query(query);
+    // console.log(query);
+    let res;
+    try {
+      res = await client.query(query);
+    } catch (err) {
+      await client.connect();
+      res = await client.query(query);
+    }
     return res;
   }
   async function end(/**@type boolean */ allowWait) {
@@ -286,6 +366,7 @@ async function connect() {
   connect.query = query;
   connect.end = end;
   connect.dcAll = dcAll;
+  connect.reconnect = reconnect;
 }
 module.exports = {
   connect,

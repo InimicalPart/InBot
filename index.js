@@ -12,6 +12,9 @@ global.playerBalance = new Map();
 global.seekMS = 0;
 global.commandsUsed = 0;
 global.userAmount = null;
+global.updatedTimers = false;
+global.dirName = __dirname;
+global.webhookify = [];
 
 //import modules
 const net = require("net");
@@ -116,9 +119,11 @@ const requiredModules = {
   cmdSudoku: fun.sudoku(),
   cmdMinesweeper: fun.minesweeper(),
   cmdSpotify: music.spotify(),
+  cmdTimer: misc.timer(),
   eventonAIMsg: event.onAIMsg(),
+  eventTimer: event.timer(),
 
-  //   cmdTestingenv: moderation.testingenv(),
+  cmdTesting: moderation.testing(),
   //   cmdV13: misc.v13(),
   //   cmdBombparty: fun.bombparty(),
   cmdTodo: misc.todo(),
@@ -327,7 +332,7 @@ client.on("ready", async () => {
           console.log(m.user.username + " is getting banned.");
           await m.send({
             content:
-              "Hello, you have been suspected of being a user bot, for safety concerns, we have banned you. If you think this is a mistake. Please DM InimicalPart ©#4542 or ray.#2021",
+              "Hello, you have been suspected of being a user bot, for safety concerns, we have banned you. If you think this is a mistake. Please message Inimi#0565",
           });
           m.ban({ reason: "User bots are not allowed." });
         } else {
@@ -374,7 +379,7 @@ client.on("ready", async () => {
   );
   console.log(
     chalk.redBright("The III Society") +
-      " was created at " +
+      " was created on the " +
       chalk.cyanBright(createdAt.toLocaleDateString()) +
       ". That's " +
       chalk.cyanBright(days) +
@@ -432,6 +437,13 @@ client.on("ready", async () => {
       require("fs").unlinkSync(file);
     }
   });
+  for (let i in requiredModules) {
+    if (i.startsWith("event")) {
+      if (requiredModules[i].eventType() === "onStart") {
+        requiredModules[i].runEvent(requiredModules);
+      }
+    }
+  }
 });
 //import express and start a server on port 3000
 
