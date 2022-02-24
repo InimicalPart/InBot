@@ -15,6 +15,8 @@ global.userAmount = null;
 global.updatedTimers = false;
 global.dirName = __dirname;
 global.webhookify = [];
+global.checkWordle = false;
+global.wordleList = [];
 
 //import modules
 const net = require("net");
@@ -47,13 +49,17 @@ console.log(
     chalk.white.bold("[" + moment().format("M/D/y HH:mm:ss") + "] [LOADER] ") +
     chalk.yellow("Modules are loading up...")
 );
+const path = require("path");
+const { connect } = require(path.resolve(global.dirName, "databasec.js"));
+(async () => {
+  await connect();
+})();
 const fun = require("./commands/fun/index.js");
 const iiisub = require("./commands/iii-submission/index.js");
 const misc = require("./commands/misc/index.js");
 const moderation = require("./commands/moderation/index.js");
 const music = require("./commands/music/index.js");
 const economy = require("./commands/economy/index.js");
-
 const event = require("./events/index.js");
 console.log(
   chalk.white.bold("[" + moment().format("M/D/y HH:mm:ss") + "] [MAIN] ") +
@@ -120,9 +126,12 @@ const requiredModules = {
   cmdMinesweeper: fun.minesweeper(),
   cmdSpotify: music.spotify(),
   cmdTimer: misc.timer(),
+  cmdWordle: fun.wordle(),
+  cmdCodeify: misc.codeify(),
   eventonAIMsg: event.onAIMsg(),
   eventTimer: event.timer(),
-
+  eventWordle: event.wordle(),
+  DBClient: connect,
   cmdTesting: moderation.testing(),
   //   cmdV13: misc.v13(),
   //   cmdBombparty: fun.bombparty(),
@@ -210,7 +219,7 @@ const requiredModules = {
   ],
   common: require("common-tags"),
   math: require("mathjs"),
-  path: require("path"),
+  path: path,
   ytdl: require("ytdl-core"),
   db: require("quick.db"),
   request: require("request"),

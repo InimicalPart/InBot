@@ -65,3 +65,5 @@ exports.cmdTodo = true;
 exports.cmdSlots = true;
 exports.cmdSpotify = true;
 exports.cmdTimer = true;
+exports.cmdWordle = true
+exports.cmdCodeify = true

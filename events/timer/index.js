@@ -8,8 +8,7 @@ async function runEvent(RM) {
   //Event checks
   //
   let path = require("path");
-  const { connect } = require(path.resolve(global.dirName, "databasec.js"));
-  await connect();
+  const connect = RM.DBClient;
   await connect.create("timer");
   var SqlString = require("sqlstring");
   //get all timers
