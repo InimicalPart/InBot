@@ -104,9 +104,7 @@ async function runCommand(message, args, RM) {
       return message.channel.send(
         "You already completed today's wordle! Next wordle is in: " +
           RM.pretty_ms(
-            parseInt(currentWordle.lastgenerated) +
-              /*86400000*/ 120000 -
-              Date.now()
+            parseInt(currentWordle.lastgenerated) + 86400000 - Date.now()
           )
       );
     global.wordleList.push({ userid: message.author.id, needsUpdate: false });
