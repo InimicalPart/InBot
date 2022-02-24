@@ -218,9 +218,7 @@ async function runCommand(message, args, RM) {
               (6 - tries) +
               " tries! The next one will be available in " +
               RM.pretty_ms(
-                parseInt(currentWordle.lastgenerated) +
-                  /*86400000*/ 120000 -
-                  Date.now()
+                parseInt(currentWordle.lastgenerated) + 86400000 - Date.now()
               );
             message.channel.send(sendMsg);
             let updatedWordleUsers = await connect.query(
