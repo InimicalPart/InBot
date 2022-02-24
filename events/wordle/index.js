@@ -46,7 +46,7 @@ async function runEvent(RM, event) {
     }
     if (expiresIn == null) {
       expiresIn = new Date(parseInt(wordle.lastgenerated)).setSeconds(
-        new Date(parseInt(wordle.lastgenerated)).getSeconds() + 120 //86400
+        new Date(parseInt(wordle.lastgenerated)).getSeconds() + 86400
       );
     }
   }, 200);
