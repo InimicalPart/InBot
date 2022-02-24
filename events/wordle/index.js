@@ -21,12 +21,16 @@ async function runEvent(RM, event) {
         wordle = checkIfExists.rows[0];
         global.checkWordle = false;
         // console.log("aquired wordle from db");
-        if (parseInt(wordle.lastgenerated) > new Date().getTime()) return;
+        if (parseInt(wordle.lastgenerated) + 86400000 > new Date().getTime())
+          return;
         // else console.log("wordle is old, generating new one");
       }
       //   console.log("making wordle");
       if (global.checkWordle) global.checkWordle = false;
-      let wordleCreationTime = new Date().getTime();
+      //todays midnight
+      let today = new Date();
+      today.setHours(0, 0, 0, 0);
+      let wordleCreationTime = today.getTime();
       let wordlew = wordleList[Math.floor(Math.random() * wordleList.length)];
       await connect.query(
         "UPDATE wordle SET wordle = '" +
