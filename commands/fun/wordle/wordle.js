@@ -320,7 +320,6 @@ async function runCommand(message, args, RM) {
             .then(async (m) => {
               m.react("🏆");
             });
-          await messageNext.delete();
         } else {
           message.channel
             .send({
@@ -331,7 +330,6 @@ async function runCommand(message, args, RM) {
             .then(async (m) => {
               m.react(triesEmoji[tries]);
             });
-          await messageNext.delete();
         }
         /* ------------------------------------------------------------------------ WORDLE MAGIC ------------------------------------------------------------------------ */
 
