@@ -24,14 +24,7 @@ async function runCommand(message, args, RM) {
       ],
     });
   }
-  const row = new RM.Discord.MessageActionRow().addComponents(
-    new RM.Discord.MessageButton()
-      .setLabel("Click me!")
-      .setStyle("DANGER")
-      .setCustomId("testBtn")
-  );
-  // send a message with a button
-  message.channel.send({ content: "a", components: [row] });
+  await message.delete();
 }
 function commandTriggers() {
   return commandInfo.possibleTriggers;
