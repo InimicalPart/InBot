@@ -238,7 +238,10 @@ console.log(
 client.on("messageCreate", async (message) => {
   for (let i in requiredModules) {
     if (i.startsWith("event")) {
-      if (requiredModules[i].eventType() === "onMessage") {
+      if (
+        requiredModules[i].eventType() === "onMessage" &&
+        message.guild.id !== "848978190088536115"
+      ) {
         requiredModules[i].runEvent(requiredModules, message);
       }
     }
@@ -287,7 +290,13 @@ client.on("messageCreate", async (message) => {
           !requiredModules.botOwners.includes(message.author.id)
         )
           return;
-        runCMD(requiredModules[i], message);
+        if (
+          requiredModules[i].commandPrim() === "codeify" &&
+          message.guild.id === "848978190088536115"
+        )
+          runCMD(requiredModules[i], message);
+        else if (message.guild.id !== "848978190088536115")
+          runCMD(requiredModules[i], message);
       }
   }
 });
@@ -350,7 +359,6 @@ client.on("ready", async () => {
       });
     })
     .catch(console.error);
-
   if (client.user.id != "859513472973537311" && config.showUsers == true)
     await list.channels.cache
       .get("862425213799104512")
