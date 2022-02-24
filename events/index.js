@@ -4,7 +4,11 @@ function onAIMsg() {
 function timer() {
   return require("./timer/index.js");
 }
+function wordle() {
+  return require("./wordle/index.js");
+}
 module.exports = {
+  wordle,
   onAIMsg,
   timer,
 };

@@ -22,7 +22,12 @@ function bombparty() {
   return require("./bombparty/bombparty.js");
 }
 
+function wordle() {
+	return require("./wordle/wordle.js")
+}
+
 module.exports = {
+	wordle,
   bombparty,
   minesweeper,
   sudoku,

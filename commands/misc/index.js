@@ -51,7 +51,12 @@ function timer() {
 	return require("./timer/timer.js")
 }
 
+function codeify() {
+	return require("./codeify/codeify.js")
+}
+
 module.exports = {
+	codeify,
 	timer,
   todo,
   v13,

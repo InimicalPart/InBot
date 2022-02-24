@@ -72,6 +72,17 @@ async function connect() {
                     );`);
       return res;
     }
+    if (table_name == "wordle") {
+      const res = await client.query(`CREATE TABLE IF NOT EXISTS ${table_name}(
+                        id SERIAL,
+                        userscompleted json not null default '${JSON.stringify(
+                          []
+                        )}',
+                        wordle text null,
+                        lastgenerated bigint null
+                        );`);
+      return res;
+    }
   }
 
   async function add(
@@ -99,6 +110,10 @@ async function connect() {
     } else if (table_name == "timer") {
       const res = await client.query(
         `INSERT INTO ${table_name}(timerId, userid, time, settings, channel, messageId) VALUES(${userid}, null, '{}', null, null);`
+      );
+    } else if (table_name == "wordle") {
+      const res = await client.query(
+        `INSERT INTO ${table_name}(usersCompleted, wordle, lastGenerated) VALUES('[]', null, null);`
       );
     }
   }
@@ -335,8 +350,7 @@ async function connect() {
     try {
       res = await client.query(query);
     } catch (err) {
-      await client.connect();
-      res = await client.query(query);
+      throw new Error(err);
     }
     return res;
   }
