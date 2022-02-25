@@ -205,6 +205,34 @@ async function runCommand(message, args, RM) {
 
   let emojiString = "";
   let LTDEITW = [];
+  let alphabet = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+  ];
   function howMany(string, ltr) {
     let a = string.split("");
     let count = 0;
@@ -234,13 +262,36 @@ async function runCommand(message, args, RM) {
       needsUpdate: false,
       practice: practiceMode,
     });
+    function bana(a, b) {
+      let a2 = [];
+      let b2 = [];
+      let new2 = [];
+      for (let i of a) {
+        a2.push(i.toLowerCase());
+      }
+      for (let i of b) {
+        b2.push(i.toLowerCase());
+      }
+
+      for (let i of a2) {
+        console.log(i);
+        if (!b2.includes(i)) new2.push(i);
+        else console.log(i + "no passed");
+      }
+      console.log(new2);
+      return new2;
+    }
     let tries = 6;
+    if (practiceMode) {
+      tries = parseInt(args[1]) || 6;
+      if (tries > 10) return message.channel.send("Max tries is 10");
+    }
     let solvedWordle = false;
     let guesses = [];
     if (!practiceMode) message.channel.send("Wordle game started. Tries: 6");
     else
       message.channel.send({
-        content: "Wordle game started (PRACTICE). Tries: 6",
+        content: "Wordle game started (PRACTICE). Tries: " + tries,
       });
     let finalTime = new Date().getTime();
     var filter = (m) => [message.author.id].includes(m.author.id);
@@ -279,13 +330,16 @@ async function runCommand(message, args, RM) {
         return collector.stop();
       }
       if (msg.length !== 5) {
-        return message.channel.send(
-          "'**" + msg + "**' is not a 5 letter word!"
-        );
+        return messageNext.react("❌");
+        // message.channel.send(
+        //   "'**" + msg + "**' is not a 5 letter word!"
+        // );
       } else if (guesses.includes(msg)) {
+        messageNext.react("❌");
         return message.channel.send("You already guessed '**" + msg + "**'!");
       } else if (!validGuesses.includes(msg)) {
-        message.channel.send("'**" + msg + "**' is not a valid word!");
+        messageNext.react("❌");
+        return message.channel.send("'**" + msg + "**' is not a valid word!");
       } else {
         /* ------------------------------------------------------------------------ WORDLE MAGIC ------------------------------------------------------------------------ */
         tries--;
@@ -295,7 +349,19 @@ async function runCommand(message, args, RM) {
         // if the letter is in the word but not in the right spot then it should be yellow
         // if the letter isnt in the word then it should be gray
         let positions = {};
-        let triesEmoji = ["0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣"];
+        let triesEmoji = [
+          "0️⃣",
+          "1️⃣",
+          "2️⃣",
+          "3️⃣",
+          "4️⃣",
+          "5️⃣",
+          "6️⃣",
+          "7️⃣",
+          "8️⃣",
+          "9️⃣",
+          "🔟",
+        ];
         let lettersRemaining = {};
         let noDup = [...new Set(currentWordle.wordle.split(""))];
         for (let letter in noDup) {
@@ -318,6 +384,11 @@ async function runCommand(message, args, RM) {
           if (!currentWordle.wordle.includes(msg[letter])) {
             // console.log("not in word. position " + letter + " becoming gray");
             LTDEITW.push(msg[letter].toUpperCase());
+            LTDEITW.sort((a, b) => {
+              if (a > b) return 1;
+              if (a < b) return -1;
+              return 0;
+            });
             positions[letter] = "gray";
           } else {
             //if the letters remaining for that letter is 0 then it should be gray
@@ -531,7 +602,7 @@ async function runCommand(message, args, RM) {
             message.channel.send({
               content:
                 "Congratulations! You solved the wordle in " +
-                (6 - tries) +
+                ((parseInt(args[1]) || 6) - tries) +
                 " " +
                 plural +
                 "!",

@@ -58,8 +58,7 @@ async function runCommand(message, args, RM) {
       ],
     });
   }
-  const { connect } = require(path.resolve(global.dirName, "databasec.js"));
-  await connect();
+  const connect = RM.DBClient;
   await connect.create("timer");
   if (timerMessage.length < 1) {
     timerMessage = "Timer has ended.";
@@ -485,7 +484,6 @@ async function runCommand(message, args, RM) {
     }, '${timerMessage}')`
   );
   global.updatedTimers = true;
-  await connect.end(true);
   return message.channel.send({
     embeds: [
       new RM.Discord.MessageEmbed()
