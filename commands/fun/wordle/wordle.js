@@ -271,6 +271,11 @@ async function runCommand(message, args, RM) {
         message.channel.send(
           "Wordle game ended. The word was: " + currentWordle.wordle
         );
+        for (let game in global.wordleList) {
+          if (global.wordleList[game].userid === message.author.id) {
+            global.wordleList.splice(game, 1);
+          }
+        }
         return collector.stop();
       }
       if (msg.length !== 5) {
