@@ -205,34 +205,7 @@ async function runCommand(message, args, RM) {
 
   let emojiString = "";
   let LTDEITW = [];
-  let alphabet = [
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
-  ];
+  let deleteMsgs = [];
   function howMany(string, ltr) {
     let a = string.split("");
     let count = 0;
@@ -262,25 +235,6 @@ async function runCommand(message, args, RM) {
       needsUpdate: false,
       practice: practiceMode,
     });
-    function bana(a, b) {
-      let a2 = [];
-      let b2 = [];
-      let new2 = [];
-      for (let i of a) {
-        a2.push(i.toLowerCase());
-      }
-      for (let i of b) {
-        b2.push(i.toLowerCase());
-      }
-
-      for (let i of a2) {
-        console.log(i);
-        if (!b2.includes(i)) new2.push(i);
-        else console.log(i + "no passed");
-      }
-      console.log(new2);
-      return new2;
-    }
     let tries = 6;
     if (practiceMode) {
       tries = parseInt(args[1]) || 6;
@@ -336,14 +290,23 @@ async function runCommand(message, args, RM) {
         // );
       } else if (guesses.includes(msg)) {
         messageNext.react("❌");
-        return message.channel.send("You already guessed '**" + msg + "**'!");
+        return message.channel
+          .send("You already guessed '**" + msg + "**'!")
+          .then((m) => {
+            deleteMsgs.push(m);
+          });
       } else if (!validGuesses.includes(msg)) {
         messageNext.react("❌");
-        return message.channel.send("'**" + msg + "**' is not a valid word!");
+        return message.channel
+          .send("'**" + msg + "**' is not a valid word!")
+          .then((m) => {
+            deleteMsgs.push(m);
+          });
       } else {
         /* ------------------------------------------------------------------------ WORDLE MAGIC ------------------------------------------------------------------------ */
         tries--;
         guesses.push(msg);
+        deleteMsgs.push(messageNext);
         // TODO: Let's say the word is "diary", if the user typed "doped", then the first one should be green and the last one should be a gray and not a yellow
         // if the letter is exactly in the same spot as the word, then it should be green
         // if the letter is in the word but not in the right spot then it should be yellow
@@ -427,7 +390,7 @@ async function runCommand(message, args, RM) {
               ephemeral: true,
             })
             .then(async (m) => {
-              m.react("🏆");
+              deleteMsgs.push(m);
             });
         } else {
           message.channel
@@ -438,6 +401,7 @@ async function runCommand(message, args, RM) {
             })
             .then(async (m) => {
               m.react(triesEmoji[tries]);
+              deleteMsgs.push(m);
             });
         }
         /* ------------------------------------------------------------------------ WORDLE MAGIC ------------------------------------------------------------------------ */
@@ -525,10 +489,11 @@ async function runCommand(message, args, RM) {
                 (6 - tries) +
                 " " +
                 plural +
-                "! The next one will be available in " +
+                "! The next one will be available in **" +
                 RM.pretty_ms(
                   parseInt(currentWordle.lastgenerated) + 86400000 - Date.now()
-                );
+                ) +
+                "**";
               message.channel.send(sendMsg);
               let updatedWordleUsers = await connect.query(
                 "SELECT * FROM wordle"
@@ -546,8 +511,15 @@ async function runCommand(message, args, RM) {
                   "' WHERE id = " +
                   currentWordle.id
               );
+              let user = message.author;
+              if (user.user) {
+                user = user.user;
+              }
               message.channel.send({
                 content:
+                  "**" +
+                  user.username +
+                  "'s Wordle Stats\n**" +
                   "Games Played: **" +
                   stats.wordle.gamesPlayed +
                   "**\n" +
@@ -568,12 +540,22 @@ async function runCommand(message, args, RM) {
                   "**",
               });
               collector.stop();
-              await messageNext.delete();
+              setTimeout(async () => {
+                message.channel.bulkDelete(deleteMsgs);
+              }, 3000);
+
               return;
             } else {
               message.channel.send(sendMsg);
+              let user = message.author;
+              if (user.user) {
+                user = user.user;
+              }
               message.channel.send({
                 content:
+                  "**" +
+                  user.username +
+                  "'s Wordle Stats\n**" +
                   "Games Played: **" +
                   stats.wordle.gamesPlayed +
                   "**\n" +
@@ -593,7 +575,9 @@ async function runCommand(message, args, RM) {
                   stats.wordle.avgGuesses +
                   "**",
               });
-              await messageNext.delete();
+              setTimeout(async () => {
+                message.channel.bulkDelete(deleteMsgs);
+              }, 3000);
               collector.stop();
               return;
             }
@@ -607,6 +591,9 @@ async function runCommand(message, args, RM) {
                 plural +
                 "!",
             });
+            setTimeout(async () => {
+              message.channel.bulkDelete(deleteMsgs);
+            }, 3000);
             for (let game in global.wordleList) {
               if (global.wordleList[game].userid === message.author.id) {
                 global.wordleList.splice(game, 1);
@@ -616,13 +603,15 @@ async function runCommand(message, args, RM) {
           }
         }
         if (tries < 1 && !solvedWordle) {
-          message.channel.send({
-            content:
-              "You're out of tries! The word was: ||" +
-              currentWordle.wordle +
-              "||",
-          });
           if (!practiceMode) {
+            message.channel.send({
+              content:
+                "Unfortunate! You're out of tries! The word has been DM'd to you to not ruin others fun.",
+            });
+            message.author.send({
+              content: "The word was: **" + currentWordle.wordle + "**",
+            });
+
             let saveCompleted = true;
             let stats = await connect.query(
               `SELECT * FROM player_stats WHERE userid = '${message.author.id}'`
@@ -685,8 +674,15 @@ async function runCommand(message, args, RM) {
                   currentWordle.id
               );
             }
+            let user = message.author;
+            if (user.user) {
+              user = user.user;
+            }
             message.channel.send({
               content:
+                "**" +
+                user.username +
+                "'s Wordle Stats\n**" +
                 "Games Played: **" +
                 stats.wordle.gamesPlayed +
                 "**\n" +
@@ -706,8 +702,17 @@ async function runCommand(message, args, RM) {
                 stats.wordle.avgGuesses +
                 "**",
             });
+            setTimeout(async () => {
+              message.channel.bulkDelete(deleteMsgs);
+            }, 3000);
             return collector.stop();
           } else {
+            message.channel.send({
+              content:
+                "You're out of tries! The word was: ||" +
+                currentWordle.wordle +
+                "||",
+            });
             for (let game in global.wordleList) {
               if (global.wordleList[game].userid === message.author.id) {
                 global.wordleList.splice(game, 1);
