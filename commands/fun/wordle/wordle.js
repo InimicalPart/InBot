@@ -591,9 +591,6 @@ async function runCommand(message, args, RM) {
                 plural +
                 "!",
             });
-            setTimeout(async () => {
-              message.channel.bulkDelete(deleteMsgs);
-            }, 3000);
             for (let game in global.wordleList) {
               if (global.wordleList[game].userid === message.author.id) {
                 global.wordleList.splice(game, 1);
