@@ -256,6 +256,7 @@ async function runCommand(message, args, RM) {
       practice: practiceMode,
     });
     let tries = 6;
+    let originalTries = 6;
     if (args[1] && practiceMode) {
       if (parseInt(args[1]) > 6) {
         return message.channel.send({
@@ -263,6 +264,7 @@ async function runCommand(message, args, RM) {
         });
       }
       tries = parseInt(args[1]) || 6;
+      originalTries = tries;
     }
     let solvedWordle = false;
     let guesses = [];
@@ -500,10 +502,10 @@ async function runCommand(message, args, RM) {
             for (let i in global.wordleList) {
               if (global.wordleList[i].userid === message.author.id) {
                 if (global.wordleList[i].needsUpdate === true) {
-                  let plural = 6 - tries === 1 ? "try" : "tries";
+                  let plural = originalTries - tries === 1 ? "try" : "tries";
                   sendMsg =
                     "Congrats, you solved the wordle in " +
-                    (6 - tries) +
+                    (originalTries - tries) +
                     " " +
                     plural +
                     "! The next wordle is already available! You can start a new one by typing `" +
@@ -515,10 +517,10 @@ async function runCommand(message, args, RM) {
               }
             }
             if (sendMsg == null) {
-              let plural = 6 - tries === 1 ? "try" : "tries";
+              let plural = originalTries - tries === 1 ? "try" : "tries";
               sendMsg =
                 "Congrats, you solved the wordle in " +
-                (6 - tries) +
+                (originalTries - tries) +
                 " " +
                 plural +
                 "! The next one will be available in **" +
@@ -679,7 +681,7 @@ async function runCommand(message, args, RM) {
                 stats
               )}' WHERE userid = '${message.author.id}'`
             );
-            let plural = 6 - tries === 1 ? "try" : "tries";
+            let plural = originalTries - tries === 1 ? "try" : "tries";
             message.channel.send({
               content:
                 "Congratulations! You solved the wordle in " +
