@@ -24,110 +24,162 @@ async function runCommand(message, args, RM) {
     });
   }
 
-  //general stats
-  const Discord = RM.Discord;
-  const client = RM.client;
-  const prettyMilliseconds = RM.pretty_ms;
-  let latency = null;
-  let apilatency = Math.round(client.ws.ping);
-  let botuptime = prettyMilliseconds(client.uptime);
-  let GAPI = null;
-  let GAPI2 = null;
-  let GAPI3 = null;
-  let GAPI4 = null;
-  let GAPI5 = null;
-  let GAPI6 = null;
-  let GAPI7 = null;
-  let GAPI8 = null;
-  let GAPI9 = null;
-  let GAPI10 = null;
-  let GENIUSAPI = null;
+  let connect = RM.DBClient;
 
-  if (RM.process_env.GAPI !== ("" || null || undefined)) {
-    GAPI = "[LOADED]";
-  } else {
-    GAPI = "[NOT LOADED]";
-  }
-  if (RM.process_env.GAPI2 !== ("" || null || undefined)) {
-    GAPI2 = "[LOADED]";
-  } else {
-    GAPI2 = "[NOT LOADED]";
-  }
-  if (RM.process_env.GAPI3 !== ("" || null || undefined)) {
-    GAPI3 = "[LOADED]";
-  } else {
-    GAPI3 = "[NOT LOADED]";
-  }
-  if (RM.process_env.GAPI4 !== ("" || null || undefined)) {
-    GAPI4 = "[LOADED]";
-  } else {
-    GAPI4 = "[NOT LOADED]";
-  }
-  if (RM.process_env.GAPI5 !== ("" || null || undefined)) {
-    GAPI5 = "[LOADED]";
-  } else {
-    GAPI5 = "[NOT LOADED]";
-  }
-  if (RM.process_env.GAPI6 !== ("" || null || undefined)) {
-    GAPI6 = "[LOADED]";
-  } else {
-    GAPI6 = "[NOT LOADED]";
-  }
-  if (RM.process_env.GAPI7 !== ("" || null || undefined)) {
-    GAPI7 = "[LOADED]";
-  } else {
-    GAPI7 = "[NOT LOADED]";
-  }
-  if (RM.process_env.GAPI8 !== ("" || null || undefined)) {
-    GAPI8 = "[LOADED]";
-  } else {
-    GAPI8 = "[NOT LOADED]";
-  }
-  if (RM.process_env.GAPI9 !== ("" || null || undefined)) {
-    GAPI9 = "[LOADED]";
-  } else {
-    GAPI9 = "[NOT LOADED]";
-  }
-  if (RM.process_env.GAPI10 !== ("" || null || undefined)) {
-    GAPI10 = "[LOADED]";
-  } else {
-    GAPI10 = "[NOT LOADED]";
-  }
-  if (RM.process_env.GENIUSAPI !== ("" || null || undefined)) {
-    GENIUSAPI = "[LOADED]";
-  } else {
-    GENIUSAPI = "[NOT LOADED]";
-  }
-  const pinging = new RM.Discord.MessageEmbed().setDescription(
-    "Pinging...  :ping_pong:"
+  await connect.create("player_stats");
+  let playerStats = await connect.query(
+    "SELECT * FROM player_stats WHERE userid = " + message.author.id
   );
-  message.channel
-    .send({ embeds: [pinging] })
-    .then((m) => {
-      latency = m.createdTimestamp - message.createdTimestamp;
-      let embed = new Discord.MessageEmbed()
-        .setAuthor({
-          name: message.author.username,
-          iconURL: message.author.avatarURL(),
-        })
-        .addFields({
-          name: "Basic Info",
-          value: `Latency: **${latency}**ms\nAPI Latency: **${apilatency}**ms\nBot Uptime: **${botuptime}**`,
-        })
-        .addFields({
-          name: "APIs",
-          value: `GOOGLE API 1: **${GAPI}**\nGOOGLE API 2: **${GAPI2}**\nGOOGLE API 3: **${GAPI3}\n**GOOGLE API 4: **${GAPI4}**\nGOOGLE API 5: **${GAPI5}**\nGOOGLE API 6: **${GAPI6}**\nGOOGLE API 7: **${GAPI7}**\nGOOGLE API 8: **${GAPI8}**\nGOOGLE API 9: **${GAPI9}**\nGOOGLE API 10: **${GAPI10}**\nGENIUS API: **${GENIUSAPI}**\n`,
-        })
-        .addFields({
-          name: "Miscellaneous",
-          value: `Commands Used: **${global.commandsUsed}**`,
-        });
-      m.edit({ embeds: [embed] });
-    })
-    .catch(async (err) => {
-      console.log(err);
-      message.channel.send({ content: "Error: " + err });
+  if (playerStats.rows.length < 1) {
+    await connect.add("player_stats", message.author.id);
+  }
+  playerStats = playerStats.rows[0].stats;
+  if (Object.keys(playerStats).length < 1) {
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
+          .setDescription(
+            "There are no stats for you, play some games and stats will show up."
+          )
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("No Games Played"),
+      ],
     });
+  }
+  if (!args[0]) {
+    let string2 = "";
+    for (let i in Object.keys(playerStats)) {
+      string2 += "- **" + Object.keys(playerStats)[i].toUpperCase() + "**\n";
+    }
+    message.channel
+      .send({
+        embeds: [
+          new RM.Discord.MessageEmbed()
+            .setColor("GREEN")
+            .setAuthor({
+              name: message.author.tag,
+              iconURL: message.author.avatarURL(),
+            })
+            .setDescription(string2)
+            .setThumbnail(message.guild.iconURL())
+            .setTitle("Stats")
+            .setFooter({
+              text: "Please type in the game you want stats on",
+            }),
+        ],
+      })
+      .then((m) => {
+        var filter = (m) => [message.author.id].includes(m.author.id);
+        const collector = message.channel.createMessageCollector({ filter });
+        collector.on("collect", async (messageNext) => {
+          const msg = messageNext.content.toLowerCase();
+          if (Object.keys(playerStats).includes(msg)) {
+            m.edit({
+              content: getText(msg),
+              reply: { messageReference: message.id },
+              embeds: [],
+            });
+          } else {
+            message.channel.send({
+              embeds: [
+                new RM.Discord.MessageEmbed()
+                  .setColor("RED")
+                  .setAuthor({
+                    name: message.author.tag,
+                    iconURL: message.author.avatarURL(),
+                  })
+                  .setDescription("That is not a valid stat.")
+                  .setThumbnail(message.guild.iconURL())
+                  .setTitle("Invalid Stat"),
+              ],
+            });
+          }
+          collector.stop();
+        });
+      });
+  } else {
+    if (Object.keys(playerStats).includes(args[0])) {
+      message.channel.send({
+        content: getText(args[0]),
+        reply: { messageReference: message.id },
+      });
+    } else {
+      return message.channel.send({
+        embeds: [
+          new RM.Discord.MessageEmbed()
+            .setColor("RED")
+            .setAuthor({
+              name: message.author.tag,
+              iconURL: message.author.avatarURL(),
+            })
+            .setDescription("That is not a valid stat.")
+            .setThumbnail(message.guild.iconURL())
+            .setTitle("Invalid Stat"),
+        ],
+      });
+    }
+  }
+  function getText(game) {
+    if (game === "wordle")
+      return (
+        "**" +
+        message.author.username +
+        "'s Wordle Stats\n**" +
+        "Games Played: **" +
+        playerStats.wordle.gamesPlayed +
+        "**\n" +
+        "Games Won: **" +
+        playerStats.wordle.gamesWon +
+        "**\n" +
+        "Games Lost: **" +
+        playerStats.wordle.gamesLost +
+        "**\n" +
+        "Current Streak: **" +
+        playerStats.wordle.streak +
+        "**\n" +
+        "Longest Streak: **" +
+        playerStats.wordle.longestStreak +
+        "**\n" +
+        "Average Guesses/game: **" +
+        playerStats.wordle.avgGuesses +
+        "**\n" +
+        "Win Rate: **" +
+        playerStats.wordle.winRate +
+        "%**"
+      );
+    else if (game === "wordlepractice")
+      return (
+        "**" +
+        message.author.username +
+        "'s Wordle (PRACTICE) Stats\n**" +
+        "Games Played: **" +
+        playerStats.wordlepractice.gamesPlayed +
+        "**\n" +
+        "Games Won: **" +
+        playerStats.wordlepractice.gamesWon +
+        "**\n" +
+        "Games Lost: **" +
+        playerStats.wordlepractice.gamesLost +
+        "**\n" +
+        "Current Streak: **" +
+        playerStats.wordlepractice.streak +
+        "**\n" +
+        "Longest Streak: **" +
+        playerStats.wordlepractice.longestStreak +
+        "**\n" +
+        "Average Guesses/game: **" +
+        playerStats.wordlepractice.avgGuesses +
+        "**\n" +
+        "Win Rate: **" +
+        playerStats.wordlepractice.winRate +
+        "%**"
+      );
+  }
 }
 
 function commandTriggers() {
