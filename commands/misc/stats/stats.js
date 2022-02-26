@@ -77,7 +77,14 @@ async function runCommand(message, args, RM) {
         var filter = (m) => [message.author.id].includes(m.author.id);
         const collector = message.channel.createMessageCollector({ filter });
         collector.on("collect", async (messageNext) => {
-          const msg = messageNext.content.toLowerCase();
+          let msg = messageNext.content.toLowerCase();
+          if (msg.toLowerCase() === "w" || msg.toLowerCase() === "wordle")
+            msg = "wordle";
+          else if (
+            msg.toLowerCase() === "wp" ||
+            msg.toLowerCase() === "wordlepractice"
+          )
+            msg = "wordlepractice";
           if (Object.keys(playerStats).includes(msg)) {
             m.edit({
               content: getText(msg),
@@ -103,9 +110,17 @@ async function runCommand(message, args, RM) {
         });
       });
   } else {
-    if (Object.keys(playerStats).includes(args[0])) {
+    let word = null;
+    if (args[0].toLowerCase() === "w" || args[0].toLowerCase() === "wordle")
+      word = "wordle";
+    else if (
+      args[0].toLowerCase() === "wp" ||
+      args[0].toLowerCase() === "wordlepractice"
+    )
+      word = "wordlepractice";
+    if (Object.keys(playerStats).includes(word)) {
       message.channel.send({
-        content: getText(args[0]),
+        content: getText(word),
         reply: { messageReference: message.id },
       });
     } else {

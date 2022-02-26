@@ -256,6 +256,14 @@ async function runCommand(message, args, RM) {
       practice: practiceMode,
     });
     let tries = 6;
+    if (args[1] && isNaN(args[1]) && practiceMode) {
+      if (parseInt(args[1]) > 6) {
+        return message.channel.send({
+          content: "You can only have less than 6 tries!",
+        });
+      }
+      tries = parseInt(args[1]);
+    }
     let solvedWordle = false;
     let guesses = [];
     if (!practiceMode) message.channel.send("Wordle game started. Tries: 6");
