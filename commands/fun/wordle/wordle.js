@@ -65,7 +65,27 @@ async function runCommand(message, args, RM) {
     statsData.wordle.longestStreak = 0;
     statsData.wordle.lastGame = 0;
     statsData.wordle.avgGuesses = 0;
+    statsData.wordle.winRate = 0;
     statsData.wordle.games = [];
+    if (statsData.wordlepractice)
+      await connect.query(
+        "UPDATE player_stats SET stats = '" +
+          JSON.stringify(statsData) +
+          "' WHERE userid = " +
+          message.author.id
+      );
+  }
+  if (!statsData.wordlepractice) {
+    statsData.wordlepractice = {};
+    statsData.wordlepractice.gamesPlayed = 0;
+    statsData.wordlepractice.gamesWon = 0;
+    statsData.wordlepractice.gamesLost = 0;
+    statsData.wordlepractice.streak = 0;
+    statsData.wordlepractice.longestStreak = 0;
+    statsData.wordlepractice.lastGame = 0;
+    statsData.wordlepractice.avgGuesses = 0;
+    statsData.wordlepractice.winRate = 0;
+    statsData.wordlepractice.games = [];
     await connect.query(
       "UPDATE player_stats SET stats = '" +
         JSON.stringify(statsData) +
@@ -236,10 +256,6 @@ async function runCommand(message, args, RM) {
       practice: practiceMode,
     });
     let tries = 6;
-    if (practiceMode) {
-      tries = parseInt(args[1]) || 6;
-      if (tries > 10) return message.channel.send("Max tries is 10");
-    }
     let solvedWordle = false;
     let guesses = [];
     if (!practiceMode) message.channel.send("Wordle game started. Tries: 6");
@@ -258,10 +274,15 @@ async function runCommand(message, args, RM) {
             "No letters that do not exist in the wordle have been discovered!"
           );
         } else {
-          return message.channel.send(
-            "Letters that do not exist in the wordle: " +
-              [...new Set(LTDEITW)].join(",")
-          );
+          deleteMsgs.push(messageNext);
+          return message.channel
+            .send(
+              "Letters that do not exist in the wordle: " +
+                [...new Set(LTDEITW)].join(",")
+            )
+            .then((m) => {
+              deleteMsgs.push(m);
+            });
         }
       } else if (msg === "b") {
         if (emojiString.length < 1) {
@@ -458,7 +479,10 @@ async function runCommand(message, args, RM) {
               amountGuesses.reduce((a, b) => a + b, 0) /
               stats.wordle.games.length;
             stats.wordle.avgGuesses = stats.wordle.avgGuesses.toFixed(3);
-
+            stats.wordle.winRate = (
+              (stats.wordle.gamesWon / stats.wordle.gamesPlayed) *
+              100
+            ).toFixed(3);
             await connect.query(
               `UPDATE player_stats SET stats = '${JSON.stringify(
                 stats
@@ -537,7 +561,10 @@ async function runCommand(message, args, RM) {
                   "**\n" +
                   "Average Guesses/game: **" +
                   stats.wordle.avgGuesses +
-                  "**",
+                  "**\n" +
+                  "Win Rate: **" +
+                  stats.wordle.winRate +
+                  "**%",
               });
               collector.stop();
               setTimeout(async () => {
@@ -573,7 +600,10 @@ async function runCommand(message, args, RM) {
                   "**\n" +
                   "Average Guesses/game: **" +
                   stats.wordle.avgGuesses +
-                  "**",
+                  "**\n" +
+                  "Win Rate: **" +
+                  stats.wordle.winRate +
+                  "**%",
               });
               setTimeout(async () => {
                 message.channel.bulkDelete(deleteMsgs);
@@ -582,6 +612,65 @@ async function runCommand(message, args, RM) {
               return;
             }
           } else {
+            let stats = await connect.query(
+              `SELECT * FROM player_stats WHERE userid = '${message.author.id}'`
+            );
+            stats = stats.rows[0].stats || null;
+            if (stats == null) {
+              return message.channel.send("Stats ERR");
+            }
+            stats.wordlepractice.gamesPlayed++;
+            stats.wordlepractice.gamesWon++;
+            if (
+              stats.wordlepractice.lastGame !== 0 &&
+              stats.wordlepractice.streak >= 1
+            ) {
+              stats.wordlepractice.streak++;
+              //check longestStreak
+              if (
+                stats.wordlepractice.streak > stats.wordlepractice.longestStreak
+              ) {
+                stats.wordlepractice.longestStreak =
+                  stats.wordlepractice.streak;
+              }
+            } else {
+              stats.wordlepractice.streak = 1;
+              if (
+                stats.wordlepractice.streak > stats.wordlepractice.longestStreak
+              ) {
+                stats.wordlepractice.longestStreak =
+                  stats.wordlepractice.streak;
+              }
+            }
+            stats.wordlepractice.lastGame = finalTime;
+            if (stats.wordlepractice.games.length >= 12) {
+              stats.wordlepractice.games.shift();
+            }
+            stats.wordlepractice.games.push({
+              word: currentWordle.wordle,
+              endTime: finalTime,
+              won: true,
+              guesses: guesses,
+            });
+            let amountGuesses = [];
+            for (let game of stats.wordlepractice.games) {
+              amountGuesses.push(game.guesses.length);
+            }
+            stats.wordlepractice.avgGuesses =
+              amountGuesses.reduce((a, b) => a + b, 0) /
+              stats.wordlepractice.games.length;
+            stats.wordlepractice.avgGuesses =
+              stats.wordlepractice.avgGuesses.toFixed(3);
+            stats.wordlepractice.winRate = (
+              (stats.wordlepractice.gamesWon /
+                stats.wordlepractice.gamesPlayed) *
+              100
+            ).toFixed(3);
+            await connect.query(
+              `UPDATE player_stats SET stats = '${JSON.stringify(
+                stats
+              )}' WHERE userid = '${message.author.id}'`
+            );
             let plural = 6 - tries === 1 ? "try" : "tries";
             message.channel.send({
               content:
@@ -639,6 +728,11 @@ async function runCommand(message, args, RM) {
               amountGuesses.reduce((a, b) => a + b, 0) /
               stats.wordle.games.length;
             stats.wordle.avgGuesses = stats.wordle.avgGuesses.toFixed(3);
+            stats.wordle.winRate = (
+              (stats.wordle.gamesWon / stats.wordle.gamesPlayed) *
+              100
+            ).toFixed(3);
+
             await connect.query(
               `UPDATE player_stats SET stats = '${JSON.stringify(
                 stats
@@ -697,13 +791,56 @@ async function runCommand(message, args, RM) {
                 "**\n" +
                 "Average Guesses/game: **" +
                 stats.wordle.avgGuesses +
-                "**",
+                "**\n" +
+                "Win Rate: **" +
+                stats.wordle.winRate +
+                "**%",
             });
             setTimeout(async () => {
               message.channel.bulkDelete(deleteMsgs);
             }, 3000);
             return collector.stop();
           } else {
+            let stats = await connect.query(
+              `SELECT * FROM player_stats WHERE userid = '${message.author.id}'`
+            );
+            stats = stats.rows[0].stats || null;
+
+            if (stats == null) {
+              return message.channel.send("Stats ERR");
+            }
+            stats.wordlepractice.gamesPlayed++;
+            stats.wordlepractice.gamesLost++;
+            stats.wordlepractice.streak = 0;
+            stats.wordlepractice.lastGame = finalTime;
+            if (stats.wordlepractice.games.length >= 12) {
+              stats.wordlepractice.games.shift();
+            }
+            stats.wordlepractice.games.push({
+              word: currentWordle.wordle,
+              endTime: finalTime,
+              won: false,
+              guesses: guesses,
+            });
+            let amountGuesses = [];
+            for (let game of stats.wordlepractice.games) {
+              amountGuesses.push(game.guesses.length);
+            }
+            stats.wordlepractice.avgGuesses =
+              amountGuesses.reduce((a, b) => a + b, 0) /
+              stats.wordlepractice.games.length;
+            stats.wordlepractice.avgGuesses =
+              stats.wordlepractice.avgGuesses.toFixed(3);
+            stats.wordlepractice.winRate = (
+              (stats.wordlepractice.gamesWon /
+                stats.wordlepractice.gamesPlayed) *
+              100
+            ).toFixed(3);
+            await connect.query(
+              `UPDATE player_stats SET stats = '${JSON.stringify(
+                stats
+              )}' WHERE userid = '${message.author.id}'`
+            );
             message.channel.send({
               content:
                 "You're out of tries! The word was: ||" +
