@@ -307,6 +307,45 @@ async function runCommand(message, args, RM) {
         message.channel.send(
           "Wordle game ended. The word was: " + currentWordle.wordle
         );
+        let stats = await connect.query(
+          `SELECT * FROM player_stats WHERE userid = '${message.author.id}'`
+        );
+        stats = stats.rows[0].stats || null;
+
+        if (stats == null) {
+          return message.channel.send("Stats ERR");
+        }
+        stats.wordlepractice.gamesPlayed++;
+        stats.wordlepractice.gamesLost++;
+        stats.wordlepractice.streak = 0;
+        stats.wordlepractice.lastGame = finalTime;
+        if (stats.wordlepractice.games.length >= 12) {
+          stats.wordlepractice.games.shift();
+        }
+        stats.wordlepractice.games.push({
+          word: currentWordle.wordle,
+          endTime: finalTime,
+          won: false,
+          guesses: guesses,
+        });
+        let amountGuesses = [];
+        for (let game of stats.wordlepractice.games) {
+          amountGuesses.push(game.guesses.length);
+        }
+        stats.wordlepractice.avgGuesses =
+          amountGuesses.reduce((a, b) => a + b, 0) /
+          stats.wordlepractice.games.length;
+        stats.wordlepractice.avgGuesses =
+          stats.wordlepractice.avgGuesses.toFixed(3);
+        stats.wordlepractice.winRate = (
+          (stats.wordlepractice.gamesWon / stats.wordlepractice.gamesPlayed) *
+          100
+        ).toFixed(3);
+        await connect.query(
+          `UPDATE player_stats SET stats = '${JSON.stringify(
+            stats
+          )}' WHERE userid = '${message.author.id}'`
+        );
         for (let game in global.wordleList) {
           if (global.wordleList[game].userid === message.author.id) {
             global.wordleList.splice(game, 1);
