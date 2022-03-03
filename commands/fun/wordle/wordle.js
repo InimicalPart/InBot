@@ -239,10 +239,14 @@ async function runCommand(message, args, RM) {
   }
   async function makeSure(guess) {
     return new Promise(async (resolve, reject) => {
-      message.channel.send({
-        content:
-          "Are you sure you want **'" + guess + "'** to be your final guess?",
-      });
+      message.channel
+        .send({
+          content:
+            "Are you sure you want **'" + guess + "'** to be your final guess?",
+        })
+        .then((m) => {
+          deleteMsgs.push(m);
+        });
       // wait until the user says yes or no
       let tempFilter = (m) => [message.author.id].includes(m.author.id);
       questioned = true;
@@ -254,10 +258,12 @@ async function runCommand(message, args, RM) {
           messageNext.content.toLowerCase() == "yes" ||
           messageNext.content.toLowerCase() == "y"
         ) {
+          deleteMsgs.push(messageNext);
           collectortwo.stop();
           questioned = false;
           return resolve(true);
         } else {
+          deleteMsgs.push(messageNext);
           collectortwo.stop();
           questioned = false;
           return resolve(false);
@@ -406,7 +412,9 @@ async function runCommand(message, args, RM) {
         /* ------------------------------------------------------------------------ WORDLE MAGIC ------------------------------------------------------------------------ */
         if (tries == 1) {
           if ((await makeSure(msg)) === false) {
-            return message.channel.send({ content: "ok" });
+            return message.channel.send({ content: "ok" }).then((m) => {
+              deleteMsgs.push(m);
+            });
           }
         }
         tries--;
