@@ -67,18 +67,24 @@ async function runCommand(message, args, RM) {
   const path = require("path");
   let round = 0;
   let totalResult = "0-0";
-  let user =
-    message.mentions.members.first() ||
-    message.guild.members.cache.get(args[0]) ||
-    message.guild.members.cache.find(
-      (r) =>
-        r.user.username.toLowerCase() === args.join(" ").toLocaleLowerCase()
-    ) ||
-    message.guild.members.cache.find(
-      (r) => r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
-    ) ||
-    (await message.guild.members.fetch(args[0])) ||
-    null;
+  let user;
+  try {
+    user =
+      message.mentions.members.first() ||
+      message.guild.members.cache.get(args[0]) ||
+      message.guild.members.cache.find(
+        (r) =>
+          r.user.username.toLowerCase() === args.join(" ").toLocaleLowerCase()
+      ) ||
+      message.guild.members.cache.find(
+        (r) =>
+          r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
+      ) ||
+      (await message.guild.members.fetch(args[0])) ||
+      null;
+  } catch (e) {
+    user = null;
+  }
   if (user == null) {
     m.edit({
       embeds: [
@@ -181,8 +187,10 @@ async function runCommand(message, args, RM) {
                         embeds: [
                           new RM.Discord.MessageEmbed()
                             .setColor("RED")
-                            .setAuthor({ name:
-                              message.author.tag, iconURL: message.author.avatarURL() })
+                            .setAuthor({
+                              name: message.author.tag,
+                              iconURL: message.author.avatarURL(),
+                            })
                             .setDescription("The provided FEN was invalid.")
                             .setThumbnail(message.guild.iconURL())
                             .setTitle("Error"),
@@ -297,16 +305,16 @@ async function runCommand(message, args, RM) {
             content: color.toUpperCase() + " RESIGNED! " + opposite + " wins!",
           });
           const endFEN = chess.fen();
-          const moves = chess.history().length;
+          const moves = chess.history().length || 0;
           const whoWon = opposite;
           const embed = new RM.Discord.MessageEmbed()
             .setTitle("Chess Stats")
             .setDescription(`${whiteUser.username} vs ${blackUser.username}`)
-            .addField("Round", String(round))
-            .addField("Moves", moves)
-            .addField("Winner", whoWon)
-            .addField("End FEN", endFEN)
-            .addField("PGN", chess.pgn({ newline_char: "\n" }));
+            .addField("Round", String(round) || "N/A")
+            .addField("Moves", moves || "N/A")
+            .addField("Winner", whoWon || "N/A")
+            .addField("End FEN", endFEN || "N/A")
+            .addField("PGN", chess.pgn({ newline_char: "\n" }) || "N/A");
           message.channel.send({ embeds: [embed] });
           for (var i = 0; i < global.chessList.length; i++) {
             if (global.chessList[i] === message.author.id) {
@@ -652,9 +660,9 @@ async function runCommand(message, args, RM) {
                         .setDescription(
                           `${whiteUser.username} vs ${blackUser.username}`
                         )
-                        .addField("Round", String(round))
-                        .addField("Moves", moves)
-                        .addField("End FEN", endFEN)
+                        .addField("Round", String(round) || "N/A")
+                        .addField("Moves", moves || 0)
+                        .addField("End FEN", endFEN || "N/A")
                         .addField("Checkmate", isCheckmate ? "Yes" : "No")
                         .addField("Stalemate", isStalemate ? "Yes" : "No")
                         .addField("Draw", isDraw ? "Yes" : "No")
@@ -662,8 +670,11 @@ async function runCommand(message, args, RM) {
                           "Insufficient Material",
                           isInsufficientMaterial ? "Yes" : "No"
                         )
-                        .addField("Winner", whoWon)
-                        .addField("PGN", chess.pgn({ newline_char: "\n" }))
+                        .addField("Winner", whoWon || "N/A")
+                        .addField(
+                          "PGN",
+                          chess.pgn({ newline_char: "\n" }) || "N/A"
+                        )
                         .setFooter({
                           text: "Use https://lichess.org/paste to analyze your game!",
                         });
@@ -849,9 +860,9 @@ async function runCommand(message, args, RM) {
                         .setDescription(
                           `${whiteUser.username} vs ${blackUser.username}`
                         )
-                        .addField("Round", String(round))
-                        .addField("Moves", moves)
-                        .addField("End FEN", endFEN)
+                        .addField("Round", String(round) || "N/A")
+                        .addField("Moves", moves || 0)
+                        .addField("End FEN", endFEN || "N/A")
                         .addField("Checkmate", isCheckmate ? "Yes" : "No")
                         .addField("Stalemate", isStalemate ? "Yes" : "No")
                         .addField("Draw", isDraw ? "Yes" : "No")
@@ -859,8 +870,11 @@ async function runCommand(message, args, RM) {
                           "Insufficient Material",
                           isInsufficientMaterial ? "Yes" : "No"
                         )
-                        .addField("Winner", whoWon)
-                        .addField("PGN", chess.pgn({ newline_char: "\n" }))
+                        .addField("Winner", whoWon || "N/A")
+                        .addField(
+                          "PGN",
+                          chess.pgn({ newline_char: "\n" }) || "N/A"
+                        )
                         .setFooter({
                           text: "Use https://lichess.org/paste to analyze your game!",
                         });
@@ -974,9 +988,9 @@ async function runCommand(message, args, RM) {
                         .setDescription(
                           `${whiteUser.username} vs ${blackUser.username}`
                         )
-                        .addField("Round", String(round))
-                        .addField("Moves", moves)
-                        .addField("End FEN", endFEN)
+                        .addField("Round", String(round) || "N/A")
+                        .addField("Moves", moves || 0)
+                        .addField("End FEN", endFEN || "N/A")
                         .addField("Checkmate", isCheckmate ? "Yes" : "No")
                         .addField("Stalemate", isStalemate ? "Yes" : "No")
                         .addField("Draw", isDraw ? "Yes" : "No")
@@ -984,8 +998,11 @@ async function runCommand(message, args, RM) {
                           "Insufficient Material",
                           isInsufficientMaterial ? "Yes" : "No"
                         )
-                        .addField("Winner", whoWon)
-                        .addField("PGN", chess.pgn({ newline_char: "\n" }))
+                        .addField("Winner", whoWon || "N/A")
+                        .addField(
+                          "PGN",
+                          chess.pgn({ newline_char: "\n" }) || "N/A"
+                        )
                         .setFooter({
                           text: "Use https://lichess.org/paste to analyze your game!",
                         });
@@ -1098,9 +1115,9 @@ async function runCommand(message, args, RM) {
                         .setDescription(
                           `${whiteUser.username} vs ${blackUser.username}`
                         )
-                        .addField("Round", String(round))
-                        .addField("Moves", moves)
-                        .addField("End FEN", endFEN)
+                        .addField("Round", String(round) || "N/A")
+                        .addField("Moves", moves || 0)
+                        .addField("End FEN", endFEN || "N/A")
                         .addField("Checkmate", isCheckmate ? "Yes" : "No")
                         .addField("Stalemate", isStalemate ? "Yes" : "No")
                         .addField("Draw", isDraw ? "Yes" : "No")
@@ -1108,8 +1125,11 @@ async function runCommand(message, args, RM) {
                           "Insufficient Material",
                           isInsufficientMaterial ? "Yes" : "No"
                         )
-                        .addField("Winner", whoWon)
-                        .addField("PGN", chess.pgn({ newline_char: "\n" }))
+                        .addField("Winner", whoWon || "N/A")
+                        .addField(
+                          "PGN",
+                          chess.pgn({ newline_char: "\n" }) || "N/A"
+                        )
                         .setFooter({
                           text: "Use https://lichess.org/paste to analyze your game!",
                         });
@@ -1303,9 +1323,9 @@ async function runCommand(message, args, RM) {
             .setTitle("Chess Game Settings")
             .setDescription("Change the game settings such as the engine")
             .addField("♟️ Chess Engine", "Engine Settings. ID: `engine`", true)
-            .setAuthor({ name:
-              messageNext.author.username, iconURL:
-              messageNext.author.avatarURL()
+            .setAuthor({
+              name: messageNext.author.username,
+              iconURL: messageNext.author.avatarURL(),
             })
             .setFooter({ text: "Type the option you want to change." });
           message.channel.send({ embeds: [settings] });

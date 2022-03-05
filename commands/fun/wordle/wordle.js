@@ -1,9 +1,9 @@
 const commandInfo = {
   primaryName: "wordle", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["wordle", "w"], // These are all commands that will trigger this command.
-  help: "eats your cake!", // This is the general description of the command.
+  help: "Starts a game of wordle.", // This is the general description of the command.
   aliases: ["w"], // These are command aliases that help.js will use
-  usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
+  usage: "[COMMAND] [mode] [tries (practice)]", // [COMMAND] gets replaced with the command and correct prefix later
   category: "fun",
 };
 

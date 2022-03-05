@@ -100,7 +100,7 @@ async function runCommand(message, args, RM) {
           message.author.id,
           undefined,
           undefined,
-          maxBank + 1000 * parseInt(amount)
+          maxBank + 5000 * parseInt(amount)
         );
 
         connect.end(true);
@@ -114,9 +114,9 @@ async function runCommand(message, args, RM) {
               })
               .setDescription(
                 "You have successfully added $" +
-                  1000 * parseInt(amount) +
+                  5000 * parseInt(amount) +
                   " to your maximum bank capacity. You max bank capacity is now: `$" +
-                  (maxBank + 1000 * parseInt(amount)) +
+                  (maxBank + 5000 * parseInt(amount)) +
                   "`"
               )
               .setThumbnail(message.guild.iconURL())

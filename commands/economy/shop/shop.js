@@ -40,14 +40,14 @@ async function runCommand(message, args, RM) {
       await connect.create("currency");
 
       let page1 = new RM.Discord.MessageEmbed().setDescription(
-        "<:banknote:870085917963067392> **Bank Note** - [$80,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nIncrease your maximum bank capacity by $1000\nid: `banknote`\n\n" +
+        "<:banknote:870085917963067392> **Bank Note** - [$10,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nIncrease your maximum bank capacity by $5000\nid: `banknote`\n\n" +
           ":brain: **Ray's Brain** - [$20,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nHe doesnt know\nid:`raybrain`\n\n" +
           ":lock: **Padlock** - [$5,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nLock your wallet for 10h! Stops every thief if they don't have a lockpick\nid:`padlock`\n\n" +
           ":lock_with_ink_pen: **Lockpick** - [$7,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nGet a lockpick so you can pick padlocks!\nid: `lockpick`\n\n" +
           "<:landmine:870679232651591700> **Landmine** - [$10,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nA landmine will have a 50% of killing the thief.\nid: `landmine`\n\n"
       );
       let page2 = new RM.Discord.MessageEmbed().setDescription(
-        "<:banknote:870085917963067392> **No Bank Note** - [$80,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nIncrease your maximum bank capacity by $1000\nid: `banknote`\n\n" +
+        "<:banknote:870085917963067392> **No Bank Note** - [$10,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nIncrease your maximum bank capacity by $5000\nid: `banknote`\n\n" +
           ":brain: **Ray's Brain** - [$20,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nHe doesnt know\nid:`raybrain`\n\n" +
           ":lock: **Padlock** - [$5,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nLock your wallet for 10h! Stops every thief if they don't have a lockpick\nid:`padlock`\n\n" +
           ":lock_with_ink_pen: **Lockpick** - [$2,000](https://www.youtube.com/watch?v=j5a0jTc9S10)\nGet a lockpick so you can pick padlocks!\nid: `lockpick`\n\n" +

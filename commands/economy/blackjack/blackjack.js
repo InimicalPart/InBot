@@ -471,7 +471,7 @@ async function runCommand(message, args, RM) {
                 })
                 .setTimestamp();
               message.channel.send({ embeds: [embed] });
-              return gameFinished("bust");
+              return gameFinished("push");
             } else {
               const embed = new RM.Discord.MessageEmbed()
                 .setColor("GREEN")
