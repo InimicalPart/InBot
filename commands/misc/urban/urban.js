@@ -33,7 +33,6 @@ async function runCommand(message, args, RM) {
     if (index > 0) index--;
   }
   query = query.join(" ");
-  console.log(query, index);
   if (!query) {
     return message.channel.send({
       embeds: [
@@ -67,7 +66,6 @@ async function runCommand(message, args, RM) {
         json = body;
       }
 
-      console.log(json);
       if (json.list.length < 1) {
         return message.channel.send({
           embeds: [
