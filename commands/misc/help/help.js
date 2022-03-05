@@ -126,10 +126,11 @@ async function runCommand(message, args, RM) {
       .send({ embeds: [embed] })
       .then((m) => {
         var filter2 = (m) => m.author.id === message.author.id;
-        message.channel
-          .awaitMessages({ filter2, max: 1, time: 30000, errors: ["time"] })
-          .then((messageNext) => {
-            messageNext = messageNext.first();
+        let collector = message.channel.createMessageCollector({
+          filter: filter2,
+        });
+        collector
+          .on("collect", (messageNext) => {
             const wanting = messageNext.content.toLowerCase();
             if (wanting === "fun") {
               let embed = new RM.Discord.MessageEmbed().setTitle("FUN");
@@ -255,6 +256,7 @@ async function runCommand(message, args, RM) {
               }
               m.edit({ embeds: [embed] });
             }
+            collector.stop();
           })
           .catch(() => null);
       })
