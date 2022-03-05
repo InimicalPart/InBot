@@ -129,136 +129,132 @@ async function runCommand(message, args, RM) {
         let collector = message.channel.createMessageCollector({
           filter: filter2,
         });
-        collector
-          .on("collect", (messageNext) => {
-            const wanting = messageNext.content.toLowerCase();
-            if (wanting === "fun") {
-              let embed = new RM.Discord.MessageEmbed().setTitle("FUN");
-              for (let i in RM) {
-                if (i.startsWith("cmd")) {
-                  let k = RM[i];
-                  if (k.commandCategory() == "fun") {
-                    if (k.commandHelp() == "") {
-                      description = "No description.";
-                    } else {
-                      description = k.commandHelp().replace("[PREFIX]", prefix);
-                    }
-                    embed.addField(prefix + k.commandPrim(), description);
+        collector.on("collect", (messageNext) => {
+          const wanting = messageNext.content.toLowerCase();
+          if (wanting === "fun") {
+            let embed = new RM.Discord.MessageEmbed().setTitle("FUN");
+            for (let i in RM) {
+              if (i.startsWith("cmd")) {
+                let k = RM[i];
+                if (k.commandCategory() == "fun") {
+                  if (k.commandHelp() == "") {
+                    description = "No description.";
+                  } else {
+                    description = k.commandHelp().replace("[PREFIX]", prefix);
                   }
+                  embed.addField(prefix + k.commandPrim(), description);
                 }
               }
-              m.edit({ embeds: [embed] });
-            } else if (
-              wanting == "iii" ||
-              wanting == "iii sub" ||
-              wanting == "iii submission"
-            ) {
-              let embed = new RM.Discord.MessageEmbed().setTitle(
-                "III Submission"
-              );
-              for (let i in RM) {
-                if (i.startsWith("cmd")) {
-                  let k = RM[i];
-                  if (k.commandCategory() == "iiisub") {
-                    if (k.commandHelp() == "") {
-                      description = "No description.";
-                    } else {
-                      description = k.commandHelp().replace("[PREFIX]", prefix);
-                    }
-                    embed.addField(prefix + k.commandPrim(), description);
-                  }
-                }
-              }
-              m.edit({ embeds: [embed] });
-            } else if (wanting == "misc" || wanting == "miscellaneous") {
-              let embed = new RM.Discord.MessageEmbed().setTitle(
-                "Miscellaneous"
-              );
-              for (let i in RM) {
-                if (i.startsWith("cmd")) {
-                  let k = RM[i];
-                  if (k.commandCategory() == "misc") {
-                    if (k.commandHelp() == "") {
-                      description = "No description.";
-                    } else {
-                      description = k.commandHelp().replace("[PREFIX]", prefix);
-                    }
-                    embed.addField(prefix + k.commandPrim(), description);
-                  }
-                }
-              }
-              m.edit({ embeds: [embed] });
-            } else if (wanting == "mod" || wanting == "moderation") {
-              let embed = new RM.Discord.MessageEmbed().setTitle("Moderation");
-              for (let i in RM) {
-                if (i.startsWith("cmd")) {
-                  let k = RM[i];
-                  if (k.commandCategory() == "mod") {
-                    if (k.commandHelp() == "") {
-                      description = "No description.";
-                    } else {
-                      description = k.commandHelp().replace("[PREFIX]", prefix);
-                    }
-                    embed.addField(prefix + k.commandPrim(), description);
-                  }
-                }
-              }
-              m.edit({ embeds: [embed] });
-            } else if (wanting == "music") {
-              let embed = new RM.Discord.MessageEmbed().setTitle("Music");
-              for (let i in RM) {
-                if (i.startsWith("cmd")) {
-                  let k = RM[i];
-                  if (k.commandCategory() == "music") {
-                    if (k.commandHelp() == "") {
-                      description = "No description.";
-                    } else {
-                      description = k.commandHelp().replace("[PREFIX]", prefix);
-                    }
-                    embed.addField(prefix + k.commandPrim(), description);
-                  }
-                }
-              }
-              m.edit({ embeds: [embed] });
-            } else if (wanting == "eco" || wanting == "economy") {
-              let embed = new RM.Discord.MessageEmbed().setTitle("Economy");
-              for (let i in RM) {
-                if (i.startsWith("cmd")) {
-                  let k = RM[i];
-                  if (k.commandCategory() == "economy") {
-                    if (k.commandHelp() == "") {
-                      description = "No description.";
-                    } else {
-                      description = k.commandHelp().replace("[PREFIX]", prefix);
-                    }
-                    embed.addField(prefix + k.commandPrim(), description);
-                  }
-                }
-              }
-              m.edit({ embeds: [embed] });
-            } else if (
-              (wanting === "dev" || wanting === "developer") &&
-              RM.botOwners.includes(message.author.id)
-            ) {
-              let embed = new RM.Discord.MessageEmbed().setTitle("Economy");
-              for (let i in RM) {
-                if (i.startsWith("cmd")) {
-                  let k = RM[i];
-                  if (k.commandCategory() == "developer") {
-                    if (k.commandHelp() == "") {
-                      description = "No description.";
-                    } else {
-                      description = k.commandHelp().replace("[PREFIX]", prefix);
-                    }
-                    embed.addField(prefix + k.commandPrim(), description);
-                  }
-                }
-              }
-              m.edit({ embeds: [embed] });
             }
-            collector.stop();
-          })
-          .catch(() => null);
+            m.edit({ embeds: [embed] });
+          } else if (
+            wanting == "iii" ||
+            wanting == "iii sub" ||
+            wanting == "iii submission"
+          ) {
+            let embed = new RM.Discord.MessageEmbed().setTitle(
+              "III Submission"
+            );
+            for (let i in RM) {
+              if (i.startsWith("cmd")) {
+                let k = RM[i];
+                if (k.commandCategory() == "iiisub") {
+                  if (k.commandHelp() == "") {
+                    description = "No description.";
+                  } else {
+                    description = k.commandHelp().replace("[PREFIX]", prefix);
+                  }
+                  embed.addField(prefix + k.commandPrim(), description);
+                }
+              }
+            }
+            m.edit({ embeds: [embed] });
+          } else if (wanting == "misc" || wanting == "miscellaneous") {
+            let embed = new RM.Discord.MessageEmbed().setTitle("Miscellaneous");
+            for (let i in RM) {
+              if (i.startsWith("cmd")) {
+                let k = RM[i];
+                if (k.commandCategory() == "misc") {
+                  if (k.commandHelp() == "") {
+                    description = "No description.";
+                  } else {
+                    description = k.commandHelp().replace("[PREFIX]", prefix);
+                  }
+                  embed.addField(prefix + k.commandPrim(), description);
+                }
+              }
+            }
+            m.edit({ embeds: [embed] });
+          } else if (wanting == "mod" || wanting == "moderation") {
+            let embed = new RM.Discord.MessageEmbed().setTitle("Moderation");
+            for (let i in RM) {
+              if (i.startsWith("cmd")) {
+                let k = RM[i];
+                if (k.commandCategory() == "mod") {
+                  if (k.commandHelp() == "") {
+                    description = "No description.";
+                  } else {
+                    description = k.commandHelp().replace("[PREFIX]", prefix);
+                  }
+                  embed.addField(prefix + k.commandPrim(), description);
+                }
+              }
+            }
+            m.edit({ embeds: [embed] });
+          } else if (wanting == "music") {
+            let embed = new RM.Discord.MessageEmbed().setTitle("Music");
+            for (let i in RM) {
+              if (i.startsWith("cmd")) {
+                let k = RM[i];
+                if (k.commandCategory() == "music") {
+                  if (k.commandHelp() == "") {
+                    description = "No description.";
+                  } else {
+                    description = k.commandHelp().replace("[PREFIX]", prefix);
+                  }
+                  embed.addField(prefix + k.commandPrim(), description);
+                }
+              }
+            }
+            m.edit({ embeds: [embed] });
+          } else if (wanting == "eco" || wanting == "economy") {
+            let embed = new RM.Discord.MessageEmbed().setTitle("Economy");
+            for (let i in RM) {
+              if (i.startsWith("cmd")) {
+                let k = RM[i];
+                if (k.commandCategory() == "economy") {
+                  if (k.commandHelp() == "") {
+                    description = "No description.";
+                  } else {
+                    description = k.commandHelp().replace("[PREFIX]", prefix);
+                  }
+                  embed.addField(prefix + k.commandPrim(), description);
+                }
+              }
+            }
+            m.edit({ embeds: [embed] });
+          } else if (
+            (wanting === "dev" || wanting === "developer") &&
+            RM.botOwners.includes(message.author.id)
+          ) {
+            let embed = new RM.Discord.MessageEmbed().setTitle("Economy");
+            for (let i in RM) {
+              if (i.startsWith("cmd")) {
+                let k = RM[i];
+                if (k.commandCategory() == "developer") {
+                  if (k.commandHelp() == "") {
+                    description = "No description.";
+                  } else {
+                    description = k.commandHelp().replace("[PREFIX]", prefix);
+                  }
+                  embed.addField(prefix + k.commandPrim(), description);
+                }
+              }
+            }
+            m.edit({ embeds: [embed] });
+          }
+          collector.stop();
+        });
       })
       .catch(async (err) => {
         console.log(err);
