@@ -44,19 +44,24 @@ async function runCommand(message, args, RM) {
       return message.channel.send({
         content: "Provide a user that you want to ban.",
       });
-    let banMember =
-      message.mentions.members.first() ||
-      message.guild.members.cache.get(args[0]) ||
-      message.guild.members.cache.find(
-        (r) =>
-          r.user.username.toLowerCase() === args.join(" ").toLocaleLowerCase()
-      ) ||
-      message.guild.members.cache.find(
-        (r) =>
-          r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
-      ) ||
-      (await message.guild.members.fetch(args[0])) ||
-      null;
+    let banMember;
+    try {
+      banMember =
+        message.mentions.members.first() ||
+        message.guild.members.cache.get(args[0]) ||
+        message.guild.members.cache.find(
+          (r) =>
+            r.user.username.toLowerCase() === args.join(" ").toLocaleLowerCase()
+        ) ||
+        message.guild.members.cache.find(
+          (r) =>
+            r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
+        ) ||
+        (await message.guild.members.fetch(args[0])) ||
+        null;
+    } catch (e) {
+      banMember = null;
+    }
     if (!banMember)
       return message.channel.send({
         content: "That user is not in the server",

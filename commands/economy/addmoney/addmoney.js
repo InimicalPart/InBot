@@ -79,19 +79,25 @@ async function runCommand(message, args, RM) {
         });
       }
 
-      let user =
-        message.mentions.members.first() ||
-        message.guild.members.cache.get(args[0]) ||
-        message.guild.members.cache.find(
-          (r) =>
-            r.user.username.toLowerCase() === args.join(" ").toLocaleLowerCase()
-        ) ||
-        message.guild.members.cache.find(
-          (r) =>
-            r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
-        ) ||
-        (await message.guild.members.fetch(args[0])) ||
-        null;
+      let user;
+      try {
+        user =
+          message.mentions.members.first() ||
+          message.guild.members.cache.get(args[0]) ||
+          message.guild.members.cache.find(
+            (r) =>
+              r.user.username.toLowerCase() ===
+              args.join(" ").toLocaleLowerCase()
+          ) ||
+          message.guild.members.cache.find(
+            (r) =>
+              r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
+          ) ||
+          (await message.guild.members.fetch(args[0])) ||
+          null;
+      } catch (e) {
+        user = null;
+      }
 
       if (user == null) {
         await connect.end(true);
@@ -130,7 +136,7 @@ async function runCommand(message, args, RM) {
           ],
         });
       }
-      if (Number.isNaN(args[1]) || args[1] < 0) {
+      if (isNaN(args[1]) || args[1] < 0) {
         await connect.end(true);
         return m.edit({
           embeds: [
@@ -205,10 +211,8 @@ async function runCommand(message, args, RM) {
             iconURL: message.author.avatarURL(),
           })
           .setDescription(
-            `**${username}**'s bank has been increased by  **\`$${numberWithCommas(
+            `**${username}**'s bank has been increased by **\`$${numberWithCommas(
               args[1]
-            )}\`**. Their bank balance is now **\`$${numberWithCommas(
-              bank + args[1]
             )}\`**`
           )
           .setThumbnail(message.guild.iconURL())

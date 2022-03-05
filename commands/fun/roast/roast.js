@@ -37,6 +37,9 @@ async function runCommand(message, args, RM) {
     "We know you have enemies, roast them!",
     "Roasting yourself is not an option to decrease your insecurity. Quite the opposite in fact.",
     "I won't roast you. You are my good friend :)",
+    "These roasts are for the weak.",
+    "You are not a person to be roasted.",
+    "These roasts are too strong, you cannot roast yourself or you will suffer some inrepairable emotional damage.",
   ];
   var linesInRoasts;
   if (!args[0]) {

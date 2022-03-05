@@ -40,23 +40,27 @@ async function runCommand(message, args, RM) {
       const { connect } = require("../../../databasec");
       await connect();
       await connect.create("currency");
-      console.log("Connected to database & created currency table");
       let user;
       if (args[0]) {
-        user =
-          message.mentions.members.first() ||
-          message.guild.members.cache.get(args[0]) ||
-          message.guild.members.cache.find(
-            (r) =>
-              r.user.username.toLowerCase() ===
-              args.join(" ").toLocaleLowerCase()
-          ) ||
-          message.guild.members.cache.find(
-            (r) =>
-              r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
-          ) ||
-          (await message.guild.members.fetch(args[0])) ||
-          null;
+        try {
+          user =
+            message.mentions.members.first() ||
+            message.guild.members.cache.get(args[0]) ||
+            message.guild.members.cache.find(
+              (r) =>
+                r.user.username.toLowerCase() ===
+                args.join(" ").toLocaleLowerCase()
+            ) ||
+            message.guild.members.cache.find(
+              (r) =>
+                r.displayName.toLowerCase() ===
+                args.join(" ").toLocaleLowerCase()
+            ) ||
+            (await message.guild.members.fetch(args[0])) ||
+            null;
+        } catch (e) {
+          user = null;
+        }
       } else {
         user = message.member;
       }

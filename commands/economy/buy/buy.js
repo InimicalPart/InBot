@@ -67,7 +67,7 @@ async function runCommand(message, args, RM) {
         if (args[0] == "banknote") {
           const data = await connect.fetch("currency", message.author.id);
           const invData = await connect.fetch("inventory", message.author.id);
-          if (data.amountw < 80000) {
+          if (data.amountw < 10000) {
             await connect.end(true);
             return m.edit({
               embeds: [
