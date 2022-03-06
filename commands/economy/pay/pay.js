@@ -59,7 +59,8 @@ async function runCommand(message, args, RM) {
           message.guild.members.cache.get(args[0]) ||
           message.guild.members.cache.find(
             (r) =>
-              r.user.username.toLowerCase() === args.join(" ").toLocaleLowerCase()
+              r.user.username.toLowerCase() ===
+              args.join(" ").toLocaleLowerCase()
           ) ||
           message.guild.members.cache.find(
             (r) =>
@@ -75,7 +76,7 @@ async function runCommand(message, args, RM) {
         return m.edit({
           embeds: [
             new RM.Discord.MessageEmbed()
-              .fsetColor("RED")
+              .setColor("RED")
               .setAuthor({
                 name: message.author.tag,
                 iconURL: message.author.avatarURL(),
