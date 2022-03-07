@@ -357,9 +357,14 @@ async function runCommand(message, args, RM) {
         if (stats.wordlepractice.games.length >= 12) {
           stats.wordlepractice.games.shift();
         }
+        //add "wquit" to guesses until the length reaches 6
+        while (guesses.length < 6) {
+          guesses.push("wquit");
+        }
         stats.wordlepractice.games.push({
           word: currentWordle.wordle,
           endTime: finalTime,
+          quit: true,
           won: false,
           guesses: guesses,
         });
@@ -560,6 +565,7 @@ async function runCommand(message, args, RM) {
             stats.wordle.games.push({
               word: currentWordle.wordle,
               endTime: finalTime,
+              quit: false,
               won: true,
               guesses: guesses,
             });
@@ -741,6 +747,7 @@ async function runCommand(message, args, RM) {
             stats.wordlepractice.games.push({
               word: currentWordle.wordle,
               endTime: finalTime,
+              quit: false,
               won: true,
               guesses: guesses,
             });
@@ -809,6 +816,7 @@ async function runCommand(message, args, RM) {
             stats.wordle.games.push({
               word: currentWordle.wordle,
               endTime: finalTime,
+              quit: false,
               won: false,
               guesses: guesses,
             });
@@ -911,6 +919,7 @@ async function runCommand(message, args, RM) {
             stats.wordlepractice.games.push({
               word: currentWordle.wordle,
               endTime: finalTime,
+              quit: false,
               won: false,
               guesses: guesses,
             });
