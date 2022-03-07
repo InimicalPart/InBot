@@ -27,14 +27,29 @@ async function runCommand(message, args, RM) {
   let connect = RM.DBClient;
 
   await connect.create("player_stats");
-  let playerStats = await connect.query(
-    "SELECT * FROM player_stats WHERE userid = " + message.author.id
-  );
-  if (playerStats.rows.length < 1) {
-    await connect.add("player_stats", message.author.id);
+  let user;
+  if (args[1]) {
+    try {
+      user =
+        message.mentions.members.first() ||
+        (await message.guild.members.fetch(args[1])) ||
+        (await message.guild.members.fetch(
+          (r) =>
+            r.user.username.toLowerCase() === args.join(" ").toLocaleLowerCase()
+        )) ||
+        (await message.guild.members.fetch(
+          (r) =>
+            r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
+        )) ||
+        (await message.guild.members.fetch(args[1])) ||
+        null;
+    } catch (e) {
+      banMember = null;
+    }
+  } else {
+    user = message.author;
   }
-  playerStats = playerStats.rows[0].stats;
-  if (Object.keys(playerStats).length < 1) {
+  if (!user) {
     return message.channel.send({
       embeds: [
         new RM.Discord.MessageEmbed()
@@ -43,9 +58,35 @@ async function runCommand(message, args, RM) {
             name: message.author.tag,
             iconURL: message.author.avatarURL(),
           })
-          .setDescription(
-            "There are no stats for you, play some games and stats will show up."
-          )
+          .setDescription("That is not a valid user.")
+          .setThumbnail(message.guild.iconURL())
+          .setTitle("Invalid User"),
+      ],
+    });
+  }
+  if (user.user) user = user.user;
+  let playerStats = await connect.query(
+    "SELECT * FROM player_stats WHERE userid = " + user.id
+  );
+  if (playerStats.rows.length < 1) {
+    await connect.add("player_stats", user.id);
+  }
+  playerStats = playerStats.rows[0].stats;
+  if (Object.keys(playerStats).length < 1) {
+    let restofMSG = "";
+    if (args[1])
+      restofMSG =
+        "**" + user.username + "** needs to play some games to get stats.";
+    else restofMSG = "You need to play some games to get stats.";
+    return message.channel.send({
+      embeds: [
+        new RM.Discord.MessageEmbed()
+          .setColor("RED")
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.avatarURL(),
+          })
+          .setDescription("No stats are available. " + restofMSG)
           .setThumbnail(message.guild.iconURL())
           .setTitle("No Games Played"),
       ],
@@ -120,7 +161,7 @@ async function runCommand(message, args, RM) {
       word = "wordlepractice";
     if (Object.keys(playerStats).includes(word)) {
       message.channel.send({
-        content: getText(word),
+        content: getText(word, user),
         reply: { messageReference: message.id },
       });
     } else {
@@ -132,18 +173,20 @@ async function runCommand(message, args, RM) {
               name: message.author.tag,
               iconURL: message.author.avatarURL(),
             })
-            .setDescription("That is not a valid stat.")
+            .setDescription(
+              "This stat does not exist or the user has not played this game."
+            )
             .setThumbnail(message.guild.iconURL())
             .setTitle("Invalid Stat"),
         ],
       });
     }
   }
-  function getText(game) {
+  function getText(game, user) {
     if (game === "wordle")
       return (
         "**" +
-        message.author.username +
+        user.username +
         "'s Wordle Stats\n**" +
         "Games Played: **" +
         playerStats.wordle.gamesPlayed +
@@ -170,7 +213,7 @@ async function runCommand(message, args, RM) {
     else if (game === "wordlepractice")
       return (
         "**" +
-        message.author.username +
+        user.username +
         "'s Wordle (PRACTICE) Stats\n**" +
         "Games Played: **" +
         playerStats.wordlepractice.gamesPlayed +
