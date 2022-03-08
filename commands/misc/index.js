@@ -59,7 +59,12 @@ function urban() {
 	return require("./urban/urban.js")
 }
 
+function dictionary() {
+	return require("./dictionary/dictionary.js")
+}
+
 module.exports = {
+	dictionary,
 	urban,
 	codeify,
 	timer,

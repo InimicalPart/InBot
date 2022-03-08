@@ -71,7 +71,9 @@ async function runCommand(message, args, RM) {
   if (playerStats.rows.length < 1) {
     await connect.add("player_stats", user.id);
   }
-  playerStats = playerStats.rows[0].stats;
+  playerStats = playerStats.rows[0]?.stats;
+  if (!playerStats) playerStats = {};
+
   if (Object.keys(playerStats).length < 1) {
     let restofMSG = "";
     if (args[1])
@@ -128,9 +130,8 @@ async function runCommand(message, args, RM) {
             msg = "wordlepractice";
           if (Object.keys(playerStats).includes(msg)) {
             m.edit({
-              content: getText(msg),
               reply: { messageReference: message.id },
-              embeds: [],
+              embeds: [await getEmbed(msg, user)],
             });
           } else {
             message.channel.send({
@@ -161,7 +162,7 @@ async function runCommand(message, args, RM) {
       word = "wordlepractice";
     if (Object.keys(playerStats).includes(word)) {
       message.channel.send({
-        content: getText(word, user),
+        embeds: [await getEmbed(word, user)],
         reply: { messageReference: message.id },
       });
     } else {
@@ -182,61 +183,29 @@ async function runCommand(message, args, RM) {
       });
     }
   }
-  function getText(game, user) {
-    if (game === "wordle")
-      return (
-        "**" +
-        user.username +
-        "'s Wordle Stats\n**" +
-        "Games Played: **" +
-        playerStats.wordle.gamesPlayed +
-        "**\n" +
-        "Games Won: **" +
-        playerStats.wordle.gamesWon +
-        "**\n" +
-        "Games Lost: **" +
-        playerStats.wordle.gamesLost +
-        "**\n" +
-        "Current Streak: **" +
-        playerStats.wordle.streak +
-        "**\n" +
-        "Longest Streak: **" +
-        playerStats.wordle.longestStreak +
-        "**\n" +
-        "Average Guesses/game: **" +
-        playerStats.wordle.avgGuesses +
-        "**\n" +
-        "Win Rate: **" +
-        playerStats.wordle.winRate +
-        "%**"
-      );
-    else if (game === "wordlepractice")
-      return (
-        "**" +
-        user.username +
-        "'s Wordle (PRACTICE) Stats\n**" +
-        "Games Played: **" +
-        playerStats.wordlepractice.gamesPlayed +
-        "**\n" +
-        "Games Won: **" +
-        playerStats.wordlepractice.gamesWon +
-        "**\n" +
-        "Games Lost: **" +
-        playerStats.wordlepractice.gamesLost +
-        "**\n" +
-        "Current Streak: **" +
-        playerStats.wordlepractice.streak +
-        "**\n" +
-        "Longest Streak: **" +
-        playerStats.wordlepractice.longestStreak +
-        "**\n" +
-        "Average Guesses/game: **" +
-        playerStats.wordlepractice.avgGuesses +
-        "**\n" +
-        "Win Rate: **" +
-        playerStats.wordlepractice.winRate +
-        "%**"
-      );
+  async function getEmbed(game, user) {
+    if (game === "wordle" || game === "wordlepractice") {
+      practiceornot = game === "wordlepractice" ? " (PRACTICE)" : "";
+      return new RM.Discord.MessageEmbed()
+        .setTitle("" + user.username + "'s Wordle" + practiceornot + " Stats")
+        .setColor("GREEN")
+        .setThumbnail(message.guild.iconURL())
+        .addField("Games Played", String(playerStats[game].gamesPlayed), true)
+        .addField("Games Won", String(playerStats[game].gamesWon), true)
+        .addField("Games Lost", String(playerStats[game].gamesLost), true)
+        .addField("Current Streak", String(playerStats[game].streak), true)
+        .addField(
+          "Longest Streak",
+          String(playerStats[game].longestStreak),
+          true
+        )
+        .addField(
+          "Average Guesses/game",
+          String(playerStats[game].avgGuesses),
+          true
+        )
+        .addField("Win Rate", String(playerStats[game].winRate + "%"), true);
+    }
   }
 }
 
