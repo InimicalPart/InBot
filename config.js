@@ -68,3 +68,4 @@ exports.cmdTimer = true;
 exports.cmdWordle = true
 exports.cmdCodeify = true
 exports.cmdUrban = true
+exports.cmdDictionary = true
