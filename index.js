@@ -62,7 +62,7 @@ const music = require("./commands/music/index.js");
 const economy = require("./commands/economy/index.js");
 const event = require("./events/index.js");
 console.log(
-  chalk.white.bold("[" + moment().format("M/D/y HH:mm:ss") + "] [MAIN] ") +
+  chalk.white.bold("[" + moment().format("M/D/y HH:mm:ss") + "] [LOADER] ") +
     chalk.green("Modules loaded! Adding to requiredModules....")
 );
 //!--------------------------
@@ -124,7 +124,7 @@ const requiredModules = {
   //   cmdScan: moderation.scan(),
   cmdSudoku: fun.sudoku(),
   cmdMinesweeper: fun.minesweeper(),
-//   cmdSpotify: music.spotify(),
+  //   cmdSpotify: music.spotify(),
   cmdTimer: misc.timer(),
   cmdWordle: fun.wordle(),
   cmdCodeify: misc.codeify(),
