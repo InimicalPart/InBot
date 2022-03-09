@@ -42,56 +42,113 @@ async function runCommand(message, args, RM) {
       ],
     });
   }
-  const nodecode =
-    /*'process.on("message", function (msg) {console.log(msg)});' +*/ args.join(
-      " "
-    );
+  let nodecode;
+  let executionStats = false;
+  if (args.includes("--iii-exec-stats")) {
+    //copy args and remove --iii-exec-stats
+    let newArgs = args.slice();
+    newArgs.splice(newArgs.indexOf("--iii-exec-stats"), 1);
+    nodecode = newArgs;
+    executionStats = true;
+  } else nodecode = args;
+  nodecode = nodecode.join(" ");
   require("fs").writeFile("execute.js", nodecode, function (err, result) {
     if (err) console.log("error", err);
   });
-  message.channel.send({
-    content:
-      "Node.JS code saved to execute.js\nExecuting execute.js\n-----------------------------------------",
-  });
-  var dataToSend;
-  // console.log("RM: " + typeof RM)
-  // console.log("message: " + typeof message)
-  // console.log("args: " + typeof args)
-  // console.log(args)
-  // console.log(JSON.stringify(args))
-  var errorToSend;
-  // const env = {
-  // 	"RM": RM,
-  // 	"client": RM.client,
-  // 	"Discord": RM.Discord,
-  // 	"testing": "yup, this is coming from env",
-  // 	"message": message,
-  // 	"args": args,
-  // }
-  // console.log(message)
-  const nodefile = spawn("node", ["execute.js"]);
-  nodefile.stdout.on("data", function (data) {
-    dataToSend = data.toString();
-  });
-  nodefile.stderr.on("data", function (data) {
-    errorToSend = data.toString();
-  });
-  nodefile.on("close", (code) => {
-    if (dataToSend != undefined) {
-      message.channel.send({
-        content: "```javascript\n" + dataToSend + "\n```",
-      });
-    }
-    if (errorToSend != undefined) {
-      message.channel.send({
-        content: "```javascript\n" + errorToSend + "\n```",
-      });
-    }
-    //require("fs").unlinkSync("execute.js")
-  });
-  // cmd stuff here
-}
+  message.channel
+    .send({
+      embeds: [
+        new RM.Discord.MessageEmbed().setDescription(
+          "<a:loading:869354366803509299> *Code is running...*"
+        ),
+      ],
+    })
+    .then(async (m) => {
+      var dataToSend;
+      var errorToSend;
 
+      let timeTaken = new Date().getTime();
+      const nodefile = spawn("node", ["execute.js"]);
+      nodefile.stdout.on("data", function (data) {
+        dataToSend = data.toString();
+      });
+      nodefile.stderr.on("data", function (data) {
+        errorToSend = data.toString();
+      });
+      nodefile.on("close", (code) => {
+        timeTaken = new Date().getTime() - timeTaken;
+        if (dataToSend != undefined) {
+          m.edit({
+            content: "```javascript\n" + dataToSend + "\n```",
+            embeds: [],
+          });
+          if (executionStats) {
+            message.channel.send({
+              embeds: [
+                new RM.Discord.MessageEmbed()
+                  .setTitle("Execution Stats")
+                  .setAuthor({
+                    name: message.author.tag,
+                    iconURL: message.author.avatarURL(),
+                  })
+                  .setColor("GREEN")
+                  .addField("Status", "Success")
+                  .addField("Process PID", String(nodefile.pid))
+                  .addField("Execution Time", require("pretty-ms")(timeTaken)),
+              ],
+            });
+          }
+        }
+        if (errorToSend != undefined) {
+          m.edit({
+            content: "```javascript\n" + errorToSend + "\n```",
+            embeds: [],
+          });
+          if (executionStats) {
+            message.channel.send({
+              embeds: [
+                new RM.Discord.MessageEmbed()
+                  .setTitle("Execution Stats")
+                  .setAuthor({
+                    name: message.author.tag,
+                    iconURL: message.author.avatarURL(),
+                  })
+                  .setColor("RED")
+                  .addField("Status", "Failure")
+                  .addField("Process PID", String(nodefile.pid))
+                  .addField("Execution Time", require("pretty-ms")(timeTaken)),
+              ],
+            });
+          }
+        }
+        if (dataToSend == undefined && errorToSend == undefined) {
+          m.edit({
+            content:
+              "```yaml\n" +
+              "[CMDEXEC] The command didn't output anything." +
+              "\n```",
+            embeds: [],
+          });
+          if (executionStats) {
+            message.channel.send({
+              embeds: [
+                new RM.Discord.MessageEmbed()
+                  .setTitle("Execution Stats")
+                  .setAuthor({
+                    name: message.author.tag,
+                    iconURL: message.author.avatarURL(),
+                  })
+                  .setColor("YELLOW")
+                  .addField("Status", "Unknown (No output)")
+                  .addField("Process PID", String(nodefile.pid))
+                  .addField("Execution Time", require("pretty-ms")(timeTaken)),
+              ],
+            });
+          }
+        }
+      });
+    });
+}
 function commandTriggers() {
   return commandInfo.possibleTriggers;
 }
