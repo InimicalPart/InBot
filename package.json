@@ -2,7 +2,7 @@
   "dependencies": {
     "@google-cloud/dialogflow": "^4.1.4",
     "chalk": "^4.1.1",
-    "chess.js": "^0.12.0",
+    "chess.js": "^0.13.0",
     "common-tags": "^1.8.0",
     "convert-units": "^2.3.4",
     "discord.js": "latest",
