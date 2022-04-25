@@ -5,6 +5,7 @@ const commandInfo = {
   aliases: ["steal"], // These are command aliases that help.js will use
   usage: "[COMMAND] <user>", // [COMMAND] gets replaced with the command and correct prefix later
   category: "economy",
+  slashCommand: null,
 };
 function calcPercent(percent, number) {
   return parseInt((percent / 100) * number);
@@ -70,16 +71,17 @@ async function runCommand(message, args, RM) {
       let user;
       try {
         user =
-        message.mentions.members.first() ||
-        (await message.guild.members.fetch(args[0])) ||
-        (await message.guild.members.fetch(
-          (r) =>
-            r.user.username.toLowerCase() === args.join(" ").toLocaleLowerCase()
-        )) ||
-        (await message.guild.members.fetch(
-          (r) =>
-            r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
-        )) ||
+          message.mentions.members.first() ||
+          (await message.guild.members.fetch(args[0])) ||
+          (await message.guild.members.fetch(
+            (r) =>
+              r.user.username.toLowerCase() ===
+              args.join(" ").toLocaleLowerCase()
+          )) ||
+          (await message.guild.members.fetch(
+            (r) =>
+              r.displayName.toLowerCase() === args.join(" ").toLocaleLowerCase()
+          )) ||
           (await message.guild.members.fetch(args[0])) ||
           null;
       } catch (e) {
@@ -819,6 +821,14 @@ function commandUsage() {
 function commandCategory() {
   return commandInfo.category;
 }
+function getSlashCommand() {
+  return commandInfo.slashCommand;
+}
+function getSlashCommandJSON() {
+  if (commandInfo.slashCommand.length !== null)
+    return commandInfo.slashCommand.toJSON();
+  else return null;
+}
 module.exports = {
   runCommand,
   commandTriggers,
@@ -827,6 +837,8 @@ module.exports = {
   commandPrim,
   commandUsage,
   commandCategory,
+  getSlashCommand,
+  getSlashCommandJSON,
 }; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */

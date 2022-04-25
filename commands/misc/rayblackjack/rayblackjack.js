@@ -12,6 +12,7 @@ var commandInfo = {
   usage: "[COMMAND]",
   // [COMMAND] gets replaced with the command and correct prefix later
   category: "misc",
+  slashCommand: null,
 };
 
 function runCommand(message, args, RM) {
@@ -813,15 +814,25 @@ function commandUsage() {
 function commandCategory() {
   return commandInfo.category;
 }
+function getSlashCommand() {
+  return commandInfo.slashCommand;
+}
+function getSlashCommandJSON() {
+  if (commandInfo.slashCommand.length !== null)
+    return commandInfo.slashCommand.toJSON();
+  else return null;
+}
 
 module.exports = {
-  runCommand: runCommand,
-  commandTriggers: commandTriggers,
-  commandHelp: commandHelp,
-  commandAliases: commandAliases,
-  commandPrim: commandPrim,
-  commandUsage: commandUsage,
-  commandCategory: commandCategory,
+  runCommand,
+  commandTriggers,
+  commandHelp,
+  commandAliases,
+  commandPrim,
+  commandUsage,
+  commandCategory,
+  getSlashCommand,
+  getSlashCommandJSON,
 };
 /* */
 

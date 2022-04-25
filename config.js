@@ -69,3 +69,4 @@ exports.cmdWordle = true
 exports.cmdCodeify = true
 exports.cmdUrban = true
 exports.cmdDictionary = true
+exports.cmdActivity = true

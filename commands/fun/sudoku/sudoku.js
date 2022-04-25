@@ -1,5 +1,3 @@
-const { neutronMassDependencies } = require("mathjs");
-
 const commandInfo = {
   primaryName: "sudoku", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["sudoku"], // These are all commands that will trigger this command.
@@ -7,6 +5,7 @@ const commandInfo = {
   aliases: [], // These are command aliases that help.js will use
   usage: "[COMMAND] <difficulty> <size>", // [COMMAND] gets replaced with the command and correct prefix later
   category: "fun",
+  slashCommand: null,
 };
 
 async function runCommand(message, args, RM) {
@@ -605,6 +604,14 @@ function commandUsage() {
 function commandCategory() {
   return commandInfo.category;
 }
+function getSlashCommand() {
+  return commandInfo.slashCommand;
+}
+function getSlashCommandJSON() {
+  if (commandInfo.slashCommand.length !== null)
+    return commandInfo.slashCommand.toJSON();
+  else return null;
+}
 module.exports = {
   runCommand,
   commandTriggers,
@@ -613,6 +620,8 @@ module.exports = {
   commandPrim,
   commandUsage,
   commandCategory,
+  getSlashCommand,
+  getSlashCommandJSON,
 }; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */

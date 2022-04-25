@@ -5,6 +5,7 @@ const commandInfo = {
   aliases: [], // These are command aliases that help.js will use
   usage: "[COMMAND] <commands>", // [COMMAND] gets replaced with the command and correct prefix later
   category: "developer",
+  slashCommand: null,
 };
 
 async function runCommand(message, args, RM) {
@@ -75,12 +76,24 @@ async function runCommand(message, args, RM) {
       nodefile.stderr.on("data", function (data) {
         errorToSend = data.toString();
       });
-      nodefile.on("close", (code) => {
+      nodefile.on("close", async (code) => {
         timeTaken = new Date().getTime() - timeTaken;
         if (dataToSend != undefined) {
           m.edit({
             content: "```javascript\n" + dataToSend + "\n```",
             embeds: [],
+            components: [
+              new RM.Discord.MessageActionRow().addComponents(
+                new RM.Discord.MessageButton()
+                  .setLabel("Delete Output")
+                  .setStyle("DANGER")
+                  .setCustomId("delete-" + message.id),
+                new RM.Discord.MessageButton()
+                  .setLabel("Save Output")
+                  .setStyle("PRIMARY")
+                  .setCustomId("save-" + message.id)
+              ),
+            ],
           });
           if (executionStats) {
             message.channel.send({
@@ -98,53 +111,132 @@ async function runCommand(message, args, RM) {
               ],
             });
           }
-        }
-        if (errorToSend != undefined) {
-          m.edit({
-            content: "```javascript\n" + errorToSend + "\n```",
-            embeds: [],
-          });
-          if (executionStats) {
-            message.channel.send({
-              embeds: [
-                new RM.Discord.MessageEmbed()
-                  .setTitle("Execution Stats")
-                  .setAuthor({
-                    name: message.author.tag,
-                    iconURL: message.author.avatarURL(),
-                  })
-                  .setColor("RED")
-                  .addField("Status", "Failure")
-                  .addField("Process PID", String(nodefile.pid))
-                  .addField("Execution Time", require("pretty-ms")(timeTaken)),
+          if (errorToSend != undefined) {
+            m.edit({
+              content: "```javascript\n" + errorToSend + "\n```",
+              embeds: [],
+              components: [
+                new RM.Discord.MessageActionRow().addComponents(
+                  new RM.Discord.MessageButton()
+                    .setLabel("Delete Output")
+                    .setStyle("DANGER")
+                    .setCustomId("delete-" + message.id),
+                  new RM.Discord.MessageButton()
+                    .setLabel("Save Output")
+                    .setStyle("PRIMARY")
+                    .setCustomId("save-" + message.id)
+                ),
               ],
             });
+            if (executionStats) {
+              message.channel.send({
+                embeds: [
+                  new RM.Discord.MessageEmbed()
+                    .setTitle("Execution Stats")
+                    .setAuthor({
+                      name: message.author.tag,
+                      iconURL: message.author.avatarURL(),
+                    })
+                    .setColor("RED")
+                    .addField("Status", "Failure")
+                    .addField("Process PID", String(nodefile.pid))
+                    .addField(
+                      "Execution Time",
+                      require("pretty-ms")(timeTaken)
+                    ),
+                ],
+              });
+            }
           }
-        }
-        if (dataToSend == undefined && errorToSend == undefined) {
-          m.edit({
-            content:
-              "```yaml\n" +
-              "[CMDEXEC] The command didn't output anything." +
-              "\n```",
-            embeds: [],
-          });
-          if (executionStats) {
-            message.channel.send({
-              embeds: [
-                new RM.Discord.MessageEmbed()
-                  .setTitle("Execution Stats")
-                  .setAuthor({
-                    name: message.author.tag,
-                    iconURL: message.author.avatarURL(),
-                  })
-                  .setColor("YELLOW")
-                  .addField("Status", "Unknown (No output)")
-                  .addField("Process PID", String(nodefile.pid))
-                  .addField("Execution Time", require("pretty-ms")(timeTaken)),
+          if (dataToSend == undefined && errorToSend == undefined) {
+            m.edit({
+              content:
+                "```yaml\n" +
+                "[CMDEXEC] The command didn't output anything." +
+                "\n```",
+              embeds: [],
+              components: [
+                new RM.Discord.MessageActionRow().addComponents(
+                  new RM.Discord.MessageButton()
+                    .setLabel("Delete Output")
+                    .setStyle("DANGER")
+                    .setCustomId("delete-" + message.id),
+                  new RM.Discord.MessageButton()
+                    .setLabel("Save Output")
+                    .setStyle("PRIMARY")
+                    .setCustomId("save-" + message.id)
+                ),
               ],
             });
+            if (executionStats) {
+              message.channel.send({
+                embeds: [
+                  new RM.Discord.MessageEmbed()
+                    .setTitle("Execution Stats")
+                    .setAuthor({
+                      name: message.author.tag,
+                      iconURL: message.author.avatarURL(),
+                    })
+                    .setColor("YELLOW")
+                    .addField("Status", "Unknown (No output)")
+                    .addField("Process PID", String(nodefile.pid))
+                    .addField(
+                      "Execution Time",
+                      require("pretty-ms")(timeTaken)
+                    ),
+                ],
+              });
+            }
           }
+          let output =
+            dataToSend ||
+            errorToSend ||
+            "[CMDEXEC] The command didn't output anything.";
+          let componentFilter = (component) => {
+            if (
+              component.customId.includes(message.id) &&
+              ["save", "delete"].includes(component.customId.split("-")[0])
+            )
+              return true;
+            return false;
+          };
+          let collector = await message.channel.createMessageComponentCollector(
+            {
+              filter: componentFilter,
+              time: 60000,
+            }
+          );
+          collector.on("collect", (component) => {
+            if (component.customId.includes("save-")) {
+              let fileran = new RM.Discord.MessageAttachment(
+                Buffer.from(nodecode),
+                "executed-" + message.id + ".js"
+              );
+              let fileoutput = new RM.Discord.MessageAttachment(
+                Buffer.from(output, "utf8"),
+                "output-" + message.id + ".txt"
+              );
+              component.user.send({
+                content: "Saved execution:",
+                files: [fileran, fileoutput],
+              });
+              component.reply({ content: "Saved in DMs.", ephemeral: true });
+            } else if (component.customId.includes("delete-")) {
+              if (component.user.id !== message.author.id) return false;
+              m.delete();
+              message.delete();
+              m = null;
+              component.reply({
+                content: "Deleted execution.",
+                ephemeral: true,
+              });
+            }
+          });
+          collector.on("end", () => {
+            if (m) {
+              m.edit({ components: [] });
+            }
+          });
         }
       });
     });
@@ -167,6 +259,14 @@ function commandUsage() {
 function commandCategory() {
   return commandInfo.category;
 }
+function getSlashCommand() {
+  return commandInfo.slashCommand;
+}
+function getSlashCommandJSON() {
+  if (commandInfo.slashCommand.length !== null)
+    return commandInfo.slashCommand.toJSON();
+  else return null;
+}
 module.exports = {
   runCommand,
   commandTriggers,
@@ -175,6 +275,8 @@ module.exports = {
   commandPrim,
   commandUsage,
   commandCategory,
+  getSlashCommand,
+  getSlashCommandJSON,
 }; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */

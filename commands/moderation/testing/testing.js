@@ -5,6 +5,7 @@ const commandInfo = {
   aliases: [], // These are command aliases that help.js will use
   usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
   category: "developer",
+  slashCommand: null,
 };
 
 async function runCommand(message, args, RM) {
@@ -24,7 +25,42 @@ async function runCommand(message, args, RM) {
       ],
     });
   }
-  await message.delete();
+  //   let user = await message.guild.members.fetch(message.author.id);
+  let users = await message.guild.members.fetch();
+  let wantedId = args[0] || message.author.id;
+  //find the users id in users
+  let user = users.find((u) => u.id === wantedId);
+  if (user.presence) {
+    let attachment = new RM.Discord.MessageAttachment(
+      Buffer.from(JSON.stringify(user.presence, null, 2)),
+      "presence-" + wantedId + ".json"
+    );
+    return message.channel.send({
+      content:
+        "**" +
+        user.user.username +
+        "#" +
+        user.user.discriminator +
+        "** has a presence and is currently **" +
+        user.presence.status +
+        "**",
+      files: [attachment],
+    });
+  } else {
+    let attachment = new RM.Discord.MessageAttachment(
+      Buffer.from(JSON.stringify(user, null, 2)),
+      "user-" + wantedId + ".json"
+    );
+    return message.channel.send({
+      content:
+        "**" +
+        user.user.username +
+        "#" +
+        user.user.discriminator +
+        "** has no presence",
+      files: [attachment],
+    });
+  }
 }
 function commandTriggers() {
   return commandInfo.possibleTriggers;
@@ -44,6 +80,14 @@ function commandUsage() {
 function commandCategory() {
   return commandInfo.category;
 }
+function getSlashCommand() {
+  return commandInfo.slashCommand;
+}
+function getSlashCommandJSON() {
+  if (commandInfo.slashCommand.length !== null)
+    return commandInfo.slashCommand.toJSON();
+  else return null;
+}
 module.exports = {
   runCommand,
   commandTriggers,
@@ -52,6 +96,8 @@ module.exports = {
   commandPrim,
   commandUsage,
   commandCategory,
+  getSlashCommand,
+  getSlashCommandJSON,
 }; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */

@@ -1,11 +1,15 @@
 {
   "dependencies": {
+    "@discordjs/builders": "^0.12.0",
+    "@discordjs/rest": "^0.3.0",
     "@google-cloud/dialogflow": "^4.1.4",
     "chalk": "^4.1.1",
     "chess.js": "^0.12.0",
     "common-tags": "^1.8.0",
     "convert-units": "^2.3.4",
+    "discord-api-types": "^0.29.0",
     "discord.js": "latest",
+    "discordjs-activity": "^1.4.2",
     "dotenv": "^10.0.0",
     "fen-to-image": "github:InimicalPart/TheIIIProject#fen2img",
     "genius-lyrics": "^4.2.9",
@@ -27,6 +31,7 @@
     "spotify-web-api-node": "^5.0.2",
     "spotify-web-playback": "^1.4.0",
     "sqlstring": "^2.3.2",
+    "uninstall": "^0.0.0",
     "uuid": "^8.3.2",
     "ytdl-core": "^4.9.0"
   },

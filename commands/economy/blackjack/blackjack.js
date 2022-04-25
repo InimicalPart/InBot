@@ -5,6 +5,7 @@ const commandInfo = {
   aliases: ["bj"], // These are command aliases that help.js will use
   usage: "[COMMAND] <bet amount>", // [COMMAND] gets replaced with the command and correct prefix later
   category: "economy",
+  slashCommand: null,
 };
 function between(lower, upper) {
   var scale = upper - lower + 1;
@@ -98,7 +99,7 @@ async function runCommand(message, args, RM) {
           )
           .setThumbnail(message.guild.iconURL())
           .setTitle("Blackjack Help")
-          .setFooter({text:"Blackjack Help"})
+          .setFooter({ text: "Blackjack Help" })
           .setTimestamp(),
       ],
     });
@@ -287,7 +288,7 @@ async function runCommand(message, args, RM) {
         value: "`" + d1 + " | " + "X" + "`\nValue: " + dFirstNum,
       })
       .setTimestamp()
-      .setFooter({text:"HIT or STAND"});
+      .setFooter({ text: "HIT or STAND" });
 
     await message.channel.send({ embeds: [embed] });
 
@@ -734,6 +735,14 @@ function commandUsage() {
 function commandCategory() {
   return commandInfo.category;
 }
+function getSlashCommand() {
+  return commandInfo.slashCommand;
+}
+function getSlashCommandJSON() {
+  if (commandInfo.slashCommand.length !== null)
+    return commandInfo.slashCommand.toJSON();
+  else return null;
+}
 module.exports = {
   runCommand,
   commandTriggers,
@@ -742,6 +751,8 @@ module.exports = {
   commandPrim,
   commandUsage,
   commandCategory,
+  getSlashCommand,
+  getSlashCommandJSON,
 }; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */

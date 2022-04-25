@@ -5,6 +5,7 @@ const commandInfo = {
   aliases: ["np"],
   usage: "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
   category: "music",
+  slashCommand: null,
 };
 
 async function runCommand(message, args, RM) {
@@ -55,7 +56,10 @@ async function runCommand(message, args, RM) {
       .setColor("GREEN")
       .setTitle(video.title)
       .setDescription(description)
-      .setFooter({text:message.member.displayName, iconURL:message.author.displayAvatarURL()})
+      .setFooter({
+        text: message.member.displayName,
+        iconURL: message.author.displayAvatarURL(),
+      })
       .setTimestamp();
     message.channel.send({ embeds: [videoEmbed] });
     return;
@@ -141,6 +145,14 @@ function commandUsage() {
 function commandCategory() {
   return commandInfo.category;
 }
+function getSlashCommand() {
+  return commandInfo.slashCommand;
+}
+function getSlashCommandJSON() {
+  if (commandInfo.slashCommand.length !== null)
+    return commandInfo.slashCommand.toJSON();
+  else return null;
+}
 module.exports = {
   runCommand,
   commandTriggers,
@@ -149,4 +161,6 @@ module.exports = {
   commandPrim,
   commandUsage,
   commandCategory,
+  getSlashCommand,
+  getSlashCommandJSON,
 };
