@@ -26,7 +26,12 @@ function wordle() {
 	return require("./wordle/wordle.js")
 }
 
+function activity() {
+	return require("./activity/activity.js")
+}
+
 module.exports = {
+	activity,
 	wordle,
   bombparty,
   minesweeper,

@@ -5,6 +5,7 @@ const commandInfo = {
   aliases: [], // These are command aliases that help.js will use
   usage: "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
   category: "music",
+  slashCommand: null,
 };
 
 async function runCommand(message, args, RM) {
@@ -97,6 +98,14 @@ function commandUsage() {
 function commandCategory() {
   return commandInfo.category;
 }
+function getSlashCommand() {
+  return commandInfo.slashCommand;
+}
+function getSlashCommandJSON() {
+  if (commandInfo.slashCommand.length !== null)
+    return commandInfo.slashCommand.toJSON();
+  else return null;
+}
 module.exports = {
   runCommand,
   commandTriggers,
@@ -105,6 +114,8 @@ module.exports = {
   commandPrim,
   commandUsage,
   commandCategory,
+  getSlashCommand,
+  getSlashCommandJSON,
 }; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */

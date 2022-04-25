@@ -5,6 +5,15 @@ const commandInfo = {
   aliases: ["alias2", "alias3"], // These are command aliases that help.js will use
   usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
   category: "fun/music/mod/iiisub/misc/economy",
+  slashCommand: new global.SlashCommandBuilder()
+    .setName("echo")
+    .setDescription("Replies with your input!")
+    .addStringOption((option) =>
+      option
+        .setName("input")
+        .setDescription("The input to echo back")
+        .setRequired(true)
+    ),
 };
 
 async function runCommand(message, args, RM) {
@@ -46,6 +55,14 @@ function commandUsage() {
 function commandCategory() {
   return commandInfo.category;
 }
+function getSlashCommand() {
+  return commandInfo.slashCommand;
+}
+function getSlashCommandJSON() {
+  if (commandInfo.slashCommand.length !== null)
+    return commandInfo.slashCommand.toJSON();
+  else return null;
+}
 module.exports = {
   runCommand,
   commandTriggers,
@@ -54,6 +71,8 @@ module.exports = {
   commandPrim,
   commandUsage,
   commandCategory,
+  getSlashCommand,
+  getSlashCommandJSON,
 }; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */

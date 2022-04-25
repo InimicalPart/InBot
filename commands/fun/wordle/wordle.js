@@ -5,6 +5,7 @@ const commandInfo = {
   aliases: ["w"], // These are command aliases that help.js will use
   usage: "[COMMAND] [mode] [tries (practice)]", // [COMMAND] gets replaced with the command and correct prefix later
   category: "fun",
+  slashCommand: null,
 };
 
 async function runCommand(message, args, RM) {
@@ -138,32 +139,32 @@ async function runCommand(message, args, RM) {
   }
   let emojis = {
     yellow: {
-      a: "<:yellow_a:946448578958733352>",
-      b: "<:yellow_b:946448669819957279>",
-      c: "<:yellow_c:946448711083520000>",
-      d: "<:yellow_d:946448710672453703>",
-      e: "<:yellow_e:946448710915723274>",
-      f: "<:yellow_f:946448711049961542>",
-      g: "<:yellow_g:946448710756335626>",
-      h: "<:yellow_h:946448710454354014>",
-      i: "<:yellow_i:946448711117053982>",
-      j: "<:yellow_j:946448710798299166>",
-      k: "<:yellow_k:946448710987051099>",
-      l: "<:yellow_l:946448710928330783>",
-      m: "<:yellow_m:946448711049969685>",
-      n: "<:yellow_n:946448711196741672>",
-      o: "<:yellow_o:946448711297425439>",
-      p: "<:yellow_p:946448711402262559>",
-      q: "<:yellow_q:946448711943331860>",
-      r: "<:yellow_r:946448711028973578>",
-      s: "<:yellow_s:946448711830089748>",
-      t: "<:yellow_t:946448711284830258>",
-      u: "<:yellow_u:946448711175782490>",
-      v: "<:yellow_v:946448711159021628>",
-      w: "<:yellow_w:946448711444209684>",
-      x: "<:yellow_x:946448711159021568>",
-      y: "<:yellow_y:946448711813324861>",
-      z: "<:yellow_z:946448712257916978>",
+      a: "<:yellow_a:968235318786531348>",
+      b: "<:yellow_b:968235318497136700>",
+      c: "<:yellow_c:968235318467784754>",
+      d: "<:yellow_d:968235318438396004>",
+      e: "<:yellow_e:968235318476161134>",
+      f: "<:yellow_f:968235318492946523>",
+      g: "<:yellow_g:968235318564249721>",
+      h: "<:yellow_h:968235318526488626>",
+      i: "<:yellow_i:968235318467780648>",
+      j: "<:yellow_j:968235318320955424>",
+      k: "<:yellow_k:968235318530670592>",
+      l: "<:yellow_l:968235318606168094>",
+      m: "<:yellow_m:968235318681686036>",
+      n: "<:yellow_n:968235318543278120>",
+      o: "<:yellow_o:968235318564241498>",
+      p: "<:yellow_p:968235318639738910>",
+      q: "<:yellow_q:968235318702637126>",
+      r: "<:yellow_r:968235318211932161>",
+      s: "<:yellow_s:968235318597800059>",
+      t: "<:yellow_t:968235318627160134>",
+      u: "<:yellow_u:968235318711038042>",
+      v: "<:yellow_v:968235318773940224>",
+      w: "<:yellow_w:968235318685884487>",
+      x: "<:yellow_x:968235318765559819>",
+      y: "<:yellow_y:968235318933340210>",
+      z: "<:yellow_z:968235318698459186>",
     },
     gray: {
       a: "<:gray_a:946432512463364096>",
@@ -206,20 +207,20 @@ async function runCommand(message, args, RM) {
       j: "<:green_j:946432513201549352>",
       k: "<:green_k:946432513486774312>",
       l: "<:green_l:946432513298030663>",
-      m: "<:green_m:946432513683898428>",
+      m: "<:green_m:968235431697186870>",
       n: "<:green_n:946432513335758858>",
       o: "<:green_o:946432513289617458>",
       p: "<:green_p:946432513109262427>",
-      q: "<:green_q:946432513738416148>",
+      q: "<:green_q:968235431869169766>",
       r: "<:green_r:946432513478361108>",
-      s: "<:green_s:946432513558081572>",
+      s: "<:green_s:968235431986618399>",
       t: "<:green_t:946432513461616650>",
       u: "<:green_u:946432513545502730>",
       v: "<:green_v:946432513453215775>",
-      w: "<:green_w:946432513767800852>",
-      x: "<:green_x:946453215065538641>",
+      w: "<:green_w:968235432062111744>",
+      x: "<:green_x:968235432355713064>",
       y: "<:green_y:946432513528721409>",
-      z: "<:green_z:946451061437247529>",
+      z: "<:green_z:968235432242479134>",
     },
   };
 
@@ -979,6 +980,14 @@ function commandUsage() {
 function commandCategory() {
   return commandInfo.category;
 }
+function getSlashCommand() {
+  return commandInfo.slashCommand;
+}
+function getSlashCommandJSON() {
+  if (commandInfo.slashCommand.length !== null)
+    return commandInfo.slashCommand.toJSON();
+  else return null;
+}
 module.exports = {
   runCommand,
   commandTriggers,
@@ -987,6 +996,8 @@ module.exports = {
   commandPrim,
   commandUsage,
   commandCategory,
+  getSlashCommand,
+  getSlashCommandJSON,
 }; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
 
 /* */
