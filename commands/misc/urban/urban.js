@@ -105,23 +105,23 @@ async function runCommand(message, args, RM) {
           iconURL: message.author.avatarURL(),
         })
         .setDescription(
-          json.list[index].definition.replace(/\[/g, "").replace(/\]/g, "")
+          json.list[index].definition.replace(/\[/g, "").replace(/\]/g, "")|| "N/A"
         )
         .setThumbnail(message.guild.iconURL())
-        .setTitle(json.list[index].word)
+        .setTitle(json.list[index].word|| "N/A")
         .addField(
           "Example",
           json.list[index].example.replace(/\[/g, "").replace(/\]/g, "")
         )
-        .addField("Author", json.list[index].author)
+        .addField("Author", json.list[index].author || "N/A")
         .addField(
           "Rating",
-          json.list[index].thumbs_up +
+          (json.list[index].thumbs_up|| "N/A") +
             " 👍 / " +
-            json.list[index].thumbs_down +
+            (json.list[index].thumbs_down|| "N/A") +
             " 👎"
         )
-        .addField("Link", json.list[index].permalink);
+        .addField("Link", json.list[index].permalink|| "N/A");
       return message.channel.send({ embeds: [embed] });
     }
   );
