@@ -3,8 +3,8 @@ let chalk = require("chalk");
 function calculate() {
   return require("./calculate/calculate.js");
 }
-function embed() {
-  return require("./embed/embed.js");
+function info() {
+  return require("./info/info.js");
 }
 function help() {
   return require("./help/help.js");
@@ -48,26 +48,26 @@ function todo() {
 }
 
 function timer() {
-	return require("./timer/timer.js")
+  return require("./timer/timer.js");
 }
 
 function codeify() {
-	return require("./codeify/codeify.js")
+  return require("./codeify/codeify.js");
 }
 
 function urban() {
-	return require("./urban/urban.js")
+  return require("./urban/urban.js");
 }
 
 function dictionary() {
-	return require("./dictionary/dictionary.js")
+  return require("./dictionary/dictionary.js");
 }
 
 module.exports = {
-	dictionary,
-	urban,
-	codeify,
-	timer,
+  dictionary,
+  urban,
+  codeify,
+  timer,
   todo,
   v13,
   run,
@@ -77,7 +77,7 @@ module.exports = {
   flipacoin,
   stats,
   calculate,
-  embed,
+  info,
   help,
   random,
   test,
