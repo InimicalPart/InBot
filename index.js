@@ -1,4 +1,6 @@
-require("discordjs-activity");
+const app = {
+  version: "3.2.5",
+};
 //set global variables
 //global.sQueueLink = []
 //global.sQueueName = []
@@ -19,6 +21,7 @@ global.webhookify = [];
 global.checkWordle = false;
 global.wordleList = [];
 global.SlashCommandBuilder = require("@discordjs/builders").SlashCommandBuilder;
+global.app = app;
 //import modules
 const moment = require("moment");
 require("dotenv").config();
@@ -50,7 +53,9 @@ let slashCommandAssigns = [];
 console.clear();
 console.log(
   chalk.white.bold("[" + moment().format("M/D/y HH:mm:ss") + "] [MAIN] ") +
-    chalk.green("TheIIIProject is starting up!") +
+    chalk.green("TheIIIProject ") +
+    chalk.bold.white("v" + app.version) +
+    chalk.green(" is starting up!") +
     "\n" +
     chalk.white.bold("[" + moment().format("M/D/y HH:mm:ss") + "] [LOADER] ") +
     chalk.yellow("Modules are loading up...")
@@ -78,7 +83,7 @@ const requiredModules = {
   cmdApprove: iiisub.approve(),
   cmdDeny: iiisub.deny(),
   cmdRemove: music.remove(),
-  cmdEmbed: misc.embed(),
+  cmdInfo: misc.info(),
   cmdRestore: iiisub.restore(),
   cmdRandom: misc.random(),
   cmdHelp: misc.help(),
