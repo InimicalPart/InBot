@@ -686,32 +686,33 @@ async function runCommand(message, args, RM) {
               message.channel.send({
                 content:
                   "**" +
-                  user.username +
-                  "'s Wordle Stats\n**" +
-                  "Games Played: **" +
-                  stats.wordle.gamesPlayed +
-                  "**\n" +
-                  "Games Won: **" +
-                  stats.wordle.gamesWon +
-                  "**\n" +
-                  "Games Lost: **" +
-                  stats.wordle.gamesLost +
-                  "**\n" +
-                  "Current Streak: **" +
-                  stats.wordle.streak +
-                  "**\n" +
-                  "Longest Streak: **" +
-                  stats.wordle.longestStreak +
-                  "**\n" +
-                  "Average Guesses/game: **" +
-                  stats.wordle.avgGuesses +
-                  "**\n" +
-                  "Average Time/game: **" +
-                  require("pretty-ms")(stats.wordle.avgTime) +
-                  "**\n" +
-                  "Win Rate: **" +
-                  stats.wordle.winRate +
-                  "**%",
+                    user.username +
+                    "'s Wordle Stats\n**" +
+                    "Games Played: **" +
+                    stats.wordle.gamesPlayed +
+                    "**\n" +
+                    "Games Won: **" +
+                    stats.wordle.gamesWon +
+                    "**\n" +
+                    "Games Lost: **" +
+                    stats.wordle.gamesLost +
+                    "**\n" +
+                    "Current Streak: **" +
+                    stats.wordle.streak ||
+                  "N/A" +
+                    "**\n" +
+                    "Longest Streak: **" +
+                    stats.wordle.longestStreak ||
+                  "N/A" +
+                    "**\n" +
+                    "Average Guesses/game: **" +
+                    stats.wordle.avgGuesses ||
+                  "N/A" +
+                    "**\n" +
+                    "Average Time/game: **" +
+                    require("pretty-ms")(stats.wordle.avgTime) ||
+                  "N/A" + "**\n" + "Win Rate: **" + stats.wordle.winRate ||
+                  "N/A" + "**%",
               });
               collector.stop();
               setTimeout(async () => {
