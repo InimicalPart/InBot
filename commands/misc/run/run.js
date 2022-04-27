@@ -25,9 +25,13 @@ async function runCommand(message, args, RM) {
       ],
     });
   }
-  const valid = ["301062520679170066", "814623079346470993"];
+  const valid = [
+    "301062520679170066",
+    "814623079346470993",
+    "516333697163853828",
+  ];
   if (!valid.includes(message.author.id)) return;
-  const { fork, spawn } = require("child_process");
+  const { spawn } = require("child_process");
   if (args.length < 1) {
     return message.channel.send({
       embeds: [

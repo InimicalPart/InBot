@@ -47,12 +47,12 @@ async function runCommand(message, args, RM) {
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
-  const { connect } = require("../../../databasec");
-  await connect();
+  const connect = RM.DBClient;
   await connect.create("currency");
   await connect.create("cooldown");
   await connect.create("inventory");
   await connect.create("timer");
+  await connect.create("player_stats");
   var SqlString = require("sqlstring");
   message.channel
     .send({
@@ -244,7 +244,6 @@ async function runCommand(message, args, RM) {
         }
       }
       m.edit({ embeds: [embed] });
-      connect.end(true);
     })
     .catch(async (err) => {
       console.log(err);
