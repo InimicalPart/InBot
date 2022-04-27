@@ -205,6 +205,14 @@ async function runCommand(message, args, RM) {
           String(playerStats[game].avgGuesses),
           true
         )
+        .addField(
+          "Average Time/game",
+          String(
+            require("pretty-ms")(parseFloat(playerStats[game].avgTime) || 0)
+          ),
+          true
+        )
+
         .addField("Win Rate", String(playerStats[game].winRate + "%"), true);
     }
   }
