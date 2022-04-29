@@ -104,42 +104,41 @@ async function runCommand(message, args, RM) {
   //   console.log(currentWordle.rows[0]);
   let fail = false;
   let startedAt = new Date().getTime();
-  if (practiceMode)
-    if (!practiceMode) {
-      if (currentWordle.rows.length < 1) {
-        message.channel.send(
-          "For some reason. The wordle hasn't been generated. Attemping to force generation."
-        );
-        global.checkWordle = true;
-        let wordleCheckTimer = setInterval(async () => {
-          if (!global.checkWordle) {
-            message.channel.send(
-              "Wordle has been generated. Re-executing command."
-            );
-            currentWordle = await connect.query("SELECT * FROM wordle");
-            if (currentWordle.rows.length < 1) {
-              fail = true;
-              return message.channel.send({
-                content:
-                  "Error. Wordle has not been able to generate. Please try again later.",
-              });
-            }
-            currentWordle = currentWordle.rows[0];
-            clearInterval(wordleCheckTimer);
-            continueExecution();
+  if (!practiceMode) {
+    if (currentWordle.rows.length < 1) {
+      message.channel.send(
+        "For some reason. The wordle hasn't been generated. Attemping to force generation."
+      );
+      global.checkWordle = true;
+      let wordleCheckTimer = setInterval(async () => {
+        if (!global.checkWordle) {
+          message.channel.send(
+            "Wordle has been generated. Re-executing command."
+          );
+          currentWordle = await connect.query("SELECT * FROM wordle");
+          if (currentWordle.rows.length < 1) {
+            fail = true;
+            return message.channel.send({
+              content:
+                "Error. Wordle has not been able to generate. Please try again later.",
+            });
           }
-        }, 10000);
-      } else {
-        currentWordle = currentWordle.rows[0];
-        continueExecution();
-      }
+          currentWordle = currentWordle.rows[0];
+          clearInterval(wordleCheckTimer);
+          continueExecution();
+        }
+      }, 10000);
     } else {
-      currentWordle = {
-        wordle: wordleList[Math.floor(Math.random() * wordleList.length)],
-        lastgenerated: new Date().getTime(),
-      };
+      currentWordle = currentWordle.rows[0];
       continueExecution();
     }
+  } else {
+    currentWordle = {
+      wordle: wordleList[Math.floor(Math.random() * wordleList.length)],
+      lastgenerated: new Date().getTime(),
+    };
+    continueExecution();
+  }
   let emojis = {
     yellow: {
       a: "<:yellow_a:968235318786531348>",
@@ -378,7 +377,7 @@ async function runCommand(message, args, RM) {
           quit: true,
           won: false,
           guesses: guesses,
-          time: finalTime,
+          time: finalPlayedTime,
         });
         let amountGuesses = [];
         let amountTime = [];
@@ -559,7 +558,7 @@ async function runCommand(message, args, RM) {
         /* ------------------------------------------------------------------------ WORDLE MAGIC ------------------------------------------------------------------------ */
 
         if (solvedWordle) {
-          let finalTime = new Date().getTime() - startedAt;
+          let finalPlayedTime = new Date().getTime() - startedAt;
           if (!practiceMode) {
             let stats = await connect.query(
               `SELECT * FROM player_stats WHERE userid = '${message.author.id}'`
@@ -603,7 +602,7 @@ async function runCommand(message, args, RM) {
               quit: false,
               won: true,
               guesses: guesses,
-              time: finalTime,
+              time: finalPlayedTime,
             });
             let amountGuesses = [];
             let amountTime = [];
@@ -686,37 +685,38 @@ async function runCommand(message, args, RM) {
               message.channel.send({
                 content:
                   "**" +
-                    user.username +
-                    "'s Wordle Stats\n**" +
-                    "Games Played: **" +
-                    stats.wordle.gamesPlayed +
-                    "**\n" +
-                    "Games Won: **" +
-                    stats.wordle.gamesWon +
-                    "**\n" +
-                    "Games Lost: **" +
-                    stats.wordle.gamesLost +
-                    "**\n" +
-                    "Current Streak: **" +
-                    stats.wordle.streak ||
-                  "N/A" +
-                    "**\n" +
-                    "Longest Streak: **" +
-                    stats.wordle.longestStreak ||
-                  "N/A" +
-                    "**\n" +
-                    "Average Guesses/game: **" +
-                    stats.wordle.avgGuesses ||
-                  "N/A" +
-                    "**\n" +
-                    "Average Time/game: **" +
-                    require("pretty-ms")(stats.wordle.avgTime) ||
-                  "N/A" + "**\n" + "Win Rate: **" + stats.wordle.winRate ||
-                  "N/A" + "**%",
+                  user.username +
+                  "'s Wordle Stats\n**" +
+                  "Games Played: **" +
+                  (String(stats.wordle.gamesPlayed) || "N/A") +
+                  "**\n" +
+                  "Games Won: **" +
+                  (String(stats.wordle.gamesWon) || "N/A") +
+                  "**\n" +
+                  "Games Lost: **" +
+                  (String(stats.wordle.gamesLost) || "N/A") +
+                  "**\n" +
+                  "Current Streak: **" +
+                  (String(stats.wordle.streak) || "N/A") +
+                  "**\n" +
+                  "Longest Streak: **" +
+                  (String(stats.wordle.longestStreak) || "N/A") +
+                  "**\n" +
+                  "Average Guesses/game: **" +
+                  (String(stats.wordle.avgGuesses) || "N/A") +
+                  "**\n" +
+                  "Average Time/game: **" +
+                  (require("pretty-ms")(
+                    parseFloat(stats.wordle.avgTime) || 0
+                  ) || "N/A") +
+                  "**\n" +
+                  "Win Rate: **" +
+                  (String(stats.wordle.winRate) || "N/A") +
+                  "**%",
               });
               collector.stop();
               setTimeout(async () => {
-                message.channel.bulkDelete(deleteMsgs);
+                message.channel.bulkDelete([...new Set(deleteMsgs)]);
               }, 3000);
 
               return;
@@ -732,32 +732,34 @@ async function runCommand(message, args, RM) {
                   user.username +
                   "'s Wordle Stats\n**" +
                   "Games Played: **" +
-                  stats.wordle.gamesPlayed +
+                  (String(stats.wordle.gamesPlayed) || "N/A") +
                   "**\n" +
                   "Games Won: **" +
-                  stats.wordle.gamesWon +
+                  (String(stats.wordle.gamesWon) || "N/A") +
                   "**\n" +
                   "Games Lost: **" +
-                  stats.wordle.gamesLost +
+                  (String(stats.wordle.gamesLost) || "N/A") +
                   "**\n" +
                   "Current Streak: **" +
-                  stats.wordle.streak +
+                  (String(stats.wordle.streak) || "N/A") +
                   "**\n" +
                   "Longest Streak: **" +
-                  stats.wordle.longestStreak +
+                  (String(stats.wordle.longestStreak) || "N/A") +
                   "**\n" +
                   "Average Guesses/game: **" +
-                  stats.wordle.avgGuesses +
+                  (String(stats.wordle.avgGuesses) || "N/A") +
                   "**\n" +
                   "Average Time/game: **" +
-                  require("pretty-ms")(stats.wordle.avgTime) +
+                  (require("pretty-ms")(
+                    parseFloat(stats.wordle.avgTime) || 0
+                  ) || "N/A") +
                   "**\n" +
                   "Win Rate: **" +
-                  stats.wordle.winRate +
+                  (String(stats.wordle.winRate) || "N/A") +
                   "**%",
               });
               setTimeout(async () => {
-                message.channel.bulkDelete(deleteMsgs);
+                message.channel.bulkDelete([...new Set(deleteMsgs)]);
               }, 3000);
               collector.stop();
               return;
@@ -803,7 +805,7 @@ async function runCommand(message, args, RM) {
               quit: false,
               won: true,
               guesses: guesses,
-              time: finalTime,
+              time: finalPlayedTime,
             });
             let amountGuesses = [];
             let amountTime = [];
@@ -851,7 +853,7 @@ async function runCommand(message, args, RM) {
           }
         }
         if (tries < 1 && !solvedWordle) {
-          let finalTime = new Date().getTime() - startedAt;
+          let finalPlayedTime = new Date().getTime() - startedAt;
 
           if (!practiceMode) {
             message.channel.send({
@@ -886,7 +888,7 @@ async function runCommand(message, args, RM) {
               quit: false,
               won: false,
               guesses: guesses,
-              time: finalTime,
+              time: finalPlayedTime,
             });
             let amountGuesses = [];
             let amountTime = [];
@@ -949,32 +951,33 @@ async function runCommand(message, args, RM) {
                 user.username +
                 "'s Wordle Stats\n**" +
                 "Games Played: **" +
-                stats.wordle.gamesPlayed +
+                (String(stats.wordle.gamesPlayed) || "N/A") +
                 "**\n" +
                 "Games Won: **" +
-                stats.wordle.gamesWon +
+                (String(stats.wordle.gamesWon) || "N/A") +
                 "**\n" +
                 "Games Lost: **" +
-                stats.wordle.gamesLost +
+                (String(stats.wordle.gamesLost) || "N/A") +
                 "**\n" +
                 "Current Streak: **" +
-                stats.wordle.streak +
+                (String(stats.wordle.streak) || "N/A") +
                 "**\n" +
                 "Longest Streak: **" +
-                stats.wordle.longestStreak +
+                (String(stats.wordle.longestStreak) || "N/A") +
                 "**\n" +
                 "Average Guesses/game: **" +
-                stats.wordle.avgGuesses +
+                (String(stats.wordle.avgGuesses) || "N/A") +
                 "**\n" +
                 "Average Time/game: **" +
-                require("pretty-ms")(stats.wordle.avgTime) +
+                (require("pretty-ms")(parseFloat(stats.wordle.avgTime) || 0) ||
+                  "N/A") +
                 "**\n" +
                 "Win Rate: **" +
-                stats.wordle.winRate +
+                (String(stats.wordle.winRate) || "N/A") +
                 "**%",
             });
             setTimeout(async () => {
-              message.channel.bulkDelete(deleteMsgs);
+              message.channel.bulkDelete([...new Set(deleteMsgs)]);
             }, 3000);
             return collector.stop();
           } else {
@@ -999,7 +1002,7 @@ async function runCommand(message, args, RM) {
               quit: false,
               won: false,
               guesses: guesses,
-              time: finalTime,
+              time: finalPlayedTime,
             });
             let amountGuesses = [];
             let amountTime = [];
