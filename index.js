@@ -1,5 +1,5 @@
 const app = {
-  version: "3.2.6",
+  version: "3.2.7",
 };
 //set global variables
 //global.sQueueLink = []

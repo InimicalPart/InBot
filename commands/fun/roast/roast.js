@@ -28,7 +28,6 @@ async function runCommand(message, args, RM) {
       ],
     });
   }
-  const time = new Date();
   var i;
   var count = 1;
   const cantRoastSelfMsgs = [
@@ -40,7 +39,6 @@ async function runCommand(message, args, RM) {
     "You are not a person to be roasted.",
     "These roasts are too strong, you cannot roast yourself or you will suffer some inrepairable emotional damage.",
   ];
-  var linesInRoasts;
   if (!args[0]) {
     const a = new RM.Discord.MessageEmbed()
       .setAuthor({ name: message.guild.name, iconURL: message.guild.iconURL() })
