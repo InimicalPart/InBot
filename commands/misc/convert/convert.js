@@ -30,11 +30,19 @@ async function runCommand(message, args, RM) {
   /* prettier-ignore */
   let currencies = ["AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BIF","BMD","BND","BOB","BRL","BSD","BTC","BTN","BWP","BYN","BZD","CAD","CDF","CHF","CLF","CLP","CNH","CNY","COP","CRC","CUC","CUP","CVE","CZK","DJF","DKK","DOP","DZD","EGP","ERN","ETB","EUR","FJD","FKP","GBP","GEL","GGP","GHS","GIP","GMD","GNF","GTQ","GYD","HKD","HNL","HRK","HTG","HUF","IDR","ILS","IMP","INR","IQD","IRR","ISK","JEP","JMD","JOD","JPY","KES","KGS","KHR","KMF","KPW","KRW","KWD","KYD","KZT","LAK","LBP","LKR","LRD","LSL","LYD","MAD","MDL","MGA","MKD","MMK","MNT","MOP","MRO","MRU","MUR","MVR","MWK","MXN","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","RWF","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SLL","SOS","SRD","SSP","STD","STN","SVC","SYP","SZL","THB","TJS","TMT","TND","TOP","TRY","TTD","TWD","TZS","UAH","UGX","USD","UYU","UZS","VES","VND","VUV","WST","XAF","XAG","XAU","XCD","XDR","XOF","XPD","XPF","XPT","YER","ZAR","ZMW","ZWL"]
   let units = [];
+  let organizedUnits = {};
   let aUnits = convert().list();
   for (let unit of aUnits) {
-    units.push(unit.singular.toUpperCase().replace(" ", "_"));
-    units.push(unit.plural.toUpperCase().replace(" ", "_"));
-    units.push(unit.abbr.toUpperCase().replace(" ", "_"));
+    units.push(unit.singular.toUpperCase().replace(/ /g, "_"));
+    units.push(unit.plural.toUpperCase().replace(/ /g, "_"));
+    units.push(unit.abbr.toUpperCase().replace(/ /g, "_"));
+    organizedUnits[unit.abbr.toUpperCase().replace(/ /g, "_")] = [];
+    organizedUnits[unit.abbr.toUpperCase().replace(/ /g, "_")].push(
+      unit.singular.toUpperCase().replace(/ /g, "_")
+    );
+    organizedUnits[unit.abbr.toUpperCase().replace(/ /g, "_")].push(
+      unit.plural.toUpperCase().replace(/ /g, "_")
+    );
   }
   let timeAbbreviations = [];
   let time = require("fs").readFileSync("./resources/timezones.json", "utf8");
@@ -56,6 +64,12 @@ async function runCommand(message, args, RM) {
     setting = "currency";
   } else if (units.includes(args[1]?.toUpperCase())) {
     setting = "unit";
+  } else if (args[0]?.toLowerCase() == "units") {
+    let attachment = new RM.Discord.MessageAttachment(
+      Buffer.from(JSON.stringify(organizedUnits, null, 2), "utf-8"),
+      "list.json"
+    );
+    return message.channel.send({ files: [attachment] });
   } else {
     return message.channel.send({
       embeds: [
@@ -818,8 +832,15 @@ async function runCommand(message, args, RM) {
     if (to === "to" || to === "->") {
       to = args[3];
     }
-
-    if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) === 0) {
+    function fixAbbrCase(abbr) {
+      for (let object of convert().list()) {
+        if (object.abbr.toLowerCase() === abbr.toLowerCase()) {
+          return object.abbr;
+        }
+      }
+      return false;
+    }
+    if ((!amount || isNaN(parseFloat(amount))) && parseFloat(amount) !== 0) {
       return message.channel.send({
         embeds: [
           new RM.Discord.MessageEmbed()
@@ -837,26 +858,34 @@ async function runCommand(message, args, RM) {
       });
     }
     if (from && to) {
-      let allUnits = convert().list();
-      for (let unit of allUnits) {
-        unitname = unit.singular;
-        unitabbr = unit.abbr;
-        unitplural = unit.plural;
-        if (
-          unitabbr.toLowerCase() === from.toLowerCase() ||
-          unitname.toUpperCase() === from.toUpperCase() ||
-          unitplural.toUpperCase() === from.toUpperCase()
-        ) {
-          from = unit.abbr;
+      for (let index of Object.keys(organizedUnits)) {
+        if (organizedUnits[index].includes(from.toUpperCase())) {
+          from = index.toLowerCase();
         }
-        if (
-          unitabbr.toLowerCase() === to.toLowerCase() ||
-          unitname.toUpperCase() === to.toUpperCase() ||
-          unitplural.toUpperCase() === to.toUpperCase()
-        ) {
-          to = unit.abbr;
+        if (organizedUnits[index].includes(to.toUpperCase())) {
+          to = index.toLowerCase();
         }
       }
+      //   let allUnits = convert().list();
+      //   for (let unit of allUnits) {
+      //     unitname = unit.singular;
+      //     unitabbr = unit.abbr;
+      //     unitplural = unit.plural;
+      //     if (
+      //       unitabbr.toLowerCase() === from.toLowerCase() ||
+      //       unitname.toUpperCase() === from.toUpperCase() ||
+      //       unitplural.toUpperCase() === from.toUpperCase()
+      //     ) {
+      //       from = unit.abbr;
+      //     }
+      //     if (
+      //       unitabbr.toLowerCase() === to.toLowerCase() ||
+      //       unitname.toUpperCase() === to.toUpperCase() ||
+      //       unitplural.toUpperCase() === to.toUpperCase()
+      //     ) {
+      //       to = unit.abbr;
+      //     }
+      //   }
     }
     if (!from || !units.includes(from.toUpperCase())) {
       return message.channel.send({
@@ -893,32 +922,65 @@ async function runCommand(message, args, RM) {
       });
     }
     // use convert function to convert the amount from the from unit to the to unit
-    let result;
-    try {
-      result = convert(amount).from(from).to(to);
-    } catch (e) {
-      return message.channel.send({
-        embeds: [
-          new RM.Discord.MessageEmbed()
-            .setColor("RED")
-            .setAuthor({
-              name: message.author.tag,
-              iconURL: message.author.avatarURL(),
-            })
-            .setDescription(
-              "Error: **" +
-                from.toLowerCase() +
-                "** to **" +
-                to.toLowerCase() +
-                "** is not a valid conversion. (ERR_CONV_INV)"
-            )
-            .setThumbnail(message.guild.iconURL())
-            .setTitle("Invalid Conversion"),
-        ],
-      });
-    }
-    // send the message to the channel
+    numberWithCommas = function (x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+    function getFixedValue(amount, from, to) {
+      let _tempResult;
+      try {
+        _tempResult = String(
+          parseFloat(
+            convert(amount).from(fixAbbrCase(from)).to(fixAbbrCase(to))
+          ).toFixed(5)
+        );
+      } catch (e) {
+        console.log(e);
+        return message.channel.send({
+          embeds: [
+            new RM.Discord.MessageEmbed()
+              .setColor("RED")
+              .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL(),
+              })
+              .setDescription(
+                "Error: **" +
+                  from.toLowerCase() +
+                  "** to **" +
+                  to.toLowerCase() +
+                  "** is not a valid conversion. (ERR_CONV_INV)"
+              )
+              .setThumbnail(message.guild.iconURL())
+              .setTitle("Invalid Conversion"),
+          ],
+        });
+      }
+      //   console.log(String(_tempResult));
+      //   if (String(_tempResult).includes(".")) {
+      //     let _temp2 = String(_tempResult).split(".");
+      //     _temp2[0] = numberWithCommas(_temp2[0]);
+      //     _tempResult = _temp2.join(".");
+      //   } else {
+      //     _tempResult = numberWithCommas(_tempResult);
+      //   }
 
+      if (_tempResult.match(/^((?!\.).)*$/)) {
+        // console.log("match 1st");
+      } else if (_tempResult.match(/\.0([-.]?0+)*$/g)) {
+        // console.log("match 2nd");
+        _tempResult = _tempResult.replace(/\.0([-.]?0+)*$/g, "");
+      } else if (_tempResult.match(/0([-.]?0+)*$/g)) {
+        // console.log("match 3rd");
+        _tempResult = _tempResult.replace(/0([-.]?0+)*$/g, "");
+      } else {
+        // console.log("no match");
+      }
+      return _tempResult;
+    }
+
+    let result = getFixedValue(amount, from, to);
+    // send the message to the channel
+    console.log(result);
     message.channel.send({
       embeds: [
         new RM.Discord.MessageEmbed()
@@ -932,13 +994,13 @@ async function runCommand(message, args, RM) {
             "Conversion: **" +
               amount +
               " " +
-              from +
+              fixAbbrCase(from) +
               "** to **" +
-              to +
+              fixAbbrCase(to) +
               "** is **" +
-              result.toFixed(5) +
+              +result +
               " " +
-              to +
+              fixAbbrCase(to) +
               "**"
           ) /*
           .addField(
