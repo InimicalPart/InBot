@@ -349,6 +349,7 @@ async function runCommand(message, args, RM) {
         practiceMode &&
         !ignoreInput
       ) {
+          let finalPlayedTime = new Date().getTime() - startedAt;
         message.channel.send(
           "Wordle game ended. The word was: " + currentWordle.wordle
         );
@@ -859,7 +860,7 @@ async function runCommand(message, args, RM) {
             message.channel.send({
               content:
                 "Unfortunate! You're out of tries! The word has been DM'd to you to not ruin others fun. You played for: **" +
-                require("pretty-ms")(finalTime) +
+                require("pretty-ms")(finalPlayedTime) +
                 "**",
             });
             message.author.send({
