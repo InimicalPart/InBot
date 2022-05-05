@@ -18,6 +18,12 @@ async function runEvent(RM) {
     "SELECT * FROM bot_settings WHERE botid=" + RM.client.user.id
   );
   global.bannedUsers = settings.rows[0]?.settings?.banned_users || [];
+setInterval(()=>{
+    const settings = await connect.query(
+        "SELECT * FROM bot_settings WHERE botid=" + RM.client.user.id
+      );
+      global.bannedUsers = settings.rows[0]?.settings?.banned_users || [];
+},30000)
   console.log(
     "Banned users aquired, " +
       global.bannedUsers.length +
