@@ -153,6 +153,7 @@ const requiredModules = {
   cmdSlots: economy.slots(),
   cmdUrban: misc.urban(),
   cmdBotban: moderation.botban(),
+  cmdUno: fun.uno(),
   Discord: Discord,
   process_env: process.env,
   pretty_ms: require("pretty-ms"),

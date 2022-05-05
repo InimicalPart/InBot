@@ -30,7 +30,12 @@ function activity() {
 	return require("./activity/activity.js")
 }
 
+function uno() {
+	return require("./uno/uno.js")
+}
+
 module.exports = {
+	uno,
 	activity,
 	wordle,
   bombparty,
