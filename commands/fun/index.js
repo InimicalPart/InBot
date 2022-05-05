@@ -23,16 +23,20 @@ function bombparty() {
 }
 
 function wordle() {
-	return require("./wordle/wordle.js")
+  return require("./wordle/wordle.js");
 }
 
 function activity() {
-	return require("./activity/activity.js")
+  return require("./activity/activity.js");
 }
 
+function uno() {
+  return require("./uno/uno.js");
+}
 module.exports = {
-	activity,
-	wordle,
+  uno,
+  activity,
+  wordle,
   bombparty,
   minesweeper,
   sudoku,
