@@ -69,3 +69,4 @@ exports.cmdWithdraw = true;
 exports.cmdWordle = true;
 exports.cmdWork = true;
 exports.showUsers = true;
+exports.cmdBotban = true

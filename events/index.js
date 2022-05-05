@@ -7,7 +7,11 @@ function timer() {
 function wordle() {
   return require("./wordle/index.js");
 }
+function getBanned() {
+  return require("./getBanned/index.js");
+}
 module.exports = {
+  getBanned,
   wordle,
   onAIMsg,
   timer,

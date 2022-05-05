@@ -18,6 +18,7 @@ global.userAmount = null;
 global.updatedTimers = false;
 global.dirName = __dirname;
 global.webhookify = [];
+global.bannedUsers = [];
 global.checkWordle = false;
 global.wordleList = [];
 global.SlashCommandBuilder = require("@discordjs/builders").SlashCommandBuilder;
@@ -137,12 +138,13 @@ const requiredModules = {
   cmdMinesweeper: fun.minesweeper(),
   //   cmdSpotify: music.spotify(),
   cmdTimer: misc.timer(),
-  cmdWordle: fun.wordle(),
+  cmd: fun.wordle(),
   cmdCodeify: misc.codeify(),
   cmdActivity: fun.activity(),
   eventonAIMsg: event.onAIMsg(),
   eventTimer: event.timer(),
   eventWordle: event.wordle(),
+  eventGetbanned: event.getBanned(),
   DBClient: connect,
   cmdTesting: moderation.testing(),
   //   cmdV13: misc.v13(),
@@ -150,6 +152,7 @@ const requiredModules = {
   //   cmdTodo: misc.todo(),
   cmdSlots: economy.slots(),
   cmdUrban: misc.urban(),
+  cmdBotban: moderation.botban(),
   Discord: Discord,
   process_env: process.env,
   pretty_ms: require("pretty-ms"),
@@ -198,6 +201,13 @@ for (let i in requiredModules) {
 }
 client.on("interactionCreate", async (interaction) => {
   if (interaction.isCommand()) {
+    if (global.bannedUsers.includes(interaction.member.user.id)) {
+      return interaction.reply({
+        content:
+          "You are banned from using commands. If you believe this is an error, please contact a moderator.",
+        ephemeral: true,
+      });
+    }
     interaction.reply({ content: "me has execution action" });
     for (let i in slashCommandAssigns) {
       if (slashCommandAssigns[i].commandName === interaction.commandName) {
@@ -226,6 +236,9 @@ function convertToMSG(interaction) {
   return newInteraction;
 }
 client.on("messageCreate", async (message) => {
+  if (global.bannedUsers.includes(message.author.id)) {
+    return;
+  }
   for (let i in requiredModules) {
     if (i.startsWith("event")) {
       if (
