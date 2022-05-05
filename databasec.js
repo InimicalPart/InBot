@@ -91,6 +91,16 @@ async function connect() {
                             );`);
       return res;
     }
+    if (table_name == "bot_settings") {
+      const res = await client.query(`CREATE TABLE IF NOT EXISTS ${table_name}(
+                            id SERIAL,
+                            botid bigint not null,
+                            settings json not null default '${JSON.stringify(
+                              {}
+                            )}'
+                                    );`);
+      return res;
+    }
   }
 
   async function add(
@@ -127,6 +137,10 @@ async function connect() {
       const res = await client.query(
         `INSERT INTO ${table_name}(userid, stats) VALUES(${userid}, '{}');`
       );
+    } else if (table_name == "bot_settings") {
+      const res = await client.query(
+        `INSERT INTO ${table_name}(botid, settings) VALUES(${userid}, '{}');`
+      );
     }
   }
 
@@ -135,7 +149,7 @@ async function connect() {
     /** @type number */ userid
   ) {
     let res;
-    if (table_name !== "settings")
+    if (table_name !== "bot_settings")
       res = await client.query(
         `SELECT * FROM ${table_name} WHERE userid=${userid}`
       );
@@ -387,6 +401,7 @@ async function connect() {
   connect.update = update;
   connect.updateInv = updateInv;
   connect.updateCooldown = updateCooldown;
+  connect.updateSettings = updateSettings;
   connect.remove = remove;
   connect.clear = clear;
   connect.query = query;

@@ -21,7 +21,12 @@ function testing() {
   return require("./testing/testing.js");
 }
 
+function botban() {
+	return require("./botban/botban.js")
+}
+
 module.exports = {
+	botban,
   testing,
   scan,
   ban,
