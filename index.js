@@ -141,6 +141,7 @@ const requiredModules = {
   cmd: fun.wordle(),
   cmdCodeify: misc.codeify(),
   cmdActivity: fun.activity(),
+  cmdUno: fun.uno(),
   eventonAIMsg: event.onAIMsg(),
   eventTimer: event.timer(),
   eventWordle: event.wordle(),
