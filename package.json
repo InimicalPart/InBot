@@ -30,6 +30,7 @@
     "spotify-web-api-node": "^5.0.2",
     "spotify-web-playback": "^1.4.0",
     "sqlstring": "^2.3.2",
+    "uno-engine-plus": "^0.0.1",
     "ytdl-core": "^4.9.0"
   },
   "name": "iii.exe",
