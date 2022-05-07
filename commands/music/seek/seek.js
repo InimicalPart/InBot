@@ -106,6 +106,7 @@ function msToTime(s) {
 
   return pad(hrs) + ":" + pad(mins) + ":" + pad(secs);
 }
+
 function commandTriggers() {
   return commandInfo.possibleTriggers;
 }

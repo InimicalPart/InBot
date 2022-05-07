@@ -34,7 +34,7 @@ async function runCommand(message, args, RM) {
   //   }
   var SpotifyWebApi = require("spotify-web-api-node");
   //   var ESA = require("enhanced-spotify-api");
-  //   let Spotify = require("../../../resources/spoti.js");
+  //   let Spotify = require("../../../assets/spoti.js");
   let Spotify = require("spotify-web-playback");
   var spotifyApi = new SpotifyWebApi({
     clientId: process.env.SpotifyCreds.split(":")[0],
@@ -142,6 +142,7 @@ async function runCommand(message, args, RM) {
     });
   }
 }
+
 function commandTriggers() {
   return commandInfo.possibleTriggers;
 }

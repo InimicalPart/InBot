@@ -323,6 +323,7 @@ async function runCommand(message, args, RM) {
       message.channel.send({ content: "Error: " + err });
     });
 }
+
 function commandTriggers() {
   return commandInfo.possibleTriggers;
 }

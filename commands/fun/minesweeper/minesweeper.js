@@ -969,6 +969,7 @@ function surroundings(array, y, x) {
     upLeft: { type: getCell(array, x - 1, y + 1), x: x - 1, y: y + 1 },
   };
 }
+
 function commandTriggers() {
   return commandInfo.possibleTriggers;
 }

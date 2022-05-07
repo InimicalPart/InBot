@@ -45,7 +45,7 @@ async function runCommand(message, args, RM) {
     );
   }
   let timeAbbreviations = [];
-  let time = require("fs").readFileSync("./resources/timezones.json", "utf8");
+  let time = require("fs").readFileSync("./assets/timezones.json", "utf8");
   let setting;
   time = JSON.parse(time);
   for (let t of time) {
