@@ -245,6 +245,7 @@ async function runCommand(message, args, RM) {
       });
     });
 }
+
 function commandTriggers() {
   return commandInfo.possibleTriggers;
 }

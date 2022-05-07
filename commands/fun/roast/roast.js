@@ -98,14 +98,14 @@ async function runCommand(message, args, RM) {
     try {
       // read contents of the file
       require("fs")
-        .createReadStream("./resources/roasts.txt")
+        .createReadStream("./assets/roasts.txt")
         .on("data", function (chunk) {
           for (i = 0; i < chunk.length; ++i) if (chunk[i] == 10) count++;
         })
         .on("end", async function () {
           const wantedLine = between(1, count);
           const data = require("fs").readFileSync(
-            "./resources/roasts.txt",
+            "./assets/roasts.txt",
             "UTF-8"
           );
 

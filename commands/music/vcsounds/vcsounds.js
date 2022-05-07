@@ -41,7 +41,7 @@ async function runCommand(message, args, RM) {
   const path = RM.path;
   const db = RM.db;
   const ytdl = RM.ytdl;
-  const musictriviajson = require("../../../resources/musictrivia.json");
+  const musictriviajson = require("../../../assets/musictrivia.json");
   const prefix = RM.process_env.prefix;
 
   const noperm = new Discord.MessageEmbed()

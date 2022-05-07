@@ -586,6 +586,7 @@ function isSodokuFinished(board) {
     return false;
   }
 }
+
 function commandTriggers() {
   return commandInfo.possibleTriggers;
 }

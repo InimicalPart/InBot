@@ -349,7 +349,7 @@ async function runCommand(message, args, RM) {
         practiceMode &&
         !ignoreInput
       ) {
-          let finalPlayedTime = new Date().getTime() - startedAt;
+        let finalPlayedTime = new Date().getTime() - startedAt;
         message.channel.send(
           "Wordle game ended. The word was: " + currentWordle.wordle
         );

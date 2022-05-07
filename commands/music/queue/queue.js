@@ -153,6 +153,7 @@ function generateQueueEmbed(message, queue, RM) {
     return embeds;
   }
 }
+
 function commandTriggers() {
   return commandInfo.possibleTriggers;
 }

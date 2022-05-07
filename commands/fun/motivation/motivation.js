@@ -27,7 +27,7 @@ async function runCommand(message, args, RM) {
 
   const Discord = RM.Discord;
   const client = RM.client;
-  const jsonQuotes = require("../../../resources/motivational.json");
+  const jsonQuotes = require("../../../assets/motivational.json");
 
   let member;
   try {

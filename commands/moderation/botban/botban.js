@@ -1,5 +1,3 @@
-const { NoticeMessage } = require("pg-protocol/dist/messages");
-
 const commandInfo = {
   primaryName: "botban", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["botban", "alias2", "alias3"], // These are all commands that will trigger this command.
@@ -344,6 +342,7 @@ async function runCommand(message, args, RM) {
     }
   }
 }
+
 function commandTriggers() {
   return commandInfo.possibleTriggers;
 }
