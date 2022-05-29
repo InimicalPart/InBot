@@ -334,7 +334,7 @@ try {
     const createdAt = list.createdAt;
     const today = new Date();
     var msSinceCreation = today.getTime() - createdAt.getTime();
-    var daysSinceCreation = Math.round(DIT / (1000 * 3600 * 24));
+    var daysSinceCreation = Math.round(msSinceCreation / (1000 * 3600 * 24));
 
     console.log(
       chalk.blueBright("------------------------\n") +
