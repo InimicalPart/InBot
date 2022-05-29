@@ -29,7 +29,7 @@ async function runCommand(message, args, RM) {
     .send({
       embeds: [
         new RM.Discord.MessageEmbed().setDescription(
-          "<a:loading:869354366803509299> Searching for Lyrics..."
+          "<a:loading:980471497057501205> Searching for Lyrics..."
         ),
       ],
     })

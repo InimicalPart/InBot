@@ -245,7 +245,7 @@ try {
     }
   });
   async function runCMD(k, message) {
-    if (Discord.version > "13.6.0")
+    if (Discord.version > "13.7.0")
       message.channel.send({
         content:
           "**NOTE:** The discord API has updated. Some commands may not work properly!",
