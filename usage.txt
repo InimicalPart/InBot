@@ -1,6 +1,6 @@
 You need node version 16 or above and npm version 6.14.13
 
-To change node version, install nvm: https://github.com/coreybutler/nvm-windows/releases/
+To change node version, install nvm by following steps on their GitHub page: https://github.com/coreybutler/nvm-windows/releases/
 then when done installing, open cmd and type:
 - nvm install 16.6.2
 - nvm use 16.6.2

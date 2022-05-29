@@ -18,10 +18,6 @@ function minesweeper() {
   return require("./minesweeper/minesweeper.js");
 }
 
-function bombparty() {
-  return require("./bombparty/bombparty.js");
-}
-
 function wordle() {
   return require("./wordle/wordle.js");
 }
@@ -37,7 +33,6 @@ module.exports = {
   uno,
   activity,
   wordle,
-  bombparty,
   minesweeper,
   sudoku,
   chess,
