@@ -13,16 +13,28 @@ const commandInfo = {
         .setName("activity")
         .setDescription("The activity to start.")
         .setRequired(true)
-        .addChoice("Poker Night", "poker_night")
-        .addChoice("Betrayal", "betrayal")
-        .addChoice("YT Together", "youtube_together")
-        .addChoice("Watch Together", "watch_together")
-        .addChoice("Fishington", "fishington")
-        .addChoice("Chess in the Park", "chess_in_the_park")
-        .addChoice("Chess in the Park Development", "chess_in_the_park_dev")
-        .addChoice("Doodle Crew", "doodlecrew")
-        .addChoice("Word Snacks", "wordsnacks")
-        .addChoice("Letter Tile", "lettertile")
+        .addChoices(
+          { name: "Awkword", value: "awkword" },
+          { name: "Betrayal", value: "betrayal_io" },
+          { name: "Blazing 8s", value: "blazing_eights" },
+          {
+            name: "Checkers in the Park",
+            value: "checkers_in_the_park",
+          },
+          { name: "Chess in the Park", value: "chess_in_the_park" },
+          { name: "Doodle Crew", value: "doodlecrew" },
+          { name: "Fishington.io", value: "fishington_io" },
+          { name: "Land.io", value: "land_io" },
+          { name: "Letter League", value: "letterleague" },
+          { name: "Poker Night", value: "poker_night" },
+          { name: "Putt Party", value: "putt_party" },
+          { name: "Sketch Heads", value: "sketch_heads" },
+          { name: "Sketchy Artist", value: "sketchy_artist" },
+          { name: "SpellCast", value: "spellcast" },
+          { name: "Watch Together", value: "watch_together" },
+          { name: "Word Snacks", value: "wordsnacks" },
+          { name: "YouTube Together", value: "youtube_together" }
+        )
     )
     .addChannelOption((option) =>
       option
