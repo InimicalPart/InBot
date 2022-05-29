@@ -30,7 +30,7 @@ async function runCommand(message, args, RM) {
     .send({
       embeds: [
         new RM.Discord.MessageEmbed().setDescription(
-          "<a:loading:869354366803509299> *Working on it...*"
+          "<a:loading:980471497057501205> *Working on it...*"
         ),
       ],
     })
