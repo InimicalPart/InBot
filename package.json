@@ -8,7 +8,7 @@
     "discord-api-types": "^0.32.0",
     "discord.js": "latest",
     "dotenv": "^10.0.0",
-    "fen-to-image": "github:InimicalPart/TheIIIProject#fen2img",
+    "fen-to-image": "github:InimicalPart/InBot#fen2img",
     "genius-lyrics": "^4.2.9",
     "glob": "^7.2.0",
     "heroku-client": "^3.1.0",
@@ -25,30 +25,27 @@
     "pg": "^8.6.0",
     "pretty-ms": "^7.0.1",
     "request": "^2.88.2",
-    "snyk": "^1.672.0",
     "sqlstring": "^2.3.2",
     "uno-engine-updated": "^0.0.3",
     "ytdl-core": "^4.9.0"
   },
   "name": "iii.exe",
-  "description": "<h1 align=\"center\">The III Project</h1>",
+  "description": "InBot is a bot that provides moderation, fun, economy and much more!",
   "version": "12.3.1",
   "main": "index.js",
   "engines": {
     "node": "16.6.0",
     "npm": "6.14.13"
   },
-  "scripts": {
-    "test": "snyk test"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/InimicalPart/TheIIIProject.git"
+    "url": "git+https://github.com/InimicalPart/InBot.git"
   },
-  "author": "Ini & Ray",
+  "author": "Inimi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/InimicalPart/TheIIIProject/issues"
+    "url": "https://github.com/InimicalPart/InBot/issues"
   },
-  "homepage": "https://github.com/InimicalPart/TheIIIProject#readme"
+  "homepage": "https://github.com/InimicalPart/InBot#readme"
 }

@@ -123,7 +123,6 @@ try {
     math: require("mathjs"),
     path: require("path"),
     pretty_ms: require("pretty-ms"),
-    ytdl: require("ytdl-core"),
     request: require("request"),
     CU: require("convert-units"),
     chalk: require("chalk"),
