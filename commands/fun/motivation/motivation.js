@@ -26,7 +26,6 @@ async function runCommand(message, args, RM) {
   }
 
   const Discord = RM.Discord;
-  const client = RM.client;
   const jsonQuotes = require("../../../assets/motivational.json");
 
   let member;
@@ -53,7 +52,7 @@ async function runCommand(message, args, RM) {
   if (!args[0]) {
     const quoteEmbed = new Discord.MessageEmbed()
       .setAuthor({ name: message.guild.name, iconURL: message.guild.iconURL() })
-      .setTitle(randomQuote.author)
+      .setTitle(randomQuote.author || "N/A")
       .setDescription(randomQuote.text)
       .setColor("GREEN")
       .setFooter({
@@ -66,7 +65,7 @@ async function runCommand(message, args, RM) {
     const embed = new Discord.MessageEmbed()
       .setAuthor({ name: message.guild.name, iconURL: message.guild.iconURL() })
       .setColor("GREEN")
-      .setTitle(`${randomQuote.author} -`)
+      .setTitle(`${randomQuote.author || "N/A"} -`)
       .setDescription(
         `**${randomQuote.text}** \n\nBy ${message.member.displayName} to ${member.displayName}`
       )

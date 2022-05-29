@@ -25,7 +25,7 @@ async function runCommand(message, args, RM) {
     });
   }
   const { MessageEmbed } = RM.Discord;
-  const db = RM.db;
+  const db = RM.db; // TODO: Make it not use quick.db
   try {
     if (
       !message.member.permissions.has(RM.Discord.Permissions.FLAGS.BAN_MEMBERS)
@@ -188,36 +188,4 @@ module.exports = {
   commandCategory,
   getSlashCommand,
   getSlashCommandJSON,
-}; /* */ /* */ /* */ /* */ /* */ /* */ /* */
-
-/* */
-/* */
-/* */
-/* */
-/* */
-/*
-------------------[Instruction]------------------
-
-1. Make a directory in commands/ with your command name
-2. Inside that directory, make a "<command name>.js" file
-3. Copy the contents of TEMPLATE.js and paste it in the <command name>.js file and modify it to your needs.
-4. In index.js add to the top:
-"const cmd<cmdNameHere> = require('./commands/<command name>/<command name>.js');" at the top.
-
--------------------------------------------------
-
-To get all possible triggers, from index.js call
-"cmd<cmdname>.commandTriggers()"
-
-To call the command, from index.js call
-"cmd<cmdname>.runCommand(message, arguments, requiredModules);"
-
-To check if possible triggers has the command call
-"cmd<cmdname>.commandTriggers().includes(command)"
-
-------------------[Instruction]------------------
-*/
-/* */
-/* */
-/* */
-/* */
+};
