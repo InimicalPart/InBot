@@ -9,7 +9,7 @@ const commandInfo = {
 };
 
 async function runCommand(message, args, RM) {
-  if (!require("../../../config.js").cmdUnban) {
+  if (!require(RM.path.resolve(global.dirName, "config.js")).cmdUnban) {
     return message.channel.send({
       embeds: [
         new RM.Discord.MessageEmbed()

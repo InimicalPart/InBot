@@ -9,7 +9,7 @@ const commandInfo = {
 };
 
 async function runCommand(message, args, RM) {
-  if (!require("../../../config.js").cmdStats) {
+  if (!require(RM.path.resolve(global.dirName, "config.js")).cmdStats) {
     return message.channel.send({
       embeds: [
         new RM.Discord.MessageEmbed()

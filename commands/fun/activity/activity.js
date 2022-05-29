@@ -47,7 +47,7 @@ const commandInfo = {
 
 async function runCommand(message, args, RM) {
   //Check if command is disabled
-  if (!require("../../../config.js").cmdActivity) {
+  if (!require(RM.path.resolve(global.dirName, "config.js")).cmdActivity) {
     return message.channel.send({
       embeds: [
         new RM.Discord.MessageEmbed()

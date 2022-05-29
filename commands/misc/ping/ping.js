@@ -8,7 +8,7 @@ const commandInfo = {
   slashCommand: null,
 };
 async function runCommand(message, args, RM) {
-  if (!require("../../../config.js").cmdTest) {
+  if (!require(RM.path.resolve(global.dirName, "config.js")).cmdPing) {
     return message.channel.send({
       embeds: [
         new RM.Discord.MessageEmbed()
