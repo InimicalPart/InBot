@@ -104,10 +104,6 @@ async function runCommand(message, args, RM) {
       })
       .addField("🎉Fun", "Here can you find some commands that are fun!")
       .addField(
-        "🖼 III Submission",
-        "Here you can find commands that you can use to submit images!"
-      )
-      .addField(
         "🛠 Misc",
         "Here are some commands that don't really fit in any category."
       )
@@ -138,28 +134,6 @@ async function runCommand(message, args, RM) {
               if (i.startsWith("cmd")) {
                 let k = RM[i];
                 if (k.commandCategory() == "fun") {
-                  if (k.commandHelp() == "") {
-                    description = "No description.";
-                  } else {
-                    description = k.commandHelp().replace("[PREFIX]", prefix);
-                  }
-                  embed.addField(prefix + k.commandPrim(), description);
-                }
-              }
-            }
-            m.edit({ embeds: [embed] });
-          } else if (
-            wanting == "iii" ||
-            wanting == "iii sub" ||
-            wanting == "iii submission"
-          ) {
-            let embed = new RM.Discord.MessageEmbed().setTitle(
-              "III Submission"
-            );
-            for (let i in RM) {
-              if (i.startsWith("cmd")) {
-                let k = RM[i];
-                if (k.commandCategory() == "iiisub") {
                   if (k.commandHelp() == "") {
                     description = "No description.";
                   } else {
@@ -263,6 +237,7 @@ async function runCommand(message, args, RM) {
       });
   }
 }
+
 function commandTriggers() {
   return commandInfo.possibleTriggers;
 }
@@ -299,32 +274,4 @@ module.exports = {
   commandCategory,
   getSlashCommand,
   getSlashCommandJSON,
-}; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
-
-/* */
-/* */
-/* */
-/*
-------------------[Instruction]------------------
-
-1. Make a directory in commands/ with your command name
-2. Inside that directory, make a "<command name>.js" file
-3. Copy the contents of TEMPLATE.js and paste it in the <command name>.js file and modify it to your needs.
-4. In index.js add to the top:
-"const cmd<cmdNameHere> = require('./commands/<command name>/<command name>.js');" at the top.
-
--------------------------------------------------
-
-To get all possible triggers, from index.js call
-"cmd<cmdname>.commandTriggers()"
-
-To call the command, from index.js call
-"cmd<cmdname>.runCommand(message, arguments, requiredModules);"
-
-To check if possible triggers has the command call
-"cmd<cmdname>.commandTriggers().includes(command)"
-
-------------------[Instruction]------------------
-*/
-/* */
-/* */
+};

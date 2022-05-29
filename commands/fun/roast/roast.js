@@ -63,7 +63,7 @@ async function runCommand(message, args, RM) {
       roastedUser.toLowerCase().includes(RM.client.user.username.toLowerCase())
     )
       return message.channel.send({
-        content: "ay ay ay. Roast someone that's not ME",
+        content: "I'm unroastable.",
       });
     if (
       roastedUser.includes(message.author.id) ||
@@ -98,14 +98,14 @@ async function runCommand(message, args, RM) {
     try {
       // read contents of the file
       require("fs")
-        .createReadStream("./resources/roasts.txt")
+        .createReadStream("./assets/roasts.txt")
         .on("data", function (chunk) {
           for (i = 0; i < chunk.length; ++i) if (chunk[i] == 10) count++;
         })
         .on("end", async function () {
           const wantedLine = between(1, count);
           const data = require("fs").readFileSync(
-            "./resources/roasts.txt",
+            "./assets/roasts.txt",
             "UTF-8"
           );
 
@@ -162,32 +162,4 @@ module.exports = {
   commandCategory,
   getSlashCommand,
   getSlashCommandJSON,
-}; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
-
-/* */
-/* */
-/* */
-/*
-------------------[Instruction]------------------
-
-1. Make a directory in commands/ with your command name
-2. Inside that directory, make a "<command name>.js" file
-3. Copy the contents of TEMPLATE.js and paste it in the <command name>.js file and modify it to your needs.
-4. In index.js add to the top:
-"const cmd<cmdNameHere> = require('./commands/<command name>/<command name>.js');" at the top.
-
--------------------------------------------------
-
-To get all possible triggers, from index.js call
-"cmd<cmdname>.commandTriggers()"
-
-To call the command, from index.js call
-"cmd<cmdname>.runCommand(message, arguments, requiredModules);"
-
-To check if possible triggers has the command call
-"cmd<cmdname>.commandTriggers().includes(command)"
-
-------------------[Instruction]------------------
-*/
-/* */
-/* */
+};

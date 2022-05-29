@@ -4,7 +4,7 @@ const commandInfo = {
   help: "eats your cake!", // This is the general description of the command.
   aliases: ["alias2", "alias3"], // These are command aliases that help.js will use
   usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
-  category: "fun/music/mod/iiisub/misc/economy",
+  category: "fun/music/mod/misc/economy",
   slashCommand: new global.SlashCommandBuilder()
     .setName("echo")
     .setDescription("Replies with your input!")
@@ -73,32 +73,4 @@ module.exports = {
   commandCategory,
   getSlashCommand,
   getSlashCommandJSON,
-}; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
-
-/* */
-/* */
-/* */
-/*
-------------------[Instruction]------------------
-
-1. Make a directory in commands/ with your command name
-2. Inside that directory, make a "<command name>.js" file
-3. Copy the contents of TEMPLATE.js and paste it in the <command name>.js file and modify it to your needs.
-4. In index.js add to the top:
-"const cmd<cmdNameHere> = require('./commands/<command name>/<command name>.js');" at the top.
-
--------------------------------------------------
-
-To get all possible triggers, from index.js call
-"cmd<cmdname>.commandTriggers()"
-
-To call the command, from index.js call
-"cmd<cmdname>.runCommand(message, arguments, requiredModules);"
-
-To check if possible triggers has the command call
-"cmd<cmdname>.commandTriggers().includes(command)"
-
-------------------[Instruction]------------------
-*/
-/* */
-/* */
+};

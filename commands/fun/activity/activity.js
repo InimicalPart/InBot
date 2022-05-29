@@ -16,7 +16,7 @@ const commandInfo = {
         .addChoice("Poker Night", "poker_night")
         .addChoice("Betrayal", "betrayal")
         .addChoice("YT Together", "youtube_together")
-        .addChoice("Watch Together Dev", "watch_together_dev")
+        .addChoice("Watch Together", "watch_together")
         .addChoice("Fishington", "fishington")
         .addChoice("Chess in the Park", "chess_in_the_park")
         .addChoice("Chess in the Park Development", "chess_in_the_park_dev")
@@ -57,53 +57,53 @@ async function runCommand(message, args, RM) {
     activityNames,
     activityName = null;
   let applications = {
-    youtube_together: "880218394199220334",
-    watch_together_dev: "880218832743055411",
-    fishington: "814288819477020702",
+    awkword: "879863881349087252",
+    betrayal_io: "773336526917861400",
+    blazing_eights: "832025144389533716",
+    checkers_in_the_park: "832013003968348200",
     chess_in_the_park: "832012774040141894",
-    chess_in_the_park_dev: "832012586023256104",
-    betrayal: "773336526917861400",
     doodlecrew: "878067389634314250",
-    wordsnacks: "879863976006127627",
-    lettertile: "879863686565621790",
+    fishington_io: "814288819477020702",
+    land_io: "903769130790969345",
+    letterleague: "879863686565621790",
     poker_night: "755827207812677713",
+    putt_party: "945737671223947305",
+    sketch_heads: "902271654783242291",
+    sketchy_artist: "879864070101172255",
+    spellcast: "852509694341283871",
+    watch_together: "880218394199220334",
+    wordsnacks: "879863976006127627",
+    youtube_together: "755600276941176913",
   };
   activityNames = [
-    { label: "Poker Night", value: "poker_night" },
-    { label: "Betrayal", value: "betrayal" },
-    { label: "YT Together", value: "youtube_together" },
-    { label: "Watch Together Dev", value: "watch_together_dev" },
-    { label: "Fishington", value: "fishington" },
-    { label: "Chess in the Park", value: "chess_in_the_park" },
+    { label: "Awkword", value: "awkword" },
+    { label: "Betrayal", value: "betrayal_io" },
+    { label: "Blazing 8s", value: "blazing_eights" },
     {
-      label: "Chess in the Park Development",
-      value: "chess_in_the_park_dev",
+      label: "Checkers in the Park",
+      value: "checkers_in_the_park",
     },
+    { label: "Chess in the Park", value: "chess_in_the_park" },
     { label: "Doodle Crew", value: "doodlecrew" },
+    { label: "Fishington.io", value: "fishington_io" },
+    { label: "Land.io", value: "land_io" },
+    { label: "Letter League", value: "letterleague" },
+    { label: "Poker Night", value: "poker_night" },
+    { label: "Putt Party", value: "putt_party" },
+    { label: "Sketch Heads", value: "sketch_heads" },
+    { label: "Sketchy Artist", value: "sketchy_artist" },
+    { label: "SpellCast", value: "spellcast" },
+    { label: "Watch Together", value: "watch_together" },
     { label: "Word Snacks", value: "wordsnacks" },
-    { label: "Letter Tile", value: "lettertile" },
+    { label: "YouTube Together", value: "youtube_together" },
   ];
-  if (message.content === "III-COMMAND") isSlashCommand = true;
+  if (message.content === "INBOT-COMMAND") isSlashCommand = true;
   if (!isSlashCommand) {
     let row = new RM.Discord.MessageActionRow().addComponents(
       new RM.Discord.MessageSelectMenu()
         .setCustomId("activitySelect-" + message.id)
         .setPlaceholder("No activity selected")
-        .addOptions([
-          { label: "Poker Night", value: "poker_night" },
-          { label: "Betrayal", value: "betrayal" },
-          { label: "YT Together", value: "youtube_together" },
-          { label: "Watch Together Dev", value: "watch_together_dev" },
-          { label: "Fishington", value: "fishington" },
-          { label: "Chess in the Park", value: "chess_in_the_park" },
-          {
-            label: "Chess in the Park Development",
-            value: "chess_in_the_park_dev",
-          },
-          { label: "Doodle Crew", value: "doodlecrew" },
-          { label: "Word Snacks", value: "wordsnacks" },
-          { label: "Letter Tile", value: "lettertile" },
-        ])
+        .addOptions(activityNames)
     );
     let componentFilter = (component) => {
       if (
@@ -114,9 +114,7 @@ async function runCommand(message, args, RM) {
         return true;
       return false;
     };
-    message.channel
-      .send({ content: "hi", components: [row] })
-      .then((a) => (m = a));
+    message.channel.send({ components: [row] }).then((a) => (m = a));
     let collector = await message.channel.createMessageComponentCollector({
       filter: componentFilter,
       time: 60000,
@@ -200,9 +198,9 @@ async function runCommand(message, args, RM) {
               })
               .setDescription(
                 message.author.tag +
-                  " has started " +
+                  " has started **" +
                   activityName +
-                  " in " +
+                  " in **" +
                   vc.name +
                   "!\n\nInvite: https://discord.com/invite/" +
                   Invite.code
@@ -252,32 +250,4 @@ module.exports = {
   commandCategory,
   getSlashCommand,
   getSlashCommandJSON,
-}; /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */ /* */
-
-/* */
-/* */
-/* */
-/*
-------------------[Instruction]------------------
-
-1. Make a directory in commands/ with your command name
-2. Inside that directory, make a "<command name>.js" file
-3. Copy the contents of TEMPLATE.js and paste it in the <command name>.js file and modify it to your needs.
-4. In index.js add to the top:
-"const cmd<cmdNameHere> = require('./commands/<command name>/<command name>.js');" at the top.
-
--------------------------------------------------
-
-To get all possible triggers, from index.js call
-"cmd<cmdname>.commandTriggers()"
-
-To call the command, from index.js call
-"cmd<cmdname>.runCommand(message, arguments, requiredModules);"
-
-To check if possible triggers has the command call
-"cmd<cmdname>.commandTriggers().includes(command)"
-
-------------------[Instruction]------------------
-*/
-/* */
-/* */
+};
