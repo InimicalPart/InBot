@@ -1,11 +1,11 @@
 {
   "dependencies": {
-    "@discordjs/builders": "^0.12.0",
-    "@discordjs/rest": "^0.3.0",
+    "@discordjs/builders": "^0.13.0",
+    "@discordjs/rest": "^0.4.1",
     "chalk": "^4.1.1",
     "chess.js": "^0.13.0",
     "convert-units": "^2.3.4",
-    "discord-api-types": "^0.31.0",
+    "discord-api-types": "^0.32.0",
     "discord.js": "latest",
     "dotenv": "^10.0.0",
     "fen-to-image": "github:InimicalPart/TheIIIProject#fen2img",
