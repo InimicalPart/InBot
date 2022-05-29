@@ -7,10 +7,8 @@ let mainDir = "";
 let commandDir = path.join(__dirname, "commands/");
 let indexFile = path.join(__dirname, "index.js");
 let configFile = path.join(__dirname, "config.js");
-let adminFile = path.join(__dirname, "public/admin.html");
 const categories = {
   fun: "Fun",
-  iiisub: "III Submission",
   misc: "Miscellaneous",
   mod: "Moderation",
   music: "Music",
@@ -48,10 +46,6 @@ async function executeAction(cmdname, category) {
     case "fun":
       categoryFile = path.join(__dirname, "/commands/fun/index.js");
       mainDir = path.join(__dirname, "/commands/fun/");
-      break;
-    case "iiisub":
-      categoryFile = path.join(__dirname, "/commands/iii-submission/index.js");
-      mainDir = path.join(__dirname, "/commands/iii-submission/");
       break;
     case "misc":
       categoryFile = path.join(__dirname, "/commands/misc/index.js");
@@ -95,7 +89,7 @@ async function executeAction(cmdname, category) {
   const newTemplate = template
     .replace("<command name>", cmdname)
     .replace("command1", cmdname)
-    .replace("fun/music/mod/iiisub/misc/economy", category)
+    .replace("fun/music/mod/misc/economy", category)
     .replace(
       "[UpperCMD]",
       cmdClone.charAt(0).toUpperCase() + cmdClone.slice(1)

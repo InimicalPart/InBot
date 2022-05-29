@@ -1,18 +1,14 @@
-function onAIMsg() {
-  return require("./onAIMsg/index.js");
+function getActiveTimers() {
+  return require("./getActiveTimers/index.js");
 }
-function timer() {
-  return require("./timer/index.js");
+function getCurrentWordle() {
+  return require("./getCurrentWordle/index.js");
 }
-function wordle() {
-  return require("./wordle/index.js");
-}
-function getBanned() {
-  return require("./getBanned/index.js");
+function getBotBanned() {
+  return require("./getBotBanned/index.js");
 }
 module.exports = {
-  getBanned,
-  wordle,
-  onAIMsg,
-  timer,
+  getBotBanned,
+  getCurrentWordle,
+  getActiveTimers,
 };
