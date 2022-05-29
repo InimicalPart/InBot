@@ -13,7 +13,7 @@ function between(lower, upper) {
   return Math.floor(lower + Math.random() * scale);
 }
 async function runCommand(message, args, RM) {
-  if (!require("../../../config.js").cmdRoast) {
+  if (!require(RM.path.resolve(global.dirName, "config.js")).cmdRoast) {
     return message.channel.send({
       embeds: [
         new RM.Discord.MessageEmbed()

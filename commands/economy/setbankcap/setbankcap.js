@@ -10,7 +10,7 @@ const commandInfo = {
 
 async function runCommand(message, args, RM) {
   //Check if command is disabled
-  if (!require("../../../config.js").cmdSetbankcap) {
+  if (!require(RM.path.resolve(global.dirName, "config.js")).cmdSetbankcap) {
     return message.channel.send({
       embeds: [
         new RM.Discord.MessageEmbed()

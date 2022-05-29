@@ -21,7 +21,7 @@ const commandInfo = {
 
 async function runCommand(message, args, RM) {
   //Check if command is disabled
-  if (!require("../../../config.js").cmdMinesweeper) {
+  if (!require(RM.path.resolve(global.dirName, "config.js")).cmdMinesweeper) {
     return message.channel.send({
       embeds: [
         new RM.Discord.MessageEmbed()

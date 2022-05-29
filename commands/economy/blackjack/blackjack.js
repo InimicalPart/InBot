@@ -48,7 +48,7 @@ function getCard(NoA) {
 }
 async function runCommand(message, args, RM) {
   //Check if command is disabled
-  if (!require("../../../config.js").cmdBlackjack) {
+  if (!require(RM.path.resolve(global.dirName, "config.js")).cmdBlackjack) {
     return message.channel.send({
       embeds: [
         new RM.Discord.MessageEmbed()

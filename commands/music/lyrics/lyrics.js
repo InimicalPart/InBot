@@ -10,7 +10,7 @@ const commandInfo = {
 
 async function runCommand(message, args, RM) {
   //Check if command is disabled
-  if (!require("../../../config.js").cmdLyrics) {
+  if (!require(RM.path.resolve(global.dirName, "config.js")).cmdLyrics) {
     return message.channel.send(
       new RM.Discord.MessageEmbed()
         .setColor("RED")
