@@ -21,7 +21,7 @@ try {
   const config = require("./config.js");
   const { REST } = require("@discordjs/rest");
   const { Routes } = require("discord-api-types/v9");
-  if (process.env.NotMyToken == null) {
+  if (process.env.DISCORD_TOKEN == null) {
     console.log(
       "Token is missing, please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPart/InBot for more information."
     );
@@ -261,7 +261,7 @@ try {
   }
 
   client.on("ready", async () => {
-    const rest = new REST({ version: "9" }).setToken(process.env.NotMyToken);
+    const rest = new REST({ version: "9" }).setToken(process.env.DISCORD_TOKEN);
     (async () => {
       try {
         console.log("Started refreshing application (/) commands.");
@@ -462,7 +462,7 @@ try {
         .setName("↦ • Members: " + users.length + " •");
     }
   });
-  client.login(process.env.NotMyToken);
+  client.login(process.env.DISCORD_TOKEN);
   function getOrdinalNum(n) {
     return (
       n +
