@@ -47,7 +47,16 @@ const commandInfo = {
 
 async function runCommand(message, args, RM) {
   //Check if command is disabled
-  if (!require(RM.path.resolve(global.dirName, "config.js")).cmdActivity) {
+  if (
+    require("json5")
+      .parse(
+        require("fs").readFileSync(
+          RM.path.resolve(global.dirName, "config.jsonc"),
+          "utf-8"
+        )
+      )
+      .disabledCommands.includes(commandInfo.primaryName.toLowerCase())
+  ) {
     return message.channel.send({
       embeds: [
         new RM.Discord.MessageEmbed()
@@ -110,6 +119,7 @@ async function runCommand(message, args, RM) {
     { label: "YouTube Together", value: "youtube_together" },
   ];
   if (message.content === "INBOT-COMMAND") isSlashCommand = true;
+
   if (!isSlashCommand) {
     let row = new RM.Discord.MessageActionRow().addComponents(
       new RM.Discord.MessageSelectMenu()
@@ -212,15 +222,27 @@ async function runCommand(message, args, RM) {
                 message.author.tag +
                   " has started **" +
                   activityName +
-                  " in **" +
+                  "** in **" +
                   vc.name +
-                  "!\n\nInvite: https://discord.com/invite/" +
+                  "**!\n\nInvite: https://discord.com/invite/" +
                   Invite.code
               )
               .setThumbnail(message.guild.iconURL())
               .setTitle("Invitation for game " + activityName + "!"),
           ],
         });
+        if (isSlashCommand)
+          message.reply({
+            content:
+              "Activity '" +
+              activityName +
+              "' started in " +
+              vc.name +
+              "\n\nInvite: <https://discord.com/invite/" +
+              Invite.code +
+              ">",
+            ephemeral: true,
+          });
       }
     }
   );
