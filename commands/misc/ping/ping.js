@@ -1,11 +1,13 @@
 const commandInfo = {
   primaryName: "ping",
   possibleTriggers: ["ping"],
-  help: "Checks the latency of the bot and the discord API and the bot uptime.",
+  help: "Checks the latency of the bot and the Discord API and the bot uptime.",
   aliases: [],
   usage: "[COMMAND]", // [COMMAND] gets replaced with the command and correct prefix later
   category: "misc",
-  slashCommand: null,
+  slashCommand: new global.SlashCommandBuilder()
+    .setName("ping")
+    .setDescription("Checks the latency of the bot and the Discord API and the bot uptime.")
 };
 async function runCommand(message, args, RM) {
   if (!require(RM.path.resolve(global.dirName, "config.js")).cmdPing) {
@@ -32,9 +34,10 @@ async function runCommand(message, args, RM) {
   const pinging = new RM.Discord.MessageEmbed().setDescription(
     "Pinging...  :ping_pong:"
   );
-  message.channel
-    .send({ embeds: [pinging] })
+  message
+    .channel.send({ embeds: [pinging] })
     .then((m) => {
+        console.log(m)
       const embed = new Discord.MessageEmbed()
         .setColor("RANDOM")
         .setDescription(
@@ -44,7 +47,9 @@ async function runCommand(message, args, RM) {
             client.ws.ping
           )}ms\`, Bot has been up for: \`${prettyMilliseconds(client.uptime)}\``
         );
-      m.edit({ embeds: [embed] });
+        m.delete()
+        
+      message.reply({ embeds: [embed] });
     })
     .catch(async (err) => {
       console.log(err);
