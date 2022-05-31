@@ -16,7 +16,7 @@ InBot was a small project of mine, which was made for my Discord server, But I h
 
 ## Installing
 
-First, make sure you have all the files necessary to start. You can find all guides to files [here](https://github.com/InimicalPart/InBot#requirements-for-installing)
+First, make sure you have all the files necessary to start. You can find all guides to files [here](https://github.com/InimicalPart/InBot#requirements-for-running)
 
 Afterwards, you're almost done! Just open up a terminal/command prompt and navigate to the directory with all the files (including the files in this repository).
 
