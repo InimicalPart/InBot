@@ -158,14 +158,16 @@ try {
     }
     client.on("interactionCreate", async (interaction) => {
         if (interaction.isCommand()) {
-            if (global.bannedUsers.includes(interaction.member.user.id)) {
+            console.log(interaction)
+            if (global.bannedUsers.includes(interaction?.member?.user?.id||interaction?.user?.id)) {
                 return interaction.reply({
                     content:
                     "You are banned from using commands. If you believe this is an error, please contact a moderator.",
                     ephemeral: true,
                 });
             }
-            interaction.deferReply();
+            //interaction.deferReply();
+            
             for (let i in slashCommandAssigns) {
                 if (slashCommandAssigns[i].commandName === interaction.commandName) {
                     if (
@@ -189,7 +191,7 @@ try {
     });
     function convertToMSG(interaction) {
         let newInteraction = interaction;
-        newInteraction.author = interaction.member.user;
+        newInteraction.author = interaction?.member?.user || interaction?.member?.user;
         newInteraction.content = "INBOT-COMMAND";
         //   delete newInteraction.user;
         return newInteraction;
