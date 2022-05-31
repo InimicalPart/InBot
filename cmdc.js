@@ -89,11 +89,7 @@ async function executeAction(cmdname, category) {
   const newTemplate = template
     .replace("<command name>", cmdname)
     .replace("command1", cmdname)
-    .replace("fun/music/mod/misc/economy", category)
-    .replace(
-      "[UpperCMD]",
-      cmdClone.charAt(0).toUpperCase() + cmdClone.slice(1)
-    );
+    .replace("fun/music/mod/misc/economy", category);
   console.log(
     chalk.green.bold("? ") + chalk.white.bold("Writing to command file...")
   );
@@ -108,27 +104,16 @@ async function executeAction(cmdname, category) {
   console.log(chalk.green.bold("? ") + chalk.white.bold("Editing index.js..."));
   const index = fs.readFileSync(indexFile, { encoding: "utf8", flag: "r" });
   const newIndex = index.replace(
-    '"Discord": Discord,',
-    "	" +
-      `"cmd${
+    "const requiredModules = {",
+    `const requiredModules = { +     
+      "cmd${
         cmdClone.charAt(0).toUpperCase() + cmdClone.slice(1)
-      }": ${category}.${cmdname}(),\n	\"Discord\": Discord,`
+      }": ${category}.${cmdname}(),`
   );
   fs.writeFile(indexFile, newIndex, function (err) {
     if (err) throw err;
     //console.log('File is created successfully.');
   });
-
-  console.log(
-    chalk.green.bold("? ") + chalk.white.bold("Editing config.js...")
-  );
-  fs.appendFileSync(
-    configFile,
-    "exports.cmd" +
-      cmdClone.charAt(0).toUpperCase() +
-      cmdClone.slice(1) +
-      " = true\n"
-  );
   console.log(chalk.green.bold("? ") + chalk.white.bold("Done"));
 }
 promptOptions();

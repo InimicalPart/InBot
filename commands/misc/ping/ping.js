@@ -7,10 +7,21 @@ const commandInfo = {
   category: "misc",
   slashCommand: new global.SlashCommandBuilder()
     .setName("ping")
-    .setDescription("Checks the latency of the bot and the Discord API and the bot uptime.")
+    .setDescription(
+      "Checks the latency of the bot and the Discord API and the bot uptime."
+    ),
 };
 async function runCommand(message, args, RM) {
-  if (!require(RM.path.resolve(global.dirName, "config.js")).cmdPing) {
+  if (
+    require("json5")
+      .parse(
+        require("fs").readFileSync(
+          RM.path.resolve(global.dirName, "config.jsonc"),
+          "utf-8"
+        )
+      )
+      .disabledCommands.includes(commandInfo.primaryName.toLowerCase())
+  ) {
     return message.channel.send({
       embeds: [
         new RM.Discord.MessageEmbed()
@@ -34,10 +45,10 @@ async function runCommand(message, args, RM) {
   const pinging = new RM.Discord.MessageEmbed().setDescription(
     "Pinging...  :ping_pong:"
   );
-  message
-    .channel.send({ embeds: [pinging] })
+  message.channel
+    .send({ embeds: [pinging] })
     .then((m) => {
-        console.log(m)
+      console.log(m);
       const embed = new Discord.MessageEmbed()
         .setColor("RANDOM")
         .setDescription(
@@ -47,8 +58,8 @@ async function runCommand(message, args, RM) {
             client.ws.ping
           )}ms\`, Bot has been up for: \`${prettyMilliseconds(client.uptime)}\``
         );
-        m.delete()
-        
+      m.delete();
+
       message.reply({ embeds: [embed] });
     })
     .catch(async (err) => {

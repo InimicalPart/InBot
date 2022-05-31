@@ -1,5 +1,6 @@
 const app = {
   version: "3.3.0",
+  botOwners: ["301062520679170066", "814623079346470993"],
 };
 global.app = app;
 global.bannedUsers = [];
@@ -18,12 +19,35 @@ try {
   require("dotenv").config();
 
   const Discord = require("discord.js");
-  const config = require("./config.js");
+  const config = require("json5").parse(
+    require("fs").readFileSync("./config.jsonc")
+  );
+  console.log(config);
   const { REST } = require("@discordjs/rest");
   const { Routes } = require("discord-api-types/v9");
   if (process.env.DISCORD_TOKEN == null) {
     console.log(
       "Token is missing, please make sure you have the .env file in the directory with the correct information. Please see https://github.com/InimicalPart/InBot for more information."
+    );
+    process.exit(1);
+  } else if (config.settings.mainGuild === "") {
+    console.log("Please set the main guild ID in the config.jsonc file.");
+    process.exit(1);
+  } else if (
+    config.settings.showMemberCount &&
+    (config.settings.sMCChannelID.length < 18 ||
+      config.settings.sMCChannelID === null)
+  ) {
+    console.log(
+      "Please set the show member count channel ID in the config.jsonc file."
+    );
+    process.exit(1);
+  } else if (
+    config.settings.showMemberCount &&
+    config.settings.sMCFormat.length < 1
+  ) {
+    console.log(
+      "Please set the show member count format in the config.jsonc file."
     );
     process.exit(1);
   }
@@ -71,7 +95,6 @@ try {
   );
   //!--------------------------
   const requiredModules = {
-    botOwners: ["301062520679170066", "814623079346470993"],
     cmdWordle: fun.wordle(),
     cmdActivity: fun.activity(),
     cmdAddmoney: economy.addmoney(),
@@ -122,6 +145,7 @@ try {
     Discord: Discord,
     process_env: process.env,
     client: client,
+    botOwners: app.botOwners,
     math: require("mathjs"),
     path: require("path"),
     pretty_ms: require("pretty-ms"),
@@ -316,64 +340,75 @@ try {
       });
     }
     let users = [];
-    const list = await client.guilds.fetch("931616832668958748");
-    await list.members
+
+    const mainGuild = await client.guilds.fetch(config.settings.mainGuild);
+    await mainGuild.members
       .fetch()
       .then(async (member) => {
         member.forEach(async (m) => {
-          if (
-            String(m.user.username).toLowerCase().includes("| gg") ||
-            String(m.user.username).toLowerCase().includes("|| discord.gg") ||
-            String(m.user.username).toLowerCase().includes("dcgate") ||
-            String(m.user.username).toLowerCase().includes("discordgate")
-          ) {
-            console.log(m.user.username + " is getting banned.");
-            await m.send({
-              content:
-                "Hello, you have been suspected of being a user bot, for safety concerns, we have banned you. If you think this is a mistake. Please message Inimi#0565",
-            });
-            m.ban({
-              reason: "User bots are not allowed.",
-            });
-          } else {
-            users.push(m.id);
+          for (let nameIndex in config.settings.knownUserBotNames) {
+            if (
+              m?.user?.username
+                ?.toLowerCase()
+                ?.includes(
+                  config.settings.knownUserBotNames[nameIndex].toLowerCase()
+                ) &&
+              config.settings.autoBanUserBots
+            ) {
+              console.log(
+                m.user.username + " is getting banned due to being a user bot."
+              );
+              await m.send({
+                content:
+                  config.settings.aBUBMsg ||
+                  "Hello, you have been suspected of being a user bot, for safety concerns, we have banned you. If you think this is a mistake. Please message Inimi#0565",
+              });
+              m.ban({
+                reason: "User was a user bot. (Auto Ban)",
+              });
+              return;
+            }
           }
+          users.push(m.id);
         });
       })
       .catch(console.error);
-    if (client.user.id != "859513472973537311" && config.showUsers == true)
-      await list.channels.cache
-        .get("980251559113920522")
-        .setName("↦ • Members: " + users.length + " •");
-    const createdAt = list.createdAt;
+    if (
+      client.user.id != "859513472973537311" && // If isn't the DEV version
+      config.settings.showMemberCount
+    )
+      await mainGuild.channels.cache
+        .get(config.settings.sMCChannelID)
+        .setName(config.settings.sMCFormat.replace("[MC]", users.length));
+    const createdAt = mainGuild.createdAt;
     const today = new Date();
     var msSinceCreation = today.getTime() - createdAt.getTime();
     var daysSinceCreation = Math.round(msSinceCreation / (1000 * 3600 * 24));
 
     console.log(
       chalk.blueBright("------------------------\n") +
-        chalk.redBright("Inimi's Community Hub") +
+        chalk.redBright(mainGuild.name) +
         " has " +
         chalk.cyanBright(users.length) +
         " members.\n"
     );
+    // console.log(
+    //   "Only " +
+    //     chalk.cyanBright(7000 - users.length) +
+    //     " more until we reach the Community requirements!"
+    // );
+    // console.log(
+    //   "Only " +
+    //     chalk.cyanBright(100 - users.length) +
+    //     " more until we reach 100 members!"
+    // );
+    // console.log(
+    //   "Only " +
+    //     chalk.cyanBright(500 - users.length) +
+    //     " more until we can see Server Metrics!\n"
+    // );
     console.log(
-      "Only " +
-        chalk.cyanBright(7000 - users.length) +
-        " more until we reach the Community requirements!"
-    );
-    console.log(
-      "Only " +
-        chalk.cyanBright(100 - users.length) +
-        " more until we reach 100 members!"
-    );
-    console.log(
-      "Only " +
-        chalk.cyanBright(500 - users.length) +
-        " more until we can see Server Metrics!\n"
-    );
-    console.log(
-      chalk.redBright("Inimi's Community Hub") +
+      chalk.redBright(mainGuild.name) +
         " was created on the " +
         chalk.cyanBright(createdAt.toLocaleDateString()) +
         ". That's " +
@@ -387,11 +422,11 @@ try {
           "As this is a DEV edition, Channels will not be updated to avoid interference with the main edition. " +
           chalk.yellowBright("⚠")
       );
-    } else if (config.showUsers == false) {
+    } else if (config.settings.showMemberCount == false) {
       console.log(
         "\n" +
           chalk.yellowBright("⚠") +
-          " As showUsers in config is disabled, channel won't be updated. " +
+          " As showMemberCount in config is disabled, channel won't be updated. " +
           chalk.yellowBright("⚠")
       );
     }
@@ -401,28 +436,29 @@ try {
     } else {
       edition = "MAIN";
     }
-    result = DateFormatter.formatDate(new Date(), `MMMM ????, YYYY hh:mm:ss A`);
-    result = result.replace("????", getOrdinalNum(new Date().getDate()));
-    isDevMode =
-      edition === "DEVELOPMENT"
-        ? chalk.greenBright("YES")
-        : chalk.redBright("NO");
     console.log(
       "------------------------\n" +
         "Current time is: " +
-        chalk.cyanBright(result) +
+        chalk.cyanBright(
+          DateFormatter.formatDate(
+            new Date(),
+            `MMMM ????, YYYY hh:mm:ss A`
+          ).replace("????", getOrdinalNum(new Date().getDate()))
+        ) +
         "\n" +
         "Discord.JS version: " +
         chalk.yellow(Discord.version) +
         "\n" +
         "In Development Mode: " +
-        isDevMode +
+        (edition === "DEVELOPMENT"
+          ? chalk.greenBright("YES")
+          : chalk.redBright("NO")) +
         "\n" +
         "Current API Latency: " +
         chalk.cyanBright(client.ws.ping) +
         " ms\n" +
         "Prefix: " +
-        chalk.blue(process.env.prefix) +
+        chalk.cyanBright(process.env.prefix) +
         "\n" +
         "------------------------\n" +
         chalk.blue.bold(client.user.tag) +
@@ -446,119 +482,67 @@ try {
   //import express and start a server on port 3000
 
   client.on("guildMemberAdd", async (user) => {
+    if (config.settings.autoBanUserBots) {
+      for (let nameIndex in config.settings.knownUserBotNames) {
+        if (
+          user?.user?.username
+            ?.toLowerCase()
+            ?.includes(
+              config.settings.knownUserBotNames[nameIndex].toLowerCase()
+            )
+        ) {
+          console.log(
+            user.user.username + " is getting banned due to being a user bot."
+          );
+          await user.send({
+            content:
+              config.settings.aBUBMsg ||
+              "Hello, you have been suspected of being a user bot, for safety concerns, we have banned you. If you think this is a mistake. Please message Inimi#0565",
+          });
+          user.ban({
+            reason: "User was a user bot. (Auto Ban)",
+          });
+        }
+      }
+    }
     if (
-      String(user.username).toLowerCase().includes("| gg") ||
-      String(user.username).toLowerCase().includes("|| discord.gg") ||
-      String(user.username).toLowerCase().includes("dcgate") ||
-      String(user.username).toLowerCase().includes("discordgate")
+      client.user.id != "859513472973537311" &&
+      config.settings.showMemberCount
     ) {
-      user.ban({
-        reason: "User bots are not allowed.",
-      });
-    }
-    if (client.user.id != "859513472973537311" && config.showUsers == true) {
       let users = [];
-      const list = await client.guilds.fetch("931616832668958748");
+      const list = await client.guilds.fetch(config.settings.mainGuild);
       await list.members
         .fetch()
         .then(async (member) => member.forEach(async (m) => users.push(m.id)))
         .catch(console.error);
       await list.channels.cache
-        .get("980251559113920522")
-        .setName("↦ • Members: " + users.length + " •");
+        .get(config.settings.sMCChannelID)
+        .setName(config.sMCFormat.replace("[MC]", users.length));
     }
   });
+
   client.on("guildMemberRemove", async () => {
-    if (client.user.id != "859513472973537311" && config.showUsers == true) {
+    if (
+      client.user.id != "859513472973537311" &&
+      config.settings.showMemberCount
+    ) {
       let users = [];
-      const list = await client.guilds.fetch("931616832668958748");
-      await list.members
+      const mainGuild = await client.guilds.fetch(config.settings.mainGuild);
+      await mainGuild.members
         .fetch()
         .then(async (member) => member.forEach(async (m) => users.push(m.id)))
         .catch(console.error);
-      await list.channels.cache
-        .get("980251559113920522")
-        .setName("↦ • Members: " + users.length + " •");
+      await mainGuild.channels.cache
+        .get(config.settings.sMCChannelID)
+        .setName(config.sMCFormat.replace("[MC]", users.length));
     }
   });
+  /* prettier-ignore */
+  function getOrdinalNum(n){return n+(n>0?["th","st","nd","rd"][n>3&&n<21||n%10>3?0:n%10]:"")}
+  /* prettier-ignore */
+  const DateFormatter={monthNames:["January","February","March","April","May","June","July","August","September","October","November","December"],dayNames:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],formatDate:function(e,t){var r=this;return t=r.getProperDigits(t,/d+/gi,e.getDate()),t=(t=r.getProperDigits(t,/M+/g,e.getMonth()+1)).replace(/y+/gi,(function(t){var r=t.length,g=e.getFullYear();return 2==r?(g+"").slice(-2):4==r?g:t})),t=r.getProperDigits(t,/H+/g,e.getHours()),t=r.getProperDigits(t,/h+/g,r.getHours12(e.getHours())),t=r.getProperDigits(t,/m+/g,e.getMinutes()),t=(t=r.getProperDigits(t,/s+/gi,e.getSeconds())).replace(/a/gi,(function(t){var g=r.getAmPm(e.getHours());return"A"===t?g.toUpperCase():g})),t=r.getFullOr3Letters(t,/d+/gi,r.dayNames,e.getDay()),t=r.getFullOr3Letters(t,/M+/g,r.monthNames,e.getMonth())},getProperDigits:function(e,t,r){return e.replace(t,(function(e){var t=e.length;return 1==t?r:2==t?("0"+r).slice(-2):e}))},getHours12:function(e){return(e+24)%12||12},getAmPm:function(e){return e>=12?"pm":"am"},getFullOr3Letters:function(e,t,r,g){return e.replace(t,(function(e){var t=e.length;return 3==t?r[g].substr(0,3):4==t?r[g]:e}))}};
+
   client.login(process.env.DISCORD_TOKEN);
-  function getOrdinalNum(n) {
-    return (
-      n +
-      (n > 0
-        ? ["th", "st", "nd", "rd"][(n > 3 && n < 21) || n % 10 > 3 ? 0 : n % 10]
-        : "")
-    );
-  }
-  const DateFormatter = {
-    monthNames: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ],
-    dayNames: [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ],
-    formatDate: function (e, t) {
-      var r = this;
-      return (
-        (t = r.getProperDigits(t, /d+/gi, e.getDate())),
-        (t = (t = r.getProperDigits(t, /M+/g, e.getMonth() + 1)).replace(
-          /y+/gi,
-          function (t) {
-            var r = t.length,
-              g = e.getFullYear();
-            return 2 == r ? (g + "").slice(-2) : 4 == r ? g : t;
-          }
-        )),
-        (t = r.getProperDigits(t, /H+/g, e.getHours())),
-        (t = r.getProperDigits(t, /h+/g, r.getHours12(e.getHours()))),
-        (t = r.getProperDigits(t, /m+/g, e.getMinutes())),
-        (t = (t = r.getProperDigits(t, /s+/gi, e.getSeconds())).replace(
-          /a/gi,
-          function (t) {
-            var g = r.getAmPm(e.getHours());
-            return "A" === t ? g.toUpperCase() : g;
-          }
-        )),
-        (t = r.getFullOr3Letters(t, /d+/gi, r.dayNames, e.getDay())),
-        (t = r.getFullOr3Letters(t, /M+/g, r.monthNames, e.getMonth()))
-      );
-    },
-    getProperDigits: function (e, t, r) {
-      return e.replace(t, function (e) {
-        var t = e.length;
-        return 1 == t ? r : 2 == t ? ("0" + r).slice(-2) : e;
-      });
-    },
-    getHours12: function (e) {
-      return (e + 24) % 12 || 12;
-    },
-    getAmPm: function (e) {
-      return e >= 12 ? "pm" : "am";
-    },
-    getFullOr3Letters: function (e, t, r, g) {
-      return e.replace(t, function (e) {
-        var t = e.length;
-        return 3 == t ? r[g].substr(0, 3) : 4 == t ? r[g] : e;
-      });
-    },
-  };
 } catch (e) {
   console.log(
     chalk.hex("#FF0000").bold("-----------------------------------[") +
