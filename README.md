@@ -29,7 +29,7 @@ node .
 
 If everything went well then your bot should come online!
 
-> If you encounter any issues, don't hesitate to open an [issue]! I'll check it out as soon as I can.
+> If you encounter any issues, don't hesitate to open an [issue](https://github.com/InimicalPart/InBot/issues/new?assignees=InimicalPart&labels=help+wanted&template=help-required.md&title=%5BHELPREQ%5D+I+need+help+with+....%21)! I'll check it out as soon as I can.
 
 ## .env file
 
