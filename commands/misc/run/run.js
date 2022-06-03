@@ -34,12 +34,7 @@ async function runCommand(message, args, RM) {
       ],
     });
   }
-  const valid = [
-    "301062520679170066",
-    "814623079346470993",
-    "516333697163853828",
-  ];
-  if (!valid.includes(message.author.id)) return;
+  if (!global?.app?.botOwners?.includes(message.author.id)) return;
   const { spawn } = require("child_process");
   if (args.length < 1) {
     return message.channel.send({
@@ -58,10 +53,10 @@ async function runCommand(message, args, RM) {
   }
   let nodecode;
   let executionStats = false;
-  if (args.includes("--iii-exec-stats")) {
-    //copy args and remove --iii-exec-stats
+  if (args.includes("--inbot-exec-stats")) {
+    //copy args and remove --inbot-exec-stats
     let newArgs = args.slice();
-    newArgs.splice(newArgs.indexOf("--iii-exec-stats"), 1);
+    newArgs.splice(newArgs.indexOf("--inbot-exec-stats"), 1);
     nodecode = newArgs;
     executionStats = true;
   } else nodecode = args;

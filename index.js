@@ -2,6 +2,7 @@ const app = {
   version: "3.3.0",
   botOwners: ["301062520679170066", "814623079346470993"],
 };
+const EventEmitter = require("events").EventEmitter;
 global.app = app;
 global.bannedUsers = [];
 global.chessList = [];
@@ -10,6 +11,7 @@ global.sudokuList = [];
 global.UNOList = [];
 global.wordleList = [];
 global.checkWordle = false;
+global.logsEmitter = new EventEmitter();
 global.updatedTimers = false;
 global.dirName = __dirname;
 global.SlashCommandBuilder = require("@discordjs/builders").SlashCommandBuilder;
@@ -22,7 +24,6 @@ try {
   const config = require("json5").parse(
     require("fs").readFileSync("./config.jsonc")
   );
-  console.log(config);
   const { REST } = require("@discordjs/rest");
   const { Routes } = require("discord-api-types/v9");
   if (process.env.DISCORD_TOKEN == null) {
@@ -61,6 +62,7 @@ try {
       Discord.Intents.FLAGS.GUILD_PRESENCES,
       Discord.Intents.FLAGS.GUILD_VOICE_STATES,
       Discord.Intents.FLAGS.GUILDS,
+      Discord.Intents.FLAGS.GUILD_BANS,
     ],
     partials: ["CHANNEL"],
   });
@@ -95,6 +97,9 @@ try {
   );
   //!--------------------------
   const requiredModules = {
+    cmdWarn: moderation.warn(),
+    cmdUnmute: moderation.unmute(),
+    cmdMute: moderation.mute(),
     cmdWordle: fun.wordle(),
     cmdActivity: fun.activity(),
     cmdAddmoney: economy.addmoney(),
@@ -141,10 +146,13 @@ try {
     eventGetbotbanned: event.getBotBanned(),
     eventTimer: event.getActiveTimers(),
     eventWordle: event.getCurrentWordle(),
+    eventLogs: event.logListeners(),
+    logsEmitter: global.logsEmitter,
     DBClient: connect,
     Discord: Discord,
     process_env: process.env,
     client: client,
+    config: config,
     botOwners: app.botOwners,
     math: require("mathjs"),
     path: require("path"),

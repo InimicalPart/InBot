@@ -23,6 +23,8 @@
     "minesweeper-board": "^1.1.2",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.34",
+    "nodemon": "^2.0.16",
+    "npm": "^8.12.1",
     "pg": "^8.6.0",
     "pretty-ms": "^7.0.1",
     "request": "^2.88.2",

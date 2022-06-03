@@ -7,7 +7,12 @@ function getCurrentWordle() {
 function getBotBanned() {
   return require("./getBotBanned/index.js");
 }
+function logListeners() {
+  return require("./logListeners/index.js");
+}
+
 module.exports = {
+  logListeners,
   getBotBanned,
   getCurrentWordle,
   getActiveTimers,
