@@ -1,7 +1,7 @@
 const commandInfo = {
   primaryName: "blackjack", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["blackjack", "bj"], // These are all commands that will trigger this command.
-  help: "III's official blackjack! Play with a bot! `[PREFIX]bj help` for more information!", // This is the general description of the command.
+  help: "InBot's official blackjack! Play with a bot! `[PREFIX]bj help` for more information!", // This is the general description of the command.
   aliases: ["bj"], // These are command aliases that help.js will use
   usage: "[COMMAND] <bet amount>", // [COMMAND] gets replaced with the command and correct prefix later
   category: "economy",
@@ -102,7 +102,7 @@ async function runCommand(message, args, RM) {
           })
           .setDescription(
             "You can play blackjack with the bot!\n\n" +
-              "Welcome to III's Blackjack! Here you can play blackjack with a dealer which even tho the dealer is a robot, it's pretty good at it.\n\n**Card values:**\nAce = **11**\n10, Jack, Queen, King = **10**\n9 = **9**\n8 = **8**\n7 = **7**\n6 = **6**\n5 = **5**\n4 = **4**\n3 = **3**\n2 = **2**\n\n" +
+              "Welcome to InBot's Blackjack! Here you can play blackjack with a dealer which even tho the dealer is a robot, it's pretty good at it.\n\n**Card values:**\nAce = **11**\n10, Jack, Queen, King = **10**\n9 = **9**\n8 = **8**\n7 = **7**\n6 = **6**\n5 = **5**\n4 = **4**\n3 = **3**\n2 = **2**\n\n" +
               "**Prize:**\nWin normally: **2 times your bet**\nGet a blackjack: **3 times your bet**\nPush: **No losses/No winnings**\nDealer gets a blackjack: **Lose 3 times your bet.**\nTimeout: **Lose your bet**\nInvalid Input: **Lose your bet**\n\n" +
               "**Betting:**\nYou need to bet at least **500** dollaroos to play, the maximum bet is **10,000** dollaroos"
           )

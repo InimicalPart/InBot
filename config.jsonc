@@ -5,8 +5,32 @@
     "showMemberCount": true,
     "sMCChannelID": "980251559113920522", // The channel ID of a VOICE chat where the name will be changed to the member count
     "sMCFormat": "↦ • Members: [MC] •", // [MC] gets replaced with the member count
-    "autoBanUserBots":true, // If true, the bot will automatically ban "users" that come from a botting service
-    "knownUserBotNames": ["| gg", "|| discord.gg", "dcgate", "discordgate"],
+    "autoBanUserBots": true, // If true, the bot will automatically ban "users" that come from a botting service
+    "knownUserBotNames": ["| gg", "|| discord.gg", "dcgate", "discordgate"], // The bot will check if the username contains one of these strings, if yes and autoBanUserBots is true, the user will be banned
     "aBUBMsg":"You have been banned because you are suspected to be a user bot. If you think this is a mistake. Please message Inimi#0565" // The message sent to the user when they get banned due to being a user bot
+  },
+  "logs": {
+      "enabled": true, // If true, the bot will log all moderational actions in the console
+        "channelID": "981227646174248980", // The channel ID of a TEXT chat where the bot will log events (make sure the bot has access to the channel!)
+        "types": {
+            "ban": true,
+            "unban": true,
+            "mute": true,
+            "unmute": true,
+            "warn": true,
+            "userJoined": true,
+            "userLeft": true,
+            "nicknameChanged": true,
+            "roleAdded": true,
+            "roleRemoved": true,
+            "roleUpdated": true,
+            "roleDeleted": true,
+            "channelCreated": true,
+            "channelDeleted": true,
+            "channelUpdated": true,
+            "messageDeleted": true,
+            "messageUpdated": true
+        }
+
   }
 }

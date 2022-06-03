@@ -10,7 +10,7 @@ let configFile = path.join(__dirname, "config.js");
 const categories = {
   fun: "Fun",
   misc: "Miscellaneous",
-  mod: "Moderation",
+  moderation: "Moderation",
   music: "Music",
   economy: "Economy",
   developer: "Developer",
@@ -51,7 +51,7 @@ async function executeAction(cmdname, category) {
       categoryFile = path.join(__dirname, "/commands/misc/index.js");
       mainDir = path.join(__dirname, "/commands/misc/");
       break;
-    case "mod":
+    case "moderation":
       categoryFile = path.join(__dirname, "/commands/moderation/index.js");
       mainDir = path.join(__dirname, "/commands/moderation/");
       break;
@@ -89,7 +89,10 @@ async function executeAction(cmdname, category) {
   const newTemplate = template
     .replace("<command name>", cmdname)
     .replace("command1", cmdname)
-    .replace("fun/music/mod/misc/economy", category);
+    .replace(
+      "fun/music/mod/misc/economy",
+      category.replace("moderation", "mod")
+    );
   console.log(
     chalk.green.bold("? ") + chalk.white.bold("Writing to command file...")
   );
@@ -105,10 +108,10 @@ async function executeAction(cmdname, category) {
   const index = fs.readFileSync(indexFile, { encoding: "utf8", flag: "r" });
   const newIndex = index.replace(
     "const requiredModules = {",
-    `const requiredModules = { +     
-      "cmd${
+    `const requiredModules = {    
+      cmd${
         cmdClone.charAt(0).toUpperCase() + cmdClone.slice(1)
-      }": ${category}.${cmdname}(),`
+      }: ${category}.${cmdname}(),`
   );
   fs.writeFile(indexFile, newIndex, function (err) {
     if (err) throw err;

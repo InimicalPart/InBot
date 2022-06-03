@@ -270,7 +270,7 @@ async function runCommand(message, args, RM) {
           "Event",
           "Casual Game",
           "Site",
-          "The III Project",
+          "InBot",
           "Date",
           new Date().toISOString().split("T")[0].replace(/-/g, "."),
           "Round",
