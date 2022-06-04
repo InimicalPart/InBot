@@ -1,6 +1,6 @@
 # InBot
 
-InBot was a small project of mine, which was made for my Discord server, But I have decided to redesign it so anyone who wants to use it can. This bot has categories like fun, moderation, and more! This bot has games like:
+InBot was a small project of mine, which was made for my Discord server, But I have decided to redesign it so anyone who wants to use it can. This bot has categories like fun, moderation, music, and more! This bot has games like:
 
 - Wordle
 - Minesweeper
