@@ -5,6 +5,7 @@ const commandInfo = {
   aliases: [],
   usage: "[COMMAND] <user/user id>", // [COMMAND] gets replaced with the command and correct prefix later
   category: "mod",
+  reqPermissions: ["BAN_MEMBERS"],
   slashCommand: null,
 };
 
