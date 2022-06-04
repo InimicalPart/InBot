@@ -1,8 +1,8 @@
 const commandInfo = {
   primaryName: "activity", // This is the command name used by help.js (gets uppercased).
-  possibleTriggers: ["activity", "alias2", "alias3"], // These are all commands that will trigger this command.
+  possibleTriggers: ["activity"], // These are all commands that will trigger this command.
   help: "eats your cake!", // This is the general description of the command.
-  aliases: ["alias2", "alias3"], // These are command aliases that help.js will use
+  aliases: [], // These are command aliases that help.js will use
   usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
   category: "fun",
   slashCommand: new global.SlashCommandBuilder()
@@ -32,8 +32,7 @@ const commandInfo = {
           { name: "Sketchy Artist", value: "sketchy_artist" },
           { name: "SpellCast", value: "spellcast" },
           { name: "Watch Together", value: "watch_together" },
-          { name: "Word Snacks", value: "wordsnacks" },
-          { name: "YouTube Together", value: "youtube_together" }
+          { name: "Word Snacks", value: "wordsnacks" }
         )
     )
     .addChannelOption((option) =>
@@ -94,7 +93,6 @@ async function runCommand(message, args, RM) {
     spellcast: "852509694341283871",
     watch_together: "880218394199220334",
     wordsnacks: "879863976006127627",
-    youtube_together: "755600276941176913",
   };
   activityNames = [
     { label: "Awkword", value: "awkword" },
@@ -116,7 +114,6 @@ async function runCommand(message, args, RM) {
     { label: "SpellCast", value: "spellcast" },
     { label: "Watch Together", value: "watch_together" },
     { label: "Word Snacks", value: "wordsnacks" },
-    { label: "YouTube Together", value: "youtube_together" },
   ];
   if (message.content === "INBOT-COMMAND") isSlashCommand = true;
 
@@ -269,6 +266,9 @@ function commandCategory() {
 function getSlashCommand() {
   return commandInfo.slashCommand;
 }
+function commandPermissions() {
+  return commandInfo.reqPermissions || null;
+}
 function getSlashCommandJSON() {
   if (commandInfo.slashCommand.length !== null)
     return commandInfo.slashCommand.toJSON();
@@ -283,5 +283,6 @@ module.exports = {
   commandUsage,
   commandCategory,
   getSlashCommand,
+  commandPermissions,
   getSlashCommandJSON,
 };

@@ -33,7 +33,19 @@ async function runCommand(message, args, RM) {
   const client = RM.client;
   const Genius = require("genius-lyrics");
   const Client = new Genius.Client(process.env.GENIUS_API_KEY);
-
+  let guildQueue = RM.client.player.getQueue(message.guild.id);
+  if (!guildQueue && !args[0]) {
+    const songNotDefined = new RM.Discord.MessageEmbed()
+      .setColor("RED")
+      .setAuthor({
+        name: message.author.tag,
+        iconURL: message.author.avatarURL(),
+      })
+      .setDescription("Please specify a song name.")
+      .setThumbnail(message.guild.iconURL())
+      .setTitle("Invalid Arguments");
+    return m.edit({ embeds: [songNotDefined] });
+  }
   message.channel
     .send({
       embeds: [
@@ -44,17 +56,13 @@ async function runCommand(message, args, RM) {
     })
     .then(async (m) => {
       if (args.length < 1) {
-        const songNotDefined = new RM.Discord.MessageEmbed()
-          .setColor("RED")
-          .setAuthor(message.author.tag, message.author.avatarURL())
-          .setDescription("Please specify a song name.")
-          .setThumbnail(message.guild.iconURL())
-          .setTitle("Invalid Arguments");
-        return m.edit({ embeds: [songNotDefined] });
+        args = guildQueue.nowPlaying.name;
       }
+      let jointArgs = typeof args === "string" ? args : args.join(" ");
       let timeStart = new Date().getTime();
-      const searches = await Client.songs.search(args.join(" "));
+      const searches = await Client.songs.search(jointArgs); // no but like if there arent any- ok
       let timeTaken = new Date().getTime() - timeStart; // time taken to get lyrics in milliseconds
+
       if (searches.length < 1) {
         const noLyricsFound = new RM.Discord.MessageEmbed()
           .setColor("RED")
@@ -205,6 +213,9 @@ function commandCategory() {
 function getSlashCommand() {
   return commandInfo.slashCommand;
 }
+function commandPermissions() {
+  return commandInfo.reqPermissions || null;
+}
 function getSlashCommandJSON() {
   if (commandInfo.slashCommand.length !== null)
     return commandInfo.slashCommand.toJSON();
@@ -219,5 +230,6 @@ module.exports = {
   commandUsage,
   commandCategory,
   getSlashCommand,
+  commandPermissions,
   getSlashCommandJSON,
 };

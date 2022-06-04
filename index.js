@@ -66,6 +66,13 @@ try {
     ],
     partials: ["CHANNEL"],
   });
+  const { Player } = require("discord-music-player");
+  const player = new Player(client, {
+    leaveOnEmpty: false,
+    deafenOnJoin: true,
+  });
+  client.player = player;
+
   let slashCommandAssigns = [];
   //!--------------------------
   console.clear();
@@ -96,7 +103,24 @@ try {
       chalk.green("Modules loaded! Adding to requiredModules....")
   );
   //!--------------------------
-  const requiredModules = {
+  const requiredModules = {    
+      cmdVolume: music.volume(),    
+      cmdImportqueue: music.importqueue(),    
+      cmdExportqueue: music.exportqueue(),
+    cmdSwap: music.swap(),
+    cmdLoop: music.loop(),
+    cmdClear: music.clear(),
+    cmdRemove: music.remove(),
+    cmdShuffle: music.shuffle(),
+    cmdSeek: music.seek(),
+    cmdPause: music.pause(),
+    cmdStop: music.stop(),
+    cmdPause: music.pause(),
+    cmdResume: music.resume(),
+    cmdSkip: music.skip(),
+    cmdQueue: music.queue(),
+    cmdNowplaying: music.nowplaying(),
+    cmdPlay: music.play(),
     cmdWarn: moderation.warn(),
     cmdUnmute: moderation.unmute(),
     cmdMute: moderation.mute(),
@@ -293,13 +317,22 @@ try {
         content:
           "**NOTE:** The discord API has updated. Some commands may not work properly!",
       });
-    if (typeof message === "string") {
-    } else
-      k.runCommand(
-        message,
-        message.content.split(" ").slice(1),
-        requiredModules
-      );
+    if (typeof message !== "string") {
+      if (checkHasRequiredPermissions(k, message.guild)[0] === true)
+        k.runCommand(
+          message,
+          message.content.split(" ").slice(1),
+          requiredModules
+        );
+      else {
+        message.channel.send({
+          content:
+            "I require permissions: [" +
+            checkHasRequiredPermissions(k, message.guild)[1].join(", ") +
+            "]",
+        });
+      }
+    }
   }
 
   client.on("ready", async () => {
@@ -549,6 +582,24 @@ try {
   function getOrdinalNum(n){return n+(n>0?["th","st","nd","rd"][n>3&&n<21||n%10>3?0:n%10]:"")}
   /* prettier-ignore */
   const DateFormatter={monthNames:["January","February","March","April","May","June","July","August","September","October","November","December"],dayNames:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],formatDate:function(e,t){var r=this;return t=r.getProperDigits(t,/d+/gi,e.getDate()),t=(t=r.getProperDigits(t,/M+/g,e.getMonth()+1)).replace(/y+/gi,(function(t){var r=t.length,g=e.getFullYear();return 2==r?(g+"").slice(-2):4==r?g:t})),t=r.getProperDigits(t,/H+/g,e.getHours()),t=r.getProperDigits(t,/h+/g,r.getHours12(e.getHours())),t=r.getProperDigits(t,/m+/g,e.getMinutes()),t=(t=r.getProperDigits(t,/s+/gi,e.getSeconds())).replace(/a/gi,(function(t){var g=r.getAmPm(e.getHours());return"A"===t?g.toUpperCase():g})),t=r.getFullOr3Letters(t,/d+/gi,r.dayNames,e.getDay()),t=r.getFullOr3Letters(t,/M+/g,r.monthNames,e.getMonth())},getProperDigits:function(e,t,r){return e.replace(t,(function(e){var t=e.length;return 1==t?r:2==t?("0"+r).slice(-2):e}))},getHours12:function(e){return(e+24)%12||12},getAmPm:function(e){return e>=12?"pm":"am"},getFullOr3Letters:function(e,t,r,g){return e.replace(t,(function(e){var t=e.length;return 3==t?r[g].substr(0,3):4==t?r[g]:e}))}};
+  /* prettier-ignore */
+  function checkHasRequiredPermissions(command,guild) {
+      if (typeof command === "string")
+        command = requiredModules[command];
+      let requiredPermissions = command.commandPermissions();
+      if (!requiredPermissions || !requiredPermissions.length < 1) return [true];
+      let missingPermissions = []
+      for (let requiredPermission of requiredPermissions) {
+        if (
+            !guild.me.permissions.has(
+              Discord.Permissions.FLAGS[requiredPermission.toUpperCase()]
+            )
+          )
+            missingPermissions.push(requiredPermission); else console.log("I have permission " + requiredPermission);
+        }
+        if (missingPermissions.length > 0) return [false, missingPermissions];
+        return [true];
+  }
 
   client.login(process.env.DISCORD_TOKEN);
 } catch (e) {
