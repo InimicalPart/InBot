@@ -617,6 +617,9 @@ function commandCategory() {
 function getSlashCommand() {
   return commandInfo.slashCommand;
 }
+function commandPermissions() {
+  return commandInfo.reqPermissions || null;
+}
 function getSlashCommandJSON() {
   if (commandInfo.slashCommand.length !== null)
     return commandInfo.slashCommand.toJSON();
@@ -631,5 +634,6 @@ module.exports = {
   commandUsage,
   commandCategory,
   getSlashCommand,
+  commandPermissions,
   getSlashCommandJSON,
 };

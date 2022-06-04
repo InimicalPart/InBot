@@ -6,6 +6,7 @@
     "chess.js": "^0.13.0",
     "convert-units": "^2.3.4",
     "discord-api-types": "^0.32.0",
+    "discord-music-player": "^8.3.2",
     "discord.js": "^13.7.0",
     "dotenv": "^10.0.0",
     "fen-to-image": "github:InimicalPart/InBot#fen2img",
@@ -39,7 +40,10 @@
     "node": "16.6.0",
     "npm": "6.14.13"
   },
-  "scripts": {},
+  "scripts": {
+    "runmon": "nodemon index.js --ignore execute.js",
+    "run": "node index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/InimicalPart/InBot.git"

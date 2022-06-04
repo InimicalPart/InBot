@@ -1,8 +1,8 @@
 const commandInfo = {
   primaryName: "mute", // This is the command name used by help.js (gets uppercased).
-  possibleTriggers: ["mute", "alias2", "alias3"], // These are all commands that will trigger this command.
+  possibleTriggers: ["mute"], // These are all commands that will trigger this command.
   help: "eats your cake!", // This is the general description of the command.
-  aliases: ["alias2", "alias3"], // These are command aliases that help.js will use
+  aliases: [], // These are command aliases that help.js will use
   usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
   category: "mod",
   slashCommand: null,
@@ -241,6 +241,9 @@ function commandCategory() {
 function getSlashCommand() {
   return commandInfo.slashCommand;
 }
+function commandPermissions() {
+  return commandInfo.reqPermissions || null;
+}
 function getSlashCommandJSON() {
   if (commandInfo.slashCommand.length !== null)
     return commandInfo.slashCommand.toJSON();
@@ -255,5 +258,6 @@ module.exports = {
   commandUsage,
   commandCategory,
   getSlashCommand,
+  commandPermissions,
   getSlashCommandJSON,
 };

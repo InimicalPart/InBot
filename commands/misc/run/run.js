@@ -53,18 +53,26 @@ async function runCommand(message, args, RM) {
   }
   let nodecode;
   let executionStats = false;
+  let dmMode;
+  let newArgs = args.slice();
   if (args.includes("--inbot-exec-stats")) {
     //copy args and remove --inbot-exec-stats
-    let newArgs = args.slice();
     newArgs.splice(newArgs.indexOf("--inbot-exec-stats"), 1);
-    nodecode = newArgs;
     executionStats = true;
-  } else nodecode = args;
+  }
+  if (args.includes("--inbot-dm")) {
+    //copy args and remove --inbot-dm
+    newArgs.splice(newArgs.indexOf("--inbot-dm"), 1);
+    dmMode = true;
+  }
+  nodecode = newArgs;
   nodecode = nodecode.join(" ");
   require("fs").writeFile("execute.js", nodecode, function (err, result) {
     if (err) console.log("error", err);
   });
-  message.channel
+  let channel = message.channel;
+  if (dmMode) channel = message.author;
+  channel
     .send({
       embeds: [
         new RM.Discord.MessageEmbed().setDescription(
@@ -103,6 +111,11 @@ async function runCommand(message, args, RM) {
               ),
             ],
           });
+          if (dmMode)
+            message.channel.send({
+              content: "Result sent in DMs",
+              reply: { messageReference: message.id },
+            });
           if (executionStats) {
             message.channel.send({
               embeds: [
@@ -120,10 +133,9 @@ async function runCommand(message, args, RM) {
             });
           }
           if (errorToSend != undefined) {
-            m.edit({
-              content: "```javascript\n" + errorToSend + "\n```",
-              embeds: [],
-              components: [
+            let components = [];
+            if (!dmMode)
+              components = [
                 new RM.Discord.MessageActionRow().addComponents(
                   new RM.Discord.MessageButton()
                     .setLabel("Delete Output")
@@ -134,7 +146,11 @@ async function runCommand(message, args, RM) {
                     .setStyle("PRIMARY")
                     .setCustomId("save-" + message.id)
                 ),
-              ],
+              ];
+            m.edit({
+              content: "```javascript\n" + errorToSend + "\n```",
+              embeds: [],
+              components: components,
             });
             if (executionStats) {
               message.channel.send({
@@ -241,7 +257,7 @@ async function runCommand(message, args, RM) {
             }
           });
           collector.on("end", () => {
-            if (m) {
+            if (m && !dmMode) {
               m.edit({ components: [] });
             }
           });
@@ -271,6 +287,9 @@ function commandCategory() {
 function getSlashCommand() {
   return commandInfo.slashCommand;
 }
+function commandPermissions() {
+  return commandInfo.reqPermissions || null;
+}
 function getSlashCommandJSON() {
   if (commandInfo.slashCommand.length !== null)
     return commandInfo.slashCommand.toJSON();
@@ -285,5 +304,6 @@ module.exports = {
   commandUsage,
   commandCategory,
   getSlashCommand,
+  commandPermissions,
   getSlashCommandJSON,
 };
