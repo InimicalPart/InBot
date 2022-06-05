@@ -1,7 +1,7 @@
 const commandInfo = {
   primaryName: "balance", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["balance", "wallet", "bal"], // These are all commands that will trigger this command.
-  help: "Shows Your or a User's Current Balance ", // This is the general description of the command.
+  help: "Shows your or a user's account balance.", // This is the general description of the command.
   aliases: ["bal", "wallet"], // These are command aliases that help.js will use
   usage: "[COMMAND] [username | nickname | mention | ID]", // [COMMAND] gets replaced with the command and correct prefix later
   category: "economy",

@@ -1,10 +1,10 @@
 const commandInfo = {
-  primaryName: "clear", // This is the command name used by help.js (gets uppercased).
-  possibleTriggers: ["clear"], // These are all commands that will trigger this command.
-  help: "Clear the queue when playing music.", // This is the general description of the command.
+  primaryName: "reload", // This is the command name used by help.js (gets uppercased).
+  possibleTriggers: ["reload"], // These are all commands that will trigger this command.
+  help: "eats your cake!", // This is the general description of the command.
   aliases: [], // These are command aliases that help.js will use
   usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
-  category: "music",
+  category: "dev",
   reqPermissions: [],
   slashCommand: null,
   /*
@@ -46,50 +46,6 @@ async function runCommand(message, args, RM) {
       ],
     });
   }
-  let guildQueue = RM.client.player.getQueue(message.guild.id);
-  if (!guildQueue) {
-    return message.channel.send({
-      embeds: [
-        new RM.Discord.MessageEmbed()
-          .setColor("RED")
-          .setAuthor({
-            name: message.author.tag,
-            iconURL: message.author.avatarURL(),
-          })
-          .setDescription("There is no music playing."),
-      ],
-    });
-  }
-  try {
-    guildQueue.clearQueue();
-  } catch (e) {
-    return message.channel.send({
-      embeds: [
-        new RM.Discord.MessageEmbed()
-          .setColor("RED")
-          .setAuthor({
-            name: message.author.tag,
-            iconURL: message.author.avatarURL(),
-          })
-          .setDescription("There is nothing in the queue.")
-          .setThumbnail(message.guild.iconURL())
-          .setTitle("Queue Empty"),
-      ],
-    });
-  }
-  return message.channel.send({
-    embeds: [
-      new RM.Discord.MessageEmbed()
-        .setColor("GREEN")
-        .setAuthor({
-          name: message.author.tag,
-          iconURL: message.author.avatarURL(),
-        })
-        .setDescription("Queue cleared.")
-        .setThumbnail(message.guild.iconURL())
-        .setTitle("Queue Cleared"),
-    ],
-  });
 }
 
 function commandTriggers() {

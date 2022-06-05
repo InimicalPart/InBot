@@ -1,7 +1,7 @@
 const commandInfo = {
   primaryName: "activity", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["activity"], // These are all commands that will trigger this command.
-  help: "eats your cake!", // This is the general description of the command.
+  help: "Start an activity in a voice channel", // This is the general description of the command.
   aliases: [], // These are command aliases that help.js will use
   usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
   category: "fun",

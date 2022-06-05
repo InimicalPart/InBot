@@ -1,7 +1,7 @@
 const commandInfo = {
   primaryName: "lyrics", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["lyrics", "ly"], // These are all commands that will trigger this command.
-  help: "fetches lyrics for songs", // This is the general description pf the command.
+  help: "Get lyrics for songs", // This is the general description pf the command.
   aliases: ["ly"], // These are command aliases that help.js will use
   usage: "[COMMAND] <song name>", // [COMMAND] gets replaced with the command and correct prefix later
   category: "music",

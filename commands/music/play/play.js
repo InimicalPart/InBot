@@ -1,7 +1,7 @@
 const commandInfo = {
   primaryName: "play", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["play", "p"], // These are all commands that will trigger this command.
-  help: "eats your cake!", // This is the general description of the command.
+  help: "Play a song or playlist", // This is the general description of the command.
   aliases: ["p"], // These are command aliases that help.js will use
   usage: "[COMMAND] <song>", // [COMMAND] gets replaced with the command and correct prefix later
   category: "music",
