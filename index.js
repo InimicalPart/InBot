@@ -1,5 +1,5 @@
 const app = {
-  version: "3.3.0",
+  version: "3.4.2",
   botOwners: ["301062520679170066", "814623079346470993"],
 };
 const EventEmitter = require("events").EventEmitter;
@@ -104,9 +104,10 @@ try {
   );
   //!--------------------------
   const requiredModules = {    
-      cmdVolume: music.volume(),    
-      cmdImportqueue: music.importqueue(),    
-      cmdExportqueue: music.exportqueue(),
+      cmdReload: misc.reload(),
+    cmdVolume: music.volume(),
+    cmdImportqueue: music.importqueue(),
+    cmdExportqueue: music.exportqueue(),
     cmdSwap: music.swap(),
     cmdLoop: music.loop(),
     cmdClear: music.clear(),

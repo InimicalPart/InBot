@@ -44,7 +44,12 @@ function dictionary() {
   return require("./dictionary/dictionary.js");
 }
 
+function reload() {
+	return require("./reload/reload.js")
+}
+
 module.exports = {
+	reload,
   dictionary,
   urban,
   timer,

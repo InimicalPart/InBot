@@ -1,7 +1,7 @@
 const commandInfo = {
   primaryName: "loop", // This is the command name used by help.js (gets uppercased).
   possibleTriggers: ["loop"], // These are all commands that will trigger this command.
-  help: "eats your cake!", // This is the general description of the command.
+  help: "Change the loop mode", // This is the general description of the command.
   aliases: [], // These are command aliases that help.js will use
   usage: "[COMMAND] <required> [optional]", // [COMMAND] gets replaced with the command and correct prefix later
   category: "music",
