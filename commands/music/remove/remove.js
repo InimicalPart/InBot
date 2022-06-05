@@ -80,7 +80,6 @@ async function runCommand(message, args, RM) {
   }
 
   let songToRemove = guildQueue.songs[parseInt(args[0])];
-  console.log(songToRemove);
   if (!songToRemove) {
     return message.channel.send({
       embeds: [

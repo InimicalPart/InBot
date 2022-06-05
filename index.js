@@ -52,9 +52,8 @@ try {
     );
     process.exit(1);
   }
-  const client = new Discord.Client({
-    intents: [
-      Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+  /*
+        Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
       Discord.Intents.FLAGS.DIRECT_MESSAGES,
       Discord.Intents.FLAGS.GUILD_MEMBERS,
       Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
@@ -63,7 +62,9 @@ try {
       Discord.Intents.FLAGS.GUILD_VOICE_STATES,
       Discord.Intents.FLAGS.GUILDS,
       Discord.Intents.FLAGS.GUILD_BANS,
-    ],
+  */
+  const client = new Discord.Client({
+    intents: new Discord.Intents(32767),
     partials: ["CHANNEL"],
   });
   const { Player } = require("discord-music-player");
@@ -103,8 +104,8 @@ try {
       chalk.green("Modules loaded! Adding to requiredModules....")
   );
   //!--------------------------
-  const requiredModules = {    
-      cmdReload: misc.reload(),
+  const requiredModules = {
+    cmdReload: misc.reload(),
     cmdVolume: music.volume(),
     cmdImportqueue: music.importqueue(),
     cmdExportqueue: music.exportqueue(),
@@ -172,12 +173,14 @@ try {
     eventTimer: event.getActiveTimers(),
     eventWordle: event.getCurrentWordle(),
     eventLogs: event.logListeners(),
+    eventDashboard: event.setupDashboard(),
+    config: config,
     logsEmitter: global.logsEmitter,
     DBClient: connect,
     Discord: Discord,
     process_env: process.env,
     client: client,
-    config: config,
+    edition: null,
     botOwners: app.botOwners,
     math: require("mathjs"),
     path: require("path"),
@@ -185,6 +188,7 @@ try {
     request: require("request"),
     CU: require("convert-units"),
     chalk: require("chalk"),
+    SocketIOClient: require("socket.io-client"),
   };
   console.log(
     chalk.blueBright("------------------------\n") +
@@ -337,6 +341,8 @@ try {
   }
 
   client.on("ready", async () => {
+    requiredModules.edition =
+      client.user.id == "859513472973537311" ? "DEVELOPMENT" : "MAIN";
     const rest = new REST({
       version: "9",
     }).setToken(process.env.DISCORD_TOKEN);

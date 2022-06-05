@@ -99,10 +99,12 @@ async function runCommand(message, args, RM, data) {
   if (guildQueue.songs.length === 1) {
     return guildQueue.stop();
   }
-
-  let songName = String(guildQueue.songs[1].name)
-    .replace(/\[.*\]/g, "")
-    .replace(/\(.*\)/g, "");
+  let songName = "";
+  if (!guildQueue.songs[1]) {
+    songName = String(guildQueue?.songs[1]?.name)
+      .replace(/\[.*\]/g, "")
+      .replace(/\(.*\)/g, "");
+  }
   try {
     guildQueue.skip();
   } catch (e) {
