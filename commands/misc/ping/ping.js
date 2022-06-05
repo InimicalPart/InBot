@@ -48,7 +48,6 @@ async function runCommand(message, args, RM) {
   message.channel
     .send({ embeds: [pinging] })
     .then((m) => {
-      console.log(m);
       const embed = new Discord.MessageEmbed()
         .setColor("RANDOM")
         .setDescription(

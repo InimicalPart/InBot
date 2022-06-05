@@ -85,7 +85,6 @@ async function runCommand(message, args, RM) {
       ],
     });
   }
-  console.log(guildQueue.nowPlaying);
   return message.channel.send({
     embeds: [
       new RM.Discord.MessageEmbed()

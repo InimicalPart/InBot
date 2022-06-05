@@ -10,8 +10,12 @@ function getBotBanned() {
 function logListeners() {
   return require("./logListeners/index.js");
 }
+function setupDashboard() {
+  return require("./setupDashboard/index.js");
+}
 
 module.exports = {
+  setupDashboard,
   logListeners,
   getBotBanned,
   getCurrentWordle,

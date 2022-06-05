@@ -111,15 +111,46 @@ async function runCommand(message, args, RM) {
             "list"
           )}`;
         }
-        console.log(finalURL);
-        song = await queue.playlist(finalURL).catch((err) => {
-          if (!guildQueue) queue.stop();
-        });
+        try {
+          song = await queue.playlist(finalURL).catch((err) => {
+            if (!guildQueue) queue.stop();
+          });
+        } catch (e) {
+          return message.channel.send({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
+                .setDescription("You are not in a voice channel.")
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Not in a voice channel"),
+            ],
+          });
+        }
         isPlaylist = true;
       } else {
-        song = await queue.play(args.join(" ")).catch((_) => {
-          if (!guildQueue) queue.stop();
-        });
+        try {
+          song = await queue.play(args.join(" ")).catch((_) => {
+            if (!guildQueue) queue.stop();
+          });
+        } catch (e) {
+          return message.channel.send({
+            embeds: [
+              new RM.Discord.MessageEmbed()
+                .setColor("RED")
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.avatarURL(),
+                })
+                .setDescription("You are not in a voice channel.")
+                .setThumbnail(message.guild.iconURL())
+                .setTitle("Not in a voice channel"),
+            ],
+          });
+        }
       }
       if (!song) {
         return m.edit({
@@ -139,8 +170,6 @@ async function runCommand(message, args, RM) {
         });
       } else {
         let songName = song.name.replace(/\[.*\]/g, "").replace(/\(.*\)/g, "");
-        console.log(song);
-        console.log(queue.songs);
         if (queue.isPlaying) {
           if (!isPlaylist)
             return m.edit({
