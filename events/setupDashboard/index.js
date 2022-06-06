@@ -20,7 +20,10 @@ async function runEvent(RM, event) {
       }
     });
     socket.on("LCNT", (message) => {
-      console.log("Web disconnected. Pausing all messages.");
+      console.log(message.socketId, "(web) disconnected.");
+      if (message.remaining == 0) {
+        console.log("No WEB clients connected. Pausing all messages.");
+      }
     });
     socket.on("IACK", (message) => {
       //Server acknowledges our HPI response
@@ -38,6 +41,7 @@ async function runEvent(RM, event) {
           tag: RM.client.user.tag,
           avatarURL: RM.client.user.displayAvatarURL(),
           socketId: socket.id,
+          id: RM.client.user.id,
         },
       });
     });
