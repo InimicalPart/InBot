@@ -37,6 +37,7 @@ async function runEvent(RM, event) {
             whoruResp: {
               tag: RM.client.user.tag,
               avatarURL: RM.client.user.displayAvatarURL(),
+              socketId: socket.id,
             },
           });
         }
