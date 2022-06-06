@@ -18,7 +18,6 @@ async function runEvent(RM, event) {
       if (message == "CONNECTED") {
         console.log("Both web and worker connected");
       }
-      attemptTestMessage();
     });
     socket.on("LCNT", (message) => {
       console.log("Web disconnected. Pausing all messages.");
@@ -29,31 +28,19 @@ async function runEvent(RM, event) {
         console.log("Server acknowledged our HPI response");
       }
     });
-    socket.on("message", (message) => {
-      if (typeof message === "string") {
-        console.log("msg:", message);
-        if (message == "who ru") {
-          socket.send({
-            whoruResp: {
-              tag: RM.client.user.tag,
-              avatarURL: RM.client.user.displayAvatarURL(),
-              socketId: socket.id,
-            },
-          });
-        }
-      } else {
-        if (message.hello) {
-          socket.send({
-            helloResp: "Hello worker",
-          });
-        } else if (message.helloResp) {
-          console.log("Test message response: " + message.helloResp);
-        }
-      }
+    socket.on("message", (message) => {});
+    socket.on("allBotsIdent", (message) => {
+      let returnId = message.iam;
+      console.log("Identification request from", returnId);
+      socket.emit("allBotsIdentResponse", {
+        socketId: returnId,
+        message: {
+          tag: RM.client.user.tag,
+          avatarURL: RM.client.user.displayAvatarURL(),
+          socketId: socket.id,
+        },
+      });
     });
-    function attemptTestMessage() {
-      socket.send({ hello: "web" });
-    }
   }
 }
 function eventType() {

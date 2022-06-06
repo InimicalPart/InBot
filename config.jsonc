@@ -3,7 +3,7 @@
   "settings": {
     "mainGuild": "931616832668958748", // The ID of the main guild (where the bot will look for channels, roles, members, etc.)
     "dashboard": {
-      "enabled": true, // Whether the dashboard is enabled or not
+      "enabled": false, // Whether the dashboard is enabled or not
       "websocketURI": "wss://ws.inimicalpart.com" // The URI of the websocket server which will handle all talking between the dashboard and the bot
     },
     "showMemberCount": true,
