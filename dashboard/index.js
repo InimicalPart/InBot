@@ -1,6 +1,7 @@
 let express = require("express");
 var livereload = require("livereload");
 var connectLiveReload = require("connect-livereload");
+console.log(__dirname);
 let config = require("json5").parse(
   require("fs").readFileSync("../config.jsonc", "utf8")
 );
