@@ -54,7 +54,7 @@ app.post("/api/discord/gettoken", (req, res) => {
         client_secret: process.env.oauthClientSecret,
         grant_type: "authorization_code",
         code: code,
-        redirect_uri: encodeURIComponent(rUri),
+        redirect_uri: rUri,
       },
     },
     function (error, response, body) {
