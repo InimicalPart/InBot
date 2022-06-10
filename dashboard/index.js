@@ -1,9 +1,13 @@
+const path = require("path");
 let express = require("express");
 var livereload = require("livereload");
 var connectLiveReload = require("connect-livereload");
-console.log(__dirname);
+console.log(path.resolve(__dirname, "../config.jsonc"));
+console.log(
+  require("fs").existsSync(path.resolve(__dirname, "../config.jsonc"))
+);
 let config = require("json5").parse(
-  require("fs").readFileSync("../config.jsonc", "utf8")
+  require("fs").readFileSync(path.resolve(__dirname, "../config.jsonc"), "utf8")
 );
 require("dotenv").config({ path: "../.env" });
 const liveReloadServer = livereload.createServer();
