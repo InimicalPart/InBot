@@ -47,8 +47,9 @@ You can learn how to set up a PostgreSQL database here:
 - [Windows](https://www.microfocus.com/documentation/idol/IDOL_12_0/MediaServer/Guides/html/English/Content/Getting_Started/Configure/_TRN_Set_up_PostgreSQL.htm)
 - [Linux](https://www.microfocus.com/documentation/idol/IDOL_12_0/MediaServer/Guides/html/English/Content/Getting_Started/Configure/_TRN_Set_up_PostgreSQL_Linux.htm)
 - [MacOS](https://www.sqlshack.com/setting-up-a-postgresql-database-on-mac/)
-  <br>
-  Create a file in the folder called ".env" and paste the contents above with the modified values in the file
+  
+  
+Create a file in the folder called ".env" and paste the contents above with the modified values in the file
 
 ## Config file
 
