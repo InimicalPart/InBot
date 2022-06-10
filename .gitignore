@@ -6,4 +6,4 @@ execute.js
 json.sqlite
 # some random file that just keeps appearing from vscode
 debug.log
-dashboard/
+# dashboard/

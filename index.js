@@ -1,6 +1,5 @@
 const app = {
   version: "3.4.2",
-  botOwners: ["301062520679170066", "814623079346470993"],
 };
 const EventEmitter = require("events").EventEmitter;
 global.app = app;
@@ -181,7 +180,7 @@ try {
     process_env: process.env,
     client: client,
     edition: null,
-    botOwners: app.botOwners,
+    botOwners: config.botOwners,
     math: require("mathjs"),
     path: require("path"),
     pretty_ms: require("pretty-ms"),

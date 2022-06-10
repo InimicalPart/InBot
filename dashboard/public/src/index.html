@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="/output.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@5/dark.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/flowbite@1.4.7/dist/flowbite.min.css"
+    />
+  </head>
+  <body class="bg-white dark:bg-black">
+    <!-- <p
+      class="top-1/2 left-1/2 text-center text-5xl font-bold text-white absolute -translate-x-1/2 -translate-y-1/2"
+    >
+      Content
+    </p>
+    <p
+      class="top-2/3 left-1/2 text-center text-xl text-white absolute -translate-x-1/2"
+    >
+        Currently selected category: <span id="currentCategory">N/A</span> -->
+
+        <iframe
+            id="mainFrame"
+            src="https://inimicalpart.com"
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            class="absolute top-0 left-0 w-full h-full"
+        ></iframe>
+    <!-- Dropdown menu -->
+    <div
+      id="botChangeDropdown"
+      class="z-50 hidden bg-white divide-y divide-gray-100 rounded shadow w-64 dark:bg-gray-700"
+    >
+      <ul
+        id="botChange"
+        class="py-1 text-sm text-gray-700 dark:text-gray-200"
+        aria-labelledby="dropdownTopButton"
+      ></ul>
+    </div>
+    <div
+      id="sidebar"
+      style="transition: left 150ms"
+      class="relative flex bg-zinc-900 h-screen w-80 -left-64"
+    >
+      <!-- start expanded, to switch, change "left-0" to "-left-64"-->
+      <div class="absolute w-60 z-10 justify-center items-center left-3.5 top-5 ">
+        <div id="dashboardName" class="font-bold text-neutral-300 text-base overflow-x-hidden whitespace-nowrap">
+        N/A
+        </div>
+    </div>
+
+      <svg
+        onclick="expandSidebar()"
+        id="menuSidebar"
+        class="absolute right-3.5 top-3 fill-black dark:fill-white cursor-pointer"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 0 38 38"
+        width="38px"
+        height="38px"
+      >
+        <g id="surface1265562">
+          <!-- <path style=" stroke:none;fill-rule:nonzero;fill-opacity:1;" d="M 2.667969 6.667969 L 2.667969 9.332031 L 29.332031 9.332031 L 29.332031 6.667969 Z M 2.667969 14.667969 L 2.667969 17.332031 L 29.332031 17.332031 L 29.332031 14.667969 Z M 2.667969 22.667969 L 2.667969 25.332031 L 29.332031 25.332031 L 29.332031 22.667969 Z M 2.667969 22.667969 "/> -->
+          <!-- <path xmlns="http://www.w3.org/2000/svg" style=" stroke:none;fill-rule:nonzero;fill:rgb(92.54902%,94.117647%,94.509804%);fill-opacity:1;" d="M 4 10 L 4 14 L 44 14 L 44 10 Z M 4 22 L 4 26 L 44 26 L 44 22 Z M 4 34 L 4 38 L 44 38 L 44 34 Z M 4 34 "/> -->
+          <path
+            xmlns="http://www.w3.org/2000/svg"
+            style="stroke: none; fill-rule: nonzero; fill-opacity: 1"
+            d="M 3.167969 7.917969 L 3.167969 11.082031 L 34.832031 11.082031 L 34.832031 7.917969 Z M 3.167969 17.417969 L 3.167969 20.582031 L 34.832031 20.582031 L 34.832031 17.417969 Z M 3.167969 26.917969 L 3.167969 30.082031 L 34.832031 30.082031 L 34.832031 26.917969 Z M 3.167969 26.917969 "
+          />
+        </g>
+      </svg>
+      <div id="categories" class="w-full mt-16 mb-20 relative overflow-y-auto">
+        <div id="lineTop" class="fixed z-30 w-80 h-px bg-zinc-800"></div>
+      </div>
+      <div
+        id="lineBottom"
+        class="fixed z-30 bottom-20 w-80 h-px bg-zinc-800"
+      ></div>
+      <div
+        id="botInformation"
+        class="absolute flex items-center rounded-xl w-full h-20 bottom-0 z-3 pl-5 cursor-pointer"
+      >
+        <!-- data-dropdown-toggle="botChangeDropdown" data-dropdown-placement="top" -->
+        <img
+          id="botimg"
+          class="h-12 border-slate-400 w-12 rounded-full"
+          src="./assets/loading.gif"
+        />
+        <p id="bottag" class="ml-5 text-black dark:text-white"></p>
+        <img
+          id="botImgSidebarIcon"
+          class="h-12 border-slate-400 w-12 rounded-full absolute z-2 right-2 sidebarIcon"
+          src="./assets/loading.gif"
+          data-tooltip-target="sidebarBotTagIcon"
+          data-tooltip-placement="right"
+        />
+        <div
+          id="sidebarBotTagIcon"
+          role="tooltip"
+          class="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700"
+        >
+          N/A
+          <div class="tooltip-arrow" data-popper-arrow></div>
+        </div>
+      </div>
+    </div>
+    <script src="https://unpkg.com/flowbite@1.4.7/dist/flowbite.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
