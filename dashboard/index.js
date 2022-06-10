@@ -39,6 +39,7 @@ app.post("/api/discord/gettoken", (req, res) => {
     console.log("not localhost");
     rUri = req.protocol + "://" + req.hostname;
   }
+  console.log(rUri);
 
   request(
     {
