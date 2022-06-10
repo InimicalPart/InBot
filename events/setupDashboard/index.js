@@ -45,6 +45,15 @@ async function runEvent(RM, event) {
         },
       });
     });
+    socket.on("askBotConfig", (message) => {
+      let returnId = message.iam;
+      console.log("Config request from", returnId);
+      socket.emit("botConfig", {
+        socketId: returnId,
+        iam: socket.id,
+        config: RM.config,
+      });
+    });
   }
 }
 function eventType() {

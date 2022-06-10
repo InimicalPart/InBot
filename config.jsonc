@@ -1,10 +1,18 @@
 {
   "disabledCommands": ["reload"],
+  "botOwners": ["301062520679170066", "814623079346470993"],
   "settings": {
     "mainGuild": "931616832668958748", // The ID of the main guild (where the bot will look for channels, roles, members, etc.)
     "dashboard": {
       "enabled": true, // Whether the dashboard is enabled or not
-      "websocketURI": "wss://ws.inimicalpart.com" // The URI of the websocket server which will handle all talking between the dashboard and the bot
+      "websocketURI": "wss://ws.inimicalpart.com", // The URI of the websocket server which will handle all talking between the dashboard and the bot
+      /* OAuth2, Get the required information: https://discordjs.guide/oauth2/#getting-an-oauth2-url */
+      "clientId": "984764980471668787", // The client ID of the OAuth2 client
+      /* Client secret is in .env as oauthClientSecret*/
+      "name": "InBot Dashboard", // The name that will be displayed in the top of the sidebar, something short, otherwise you might overlap other elements
+      "permissions": { // permissions to do certain actions on dashboard, specify userId.
+        "commandsHandler": []
+      }
     },
     "showMemberCount": true,
     "sMCChannelID": "980251559113920522", // The channel ID of a VOICE chat where the name will be changed to the member count
