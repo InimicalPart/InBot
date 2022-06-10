@@ -31,6 +31,15 @@ app.post("/api/discord/gettoken", (req, res) => {
   let code = req.body.code;
   console.log(code);
   console.log(req.protocol + "://" + req.get("host"));
+  let rUri = null;
+  if (req.hostname == "localhost") {
+    console.log("localhost");
+    rUri = req.protocol + "://" + req.get("host");
+  } else {
+    console.log("not localhost");
+    rUri = req.protocol + "://" + req.hostname;
+  }
+
   request(
     {
       method: "POST",
@@ -43,7 +52,7 @@ app.post("/api/discord/gettoken", (req, res) => {
         client_secret: process.env.oauthClientSecret,
         grant_type: "authorization_code",
         code: code,
-        redirect_uri: req.protocol + "://" + req.get("host"),
+        redirect_uri: rUri,
       },
     },
     function (error, response, body) {
