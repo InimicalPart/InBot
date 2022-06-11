@@ -1,17 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/../output.css" />
   </head>
-  <body>
-    <p
+  <body 
+  class="bg-white dark:bg-black"
+    >
+    <!-- <p
       class="top-1/2 left-1/2 text-center text-5xl font-bold text-white absolute -translate-x-1/2 -translate-y-1/2"
     >
         Content
-    </p>
+    </p> -->
+    <!-- a image that is a circle with a diameter of 32 px with a white border -->
+    <div id="botInformation"
+    class="flex absolute w-80 h-32 bg-zinc-800 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+>
 
-</body>
+    <img
+      src="unknown.png"
+      id ="botAvatar"
+      class="rounded-full top-1/2 -translate-y-1/2 absolute border-white border-4 w-20 left-3.5"      alt="avatar"
+
+    />
+      <p class="absolute top-8 left-28" ><span class="text-white text-base" id="botName">N/A</span></p>
+      <p class="absolute top-12 left-28"><span class="text-gray-400 text-xs" id="botId">(N/A)</span></p>
+      <p style="top:56%" class="absolute left-28 text-white">Uptime: <span class="text-white text-sm font-bold" id="botUptime">N/A</span>
+      </p>
+</div>
+  </body>
 </html>

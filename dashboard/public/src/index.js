@@ -10,6 +10,7 @@ let paused = false;
 let iconSize = 36;
 let categoryIds = [];
 let userInfo = {};
+let activeCategory = null;
 let frameDocument = null;
 const dropdown = new Dropdown(
   document.getElementById("botChangeDropdown"),
@@ -122,6 +123,13 @@ socket.on("allBotsIdentResponse", (message) => {
     document.getElementById("sidebarBotTagIcon").innerHTML = document
       .getElementById("sidebarBotTagIcon")
       .innerHTML.replace("N/A", message.message.tag);
+    if (activeCategory && activeCategory == "dashboard") {
+      frameDocument.getElementById("botName").innerText = message.message.tag;
+      frameDocument.getElementById("botId").innerText =
+        "(" + message.message.id + ")";
+      frameDocument.getElementById("botName").innerText = message.message.tag;
+      frameDocument.getElementById("botAvatar").src = message.message.avatarURL;
+    }
     // document.getElementById("bot1text").innerHTML = document
     //   .getElementById("bot1text")
     //   .innerHTML.replace("Sign out", message.message.tag);
@@ -314,6 +322,26 @@ function removeBot(botObj, parentElement) {
   console.log("Unable to remove bot", botObj.tag);
   return false;
 }
+function removeCategory(id) {
+  let category = document.getElementById(
+    "category" + id[0].toUpperCase() + id.slice(1)
+  );
+  if (category) {
+    category.parentElement.removeChild(category);
+    categoryIds.splice(categoryIds.indexOf(id), 1);
+    console.log("Removed category", id);
+    if (id == activeCategory) {
+      activeCategory = categoryIds[0];
+      console.log("Switching to category", activeCategory);
+      location.href = `#${activeCategory}`;
+      checkActiveCategory();
+    }
+
+    return true;
+  }
+  console.log("Unable to remove category", id);
+  return false;
+}
 function createCategory(text, id, imgLoc, iconSize, onClick) {
   const category = document.createElement("div");
   category.classList.add(
@@ -358,6 +386,7 @@ function categoryClickHandler(category) {
     console.error("Error: Unable to get category ID");
     return false;
   }
+
   location.href = "#" + id;
   checkActiveCategory();
 }
@@ -392,7 +421,21 @@ function loadCategory(id) {
   iframe.onload = () => {
     console.log("Loaded category " + id);
     frameDocument = iframe.contentWindow.document;
+    activeCategory = id;
+    let activeBot = getActiveBot();
+    if (activeBot) {
+      if (id == "dashboard") {
+        frameDocument.getElementById("botName").innerText = activeBot.tag;
+        frameDocument.getElementById("botId").innerText = activeBot.id;
+      }
+    }
   };
+}
+function getActiveBot() {
+  for (let bot of connectedBots) {
+    if (bot.socketId == activeSocketId) return bot;
+  }
+  return null;
 }
 function askBotConfig(socketId) {
   console.log("Asking bot config for socketId " + socketId);
@@ -610,6 +653,16 @@ socket.on("botConfig", function (data) {
     connectedBots[data.iam].tag,
     "Updated bot config"
   );
+  console.log("Requesting uptime");
+  socket.emit("getUptime", {
+    iam: socket.id,
+    socketId: data.iam,
+  });
+});
+socket.on("uptime", function (data) {
+  console.log("Received uptime", data);
+  connectedBots[data.socketId].uptime = data.uptime;
+  console.log("Updated uptime for bot:", connectedBots[data.socketId].tag);
 });
 function hasPermissionToControl(connectedBot) {
   if (connectedBot.isOwner) return true;

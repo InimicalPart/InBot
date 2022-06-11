@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+br {
+    display: block; /* makes it have a width */
+    content: ""; /* clears default height */
+    margin-top: 2px; /* change this to whatever height you want it */
+}
