@@ -54,6 +54,15 @@ async function runEvent(RM, event) {
         config: RM.config,
       });
     });
+    socket.on("getUptime", (message) => {
+      let returnId = message.iam;
+      console.log("Uptime request from", returnId);
+      socket.emit("uptime", {
+        socketId: returnId,
+        iam: socket.id,
+        uptime: new Date().getTime() - RM.client.uptime,
+      });
+    });
   }
 }
 function eventType() {
