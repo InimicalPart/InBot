@@ -7,7 +7,7 @@
     "chess.js": "^0.13.0",
     "connect-livereload": "^0.6.1",
     "convert-units": "^2.3.4",
-    "discord-api-types": "^0.36.1",
+    "discord-api-types": "^0.37.9",
     "discord-music-player": "^8.3.2",
     "discord.js": "^13.7.0",
     "dotenv": "^10.0.0",
