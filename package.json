@@ -18,7 +18,7 @@
     "heroku-client": "^3.1.0",
     "i": "^0.3.7",
     "inquirer": "^8.1.2",
-    "jimp": "^0.16.1",
+    "jimp": "^0.21.3",
     "js-chess-engine": "^0.11.3",
     "js-sudoku-generator": "0.0.3",
     "json5": "^2.2.1",
